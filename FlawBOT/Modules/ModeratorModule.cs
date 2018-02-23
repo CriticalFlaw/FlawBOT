@@ -127,6 +127,7 @@ namespace FlawBOT.Modules
         [Aliases("und")]
         [Description("Undeafen server user")]
         [RequirePermissions(Permissions.DeafenMembers)]
+        [Cooldown(1, 5, CooldownBucketType.User)]
         public async Task UndeafenUser(CommandContext CTX, [RemainingText] DiscordMember member)
         {
             if (member.IsDeafened == false)
