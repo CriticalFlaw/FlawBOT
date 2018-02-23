@@ -63,6 +63,7 @@ namespace FlawBOT
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<CommonModule>();
+            Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<ModeratorModule>();
             Commands.RegisterCommands<ServerModule>();
 
@@ -76,7 +77,7 @@ namespace FlawBOT
 
         private Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.4.0 (Build 20180222)", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.5.0 (Build 20180222)", DateTime.Now);
             return Task.CompletedTask;
         }
 

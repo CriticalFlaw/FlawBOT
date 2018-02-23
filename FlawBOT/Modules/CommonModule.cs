@@ -4,6 +4,10 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Services;
+using Imgur.API.Authentication.Impl;
+using Imgur.API.Endpoints.Impl;
+using Imgur.API.Models;
+using Imgur.API.Models.Impl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OMDbSharp;
@@ -206,6 +210,37 @@ namespace FlawBOT.Modules
                         .WithColor(DiscordColor.CornflowerBlue);
                     await CTX.RespondAsync(embed: output.Build());
                 }
+            }
+        }
+
+        [Command("imgur")]
+        [Description("Fetch an imager from Imgur")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task Find(CommandContext CTX, [RemainingText] string query = null)
+        {
+            await CTX.TriggerTypingAsync();
+            Random RND = new Random();
+            var JSON = "";  // Load the configuration file
+            using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
+                JSON = await SRD.ReadToEndAsync();
+            string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).ImgurToken;
+            ImgurClient imgur = new ImgurClient(Token);
+            var endpoint = new GalleryEndpoint(imgur);
+            List<IGalleryItem> gallery;
+            if (String.IsNullOrWhiteSpace(query))
+                gallery = (await endpoint.GetRandomGalleryAsync()).ToList();
+            else
+                gallery = (await endpoint.SearchGalleryAsync(query)).ToList();
+
+            var IMG = gallery.Any() ? gallery[RND.Next(0, gallery.Count)] : null;
+            if (IMG == null)
+                await CTX.RespondAsync("Couldn't find anything");
+            else
+            {
+                if (IMG is GalleryAlbum)
+                    await CTX.RespondAsync(((GalleryAlbum)IMG).Link);
+                else if (IMG is GalleryImage)
+                    await CTX.RespondAsync(((GalleryImage)IMG).Link);
             }
         }
 
