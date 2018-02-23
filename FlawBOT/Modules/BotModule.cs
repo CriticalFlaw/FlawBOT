@@ -48,13 +48,13 @@ namespace FlawBOT.Modules
         [Aliases("hi")]
         [Description("Say hello to a user")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Greet(CommandContext CTX, [RemainingText] DiscordMember member = null)
+        public async Task Greet(CommandContext CTX, [RemainingText] DiscordMember member)
         {
             await CTX.TriggerTypingAsync();
-            if (member is DiscordMember)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":wave:")} Hello, {member.Mention} from {CTX.User.Mention}!");
-            else
+            if (member == null)
                 await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":wave:")} Hello, {CTX.User.Mention}!");
+            else
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":wave:")} Hello, {member.Mention} from {CTX.User.Mention}!");
         }
 
         [Command("info")]

@@ -78,7 +78,7 @@ namespace FlawBOT
 
         private Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.6.0 (Build 20180222)", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.7.0 (Build 20180222)", DateTime.Now);
             return Task.CompletedTask;
         }
 
@@ -119,13 +119,6 @@ namespace FlawBOT
                     .WithTitle("Insufficient parameters")
                     .WithDescription($"{DiscordEmoji.FromName(e.Context.Client, ":no_entry:")} Not enough arguments supplied to the command.")
                     .WithColor(DiscordColor.Red);
-                await e.Context.RespondAsync(embed: output.Build());
-            }
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                   .WithDescription($"{DiscordEmoji.FromName(e.Context.Client, ":no_entry:")} {e.Exception.Message}")
-                   .WithColor(DiscordColor.Red);
                 await e.Context.RespondAsync(embed: output.Build());
             }
         }

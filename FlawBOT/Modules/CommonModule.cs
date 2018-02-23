@@ -46,18 +46,13 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SearchUserAvatar(CommandContext CTX, DiscordMember member)
         {
-            if (member is DiscordMember)
-            {
-                await CTX.TriggerTypingAsync();
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle($"{member.DisplayName}'s avatar, click here for the link")
-                    .WithImageUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
-                    .WithUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
-                    .WithColor(DiscordColor.Blue);
-                await CTX.RespondAsync(embed: output.Build());
-            }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} This user does not exist in the server");
+            await CTX.TriggerTypingAsync();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle($"{member.DisplayName}'s avatar, click here for the link")
+                .WithImageUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
+                .WithUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
+                .WithColor(DiscordColor.Blue);
+            await CTX.RespondAsync(embed: output.Build());
         }
 
         [Command("catfact")]
@@ -88,7 +83,7 @@ namespace FlawBOT.Modules
                 DiscordColor color = new DiscordColor(red, green, blue);
                 var output = new DiscordEmbedBuilder()
                     .AddField("**HEX:**", $"{color.Value.ToString("X")}")
-                    .AddField("**RGB:**", $"{colors}")
+                    .AddField("**RGB:**", $"{colors[1]} {colors[2]} {colors[3]}")
                     .AddField("**Decimal:**", $"{color.Value}")
                     .WithColor(color);
                 await CTX.RespondAsync("", embed: output.Build());
@@ -338,20 +333,9 @@ namespace FlawBOT.Modules
 
         [Command("simpsons")]
         [Aliases("doh")]
-        [Description("Get a random Simpsons screenshot")]
+        [Description("Get a random Simpsons screenshot and episode")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchSimpsonsScreenshot(CommandContext CTX)
-        {
-            await CTX.TriggerTypingAsync();
-            SimpsonsService.RootObject data = new SimpsonsService.RootObject();
-            data = await SimpsonsService.GetSimpsonsDataAsync();
-            await CTX.RespondAsync($"https://frinkiac.com/img/{data.Frame.Episode}/{data.Frame.Timestamp}.jpg");
-        }
-
-        [Command("simpsonsepisode")]
-        [Description("Get a random Simpsons episode")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchSimpsonsEpisode(CommandContext CTX)
+        public async Task SimpsonsEpisode(CommandContext CTX)
         {
             await CTX.TriggerTypingAsync();
             SimpsonsService.RootObject data = new SimpsonsService.RootObject();
@@ -362,9 +346,21 @@ namespace FlawBOT.Modules
                 .AddField("Air Date", data.Episode.OriginalAirDate, true)
                 .AddField("Writer", data.Episode.Writer, true)
                 .AddField("Director", data.Episode.Director, true)
+                .WithImageUrl($"https://frinkiac.com/img/{data.Frame.Episode}/{data.Frame.Timestamp}.jpg")
                 .WithUrl(data.Episode.WikiLink)
                 .WithColor(DiscordColor.Yellow);
             await CTX.RespondAsync(embed: output.Build());
+        }
+
+        [Command("simpsonsgif")]
+        [Description("Get a random Simpsons screenshot and episode")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task SimpsonsGif(CommandContext CTX)
+        {
+            await CTX.TriggerTypingAsync();
+            string data = null;
+            data = await SimpsonsService.GetSimpsonsGifAsync();
+            await CTX.RespondAsync($"{data.ToString()}");
         }
 
         [Command("sum")]
@@ -423,19 +419,24 @@ namespace FlawBOT.Modules
                     await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Unable to find this streamer");
                 twitch.Url = twitchUrl;
 
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(twitch.Title)
-                    .AddField("Game", twitch.Game, true)
-                    .AddField("Status", twitch.IsLive ? "Online" : "Offline", true)
-                    .AddField("Followers", twitch.Followers.ToString(), true)
-                    .AddField("Viewers", twitch.Viewers.ToString(), true)
-                    .WithThumbnailUrl(twitch.Icon)
-                    .WithUrl(twitch.Url);
-                if (twitch.Live == false)
-                    output.WithColor(DiscordColor.Red);
+                if (twitch.Live)
+                {
+                    var output = new DiscordEmbedBuilder()
+                        .WithTitle(twitch.Title)
+                        .AddField("Game", twitch.Game, true)
+                        .AddField("Status", twitch.IsLive ? "Online" : "Offline", true)
+                        .AddField("Followers", twitch.Followers.ToString(), true)
+                        .AddField("Viewers", twitch.Viewers.ToString(), true)
+                        .WithThumbnailUrl(twitch.Icon)
+                        .WithUrl(twitch.Url);
+                    if (twitch.Live == false)
+                        output.WithColor(DiscordColor.Red);
+                    else
+                        output.WithColor(DiscordColor.Purple);
+                    await CTX.RespondAsync(embed: output.Build());
+                }
                 else
-                    output.WithColor(DiscordColor.Purple);
-                await CTX.RespondAsync(embed: output.Build());
+                    await CTX.RespondAsync("That Twitch stream is **Offline** :pensive:");
             }
         }
 

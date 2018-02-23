@@ -131,14 +131,9 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task DeleteRole(CommandContext CTX, [RemainingText] DiscordRole role)
         {
-            if (CTX.Guild.Roles.Contains(role) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} This role does not exist");
-            else
-            {
-                await CTX.TriggerTypingAsync();
-                await CTX.Guild.DeleteRoleAsync(role);
-                await CTX.RespondAsync($"Role **{role.Name}** has been deleted");
-            }
+            await CTX.TriggerTypingAsync();
+            await CTX.Guild.DeleteRoleAsync(role);
+            await CTX.RespondAsync($"Role **{role.Name}** has been deleted");
         }
 
         [Command("deletetext")]
@@ -148,9 +143,7 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task RemoveTextChannel(CommandContext CTX, [RemainingText] DiscordChannel channel)
         {
-            if (CTX.Guild.Channels.Contains(channel) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} This text channel does not exist");
-            else if (channel.Type != ChannelType.Text)
+            if (channel.Type != ChannelType.Text)
                 await CTX.RespondAsync($"This is not a text channel, use **.deletevoice** instead.");
             else
             {
@@ -167,9 +160,7 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task RemoveVoiceChannel(CommandContext CTX, [RemainingText] DiscordChannel channel)
         {
-            if (CTX.Guild.Channels.Contains(channel) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} This voice channel does not exist");
-            else if (channel.Type != ChannelType.Voice)
+            if (channel.Type != ChannelType.Voice)
                 await CTX.RespondAsync($"This is not a voice channel, use **.deletetext** instead.");
             else
             {
@@ -330,14 +321,10 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task RemoveUserRole(CommandContext CTX, DiscordMember member, [RemainingText] DiscordRole role)
         {
-            if (CTX.Guild.Members.Contains(member) == false)
-                await CTX.RespondAsync($"This member does not exist in this server");
-            else
-            {
-                await CTX.TriggerTypingAsync();
-                await member.RevokeRoleAsync(role);
-                await CTX.RespondAsync($"{member.DisplayName} has been revoked the role **{role.Name}**");
-            }
+
+            await CTX.TriggerTypingAsync();
+            await member.RevokeRoleAsync(role);
+            await CTX.RespondAsync($"{member.DisplayName} has been revoked the role **{role.Name}**");
         }
 
         [Command("removeroles")]
@@ -363,21 +350,16 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetRoleID(CommandContext CTX, [RemainingText] DiscordRole role)
         {
-            if (CTX.Guild.Roles.Contains(role) == false)
-                await CTX.RespondAsync($"This role does not exist in this server");
-            else
-            {
-                await CTX.TriggerTypingAsync();
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle($"{role.Name} (ID: {role.Id}")
-                    .WithDescription($"Created on: {role.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
-                    .AddField("**Permissions:**", role.Permissions.ToPermissionString())
-                    .AddField("**Mentionable:**", (role.IsMentionable ? "YES" : "NO"))
-                    .AddField("**Hoisted:**", (role.IsHoisted ? "YES" : "NO"))
-                    .AddField("**Managed:**", (role.IsManaged ? "YES" : "NO"))
-                    .WithColor(role.Color);
-                await CTX.RespondAsync(embed: output.Build());
-            }
+            await CTX.TriggerTypingAsync();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle($"{role.Name} (ID: {role.Id}")
+                .WithDescription($"Created on: {role.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
+                .AddField("**Permissions:**", role.Permissions.ToPermissionString())
+                .AddField("**Mentionable:**", (role.IsMentionable ? "YES" : "NO"))
+                .AddField("**Hoisted:**", (role.IsHoisted ? "YES" : "NO"))
+                .AddField("**Managed:**", (role.IsManaged ? "YES" : "NO"))
+                .WithColor(role.Color);
+            await CTX.RespondAsync(embed: output.Build());
         }
 
         [Command("server")]
@@ -473,9 +455,7 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SetNickName(CommandContext CTX, DiscordMember member, [RemainingText] string name)
         {
-            if (CTX.Guild.Members.Contains(member) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} This member does not exist in the server");
-            else if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
                 await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Nickname cannot be blank");
             else
             {
@@ -493,16 +473,9 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SetUserRole(CommandContext CTX, DiscordMember member, [RemainingText] DiscordRole role)
         {
-            if (CTX.Guild.Members.Contains(member) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} This member does not exist in the server");
-            else if (CTX.Guild.Roles.Contains(role) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} This role does not exist in the server");
-            else
-            {
-                await CTX.TriggerTypingAsync();
-                await member.GrantRoleAsync(role);
-                await CTX.RespondAsync($"{member.DisplayName} been granted the role {role.Name}");
-            }
+            await CTX.TriggerTypingAsync();
+            await member.GrantRoleAsync(role);
+            await CTX.RespondAsync($"{member.DisplayName} been granted the role {role.Name}");
         }
 
         [Command("settopic")]
@@ -549,21 +522,16 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task ShowSidebarRole(CommandContext CTX, [RemainingText] DiscordRole role)
         {
-            if (CTX.Guild.Roles.Contains(role) == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} This role does not exist in the server");
+            await CTX.TriggerTypingAsync();
+            if (role.IsHoisted == false)
+            {
+                await CTX.Guild.UpdateRoleAsync(role, hoist: true);
+                await CTX.RespondAsync($"Role {role.Name} is now **displayed**");
+            }
             else
             {
-                await CTX.TriggerTypingAsync();
-                if (role.IsHoisted == false)
-                {
-                    await CTX.Guild.UpdateRoleAsync(role, hoist: true);
-                    await CTX.RespondAsync($"Role {role.Name} is now **displayed**");
-                }
-                else
-                {
-                    await CTX.Guild.UpdateRoleAsync(role, hoist: false);
-                    await CTX.RespondAsync($"Role {role.Name} is now **hidden**");
-                }
+                await CTX.Guild.UpdateRoleAsync(role, hoist: false);
+                await CTX.RespondAsync($"Role {role.Name} is now **hidden**");
             }
         }
 

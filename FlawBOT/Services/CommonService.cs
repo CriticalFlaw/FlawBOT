@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services
@@ -137,6 +139,30 @@ namespace FlawBOT.Services
             }
         }
 
+        public static async Task<string> GetSimpsonsGifAsync()
+        {
+            using (var http = new HttpClient())
+            {
+                var result = await http.GetStringAsync($"https://frinkiac.com/api/random");
+                var content = JsonConvert.DeserializeObject<RootObject>(result);
+                //var gif_url = await get_gif_url(content.Episode.Key, content.Frame.Timestamp);
+                var frames_result = await http.GetStringAsync($"https://frinkiac.com/api/frames/{content.Episode.Key}/{content.Frame.Timestamp}/3000/4000");
+                var frames = JsonConvert.DeserializeObject<List<Frame>>(frames_result);
+                var start = frames[0].Timestamp;
+                var end = frames[frames.Count - 1].Timestamp;
+                return $"https://frinkiac.com/gif/{content.Episode.Key}/{start}/{end}.gif";
+            }
+        }
+
+        //public static async Task<RootObject> generate_gif(string gif_url)
+        //{
+        //    using (var http = new HttpClient())
+        //    {
+        //        var result = await http.GetStringAsync(gif_url);
+        //        return JsonConvert.DeserializeObject<RootObject>(result);
+        //    }
+        //}
+
         public class RootObject
         {
             public Episode Episode { get; set; }
@@ -240,22 +266,6 @@ namespace FlawBOT.Services
         }
     }
 
-    public class WikipediaService
-    {
-        public WikipediaQuery Query { get; set; }
-
-        public class WikipediaQuery
-        {
-            public WikipediaPage[] Pages { get; set; }
-
-            public class WikipediaPage
-            {
-                public bool Missing { get; set; } = false;
-                public string FullUrl { get; set; }
-            }
-        }
-    }
-
     public class WeatherService
     {
         public static double CelsiusToFahrenheit(double cel)
@@ -308,6 +318,22 @@ namespace FlawBOT.Services
         {
             public double Speed { get; set; }
             public double Deg { get; set; }
+        }
+    }
+
+    public class WikipediaService
+    {
+        public WikipediaQuery Query { get; set; }
+
+        public class WikipediaQuery
+        {
+            public WikipediaPage[] Pages { get; set; }
+
+            public class WikipediaPage
+            {
+                public bool Missing { get; set; } = false;
+                public string FullUrl { get; set; }
+            }
         }
     }
 

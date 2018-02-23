@@ -19,7 +19,7 @@ namespace FlawBOT.Modules
         {
             if (CTX.Member.Id == member.Id)
                 await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} You cannot ban yourself...");
-            if (member is DiscordMember)
+            else
             {
                 await CTX.TriggerTypingAsync();
                 var ustr = $"{CTX.User.Username}#{CTX.User.Discriminator} ({CTX.User.Id})";
@@ -27,8 +27,6 @@ namespace FlawBOT.Modules
                 await CTX.Guild.BanMemberAsync(member, 7, $"{ustr}: {rstr}");
                 await CTX.RespondAsync($"**Banned** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}");
             }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
         }
 
         [Command("deafen")]
@@ -39,16 +37,14 @@ namespace FlawBOT.Modules
         public async Task DeafenUser(CommandContext CTX, DiscordMember member, [RemainingText] string reason = null)
         {
             if (member.IsDeafened == true)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {member.DisplayName}#{member.Discriminator} is already deafened");
-            if (member is DiscordMember)
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {member.DisplayName}#{member.Discriminator} is already **deafened**");
+            else
             {
                 await CTX.TriggerTypingAsync();
                 var rstr = string.IsNullOrWhiteSpace(reason) ? "" : $": {reason}";
                 await member.SetDeafAsync(true, rstr);
                 await CTX.RespondAsync($"**Deafened** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}");
             }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
         }
 
         [Command("kick")]
@@ -60,7 +56,7 @@ namespace FlawBOT.Modules
         {
             if (CTX.Member.Id == member.Id)
                 await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} You cannot kick yourself...");
-            if (member is DiscordMember)
+            else
             {
                 await CTX.TriggerTypingAsync();
                 var ustr = $"{CTX.User.Username}#{CTX.User.Discriminator} ({CTX.User.Id})";
@@ -68,8 +64,6 @@ namespace FlawBOT.Modules
                 await member.RemoveAsync($"{ustr}: {rstr}");
                 await CTX.RespondAsync($"**Kicked** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}");
             }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
         }
 
         [Command("mute")]
@@ -80,8 +74,8 @@ namespace FlawBOT.Modules
         public async Task MuteUser(CommandContext CTX, DiscordMember member, [RemainingText] string reason = null)
         {
             if (member.IsMuted == true)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {member.DisplayName}#{member.Discriminator} is already muted");
-            if (member is DiscordMember)
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {member.DisplayName}#{member.Discriminator} is already **muted**");
+            else
             {
                 await CTX.TriggerTypingAsync();
                 var ustr = $"{CTX.User.Username}#{CTX.User.Discriminator} ({CTX.User.Id})";
@@ -89,8 +83,6 @@ namespace FlawBOT.Modules
                 await member.SetMuteAsync(true, $"{ustr}: {rstr}");
                 await CTX.RespondAsync($"**Muted** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}");
             }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
         }
 
         [Command("purge")]
@@ -131,15 +123,13 @@ namespace FlawBOT.Modules
         public async Task UndeafenUser(CommandContext CTX, [RemainingText] DiscordMember member)
         {
             if (member.IsDeafened == false)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {member.Username}#{member.Discriminator} is already undeafened");
-            if (member is DiscordMember)
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {member.Username}#{member.Discriminator} is already **undeafened**");
+            else
             {
                 await CTX.TriggerTypingAsync();
                 await member.SetDeafAsync(false);
                 await CTX.RespondAsync($"**Undeafened** user  {member.DisplayName}#{member.Discriminator} (ID:{member.Id})");
             }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
         }
 
         [Command("unmute")]
@@ -147,19 +137,17 @@ namespace FlawBOT.Modules
         [Description("Unmute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
         [Cooldown(1, 5, CooldownBucketType.User)]
-        public async Task UnmuteUser(CommandContext CTX, DiscordMember member)
+        public async Task UnmuteUser(CommandContext CTX, [RemainingText] DiscordMember member)
         {
             if (member.IsMuted == false)
                 await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} {CTX.Member.Username}#{CTX.Member.Discriminator} is already **unmuted**");
-            if (member is DiscordMember)
+            else
             {
                 await CTX.TriggerTypingAsync();
                 var ustr = $"{CTX.User.Username}#{CTX.User.Discriminator} ({CTX.User.Id})";
                 await member.SetMuteAsync(false, $"{ustr}");
                 await CTX.RespondAsync($"**Unmuted** user {member.Username}#{member.Discriminator} (ID:{member.Id})");
             }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
         }
 
         [Command("warn")]
@@ -168,25 +156,20 @@ namespace FlawBOT.Modules
         [Cooldown(1, 60, CooldownBucketType.User)]
         public async Task WarnUser(CommandContext CTX, DiscordMember member, [RemainingText] string reason = null)
         {
-            if (member is DiscordMember)
-            {
-                await CTX.TriggerTypingAsync();
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle("Warning received!")
-                    .WithDescription($"Guild {Formatter.Bold(CTX.Guild.Name)} issued a warning to you through me.")
-                    .WithTimestamp(DateTime.Now)
-                    .WithColor(DiscordColor.Red);
-                if (!string.IsNullOrWhiteSpace(reason))
-                    output.AddField("**Warning message:**", reason);
-                output.AddField("**Sender:**", $"{CTX.Member.Username}#{CTX.Member.Discriminator}");
-                var DM = await member.CreateDmChannelAsync().ConfigureAwait(false);
-                if (DM == null)
-                    await CTX.RespondAsync("Unable to direct message this user");
-                await DM.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
-                await CTX.RespondAsync($"Successfully sent a warning to {Formatter.Bold(member.Username)}.").ConfigureAwait(false);
-            }
-            else
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} User not found in the server.");
+            await CTX.TriggerTypingAsync();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle("Warning received!")
+                .WithDescription($"Guild {Formatter.Bold(CTX.Guild.Name)} issued a warning to you through me.")
+                .WithTimestamp(DateTime.Now)
+                .WithColor(DiscordColor.Red);
+            if (!string.IsNullOrWhiteSpace(reason))
+                output.AddField("**Warning message:**", reason);
+            output.AddField("**Sender:**", $"{CTX.Member.Username}#{CTX.Member.Discriminator}");
+            var DM = await member.CreateDmChannelAsync().ConfigureAwait(false);
+            if (DM == null)
+                await CTX.RespondAsync("Unable to direct message this user");
+            await DM.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
+            await CTX.RespondAsync($"Successfully sent a warning to {Formatter.Bold(member.Username)}.").ConfigureAwait(false);
         }
     }
 }
