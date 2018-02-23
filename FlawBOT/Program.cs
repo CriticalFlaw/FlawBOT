@@ -63,6 +63,7 @@ namespace FlawBOT
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<CommonModule>();
+            Commands.RegisterCommands<ModeratorModule>();
 
             // Set up the custom name and type converter
             var MathCMD = new MathService();
@@ -74,7 +75,7 @@ namespace FlawBOT
 
         private Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.2.0 (Build 20180222)", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.3.0 (Build 20180222)", DateTime.Now);
             return Task.CompletedTask;
         }
 
