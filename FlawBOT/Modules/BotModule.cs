@@ -22,6 +22,24 @@ namespace FlawBOT.Modules
                 .WithTitle("FlawBOT Commands List")
                 .WithFooter("Accessible via Google Docs")
                 .WithUrl("https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing")
+                .WithThumbnailUrl(CTX.Client.CurrentUser.AvatarUrl)
+                .WithColor(DiscordColor.Aquamarine);
+            await CTX.RespondAsync(embed: output.Build());
+        }
+
+        [Command("github")]
+        [Aliases("git")]
+        [Description("Retrieve FlawBOT GitHub repository link")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task GitHub(CommandContext CTX)
+        {
+            await CTX.TriggerTypingAsync();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle("FlawBOT GitHub Repository")
+                .WithDescription("[Click here to submit an issue report on GitHub](https://github.com/CriticalFlaw/FlawBOT/issues/new).")
+                .WithFooter("*GitHub account is required. If you do not have one use .report instead")
+                .WithThumbnailUrl(CTX.Client.CurrentUser.AvatarUrl)
+                .WithUrl("https://www.github.com/CriticalFlaw/flawbot")
                 .WithColor(DiscordColor.Aquamarine);
             await CTX.RespondAsync(embed: output.Build());
         }
