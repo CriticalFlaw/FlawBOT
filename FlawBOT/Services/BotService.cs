@@ -26,9 +26,15 @@ namespace FlawBOT.Services
 
                 case "IMGUR":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).ImgurToken;
-
+                    
                 case "OMDB":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).OMDBToken;
+                    
+                case "TWITTER":
+                    return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitterToken;
+                    
+                case "TWITCH":
+                    return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitchToken;
 
                 default:
                     return null;
@@ -54,6 +60,12 @@ namespace FlawBOT.Services
 
             [JsonProperty("omdb")]
             public string OMDBToken { get; private set; }
+
+            [JsonProperty("twitter")]
+            public string TwitterToken { get; private set; }
+
+            [JsonProperty("twitch")]
+            public string TwitchToken { get; private set; }
         }
     }
 
@@ -68,7 +80,7 @@ namespace FlawBOT.Services
 
         public IHelpFormatter WithCommandName(string name)
         {
-            MessageBuilder.Append($"**Command**: {name}");
+            MessageBuilder.Append("**Command**: ").AppendLine(name);
             return this;
         }
 
@@ -80,7 +92,7 @@ namespace FlawBOT.Services
 
         public IHelpFormatter WithDescription(string description)
         {
-            MessageBuilder.Append("**Description**: {description}");
+            MessageBuilder.Append("**Description**: ").AppendLine(description);
             return this;
         }
 

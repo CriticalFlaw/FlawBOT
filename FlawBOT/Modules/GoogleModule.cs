@@ -16,8 +16,8 @@ namespace FlawBOT.Modules
     {
         [Hidden]
         [Command("google")]
-        [Aliases("g")]
-        [Description("Retrieve the first Google search result")]
+        [Aliases("go")]
+        [Description("Get the first Google search result")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SearchGoogle(CommandContext CTX, [RemainingText] string terms = null)
         {
@@ -37,7 +37,7 @@ namespace FlawBOT.Modules
         [Hidden]
         [Command("image")]
         [Aliases("img")]
-        [Description("Retrieve first image search result")]
+        [Description("Get the first Google image search result")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SearchImage(CommandContext CTX, [RemainingText] string terms = null)
         {
@@ -57,37 +57,35 @@ namespace FlawBOT.Modules
             //await CTX.RespondAsync(embed: embed);
         }
 
-        [Command("shorten")]
-        [Description("Shorten the inputted URL")]
-        public async Task ShortenURL(CommandContext CTX, string URL)
-        {
-            await CTX.TriggerTypingAsync();
-            var JSON = "";  // Load the configuration file
-            using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                JSON = await SRD.ReadToEndAsync();
-            var shorten = new Google.Apis.Urlshortener.v1.Data.Url();
-            UrlshortenerService service = new UrlshortenerService(new BaseClientService.Initializer()
-            {
-                ApiKey = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).GoogleToken,
-                ApplicationName = "FlawBOT",
-            });
-            shorten.LongUrl = URL;
-            await CTX.RespondAsync($"{service.Url.Insert(shorten).Execute().Id}");
-        }
-
-        [Hidden]
         [Command("revav")]
         [Description("Reverse image search someone's avatar")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchAvatarReverse(CommandContext CTX, [RemainingText] DiscordMember member)
+        public async Task SearchAvatarReverse(CommandContext CTX, DiscordMember member)
         {
             await CTX.TriggerTypingAsync();
             var output = new DiscordEmbedBuilder()
                 .WithTitle("Google Reverse Image Search")
                 .WithImageUrl(member.AvatarUrl)
-                .WithUrl("https://images.google.com/searchbyimage?image_url={member.AvatarUrl}")
+                .WithUrl($"https://images.google.com/searchbyimage?image_url={member.AvatarUrl}")
                 .WithColor(DiscordColor.DarkButNotBlack);
             await CTX.RespondAsync(embed: output.Build());
+        }
+
+        [Command("shorten")]
+        [Description("Shorten the inputted URL")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task ShortenURL(CommandContext CTX, string URL)
+        {
+            await CTX.TriggerTypingAsync();
+            var shorten = new Google.Apis.Urlshortener.v1.Data.Url();
+            APITokenService service = new APITokenService();
+            UrlshortenerService google = new UrlshortenerService(new BaseClientService.Initializer()
+            {
+                ApiKey = service.GetAPIToken("google"),
+                ApplicationName = "FlawBOT",
+            });
+            shorten.LongUrl = URL;
+            await CTX.RespondAsync($"{google.Url.Insert(shorten).Execute().Id}");
         }
 
         [Command("youtube")]
@@ -97,16 +95,14 @@ namespace FlawBOT.Modules
         public async Task SearchVideoAsync(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Search query missing");
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a video to search for...");
             else
             {
-                var JSON = "";  // Load the configuration file
-                using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                    JSON = await SRD.ReadToEndAsync();
-                string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).GoogleToken;
+                APITokenService service = new APITokenService();
+                string Token = service.GetAPIToken("google");
                 GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
                 var output = await YTservice.GetFirstVideoResultAsync(query);
-                await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}\n {output}");
+                await CTX.RespondAsync(output);
             }
         }
 
@@ -117,13 +113,11 @@ namespace FlawBOT.Modules
         public async Task SearchChannelAsync(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Search query missing");
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a channel to search for...");
             else
             {
-                var JSON = "";  // Load the configuration file
-                using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                    JSON = await SRD.ReadToEndAsync();
-                string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).GoogleToken;
+                APITokenService service = new APITokenService();
+                string Token = service.GetAPIToken("google");
                 GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
                 var output = await YTservice.GetEmbeddedResults(query, 5, "channel");
                 await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}", embed: output);
@@ -137,13 +131,11 @@ namespace FlawBOT.Modules
         public async Task SearchYoutube(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Search query missing");
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a video list to search for...");
             else
             {
-                var JSON = "";  // Load the configuration file
-                using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                    JSON = await SRD.ReadToEndAsync();
-                string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).GoogleToken;
+                APITokenService service = new APITokenService();
+                string Token = service.GetAPIToken("google");
                 GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
                 var output = await YTservice.GetEmbeddedResults(query, 5, "video");
                 await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}", embed: output);
@@ -157,13 +149,11 @@ namespace FlawBOT.Modules
         public async Task SearchPlaylistAsync(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Search query missing");
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a playlist to search for...");
             else
             {
-                var JSON = "";  // Load the configuration file
-                using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                    JSON = await SRD.ReadToEndAsync();
-                string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).GoogleToken;
+                APITokenService service = new APITokenService();
+                string Token = service.GetAPIToken("google");
                 GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
                 var output = await YTservice.GetEmbeddedResults(query, 5, "playlist");
                 await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}", embed: output);

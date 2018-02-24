@@ -17,7 +17,7 @@ namespace FlawBOT.Modules
     {
         [Command("channel")]
         [Aliases("cid")]
-        [Description("Retrieve channel information")]
+        [Description("Get channel information")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetChannelID(CommandContext CTX, [RemainingText] DiscordChannel channel)
         {
@@ -26,11 +26,12 @@ namespace FlawBOT.Modules
             DiscordInvite invite = await CTX.Channel.CreateInviteAsync();
             var output = new DiscordEmbedBuilder()
                 .WithTitle($"#{channel.Name} (ID: {channel.Id})")
-                .AddField("**Created on**: ", channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
-                .AddField("**Topic**: ", channel.Topic)
+                .WithDescription($"Created on: {channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
+                .AddField("**Topic**: ", channel.Topic, true)
                 .AddField("**Type**: ", channel.Type.ToString(), true)
                 .AddField("**Private?**: ", channel.IsPrivate ? "YES" : "NO", true)
                 .AddField("**NSFW?**: ", channel.IsNSFW ? "YES" : "NO", true)
+                .WithThumbnailUrl(CTX.Guild.IconUrl)
                 .WithUrl($"https://discord.gg/{invite.Code}");
             await CTX.RespondAsync(embed: output.Build());
         }
@@ -69,7 +70,7 @@ namespace FlawBOT.Modules
         public async Task ColorRole(CommandContext CTX, params string[] colors)
         {
             if (colors.Length != 2 && colors.Length != 4)
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Invalid parameters (ex. .colorrole admin 255 0 255)");
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Invalid parameters (ex. **.colorrole admin 255 0 255**)");
             else
             {
                 await CTX.TriggerTypingAsync();
@@ -93,7 +94,7 @@ namespace FlawBOT.Modules
         [Description("Create a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(1, 10, CooldownBucketType.Channel)]
-        public async Task CreateRole(CommandContext CTX, [RemainingText] string role)
+        public async Task CreateRole(CommandContext CTX, string role)
         {
             await CTX.TriggerTypingAsync();
             await CTX.Guild.CreateRoleAsync(role);
@@ -105,7 +106,7 @@ namespace FlawBOT.Modules
         [Description("Create a text channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         [Cooldown(5, 5, CooldownBucketType.User)]
-        public async Task CreateTextChannel(CommandContext CTX, [RemainingText] string channel)
+        public async Task CreateTextChannel(CommandContext CTX, string channel)
         {
             await CTX.TriggerTypingAsync();
             await CTX.Guild.CreateChannelAsync(channel.Trim().Replace(" ", "-"), ChannelType.Text, parent: CTX.Channel.Parent);
@@ -117,7 +118,7 @@ namespace FlawBOT.Modules
         [Description("Create a voice channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task CreateVoiceChannel(CommandContext CTX, [RemainingText] string channel)
+        public async Task CreateVoiceChannel(CommandContext CTX, string channel)
         {
             await CTX.TriggerTypingAsync();
             await CTX.Guild.CreateChannelAsync(channel.Trim().Replace(" ", "-"), ChannelType.Voice, parent: CTX.Channel.Parent);
@@ -129,7 +130,7 @@ namespace FlawBOT.Modules
         [Description("Delete a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task DeleteRole(CommandContext CTX, [RemainingText] DiscordRole role)
+        public async Task DeleteRole(CommandContext CTX, DiscordRole role)
         {
             await CTX.TriggerTypingAsync();
             await CTX.Guild.DeleteRoleAsync(role);
@@ -141,7 +142,7 @@ namespace FlawBOT.Modules
         [Description("Remove a text channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RemoveTextChannel(CommandContext CTX, [RemainingText] DiscordChannel channel)
+        public async Task RemoveTextChannel(CommandContext CTX, DiscordChannel channel)
         {
             if (channel.Type != ChannelType.Text)
                 await CTX.RespondAsync($"This is not a text channel, use **.deletevoice** instead.");
@@ -158,7 +159,7 @@ namespace FlawBOT.Modules
         [Description("Remove a voice channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RemoveVoiceChannel(CommandContext CTX, [RemainingText] DiscordChannel channel)
+        public async Task RemoveVoiceChannel(CommandContext CTX, DiscordChannel channel)
         {
             if (channel.Type != ChannelType.Voice)
                 await CTX.RespondAsync($"This is not a voice channel, use **.deletetext** instead.");
@@ -178,9 +179,11 @@ namespace FlawBOT.Modules
             await CTX.TriggerTypingAsync();
             var users = (await CTX.Guild.GetAllMembersAsync()).ToArray();
             string usersList = null;
+            int userCount = 0;
             foreach (var user in users)
                 if (user.Roles.Contains(role))
                 {
+                    userCount++;
                     if (user.Equals(users.Last()))
                         usersList += $"{user.DisplayName}";
                     else
@@ -189,7 +192,7 @@ namespace FlawBOT.Modules
             if (string.IsNullOrWhiteSpace(usersList))
                 await CTX.RespondAsync($"Role **{role.Name}** has no members");
             else
-                await CTX.RespondAsync($"Role **{role.Name}** has **{users.Count()}** member(s): {usersList}");
+                await CTX.RespondAsync($"Role **{role.Name}** has **{userCount}** member(s): {usersList}");
         }
 
         [Command("invite")]
@@ -319,9 +322,8 @@ namespace FlawBOT.Modules
         [Description("Remove a role from mentioned user")]
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RemoveUserRole(CommandContext CTX, DiscordMember member, [RemainingText] DiscordRole role)
+        public async Task RemoveUserRole(CommandContext CTX, DiscordMember member, DiscordRole role)
         {
-
             await CTX.TriggerTypingAsync();
             await member.RevokeRoleAsync(role);
             await CTX.RespondAsync($"{member.DisplayName} has been revoked the role **{role.Name}**");
@@ -348,16 +350,17 @@ namespace FlawBOT.Modules
         [Aliases("rid")]
         [Description("Retrieve role information")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task GetRoleID(CommandContext CTX, [RemainingText] DiscordRole role)
+        public async Task GetRoleID(CommandContext CTX, DiscordRole role)
         {
             await CTX.TriggerTypingAsync();
             var output = new DiscordEmbedBuilder()
                 .WithTitle($"{role.Name} (ID: {role.Id}")
                 .WithDescription($"Created on: {role.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
                 .AddField("**Permissions:**", role.Permissions.ToPermissionString())
-                .AddField("**Mentionable:**", (role.IsMentionable ? "YES" : "NO"))
-                .AddField("**Hoisted:**", (role.IsHoisted ? "YES" : "NO"))
-                .AddField("**Managed:**", (role.IsManaged ? "YES" : "NO"))
+                .AddField("**Mentionable:**", (role.IsMentionable ? "YES" : "NO"), true)
+                .AddField("**Hoisted:**", (role.IsHoisted ? "YES" : "NO"), true)
+                .AddField("**Managed:**", (role.IsManaged ? "YES" : "NO"), true)
+                .WithThumbnailUrl(CTX.Guild.IconUrl)
                 .WithColor(role.Color);
             await CTX.RespondAsync(embed: output.Build());
         }
@@ -374,7 +377,7 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder()
                 .WithAuthor($"Owner: {CTX.Guild.Owner.Username}#{CTX.Guild.Owner.Discriminator}", icon_url: string.IsNullOrEmpty(CTX.Guild.Owner.AvatarHash) ? null : CTX.Guild.Owner.AvatarUrl)
                 .WithTitle($"{CTX.Guild.Name} (ID: {CTX.Guild.Id})")
-                .AddField("Created on:", CTX.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
+                .WithDescription($"Created on: {CTX.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
                 .WithColor(DiscordColor.DarkGreen);
             if (!string.IsNullOrEmpty(CTX.Guild.IconHash))
                 output.WithThumbnailUrl(CTX.Guild.IconUrl);
@@ -407,11 +410,11 @@ namespace FlawBOT.Modules
                 roles.Append($"[`{role.Name}`]");
             if (roles.Length == 0) roles.Append("None");
             output.AddField("Roles", roles.ToString());
-            output.AddField("Member Count:", CTX.Guild.MemberCount.ToString());
-            output.AddField("Region", CTX.Guild.RegionId.ToUpperInvariant());
-            output.AddField("Authentication", CTX.Guild.MfaLevel.ToString());
-            output.AddField("Content Filter", CTX.Guild.ExplicitContentFilter.ToString());
-            output.AddField("Verification", CTX.Guild.VerificationLevel.ToString());
+            output.AddField("Member Count:", CTX.Guild.MemberCount.ToString(), true);
+            output.AddField("Region", CTX.Guild.RegionId.ToUpperInvariant(), true);
+            output.AddField("Authentication", CTX.Guild.MfaLevel.ToString(), true);
+            output.AddField("Content Filter", CTX.Guild.ExplicitContentFilter.ToString(), true);
+            output.AddField("Verification", CTX.Guild.VerificationLevel.ToString(), true);
             await CTX.RespondAsync("", false, embed: output.Build());
         }
 
@@ -429,22 +432,6 @@ namespace FlawBOT.Modules
                 await CTX.TriggerTypingAsync();
                 await CTX.Channel.ModifyAsync(name: name.Trim().Replace(" ", "-"));
                 await CTX.RespondAsync($"Channel name has been changed to **{name.Trim().Replace(" ", "-")}**");
-            }
-        }
-
-        [Command("setservername")]
-        [Description("Set server name")]
-        [RequireUserPermissions(Permissions.ManageGuild)]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SetServerName(CommandContext CTX, [RemainingText] string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Server name cannot be blank");
-            else
-            {
-                await CTX.TriggerTypingAsync();
-                await CTX.Guild.ModifyAsync(name: name.Trim());
-                await CTX.RespondAsync($"Server name has been changed to {name}");
             }
         }
 
@@ -478,18 +465,6 @@ namespace FlawBOT.Modules
             await CTX.RespondAsync($"{member.DisplayName} been granted the role {role.Name}");
         }
 
-        [Command("settopic")]
-        [Aliases("st")]
-        [Description("Set a topic for the current channel")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SetChannelTopic(CommandContext CTX, [RemainingText] string channelTopic)
-        {
-            await CTX.TriggerTypingAsync();
-            await CTX.Channel.ModifyAsync(topic: channelTopic);
-            await CTX.RespondAsync($"Channel topic has been updated");
-        }
-
         [Command("setserveravatar")]
         [Description("Set server avatar")]
         [RequireUserPermissions(Permissions.ManageGuild)]
@@ -513,6 +488,34 @@ namespace FlawBOT.Modules
                     }
                 }
             }
+        }
+
+        [Command("setservername")]
+        [Description("Set server name")]
+        [RequireUserPermissions(Permissions.ManageGuild)]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task SetServerName(CommandContext CTX, [RemainingText] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Server name cannot be blank");
+            else
+            {
+                await CTX.TriggerTypingAsync();
+                await CTX.Guild.ModifyAsync(name: name.Trim());
+                await CTX.RespondAsync($"Server name has been changed to {name}");
+            }
+        }
+
+        [Command("settopic")]
+        [Aliases("st")]
+        [Description("Set a topic for the current channel")]
+        [RequirePermissions(Permissions.ManageChannels)]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task SetChannelTopic(CommandContext CTX, [RemainingText] string channelTopic)
+        {
+            await CTX.TriggerTypingAsync();
+            await CTX.Channel.ModifyAsync(topic: channelTopic);
+            await CTX.RespondAsync($"Channel topic has been updated");
         }
 
         [Command("showrole")]
@@ -545,13 +548,10 @@ namespace FlawBOT.Modules
             if (member == null)
                 member = CTX.Member;
             var output = new DiscordEmbedBuilder()
-                .WithTitle($"@{member.Username}#{member.Discriminator}")
-                .AddField("ID", member.Id.ToString())
-                .AddField("Nickname", member.Nickname)
+                .WithTitle($"@{member.Username}#{member.Discriminator} (ID: {member.Id.ToString()})")
+                .WithDescription("Nickname: ")
                 .AddField("Registered on", member.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
                 .AddField("Joined Guild on", member.JoinedAt.DateTime.ToString(CultureInfo.InvariantCulture))
-                .AddField("Verified?", member.Verified.ToString(), true)
-                .AddField("Secured?", member.MfaEnabled.ToString(), true)
                 .AddField("Muted?", member.IsMuted ? "YES" : "NO", true)
                 .AddField("Deafened?", member.IsDeafened ? "YES" : "NO", true)
                 .WithThumbnailUrl(member.AvatarUrl)
@@ -560,6 +560,15 @@ namespace FlawBOT.Modules
 
             if (member.IsBot) output.Title += " __[BOT]__ ";
             if (member.IsOwner) output.Title += " __[OWNER]__ ";
+            if (member.Verified == true)
+                output.AddField("Verified?", "YES", true);
+            else
+                output.AddField("Verified?", "NO", true);
+            if (member.MfaEnabled == true)
+                output.AddField("Secured?", "YES", true);
+            else
+                output.AddField("Secured?", "NO", true);
+            if (!string.IsNullOrWhiteSpace(member.Nickname)) output.Description += (member.Nickname);
 
             var roles = new StringBuilder();
             foreach (var role in member.Roles)

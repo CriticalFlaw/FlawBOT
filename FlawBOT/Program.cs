@@ -9,6 +9,7 @@ using FlawBOT.Services;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,7 +79,7 @@ namespace FlawBOT
 
         private Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: 0.7.0 (Build 20180222)", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: {Assembly.GetExecutingAssembly().GetName().Version} (Build 20180223)", DateTime.Now);
             return Task.CompletedTask;
         }
 

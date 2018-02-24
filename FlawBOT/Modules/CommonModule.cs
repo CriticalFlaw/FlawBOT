@@ -11,6 +11,7 @@ using Imgur.API.Models.Impl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OMDbSharp;
+using OverwatchAPI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,13 +43,13 @@ namespace FlawBOT.Modules
 
         [Command("avatar")]
         [Aliases("av")]
-        [Description("Retrieve mentioned user's avatar")]
+        [Description("Get mentioned user's avatar")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SearchUserAvatar(CommandContext CTX, DiscordMember member)
         {
             await CTX.TriggerTypingAsync();
             var output = new DiscordEmbedBuilder()
-                .WithTitle($"{member.DisplayName}'s avatar, click here for the link")
+                .WithTitle($"{member.DisplayName}'s avatar, click here for the link...")
                 .WithImageUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
                 .WithUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
                 .WithColor(DiscordColor.Blue);
@@ -68,7 +69,7 @@ namespace FlawBOT.Modules
         }
 
         [Command("color")]
-        [Description("Retrieve color values corresponding to inputted RGB")]
+        [Description("Get color values corresponding to the inputted RGB")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetColor(CommandContext CTX, params string[] colors)
         {
@@ -120,7 +121,7 @@ namespace FlawBOT.Modules
                     .WithTitle($"Define {query}")
                     .WithDescription(definition)
                     .WithFooter(sense.Gramatical_info?.type)
-                    .WithColor(DiscordColor.Lilac);
+                    .WithColor(DiscordColor.Blurple);
 
                 if (sense.Examples != null)
                     output.AddField("Example", sense.Examples.First().text);
@@ -168,7 +169,7 @@ namespace FlawBOT.Modules
 
         [Command("imdb")]
         [Aliases("omdb")]
-        [Description("Retrieve a movie or TV show from OMDB")]
+        [Description("Get a movie or TV show from OMDB")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SearchIMDB(CommandContext CTX, [RemainingText] string query)
         {
@@ -177,10 +178,8 @@ namespace FlawBOT.Modules
             else
             {
                 await CTX.TriggerTypingAsync();
-                var JSON = "";  // Load the configuration file
-                using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                    JSON = await SRD.ReadToEndAsync();
-                string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).OMDBToken;
+                APITokenService service = new APITokenService();
+                string Token = service.GetAPIToken("omdb");
                 OMDbClient client = new OMDbClient(Token, true);
                 var movie = await client.GetItemByTitle(query.Replace(" ", "+"));
                 if (movie == null)
@@ -209,16 +208,14 @@ namespace FlawBOT.Modules
         }
 
         [Command("imgur")]
-        [Description("Fetch an imager from Imgur")]
+        [Description("Get an imager from Imgur")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Find(CommandContext CTX, [RemainingText] string query = null)
         {
             await CTX.TriggerTypingAsync();
             Random RND = new Random();
-            var JSON = "";  // Load the configuration file
-            using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                JSON = await SRD.ReadToEndAsync();
-            string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).ImgurToken;
+            APITokenService service = new APITokenService();
+            string Token = service.GetAPIToken("imgur");
             ImgurClient imgur = new ImgurClient(Token);
             var endpoint = new GalleryEndpoint(imgur);
             List<IGalleryItem> gallery;
@@ -271,6 +268,28 @@ namespace FlawBOT.Modules
         }
 
         [Hidden]
+        [Command("pokemon")]
+        [Aliases("poke")]
+        [Description("Get Pokemon information")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task CheckPokemon(CommandContext CTX, string query)
+        {
+            await CTX.TriggerTypingAsync();
+            using (var http = new HttpClient())
+            {
+                string response = await http.GetStringAsync($"http://pokeapi.co/api/v2/pokemon/{query}").ConfigureAwait(false);
+                var pokemon = JsonConvert.DeserializeObject<PokemonServiceTest>(response);
+                if (pokemon == null)
+                    await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Unable to find this pokemon");
+                else
+                {
+                    var output = new DiscordEmbedBuilder()
+                        .WithTitle(pokemon.results.name);
+                    await CTX.RespondAsync(embed: output.Build());
+                }
+            }
+        }
+
         [Command("overwatch")]
         [Aliases("ow")]
         [Description("Get Overwatch player information")]
@@ -278,34 +297,45 @@ namespace FlawBOT.Modules
         public async Task SearchOverwatch(CommandContext CTX, string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a battletag (ex.*CriticalFlaw#1100*)");
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a battletag like CriticalFlaw#11354");
             else
             {
                 await CTX.TriggerTypingAsync();
-                //using (var OW = new OverwatchClient())
-                //{
-                //    Player player = await OW.GetPlayerAsync(query);
-                //    if (player == null)
-                //        await CTX.RespondAsync($"The player you were searching for was not found");
-                //    else
-                //    {
-                //        var output = new DiscordEmbedBuilder()
-                //            .WithTitle(player.Username)
-                //            .AddField("Level", player.PlayerLevel.ToString(), true)
-                //            .AddField("Competitive", player.CompetitiveRank.ToString(), true)
-                //            .AddField("Platform", player.Platform.ToString().ToUpper(), true)
-                //            .WithThumbnailUrl(player.ProfilePortraitUrl)
-                //            .WithUrl(player.ProfileUrl)
-                //            .WithColor(DiscordColor.Gold);
-                //        await CTX.RespondAsync(embed: output.Build());
-                //    }
-                //}
+                using (var owClient = new OverwatchClient())
+                {
+                    Player player = await owClient.GetPlayerAsync(query);
+                    if (player == null)
+                        await CTX.RespondAsync($"The player you were searching for was not found (Battletags is text-sensitive)");
+                    else
+                    {
+                        // CasualStats and CompetitiveStats
+                        //var allHeroesHealingDone = player.CasualStats.GetStatExact("All Heroes", "Assists", "Healing Done");
+                        //IEnumerable<Stat> allHealingDoneStats = player.CasualStats.FilterByName("Healing Done");
+                        //foreach (var stat in player.CasualStats)
+                        //{
+                        //    string statHeroName = stat.HeroName;
+                        //    string statName = stat.Name;
+                        //    string statCategoryName = stat.CategoryName;
+                        //    string statValue = stat.Value.ToString();
+                        //}
+                        var output = new DiscordEmbedBuilder()
+                            .WithTitle(player.Username)
+                            .AddField("Level", player.PlayerLevel.ToString(), true)
+                            .AddField("Competitive", player.CompetitiveRank.ToString(), true)
+                            .AddField("Platform", player.Platform.ToString().ToUpper(), true)
+                            .AddField("Achievements", player.Achievements.Count().ToString(), true)
+                            .WithThumbnailUrl(player.ProfilePortraitUrl)
+                            .WithUrl(player.ProfileUrl)
+                            .WithColor(DiscordColor.Gold);
+                        await CTX.RespondAsync(embed: output.Build());
+                    }
+                }
             }
         }
 
         [Command("randomcat")]
         [Aliases("meow")]
-        [Description("Retrieve a random cat image")]
+        [Description("Get a random cat image")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task RandomCat(CommandContext CTX)
         {
@@ -322,7 +352,7 @@ namespace FlawBOT.Modules
 
         [Command("randomdog")]
         [Aliases("woof")]
-        [Description("Retrieve a random dog image")]
+        [Description("Get a random dog image")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task RandomDog(CommandContext CTX)
         {
@@ -353,14 +383,13 @@ namespace FlawBOT.Modules
         }
 
         [Command("simpsonsgif")]
-        [Description("Get a random Simpsons screenshot and episode")]
+        [Description("Get a random Simpsons gif")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SimpsonsGif(CommandContext CTX)
         {
             await CTX.TriggerTypingAsync();
-            string data = null;
-            data = await SimpsonsService.GetSimpsonsGifAsync();
-            await CTX.RespondAsync($"{data.ToString()}");
+            var data = await SimpsonsService.GetSimpsonsGifAsync();
+            await CTX.RespondAsync($"**Note:** First time gifs take a few minutes to properly generate\n{data.ToString()}");
         }
 
         [Command("sum")]
@@ -375,74 +404,114 @@ namespace FlawBOT.Modules
 
         [Command("time")]
         [Aliases("ti")]
-        [Description("Retrieve time and timezone in the specified location")]
+        [Description("Get time for specified location")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetTime(CommandContext CTX, [RemainingText] string location)
         {
-            await CTX.TriggerTypingAsync();
-            var JSON = "";  // Load the configuration file
-            using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                JSON = await SRD.ReadToEndAsync();
-            string Token = JsonConvert.DeserializeObject<APITokenService.APITokenList>(JSON).GoogleToken;
-
-            using (var http = new HttpClient())
+            if (string.IsNullOrWhiteSpace(location))
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a location...");
+            else
             {
-                http.DefaultRequestHeaders.Clear();
-                var locationResource = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/geocode/json?address={location.Replace(" ", "")}&key={Token}");
-                var locationObject = JsonConvert.DeserializeObject<TimeService>(locationResource);
-                var currentSeconds = DateTime.UtcNow.ToUniversalTime();
-                var timeResource = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/timezone/json?location={locationObject.results[0].Geometry.Location.Lat},{locationObject.results[0].Geometry.Location.Lng}&timestamp={currentSeconds}&key={Token}");
-                var timeObject = JsonConvert.DeserializeObject<TimeService.TimeZoneResult>(timeResource);
-                var time = DateTime.UtcNow.AddSeconds(timeObject.DstOffset + timeObject.RawOffset);
+                await CTX.TriggerTypingAsync();
+                APITokenService service = new APITokenService();
+                string Token = service.GetAPIToken("google");
+                using (var http = new HttpClient())
+                {
+                    http.DefaultRequestHeaders.Clear();
+                    var locationResource = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/geocode/json?address={location.Replace(" ", "")}&key={Token}");
+                    var locationObject = JsonConvert.DeserializeObject<TimeService>(locationResource);
+                    var currentSeconds = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds; //DateTime.UtcNow.ToUniversalTime();
+                    var url = $"https://maps.googleapis.com/maps/api/timezone/json?location={locationObject.results[0].Geometry.Location.Lat},{locationObject.results[0].Geometry.Location.Lng}&timestamp={currentSeconds}&key={Token}";
+                    var timeResource = await http.GetStringAsync(url);
+                    var timeObject = JsonConvert.DeserializeObject<TimeService.TimeZoneResult>(timeResource);
+                    var time = DateTime.UtcNow.AddSeconds(timeObject.DstOffset + timeObject.RawOffset);
 
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle($"Time in {location}")
-                    .WithDescription($"{DiscordEmoji.FromName(CTX.Client, ":clock1:")}  **{time.ToShortTimeString()} UTC**")
-                    .WithColor(DiscordColor.Cyan);
-                await CTX.RespondAsync(embed: output.Build());
+                    var output = new DiscordEmbedBuilder()
+                        .WithTitle($"Local Time in {location}")
+                        .WithDescription($"{DiscordEmoji.FromName(CTX.Client, ":clock1:")}  **{time.ToShortTimeString()}**")
+                        .WithColor(DiscordColor.Cyan);
+                    await CTX.RespondAsync(embed: output.Build());
+                }
+            }
+        }
+
+        [Hidden]
+        [Command("twitter")]
+        [Aliases("tweet")]
+        [Description("Get a random tweet from provided twitter handler")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task CheckTwitter(CommandContext CTX, string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a Twitter handle...");
+            else
+            {
+                //https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
+                await CTX.TriggerTypingAsync();
+                using (var http = new HttpClient())
+                {
+                    await CTX.TriggerTypingAsync();
+                    APITokenService service = new APITokenService();
+                    string Token = service.GetAPIToken("twitter");
+                    string response = await http.GetStringAsync($"https://api.twitter.com/1.1/search/tweets.json?q=%40simpsonsqotd&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=1");
+                    var tweet = JsonConvert.DeserializeObject<TwitterService.RootObject>(response);
+                    if (tweet == null)
+                        await CTX.RespondAsync("The Twitter you were searching for was not found");
+                    else
+                    {
+                        var output = new DiscordEmbedBuilder()
+                            .WithTitle(tweet.statuses[0].text)
+                            .WithColor(DiscordColor.Cyan);
+                        await CTX.RespondAsync(embed: output.Build());
+                    }
+                }
             }
         }
 
         [Command("twitch")]
         [Aliases("tw")]
-        [Description("Check Twtich stream status, return URL if online")]
+        [Description("Get Twitch stream information")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task CheckTwitchStream(CommandContext CTX, string stream)
         {
-            await CTX.TriggerTypingAsync();
-            using (var http = new HttpClient())
+            if (string.IsNullOrWhiteSpace(stream))
+                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a Twitch channel...");
+            else
             {
-                var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id=67w6z9i09xv2uoojdm9l0wsyph4hxo6";
-                string response = await http.GetStringAsync(twitchUrl).ConfigureAwait(false);
-                var twitch = JsonConvert.DeserializeObject<TwitchService>(response);
-                if (twitch.Error != null)
-                    await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Unable to find this streamer");
-                twitch.Url = twitchUrl;
-
-                if (twitch.Live)
+                await CTX.TriggerTypingAsync();
+                using (var http = new HttpClient())
                 {
-                    var output = new DiscordEmbedBuilder()
-                        .WithTitle(twitch.Title)
-                        .AddField("Game", twitch.Game, true)
-                        .AddField("Status", twitch.IsLive ? "Online" : "Offline", true)
-                        .AddField("Followers", twitch.Followers.ToString(), true)
-                        .AddField("Viewers", twitch.Viewers.ToString(), true)
-                        .WithThumbnailUrl(twitch.Icon)
-                        .WithUrl(twitch.Url);
-                    if (twitch.Live == false)
-                        output.WithColor(DiscordColor.Red);
-                    else
+                    APITokenService service = new APITokenService();
+                    string Token = service.GetAPIToken("twitch");
+                    var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id={Token}";
+                    string response = await http.GetStringAsync(twitchUrl).ConfigureAwait(false);
+                    var twitch = JsonConvert.DeserializeObject<TwitchService>(response);
+                    if (twitch.Error != null)
+                        await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning: ")} Unable to find this streamer");
+                    twitch.Url = twitchUrl;
+
+                    if (twitch.IsLive)
+                    {
+                        var output = new DiscordEmbedBuilder()
+                            .WithTitle(twitch.Title)
+                            .AddField("Game", twitch.Game, true)
+                            .AddField("Status", twitch.IsLive ? "Online" : "Offline", true)
+                            .AddField("Followers", twitch.Followers.ToString(), true)
+                            .AddField("Viewers", twitch.Viewers.ToString(), true)
+                            .WithThumbnailUrl(twitch.Icon)
+                            .WithUrl(twitch.Url);
                         output.WithColor(DiscordColor.Purple);
-                    await CTX.RespondAsync(embed: output.Build());
+                        await CTX.RespondAsync(embed: output.Build());
+                    }
+                    else
+                        await CTX.RespondAsync("That Twitch channel is **Offline** :pensive:");
                 }
-                else
-                    await CTX.RespondAsync("That Twitch stream is **Offline** :pensive:");
             }
         }
 
         [Command("weather")]
         [Aliases("we")]
-        [Description("Retrieve weather data for the specified city")]
+        [Description("Get weather information for specified location")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetWeather(CommandContext CTX, [RemainingText] string location)
         {
