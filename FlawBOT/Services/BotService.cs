@@ -26,13 +26,13 @@ namespace FlawBOT.Services
 
                 case "IMGUR":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).ImgurToken;
-                    
+
                 case "OMDB":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).OMDBToken;
-                    
+
                 case "TWITTER":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitterToken;
-                    
+
                 case "TWITCH":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitchToken;
 

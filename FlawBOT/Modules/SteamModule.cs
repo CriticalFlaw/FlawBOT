@@ -7,9 +7,7 @@ using Steam.Models.SteamCommunity;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
 using System;
-using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 

@@ -126,405 +126,75 @@ namespace FlawBOT.Services
         }
     }
 
-    public class PokemonServiceTest
-    {
-        public RootObject results;
-
-        public class RootObject
-        {
-            public string name { get; set; }
-            public int weight { get; set; }
-            public string location_area_encounters { get; set; }
-            public int height { get; set; }
-            public bool is_default { get; set; }
-            public int id { get; set; }
-            public int order { get; set; }
-            public int base_experience { get; set; }
-            public Species species { get; set; }
-            public Sprites sprites { get; set; }
-            public List<Ability> abilities { get; set; }
-            public List<Form> forms { get; set; }
-            public List<Move> moves { get; set; }
-            public List<Stat> stats { get; set; }
-            public List<Type> types { get; set; }
-            public List<object> held_items { get; set; }
-            public List<GameIndice> game_indices { get; set; }
-        }
-
-        public class Species
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Sprites
-        {
-            public object back_female { get; set; }
-            public object back_shiny_female { get; set; }
-            public string back_default { get; set; }
-            public object front_female { get; set; }
-            public object front_shiny_female { get; set; }
-            public string back_shiny { get; set; }
-            public string front_default { get; set; }
-            public string front_shiny { get; set; }
-        }
-
-        public class Ability
-        {
-            public int slot { get; set; }
-            public bool is_hidden { get; set; }
-            public Ability2 ability { get; set; }
-        }
-
-        public class Form
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Move
-        {
-            public List<VersionGroupDetail> version_group_details { get; set; }
-            public Move2 move { get; set; }
-        }
-
-        public class Stat
-        {
-            public Stat2 stat { get; set; }
-            public int effort { get; set; }
-            public int base_stat { get; set; }
-        }
-
-        public class Type
-        {
-            public int slot { get; set; }
-            public Type2 type { get; set; }
-        }
-
-        public class GameIndice
-        {
-            public Version version { get; set; }
-            public int game_index { get; set; }
-        }
-
-        public class Ability2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Move2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class VersionGroupDetail
-        {
-            public MoveLearnMethod move_learn_method { get; set; }
-            public int level_learned_at { get; set; }
-            public VersionGroup version_group { get; set; }
-        }
-
-        public class Stat2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Type2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Version
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class MoveLearnMethod
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class VersionGroup
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-    }
-
     public class PokemonService
     {
-        public RootObject results;
+        public static async Task<RootObject> GetPokemonDataAsync(string query)
+        {
+            using (var http = new HttpClient())
+            {
+                var result = await http.GetStringAsync($"http://api.pokemontcg.io/v1/cards?name={query}");
+                return JsonConvert.DeserializeObject<RootObject>(result);
+            }
+        }
 
         public class RootObject
         {
-            public int id { get; set; }
+            public List<Card> cards { get; set; }
+        }
+
+        public class Card
+        {
+            public string id { get; set; }
             public string name { get; set; }
-            public int weight { get; set; }
-            public string location_area_encounters { get; set; }
-            public int height { get; set; }
-            public bool is_default { get; set; }
-            public int order { get; set; }
-            public int base_experience { get; set; }
-            public bool is_main_series { get; set; }
-
-            public Species species { get; set; }
-            public Sprites sprites { get; set; }
-            public Generation generation { get; set; }
-            public DamageRelations damage_relations { get; set; }
-            public MoveDamageClass move_damage_class { get; set; }
-
-            public List<Pokemon> pokemon { get; set; }
-            public List<Name> names { get; set; }
-            public List<Ability> abilities { get; set; }
-            public List<Form> forms { get; set; }
-            public List<Stat> stats { get; set; }
-            public List<Move> moves { get; set; }
-            public List<Type> types { get; set; }
-
-            public List<object> held_items { get; set; }
-            public List<object> effect_changes { get; set; }
-            public List<GameIndice> game_indices { get; set; }
-            public List<EffectEntry> effect_entries { get; set; }
-            public List<FlavorTextEntry> flavor_text_entries { get; set; }
+            public int nationalPokedexNumber { get; set; }
+            public string imageUrl { get; set; }
+            public string imageUrlHiRes { get; set; }
+            public List<string> types { get; set; }
+            public string supertype { get; set; }
+            public string subtype { get; set; }
+            public string hp { get; set; }
+            public List<string> retreatCost { get; set; }
+            public string number { get; set; }
+            public string artist { get; set; }
+            public string rarity { get; set; }
+            public string series { get; set; }
+            public string set { get; set; }
+            public string setCode { get; set; }
+            public List<Attack> attacks { get; set; }
+            public List<Resistance> resistances { get; set; }
+            public List<Weakness> weaknesses { get; set; }
+            public Ability ability { get; set; }
+            public string evolvesFrom { get; set; }
+            public List<string> text { get; set; }
         }
 
-        public class Species
+        public class Attack
         {
-            public string url { get; set; }
+            public List<string> cost { get; set; }
             public string name { get; set; }
+            public string text { get; set; }
+            public string damage { get; set; }
+            public int convertedEnergyCost { get; set; }
         }
 
-        public class Sprites
+        public class Resistance
         {
-            public object back_female { get; set; }
-            public object back_shiny_female { get; set; }
-            public string back_default { get; set; }
-            public object front_female { get; set; }
-            public object front_shiny_female { get; set; }
-            public string back_shiny { get; set; }
-            public string front_default { get; set; }
-            public string front_shiny { get; set; }
+            public string type { get; set; }
+            public string value { get; set; }
         }
 
-        public class Generation
+        public class Weakness
         {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class DamageRelations
-        {
-            public List<NoDamageFrom> no_damage_from { get; set; }
-            public List<object> no_damage_to { get; set; }
-            public List<HalfDamageFrom> half_damage_from { get; set; }
-            public List<HalfDamageTo> half_damage_to { get; set; }
-            public List<DoubleDamageFrom> double_damage_from { get; set; }
-            public List<DoubleDamageTo> double_damage_to { get; set; }
-        }
-
-        public class MoveDamageClass
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        #region LISTS
-
-        public class Pokemon
-        {
-            public int slot { get; set; }
-            public bool is_hidden { get; set; }
-            public Pokemon2 pokemon { get; set; }
-        }
-
-        public class Name
-        {
-            public string name { get; set; }
-            public Language language { get; set; }
-            public Language2 language2 { get; set; }
+            public string type { get; set; }
+            public string value { get; set; }
         }
 
         public class Ability
         {
-            public int slot { get; set; }
-            public bool is_hidden { get; set; }
-            public Ability2 ability { get; set; }
-        }
-
-        public class Form
-        {
-            public string url { get; set; }
             public string name { get; set; }
+            public string text { get; set; }
+            public string type { get; set; }
         }
-
-        public class Stat
-        {
-            public Stat2 stat { get; set; }
-            public int effort { get; set; }
-            public int base_stat { get; set; }
-        }
-
-        public class Move
-        {
-            public Move2 move { get; set; }
-            public string url { get; set; }
-            public string name { get; set; }
-            public List<VersionGroupDetail> version_group_details { get; set; }
-        }
-
-        public class Type
-        {
-            public int slot { get; set; }
-            public Type2 type { get; set; }
-        }
-
-        public class Pokemon2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Language
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Language2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Ability2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Stat2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Move2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Type2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class NoDamageFrom
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class NoDamageTo
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class HalfDamageFrom
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class HalfDamageTo
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class DoubleDamageFrom
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class DoubleDamageTo
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        #endregion LISTS
-
-        #region unused
-
-        public class VersionGroupDetail
-        {
-            public MoveLearnMethod move_learn_method { get; set; }
-            public int level_learned_at { get; set; }
-            public VersionGroup version_group { get; set; }
-        }
-
-        public class MoveLearnMethod
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class VersionGroup
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class GameIndice
-        {
-            public Version version { get; set; }
-            public Generation2 generation { get; set; }
-            public int game_index { get; set; }
-        }
-
-        public class EffectEntry
-        {
-            public string short_effect { get; set; }
-            public string effect { get; set; }
-            public Language language { get; set; }
-        }
-
-        public class FlavorTextEntry
-        {
-            public string flavor_text { get; set; }
-            public Language3 language { get; set; }
-            public VersionGroup version_group { get; set; }
-        }
-
-        public class Version
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Generation2
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Language3
-        {
-            public string url { get; set; }
-            public string name { get; set; }
-        }
-
-        #endregion unused
     }
 
     public class SimpsonsService

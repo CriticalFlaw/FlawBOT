@@ -92,6 +92,9 @@
     <Reference Include="OverwatchAPI, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Overwatch.Net.3.1.0\lib\netstandard1.1\OverwatchAPI.dll</HintPath>
     </Reference>
+    <Reference Include="PokemonTcgSdk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PokemonTcgSdk.1.0.0\lib\PokemonTcgSdk.dll</HintPath>
+    </Reference>
     <Reference Include="Steam.Models, Version=3.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Steam.Models.3.0.7\lib\netstandard2.0\Steam.Models.dll</HintPath>
     </Reference>

@@ -72,15 +72,15 @@ namespace FlawBOT.Services
                     switch (r.Id.Kind)
                     {
                         case "youtube#video":
-                            output.AddField(r.Snippet.Title, "https://www.youtube.com/watch?v=" + r.Id.VideoId);
+                            output.AddField(r.Snippet.Title, $"https://www.youtube.com/watch?v={r.Id.VideoId}");
                             break;
 
                         case "youtube#channel":
-                            output.AddField(r.Snippet.Title, "https://www.youtube.com/channel/" + r.Id.ChannelId);
+                            output.AddField(r.Snippet.Title, $"https://www.youtube.com/channel/{r.Id.ChannelId}");
                             break;
 
                         case "youtube#playlist":
-                            output.AddField(r.Snippet.Title, "https://www.youtube.com/playlist?list=" + r.Id.PlaylistId);
+                            output.AddField(r.Snippet.Title, $"https://www.youtube.com/playlist?list={r.Id.PlaylistId}");
                             break;
                     }
                 }
