@@ -37,13 +37,205 @@ namespace FlawBOT.Services
         }
     }
 
+    public class SteamService
+    {
+        public static async Task<RootObject> GetSteamAppsListAsync()
+        {
+            using (var HTTP = new HttpClient())
+            {
+                var result = await HTTP.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
+                return JsonConvert.DeserializeObject<RootObject>(result);
+            }
+        }
+
+        public class App
+        {
+            public int appid { get; set; }
+            public string name { get; set; }
+        }
+
+        public class Applist
+        {
+            public List<App> apps { get; set; }
+        }
+
+        public class RootObject
+        {
+            public Applist applist { get; set; }
+        }
+    }
+
+    public class SteamGameService
+    {
+        public static async Task<RootObject> GetSteamAppsInfoAsync(uint appID)
+        {
+            using (var HTTP = new HttpClient())
+            {
+                var result = await HTTP.GetStringAsync($"http://store.steampowered.com/api/appdetails/?appids={appID}");
+                return JsonConvert.DeserializeObject<RootObject>(result);
+            }
+        }
+
+        public class PcRequirements
+        {
+            public string minimum { get; set; }
+        }
+
+        public class PriceOverview
+        {
+            public string currency { get; set; }
+            public int initial { get; set; }
+            public int final { get; set; }
+            public int discount_percent { get; set; }
+        }
+
+        public class Sub
+        {
+            public int packageid { get; set; }
+            public string percent_savings_text { get; set; }
+            public int percent_savings { get; set; }
+            public string option_text { get; set; }
+            public string option_description { get; set; }
+            public string can_get_free_license { get; set; }
+            public bool is_free_license { get; set; }
+            public int price_in_cents_with_discount { get; set; }
+        }
+
+        public class PackageGroup
+        {
+            public string name { get; set; }
+            public string title { get; set; }
+            public string description { get; set; }
+            public string selection_text { get; set; }
+            public string save_text { get; set; }
+            public int display_type { get; set; }
+            public string is_recurring_subscription { get; set; }
+            public List<Sub> subs { get; set; }
+        }
+
+        public class Platforms
+        {
+            public bool windows { get; set; }
+            public bool mac { get; set; }
+            public bool linux { get; set; }
+        }
+
+        public class Category
+        {
+            public int id { get; set; }
+            public string description { get; set; }
+        }
+
+        public class Genre
+        {
+            public string id { get; set; }
+            public string description { get; set; }
+        }
+
+        public class Screenshot
+        {
+            public int id { get; set; }
+            public string path_thumbnail { get; set; }
+            public string path_full { get; set; }
+        }
+
+        public class Webm
+        {
+            public string __invalid_name__480 { get; set; }
+            public string max { get; set; }
+        }
+
+        public class Movie
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string thumbnail { get; set; }
+            public Webm webm { get; set; }
+            public bool highlight { get; set; }
+        }
+
+        public class Recommendations
+        {
+            public int total { get; set; }
+        }
+
+        public class Highlighted
+        {
+            public string name { get; set; }
+            public string path { get; set; }
+        }
+
+        public class Achievements
+        {
+            public int total { get; set; }
+            public List<Highlighted> highlighted { get; set; }
+        }
+
+        public class ReleaseDate
+        {
+            public bool coming_soon { get; set; }
+            public string date { get; set; }
+        }
+
+        public class SupportInfo
+        {
+            public string url { get; set; }
+            public string email { get; set; }
+        }
+
+        public class Data
+        {
+            public string type { get; set; }
+            public string name { get; set; }
+            public int steam_appid { get; set; }
+            public int required_age { get; set; }
+            public bool is_free { get; set; }
+            public List<int> dlc { get; set; }
+            public string detailed_description { get; set; }
+            public string about_the_game { get; set; }
+            public string short_description { get; set; }
+            public string supported_languages { get; set; }
+            public string header_image { get; set; }
+            public string website { get; set; }
+            public PcRequirements pc_requirements { get; set; }
+            public List<object> mac_requirements { get; set; }
+            public List<object> linux_requirements { get; set; }
+            public List<string> developers { get; set; }
+            public List<string> publishers { get; set; }
+            public PriceOverview price_overview { get; set; }
+            public List<int> packages { get; set; }
+            public List<PackageGroup> package_groups { get; set; }
+            public Platforms platforms { get; set; }
+            public List<Category> categories { get; set; }
+            public List<Genre> genres { get; set; }
+            public List<Screenshot> screenshots { get; set; }
+            public List<Movie> movies { get; set; }
+            public Recommendations recommendations { get; set; }
+            public Achievements achievements { get; set; }
+            public ReleaseDate release_date { get; set; }
+            public SupportInfo support_info { get; set; }
+            public string background { get; set; }
+        }
+
+        public class __invalid_type__526160
+        {
+            public bool success { get; set; }
+            public Data data { get; set; }
+        }
+
+        public class RootObject
+        {
+            public __invalid_type__526160 __invalid_name__526160 { get; set; }
+        }
+    }
+
     public class DefinitionService
     {
         public static async Task<Data> GetDefinitionForTermAsync(string query)
         {
             using (var HTTP = new HttpClient())
             {
-                var result = await HTTP.GetStringAsync($"http://api.pearson.com/v2/dictionaries/entries?headword=" + WebUtility.UrlEncode(query.Trim())).ConfigureAwait(false);
+                var result = await HTTP.GetStringAsync($"http://api.pearson.com/v2/dictionaries/entries?headword={WebUtility.UrlEncode(query.Trim())}");
                 return JsonConvert.DeserializeObject<Data>(result);
             }
         }
@@ -86,43 +278,27 @@ namespace FlawBOT.Services
 
     public class DictionaryService
     {
-        public static async Task<Data> GetDictionaryForTermAsync(string query)
+        public static async Task<RootObject> GetDictionaryForTermAsync(string query)
         {
             using (var http = new HttpClient())
             {
-                var result = await http.GetStringAsync($"http://api.urbandictionary.com/v0/define?term={WebUtility.UrlEncode(query)}");
-                return JsonConvert.DeserializeObject<Data>(result);
+                var data = await http.GetStringAsync($"http://api.urbandictionary.com/v0/define?term={WebUtility.UrlEncode(query)}");
+                return JsonConvert.DeserializeObject<RootObject>(data);
             }
         }
 
-        public class Data
+        public class RootObject
         {
-            [JsonProperty("tags")]
-            public string[] Tags { get; set; }
-
-            [JsonProperty("result_type")]
-            public string ResultType { get; set; }
-
-            [JsonProperty("list")]
-            public UrbanDictList[] List { get; set; }
+            public string result_type { get; set; }
+            public List<List> list { get; set; }
         }
 
-        public class UrbanDictList
+        public class List
         {
-            [JsonProperty("definition")]
-            public string Definition { get; set; }
-
-            [JsonProperty("permalink")]
-            public string Permalink { get; set; }
-
-            [JsonProperty("author")]
-            public string Author { get; set; }
-
-            [JsonProperty("word")]
-            public string Word { get; set; }
-
-            [JsonProperty("example")]
-            public string Example { get; set; }
+            public string definition { get; set; }
+            public string author { get; set; }
+            public string permalink { get; set; }
+            public string example { get; set; }
         }
     }
 
@@ -132,8 +308,8 @@ namespace FlawBOT.Services
         {
             using (var http = new HttpClient())
             {
-                var result = await http.GetStringAsync($"http://api.pokemontcg.io/v1/cards?name={query}");
-                return JsonConvert.DeserializeObject<RootObject>(result);
+                var data = await http.GetStringAsync($"http://api.pokemontcg.io/v1/cards?name={query}");
+                return JsonConvert.DeserializeObject<RootObject>(data);
             }
         }
 
@@ -145,55 +321,6 @@ namespace FlawBOT.Services
         public class Card
         {
             public string id { get; set; }
-            public string name { get; set; }
-            public int nationalPokedexNumber { get; set; }
-            public string imageUrl { get; set; }
-            public string imageUrlHiRes { get; set; }
-            public List<string> types { get; set; }
-            public string supertype { get; set; }
-            public string subtype { get; set; }
-            public string hp { get; set; }
-            public List<string> retreatCost { get; set; }
-            public string number { get; set; }
-            public string artist { get; set; }
-            public string rarity { get; set; }
-            public string series { get; set; }
-            public string set { get; set; }
-            public string setCode { get; set; }
-            public List<Attack> attacks { get; set; }
-            public List<Resistance> resistances { get; set; }
-            public List<Weakness> weaknesses { get; set; }
-            public Ability ability { get; set; }
-            public string evolvesFrom { get; set; }
-            public List<string> text { get; set; }
-        }
-
-        public class Attack
-        {
-            public List<string> cost { get; set; }
-            public string name { get; set; }
-            public string text { get; set; }
-            public string damage { get; set; }
-            public int convertedEnergyCost { get; set; }
-        }
-
-        public class Resistance
-        {
-            public string type { get; set; }
-            public string value { get; set; }
-        }
-
-        public class Weakness
-        {
-            public string type { get; set; }
-            public string value { get; set; }
-        }
-
-        public class Ability
-        {
-            public string name { get; set; }
-            public string text { get; set; }
-            public string type { get; set; }
         }
     }
 
@@ -214,7 +341,6 @@ namespace FlawBOT.Services
             {
                 var result = await http.GetStringAsync($"https://frinkiac.com/api/random");
                 var content = JsonConvert.DeserializeObject<RootObject>(result);
-                //var gif_url = await get_gif_url(content.Episode.Key, content.Frame.Timestamp);
                 var frames_result = await http.GetStringAsync($"https://frinkiac.com/api/frames/{content.Episode.Key}/{content.Frame.Timestamp}/3000/4000");
                 var frames = JsonConvert.DeserializeObject<List<Frame>>(frames_result);
                 var start = frames[0].Timestamp;
@@ -223,29 +349,16 @@ namespace FlawBOT.Services
             }
         }
 
-        //public static async Task<RootObject> generate_gif(string gif_url)
-        //{
-        //    using (var http = new HttpClient())
-        //    {
-        //        var result = await http.GetStringAsync(gif_url);
-        //        return JsonConvert.DeserializeObject<RootObject>(result);
-        //    }
-        //}
-
         public class RootObject
         {
             public Episode Episode { get; set; }
             public Frame Frame { get; set; }
-            public List<Subtitle> Subtitles { get; set; }
-            public List<Nearby> Nearby { get; set; }
         }
 
         public class Episode
         {
             public int Id { get; set; }
             public string Key { get; set; }
-            public int Season { get; set; }
-            public int EpisodeNumber { get; set; }
             public string Title { get; set; }
             public string Director { get; set; }
             public string Writer { get; set; }
@@ -259,212 +372,63 @@ namespace FlawBOT.Services
             public string Episode { get; set; }
             public int Timestamp { get; set; }
         }
-
-        public class Subtitle
-        {
-            public int Id { get; set; }
-            public int RepresentativeTimestamp { get; set; }
-            public string Episode { get; set; }
-            public int StartTimestamp { get; set; }
-            public int EndTimestamp { get; set; }
-            public string Content { get; set; }
-            public string Language { get; set; }
-        }
-
-        public class Nearby
-        {
-            public int Id { get; set; }
-            public string Episode { get; set; }
-            public int Timestamp { get; set; }
-        }
     }
 
     public class TimeService
     {
         public GeolocationModel[] results;
+        public string status { get; set; }
 
         public class GeolocationModel
         {
-            public GeometryModel Geometry { get; set; }
+            public string formatted_address { get; set; }
+            public GeometryModel geometry { get; set; }
 
             public class GeometryModel
             {
-                public LocationModel Location { get; set; }
+                public LocationModel location { get; set; }
 
                 public class LocationModel
                 {
-                    public float Lat { get; set; }
-                    public float Lng { get; set; }
+                    public float lat { get; set; }
+                    public float lng { get; set; }
                 }
             }
         }
 
         public class TimeZoneResult
         {
-            public double DstOffset { get; set; }
-            public double RawOffset { get; set; }
-            public string TimeZoneName { get; set; }
-        }
-    }
-
-    public class TwitterService
-    {
-        public RootObject Query { get; set; }
-
-        public class RootObject
-        {
-            public List<Status> statuses { get; set; }
-            public SearchMetadata search_metadata { get; set; }
-        }
-
-        public class Status
-        {
-            public object coordinates { get; set; }
-            public bool favorited { get; set; }
-            public bool truncated { get; set; }
-            public string created_at { get; set; }
-            public string id_str { get; set; }
-            public Entities entities { get; set; }
-            public object in_reply_to_user_id_str { get; set; }
-            public object contributors { get; set; }
-            public string text { get; set; }
-            public Metadata metadata { get; set; }
-            public int retweet_count { get; set; }
-            public object in_reply_to_status_id_str { get; set; }
-            public object id { get; set; }
-            public object geo { get; set; }
-            public bool retweeted { get; set; }
-            public object in_reply_to_user_id { get; set; }
-            public object place { get; set; }
-            public User user { get; set; }
-            public object in_reply_to_screen_name { get; set; }
-            public string source { get; set; }
-            public object in_reply_to_status_id { get; set; }
-        }
-
-        public class Entities
-        {
-            public List<object> urls { get; set; }
-            public List<Hashtag> hashtags { get; set; }
-            public List<object> user_mentions { get; set; }
-        }
-
-        public class Metadata
-        {
-            public string iso_language_code { get; set; }
-            public string result_type { get; set; }
-        }
-
-        public class User
-        {
-            public string profile_sidebar_fill_color { get; set; }
-            public string profile_sidebar_border_color { get; set; }
-            public bool profile_background_tile { get; set; }
-            public string name { get; set; }
-            public string profile_image_url { get; set; }
-            public string created_at { get; set; }
-            public string location { get; set; }
-            public object follow_request_sent { get; set; }
-            public string profile_link_color { get; set; }
-            public bool is_translator { get; set; }
-            public string id_str { get; set; }
-            public Entities2 entities { get; set; }
-            public bool default_profile { get; set; }
-            public bool contributors_enabled { get; set; }
-            public int favourites_count { get; set; }
-            public string url { get; set; }
-            public string profile_image_url_https { get; set; }
-            public int utc_offset { get; set; }
-            public int id { get; set; }
-            public bool profile_use_background_image { get; set; }
-            public int listed_count { get; set; }
-            public string profile_text_color { get; set; }
-            public string lang { get; set; }
-            public int followers_count { get; set; }
-            public bool @protected { get; set; }
-            public object notifications { get; set; }
-            public string profile_background_image_url_https { get; set; }
-            public string profile_background_color { get; set; }
-            public bool verified { get; set; }
-            public bool geo_enabled { get; set; }
-            public string time_zone { get; set; }
-            public string description { get; set; }
-            public bool default_profile_image { get; set; }
-            public string profile_background_image_url { get; set; }
-            public int statuses_count { get; set; }
-            public int friends_count { get; set; }
-            public object following { get; set; }
-            public bool show_all_inline_media { get; set; }
-            public string screen_name { get; set; }
-        }
-
-        public class Hashtag
-        {
-            public string text { get; set; }
-            public List<int> indices { get; set; }
-        }
-
-        public class Entities2
-        {
-            public Url url { get; set; }
-            public Description description { get; set; }
-        }
-
-        public class Url
-        {
-            public List<Url2> urls { get; set; }
-        }
-
-        public class Url2
-        {
-            public object expanded_url { get; set; }
-            public string url { get; set; }
-            public List<int> indices { get; set; }
-        }
-
-        public class Description
-        {
-            public List<object> urls { get; set; }
-        }
-
-        public class SearchMetadata
-        {
-            public long max_id { get; set; }
-            public long since_id { get; set; }
-            public string refresh_url { get; set; }
-            public string next_results { get; set; }
-            public int count { get; set; }
-            public double completed_in { get; set; }
-            public string since_id_str { get; set; }
-            public string query { get; set; }
-            public string max_id_str { get; set; }
+            public double dstOffset { get; set; }
+            public double rawOffset { get; set; }
+            public string timeZoneName { get; set; }
         }
     }
 
     public class TwitchService : IStreamResponse
     {
-        public string Error { get; set; } = null;
-        public bool IsLive => Stream != null;
-        public StreamInfo Stream { get; set; }
-        public int Viewers => Stream?.Viewers ?? 0;
-        public string Title => Stream?.Channel?.Status;
+        public StreamInfo stream { get; set; }
+        public string Game => stream?.game;
+        public int Viewers => stream?.viewers ?? 0;
+        public string Title => stream?.channel?.status;
+        public string Icon => stream?.channel?.logo;
+        public int Followers => stream?.channel?.followers ?? 0;
+        public bool IsLive => stream != null;
         public bool Live => IsLive;
-        public string Game => Stream?.Game;
-        public int Followers => Stream?.Channel?.Followers ?? 0;
+        public string Error { get; set; } = null;
         public string Url { get; set; }
-        public string Icon => Stream?.Channel?.Logo;
 
         public class StreamInfo
         {
-            public int Viewers { get; set; }
-            public string Game { get; set; }
-            public ChannelInfo Channel { get; set; }
+            public string game { get; set; }
+            public int viewers { get; set; }
+            public ChannelInfo channel { get; set; }
 
             public class ChannelInfo
             {
-                public string Status { get; set; }
-                public string Logo { get; set; }
-                public int Followers { get; set; }
+                public string display_name { get; set; }
+                public string status { get; set; }
+                public string logo { get; set; }
+                public int followers { get; set; }
             }
         }
     }
@@ -478,49 +442,42 @@ namespace FlawBOT.Services
 
         public class WeatherData
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public Sys Sys { get; set; }
-            public Main Main { get; set; }
-            public List<Weather> Weather { get; set; }
-            public Wind Wind { get; set; }
+            public int id { get; set; }
+            public string name { get; set; }
+            public Sys sys { get; set; }
+            public Main main { get; set; }
+            public Wind wind { get; set; }
+            public List<Weather> weather { get; set; }
+            public int cod { get; set; }
         }
 
         public class Sys
         {
-            public int Type { get; set; }
-            public int Id { get; set; }
-            public double Message { get; set; }
-            public string Country { get; set; }
-            public double Sunrise { get; set; }
-            public double Sunset { get; set; }
+            public int id { get; set; }
+            public string country { get; set; }
         }
 
         public class Main
         {
-            public double Temp { get; set; }
-            public float Pressure { get; set; }
-            public float Humidity { get; set; }
+            public double temp { get; set; }
+            public float humidity { get; set; }
 
-            [JsonProperty("temp_min")]
-            public double TempMin { get; set; }
+            //    [JsonProperty("temp_min")]
+            public double tempMin { get; set; }
 
-            [JsonProperty("temp_max")]
-            public double TempMax { get; set; }
-        }
-
-        public class Weather
-        {
-            public int Id { get; set; }
-            public string Main { get; set; }
-            public string Description { get; set; }
-            public string Icon { get; set; }
+            //    [JsonProperty("temp_max")]
+            public double tempMax { get; set; }
         }
 
         public class Wind
         {
-            public double Speed { get; set; }
-            public double Deg { get; set; }
+            public double speed { get; set; }
+        }
+
+        public class Weather
+        {
+            public int id { get; set; }
+            public string main { get; set; }
         }
     }
 

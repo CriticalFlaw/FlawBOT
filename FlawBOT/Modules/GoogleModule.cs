@@ -1,10 +1,8 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using FlawBOT.Services;
-using Google.Apis.Services;
-using Google.Apis.Urlshortener.v1;
+using System;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
@@ -14,18 +12,17 @@ namespace FlawBOT.Modules
         [Command("shorten")]
         [Description("Shorten the inputted URL")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task ShortenURL(CommandContext CTX, string URL)
+        public async Task ShortenURL(CommandContext CTX, [RemainingText] string query)
         {
-            await CTX.TriggerTypingAsync();
-            var shorten = new Google.Apis.Urlshortener.v1.Data.Url();
-            APITokenService service = new APITokenService();
-            UrlshortenerService google = new UrlshortenerService(new BaseClientService.Initializer()
+            if (Uri.TryCreate(query, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
-                ApiKey = service.GetAPIToken("google"),
-                ApplicationName = "FlawBOT",
-            });
-            shorten.LongUrl = URL;
-            await CTX.RespondAsync($"{google.Url.Insert(shorten).Execute().Id}");
+                await CTX.TriggerTypingAsync();
+                ShortenService shortenService = new ShortenService();
+                var output = shortenService.ShortenURL(query);
+                await CTX.RespondAsync(output);
+            }
+            else
+                await CTX.RespondAsync(":warning: Please provide a valid URL to shorten, include **http://** or **https://**");
         }
 
         [Command("youtube")]
@@ -35,12 +32,11 @@ namespace FlawBOT.Modules
         public async Task SearchVideoAsync(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a video to search for...");
+                await CTX.RespondAsync("https://www.youtube.com/watch?v=rFA_auWj0rQ");
             else
             {
-                APITokenService service = new APITokenService();
-                string Token = service.GetAPIToken("google");
-                GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
+                await CTX.TriggerTypingAsync();
+                YoutubeService YTservice = new YoutubeService();
                 var output = await YTservice.GetFirstVideoResultAsync(query);
                 await CTX.RespondAsync(output);
             }
@@ -53,32 +49,30 @@ namespace FlawBOT.Modules
         public async Task SearchChannelAsync(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a channel to search for...");
+                await CTX.RespondAsync(":warning: Please provide a channel to search for...");
             else
             {
-                APITokenService service = new APITokenService();
-                string Token = service.GetAPIToken("google");
-                GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
+                await CTX.TriggerTypingAsync();
+                YoutubeService YTservice = new YoutubeService();
                 var output = await YTservice.GetEmbeddedResults(query, 5, "channel");
-                await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}", embed: output);
+                await CTX.RespondAsync($"Search results for {Formatter.Bold(query)}", embed: output);
             }
         }
 
-        [Command("ytlist")]
-        [Aliases("ytl")]
+        [Command("ytvideos")]
+        [Aliases("ytv")]
         [Description("Get a list of YouTube search results")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SearchYoutube(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a video list to search for...");
+                await CTX.RespondAsync(":warning: Please provide a video list to search for...");
             else
             {
-                APITokenService service = new APITokenService();
-                string Token = service.GetAPIToken("google");
-                GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
+                await CTX.TriggerTypingAsync();
+                YoutubeService YTservice = new YoutubeService();
                 var output = await YTservice.GetEmbeddedResults(query, 5, "video");
-                await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}", embed: output);
+                await CTX.RespondAsync($"Search results for {Formatter.Bold(query)}", embed: output);
             }
         }
 
@@ -89,14 +83,13 @@ namespace FlawBOT.Modules
         public async Task SearchPlaylistAsync(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync($"{DiscordEmoji.FromName(CTX.Client, ":warning:")} Please provide a playlist to search for...");
+                await CTX.RespondAsync(":warning: Please provide a playlist to search for...");
             else
             {
-                APITokenService service = new APITokenService();
-                string Token = service.GetAPIToken("google");
-                GoogleService.YoutubeService YTservice = new GoogleService.YoutubeService(Token);
+                await CTX.TriggerTypingAsync();
+                YoutubeService YTservice = new YoutubeService();
                 var output = await YTservice.GetEmbeddedResults(query, 5, "playlist");
-                await CTX.RespondAsync($"Search result for {Formatter.Bold(query)}", embed: output);
+                await CTX.RespondAsync($"Search results for {Formatter.Bold(query)}", embed: output);
             }
         }
     }

@@ -2,18 +2,56 @@
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using Newtonsoft.Json;
+using SteamWebAPI2.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace FlawBOT.Services
 {
+    internal class GlobalVariables : Random
+    {
+        public static string Name = "FlawBOT";
+        public static string Version = "0.9.0";
+        public static DateTime ProcessStarted;
+        public static Random Instance => ThreadLocal.Value;
+        public static Dictionary<int, string> itemSchema = new Dictionary<int, string>();
+        public static Dictionary<int, string> gameList = new Dictionary<int, string>();
+        private static int _seed;
+        private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
+
+        static GlobalVariables() => _seed = Environment.TickCount;
+
+        public static async void UpdateSteamAsync()
+        {
+            // Team Fortress 2 Item Schema
+            APITokenService service = new APITokenService();
+            string Token = service.GetAPIToken("steam");
+            EconItems schema = new EconItems(Token, EconItemsAppId.TeamFortress2);
+            var items = await schema.GetSchemaForTF2Async();
+            GlobalVariables.itemSchema.Clear();
+            foreach (var item in items.Data.Items)
+                if (!string.IsNullOrWhiteSpace(item.ItemName))
+                    GlobalVariables.itemSchema.Add(Convert.ToInt32(item.DefIndex), item.ItemName);
+
+            // Steam Games List
+            SteamService steam = new SteamService();
+            var games = await SteamService.GetSteamAppsListAsync();
+            GlobalVariables.gameList.Clear();
+            foreach (var game in games.applist.apps)
+                if (!string.IsNullOrWhiteSpace(game.name))
+                    GlobalVariables.gameList.Add(Convert.ToInt32(game.appid), game.name);
+        }
+    }
+
     public class APITokenService
     {
         public string GetAPIToken(string query)
         {
-            string JSON = null;  // Load the configuration file
+            string JSON = null;
             using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
                 JSON = SRD.ReadToEnd();
             switch (query.ToUpperInvariant())
@@ -29,9 +67,6 @@ namespace FlawBOT.Services
 
                 case "OMDB":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).OMDBToken;
-
-                case "TWITTER":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitterToken;
 
                 case "TWITCH":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitchToken;
@@ -49,20 +84,17 @@ namespace FlawBOT.Services
             [JsonProperty("prefix")]
             public string CommandPrefix { get; private set; }
 
-            [JsonProperty("steam")]
-            public string SteamToken { get; private set; }
-
             [JsonProperty("google")]
             public string GoogleToken { get; private set; }
+
+            [JsonProperty("steam")]
+            public string SteamToken { get; private set; }
 
             [JsonProperty("imgur")]
             public string ImgurToken { get; private set; }
 
             [JsonProperty("omdb")]
             public string OMDBToken { get; private set; }
-
-            [JsonProperty("twitter")]
-            public string TwitterToken { get; private set; }
 
             [JsonProperty("twitch")]
             public string TwitchToken { get; private set; }

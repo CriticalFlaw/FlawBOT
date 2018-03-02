@@ -2,10 +2,10 @@
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("FlawBOT")]
-[assembly: AssemblyVersion("0.8.1.0")]
+[assembly: AssemblyVersion("0.9.0.0")]
 [assembly: AssemblyDescription("https://github.com/CriticalFlaw/FlawBOT")]
-[assembly: AssemblyConfiguration("Debug")]  //Release
+[assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCompany("CriticalFlaw")]
 [assembly: AssemblyCopyright("Copyright © CriticalFlaw 2018")]
 [assembly: ComVisible(false)]
-[assembly: Guid("73262e96-7c19-42e9-9401-dfc52aee483c")]
+[assembly: Guid("acf62918-c29e-44b1-8703-df4ea7e74c66")]

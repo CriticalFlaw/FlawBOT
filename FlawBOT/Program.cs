@@ -9,7 +9,6 @@ using FlawBOT.Services;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,13 +72,18 @@ namespace FlawBOT
             var MathCMD = new MathService();
             CommandsNextUtilities.RegisterConverter(MathCMD);
             CommandsNextUtilities.RegisterUserFriendlyTypeName<MathService>("operation");
+            GlobalVariables.ProcessStarted = DateTime.Now;      // Start the uptime counter
+            // Update the Steam and TF2 lists
+            Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", "Updating Steam database...", DateTime.Now);
+            GlobalVariables.UpdateSteamAsync();
+            Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", "Ready!", DateTime.Now);
             await Client.ConnectAsync();                        // Connect and log into Discord
             await Task.Delay(-1);                               // Prevent the console window from closing
         }
 
         private Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"FlawBOT, version: {Assembly.GetExecutingAssembly().GetName().Version} (Build 20180223)", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", "FlawBOT, version: 0.9.0 (Build 20180228)", DateTime.Now);
             return Task.CompletedTask;
         }
 
@@ -102,7 +106,7 @@ namespace FlawBOT
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle("Access Denied")
-                    .WithDescription($"{DiscordEmoji.FromName(e.Context.Client, ":no_entry:")} Insufficient permissions.")
+                    .WithDescription(":no_entry: Insufficient permissions.")
                     .WithColor(DiscordColor.Red);
                 await e.Context.RespondAsync(embed: output.Build());
             }
@@ -110,7 +114,7 @@ namespace FlawBOT
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle("Command Not Found")
-                    .WithDescription($"{DiscordEmoji.FromName(e.Context.Client, ":no_entry:")} This command does not exist.")
+                    .WithDescription(":no_entry: This command does not exist.")
                     .WithColor(DiscordColor.Red);
                 await e.Context.RespondAsync(embed: output.Build());
             }
@@ -118,7 +122,15 @@ namespace FlawBOT
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle("Insufficient parameters")
-                    .WithDescription($"{DiscordEmoji.FromName(e.Context.Client, ":no_entry:")} Not enough arguments supplied to the command.")
+                    .WithDescription(":no_entry: Not enough arguments supplied to the command.")
+                    .WithColor(DiscordColor.Red);
+                await e.Context.RespondAsync(embed: output.Build());
+            }
+            else if (e.Exception is ArgumentException)
+            {
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle("Invalid parameters")
+                    .WithDescription(":no_entry: Parameter provide is invalid or does not exist.")
                     .WithColor(DiscordColor.Red);
                 await e.Context.RespondAsync(embed: output.Build());
             }
