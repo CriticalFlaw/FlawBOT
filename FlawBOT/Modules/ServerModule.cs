@@ -44,7 +44,7 @@ namespace FlawBOT.Modules
         public async Task BotClean(CommandContext CTX, int limit, [RemainingText] DiscordChannel channel)
         {
             if (limit <= 0 || limit > 100)
-                await CTX.RespondAsync(":warning: Invalid number of messages to delete (must be in range 1-100");
+                await CTX.RespondAsync(":warning: Invalid number of messages, must be in range of 1 to 100 :warning:");
             else
             {
                 await CTX.TriggerTypingAsync();
@@ -70,11 +70,11 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task ColorRole(CommandContext CTX, params string[] colors)
         {
-            if (colors.Length != 2 && colors.Length != 4)
-                await CTX.RespondAsync(":warning: Invalid parameters, try **.colorrole admin [0-255] [0-255] [0-255]**");
-            else
+            try
             {
-                try
+                if (colors.Length != 2 && colors.Length != 4)
+                    await CTX.RespondAsync(":warning: Invalid parameters, try **.colorrole admin [0-255] [0-255] [0-255]**");
+                else
                 {
                     await CTX.TriggerTypingAsync();
                     var roleName = colors[0].ToLowerInvariant();
@@ -91,10 +91,10 @@ namespace FlawBOT.Modules
                         await CTX.RespondAsync($"Color of the role **{roleName}** has been changed to **{color.ToString()}**");
                     }
                 }
-                catch
-                {
-                    await CTX.RespondAsync(":warning: Unable to change role color values, try **.colorrole admin [0-255] [0-255] [0-255]** :warning:");
-                }
+            }
+            catch
+            {
+                await CTX.RespondAsync(":warning: Unable to change role color values, try **.colorrole admin [0-255] [0-255] [0-255]** :warning:");
             }
         }
 
@@ -207,14 +207,15 @@ namespace FlawBOT.Modules
         [Command("inrole")]
         [Description("Lists all users in specified role")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task UsersInRole(CommandContext CTX, [RemainingText] DiscordRole role)
+        public async Task UsersInRole(CommandContext CTX, [RemainingText] string roleName)
         {
+            var role = CTX.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
             if (role != null)
             {
                 await CTX.TriggerTypingAsync();
-                var users = (await CTX.Guild.GetAllMembersAsync()).ToArray();
                 int userCount = 0;
                 string usersList = null;
+                var users = (await CTX.Guild.GetAllMembersAsync()).ToArray();
                 foreach (var user in users)
                     if (user.Roles.Contains(role))
                     {
@@ -265,10 +266,12 @@ namespace FlawBOT.Modules
         [Description("Toggle whether this role can be mentioned by others")]
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task MentionRole(CommandContext CTX, [RemainingText] DiscordRole role)
+        public async Task MentionRole(CommandContext CTX, [RemainingText] string roleName)
         {
+            var role = CTX.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
             if (role != null)
             {
+                await CTX.TriggerTypingAsync();
                 if (role.IsMentionable)
                 {
                     await CTX.Guild.UpdateRoleAsync(role, mentionable: false);
@@ -308,23 +311,30 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Poll(CommandContext CTX, string time, params DiscordEmoji[] options)
         {
-            if (int.TryParse(time, out int minutes))
+            try
             {
-                var interactivity = CTX.Client.GetInteractivityModule();
-                var poll_options = options.Select(xe => xe.ToString());
-                TimeSpan duration = new TimeSpan(0, 0, minutes, 0, 0);
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle("Poll Time!")
-                    .WithDescription(string.Join(" **VS.** ", poll_options));
-                var message = await CTX.RespondAsync(embed: output.Build());
-                for (var i = 0; i < options.Length; i++)
-                    await message.CreateReactionAsync(options[i]);
-                var poll_result = await interactivity.CollectReactionsAsync(message, duration);
-                var results = poll_result.Reactions.Where(xkvp => options.Contains(xkvp.Key)).Select(xkvp => $"{xkvp.Key} wins the poll with **{xkvp.Value}** votes");
-                await CTX.RespondAsync(string.Join("\n", results));
+                if (int.TryParse(time, out int minutes))
+                {
+                    var interactivity = CTX.Client.GetInteractivityModule();
+                    var poll_options = options.Select(xe => xe.ToString());
+                    TimeSpan duration = new TimeSpan(0, 0, minutes, 0, 0);
+                    var output = new DiscordEmbedBuilder()
+                        .WithTitle("Poll Time!")
+                        .WithDescription(string.Join(" **VS.** ", poll_options));
+                    var message = await CTX.RespondAsync(embed: output.Build());
+                    for (var i = 0; i < options.Length; i++)
+                        await message.CreateReactionAsync(options[i]);
+                    var poll_result = await interactivity.CollectReactionsAsync(message, duration);
+                    var results = poll_result.Reactions.Where(xkvp => options.Contains(xkvp.Key)).Select(xkvp => $"{xkvp.Key} wins the poll with **{xkvp.Value}** votes");
+                    await CTX.RespondAsync(string.Join("\n", results));
+                }
+                else
+                    await CTX.RespondAsync("Please input a valid number of days like **.poll 5** :open_mouth: :smile:");
             }
-            else
-                await CTX.RespondAsync(":warning: Please input a valid number of days like **.poll 5** :open_mouth: :smile: :warning:");
+            catch
+            {
+                await CTX.RespondAsync(":warning: Unable to create the poll, please use stock Discord emojis as options!");
+            }
         }
 
         [Command("prune")]
@@ -379,8 +389,9 @@ namespace FlawBOT.Modules
         [Aliases("rid")]
         [Description("Retrieve role information")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task GetRole(CommandContext CTX, [RemainingText] DiscordRole role)
+        public async Task GetRole(CommandContext CTX, [RemainingText] string roleName)
         {
+            var role = CTX.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
             if (role != null)
             {
                 await CTX.TriggerTypingAsync();
@@ -473,18 +484,20 @@ namespace FlawBOT.Modules
         [Description("Set server member's nickname")]
         [RequireUserPermissions(Permissions.ChangeNickname)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SetNickname(CommandContext CTX, DiscordMember member, [RemainingText] string name)
+        public async Task SetNickname(CommandContext CTX, string member, [RemainingText] string name)
         {
-            if (member.Roles.Max(r => r.Position) >= CTX.Member.Roles.Max(r => r.Position))
-                await CTX.RespondAsync(":warning: You are not authorised to nickname this user! :warning:");
-            else if (string.IsNullOrWhiteSpace(name))
-                await member.ModifyAsync(nickname: null);
-            else
+            var user = CTX.Guild.Members.FirstOrDefault(r => r.DisplayName.ToLowerInvariant() == member.ToLowerInvariant());
+            if (user != null)
             {
-                await CTX.TriggerTypingAsync();
-                string nickname = member.DisplayName;
-                await member.ModifyAsync(nickname: name);
-                await CTX.RespondAsync($"{nickname}'s nickname has been changed to **{name}**");
+                if (string.IsNullOrWhiteSpace(name))
+                    await user.ModifyAsync(nickname: "");
+                else
+                {
+                    await CTX.TriggerTypingAsync();
+                    string nickname = user.DisplayName;
+                    await user.ModifyAsync(nickname: name);
+                    await CTX.RespondAsync($"{nickname}'s nickname has been changed to **{name}**");
+                }
             }
         }
 
@@ -513,14 +526,12 @@ namespace FlawBOT.Modules
                 await CTX.TriggerTypingAsync();
                 using (WebClient client = new WebClient())
                 {
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        var data = client.DownloadData(query);
-                        stream.Write(data, 0, data.Length);
-                        stream.Position = 0;
-                        await CTX.Guild.ModifyAsync(icon: stream);
-                        await CTX.RespondAsync($"{CTX.Guild.Name} server avatar has been updated!");
-                    }
+                    MemoryStream stream = new MemoryStream();
+                    var data = client.DownloadData(query);
+                    stream.Write(data, 0, data.Length);
+                    stream.Position = 0;
+                    await CTX.Guild.ModifyAsync(icon: stream);
+                    await CTX.RespondAsync($"{CTX.Guild.Name} server avatar has been updated!");
                 }
             }
         }
@@ -561,18 +572,22 @@ namespace FlawBOT.Modules
         [Description("Toggles whether this role is displayed in the sidebar or not")]
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SidebarRole(CommandContext CTX, [RemainingText] DiscordRole role)
+        public async Task SidebarRole(CommandContext CTX, [RemainingText] string roleName)
         {
-            await CTX.TriggerTypingAsync();
-            if (role.IsHoisted)
+            var role = CTX.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
+            if (role != null)
             {
-                await CTX.Guild.UpdateRoleAsync(role, hoist: false);
-                await CTX.RespondAsync($"Role {role.Name} is now **hidden**");
-            }
-            else
-            {
-                await CTX.Guild.UpdateRoleAsync(role, hoist: true);
-                await CTX.RespondAsync($"Role {role.Name} is now **displayed**");
+                await CTX.TriggerTypingAsync();
+                if (role.IsHoisted)
+                {
+                    await CTX.Guild.UpdateRoleAsync(role, hoist: false);
+                    await CTX.RespondAsync($"Role {role.Name} is now **hidden**");
+                }
+                else
+                {
+                    await CTX.Guild.UpdateRoleAsync(role, hoist: true);
+                    await CTX.RespondAsync($"Role {role.Name} is now **displayed**");
+                }
             }
         }
 

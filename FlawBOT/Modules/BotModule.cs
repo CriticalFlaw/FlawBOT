@@ -15,7 +15,7 @@ namespace FlawBOT.Modules
         [Command("commands")]
         [Aliases("cmd", "cmds")]
         [Description("Get a link to the complete commands list")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task BotCommands(CommandContext CTX)
         {
             await CTX.TriggerTypingAsync();
@@ -30,7 +30,7 @@ namespace FlawBOT.Modules
         [Command("github")]
         [Aliases("git")]
         [Description("Get a link to the GitHub repository")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task BotRepo(CommandContext CTX)
         {
             await CTX.TriggerTypingAsync();
@@ -46,7 +46,7 @@ namespace FlawBOT.Modules
         [Command("hello")]
         [Aliases("hi")]
         [Description("Say hello to a user")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Greet(CommandContext CTX, [RemainingText] DiscordMember member)
         {
             await CTX.TriggerTypingAsync();
@@ -59,7 +59,7 @@ namespace FlawBOT.Modules
         [Command("info")]
         [Aliases("i")]
         [Description("Get the FlawBOT client information")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task BotInfo(CommandContext CTX)
         {
             await CTX.TriggerTypingAsync();
@@ -80,7 +80,7 @@ namespace FlawBOT.Modules
         [Command("ping")]
         [Aliases("pong")]
         [Description("Ping the FlawBOT client")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Ping(CommandContext CTX)
         {
             await CTX.TriggerTypingAsync();
@@ -90,7 +90,7 @@ namespace FlawBOT.Modules
         [Command("report")]
         [Aliases("issue")]
         [Description("Send a problem report to the developer")]
-        [Cooldown(1, 10, CooldownBucketType.User)]
+        [Cooldown(1, 10, CooldownBucketType.User), Cooldown(3, 10, CooldownBucketType.Channel)]
         public async Task ReportIssue(CommandContext CTX, [RemainingText] string report)
         {
             if ((string.IsNullOrWhiteSpace(report)) || (report.Length < 50))
@@ -122,7 +122,7 @@ namespace FlawBOT.Modules
 
         [Command("say")]
         [Description("Repeat the inputted message")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Say(CommandContext CTX, [RemainingText] string message)
         {
             await CTX.TriggerTypingAsync();
@@ -157,19 +157,24 @@ namespace FlawBOT.Modules
         [RequireOwner]
         [Command("setavatar")]
         [Description("Set FlawBOT's avatar")]
-        public async Task SetBotAvatar(CommandContext CTX, [RemainingText] string imageURL)
+        public async Task SetBotAvatar(CommandContext CTX, [RemainingText] string query)
         {
-            if (string.IsNullOrWhiteSpace(imageURL))
-                imageURL = "http://givemesport.azureedge.net/images/17/07/14/d57674728648fe4608784eea3b66cbbe/960.jpg";
-            await CTX.TriggerTypingAsync();
-            HttpClient http = new HttpClient();
-            using (var stream = await http.GetStreamAsync(imageURL))
+            try
             {
-                var avatar = new MemoryStream();
-                await stream.CopyToAsync(avatar);
-                avatar.Position = 0;
-                await CTX.Client.EditCurrentUserAsync(avatar: avatar);
-                await CTX.RespondAsync("FlawBOT avatar updated!");
+                await CTX.TriggerTypingAsync();
+                HttpClient http = new HttpClient();
+                using (var stream = await http.GetStreamAsync(query))
+                {
+                    var avatar = new MemoryStream();
+                    await stream.CopyToAsync(avatar);
+                    avatar.Position = 0;
+                    await CTX.Client.EditCurrentUserAsync(avatar: avatar);
+                    await CTX.RespondAsync("FlawBOT avatar updated!");
+                }
+            }
+            catch
+            {
+                await CTX.RespondAsync(":warning: Provided URL is not a valid image file!");
             }
         }
 
@@ -219,6 +224,7 @@ namespace FlawBOT.Modules
         [Command("uptime")]
         [Aliases("up")]
         [Description("Get the FlawBOT client uptime")]
+        [Cooldown(2, 5, CooldownBucketType.User), Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Uptime(CommandContext CTX)
         {
             TimeSpan uptime = DateTime.Now - GlobalVariables.ProcessStarted;

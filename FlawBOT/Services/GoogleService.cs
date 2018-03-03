@@ -49,33 +49,35 @@ namespace FlawBOT.Services
 
         public async Task<string> GetFirstVideoResultAsync(string query)
         {
-            var res = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
-            return $"https://www.youtube.com/watch?v={res.First().Id.VideoId}";
+            var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
+            if (results == null || results.Count == 0)
+                return ":warning: No results found! :warning:";
+            else
+                return $"https://www.youtube.com/watch?v={results.First().Id.VideoId}";
         }
 
         public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, string type = null)
         {
             var results = await GetResultsAsync(query, amount, type).ConfigureAwait(false);
             if (results == null || results.Count == 0)
-                return new DiscordEmbedBuilder() { Description = "No results...", Color = DiscordColor.Red };
+                return new DiscordEmbedBuilder() { Description = ":warning: No results found! :warning:", Color = DiscordColor.Red };
             if (results.Count > 25)
                 results = results.Take(25).ToList();
-            var output = new DiscordEmbedBuilder()
-                .WithColor(DiscordColor.Red);
-            foreach (var r in results)
+            var output = new DiscordEmbedBuilder() { Color = DiscordColor.Red };
+            foreach (var result in results)
             {
-                switch (r.Id.Kind)
+                switch (result.Id.Kind)
                 {
                     case "youtube#video":
-                        output.AddField(r.Snippet.Title, $"https://www.youtube.com/watch?v={r.Id.VideoId}");
+                        output.AddField(result.Snippet.Title, $"https://www.youtube.com/watch?v={result.Id.VideoId}");
                         break;
 
                     case "youtube#channel":
-                        output.AddField(r.Snippet.Title, $"https://www.youtube.com/channel/{r.Id.ChannelId}");
+                        output.AddField(result.Snippet.Title, $"https://www.youtube.com/channel/{result.Id.ChannelId}");
                         break;
 
                     case "youtube#playlist":
-                        output.AddField(r.Snippet.Title, $"https://www.youtube.com/playlist?list={r.Id.PlaylistId}");
+                        output.AddField(result.Snippet.Title, $"https://www.youtube.com/playlist?list={result.Id.PlaylistId}");
                         break;
                 }
             }
@@ -87,7 +89,7 @@ namespace FlawBOT.Services
             var searchListRequest = youtube.Search.List("snippet");
             searchListRequest.Q = query;
             searchListRequest.MaxResults = amount;
-            if (type != null)
+            if (!string.IsNullOrWhiteSpace(type))
                 searchListRequest.Type = type;
             var searchListResponse = await searchListRequest.ExecuteAsync().ConfigureAwait(false);
             List<SearchResult> videos = new List<SearchResult>();

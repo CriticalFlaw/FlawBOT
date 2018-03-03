@@ -29,11 +29,11 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.User)]
         public async Task EightBall(CommandContext CTX, [RemainingText] string question)
         {
-            await CTX.TriggerTypingAsync();
             if (string.IsNullOrWhiteSpace(question))
-                await CTX.RespondAsync(":warning: Please provide a question...");
+                await CTX.RespondAsync(":warning: You have to ask a question! :warning:");
             else
             {
+                await CTX.TriggerTypingAsync();
                 Random RND = new Random();
                 List<string> EightBallAnswers = CommonService.Get8BallList();
                 await CTX.RespondAsync(EightBallAnswers[RND.Next(0, EightBallAnswers.Count)]);
@@ -46,9 +46,9 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.User)]
         public async Task UserAvatar(CommandContext CTX, [RemainingText] DiscordMember member)
         {
-            await CTX.TriggerTypingAsync();
             if (member == null)
                 member = CTX.Member;
+            await CTX.TriggerTypingAsync();
             var output = new DiscordEmbedBuilder()
                 .WithTitle($"{member.DisplayName}'s avatar, click here for the link...")
                 .WithImageUrl($"{member.GetAvatarUrl(ImageFormat.Jpeg)}")
@@ -92,7 +92,7 @@ namespace FlawBOT.Modules
             }
             catch
             {
-                await CTX.RespondAsync(":warning: Unable to retrieve color values, try **.color [0-255] [0-255] [0-255]**");
+                await CTX.RespondAsync(":warning: Unable to retrieve color values, try **.color [0-255] [0-255] [0-255]** :warning:");
             }
         }
 
@@ -103,7 +103,7 @@ namespace FlawBOT.Modules
         public async Task Dictionary(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync(":warning: Please provide a word or a phrase to define...");
+                await CTX.RespondAsync(":warning: A word or a phrase is required! :warning:");
             else
             {
                 await CTX.TriggerTypingAsync();
@@ -151,14 +151,14 @@ namespace FlawBOT.Modules
         public async Task UrbanDictionary(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync(":warning: Please provide a word or a phrase to define...");
+                await CTX.RespondAsync(":warning: A word or a phrase is required! :warning:");
             else
             {
                 await CTX.TriggerTypingAsync();
                 DictionaryService.RootObject data = new DictionaryService.RootObject();
                 data = await DictionaryService.GetDictionaryForTermAsync(query);
                 if (data.result_type == "no_results")
-                    await CTX.RespondAsync(":warning: No results found!");
+                    await CTX.RespondAsync(":warning: No results found! :warning:");
                 else
                 {
                     foreach (var value in data.list)
@@ -187,7 +187,7 @@ namespace FlawBOT.Modules
         public async Task OMDB(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync(":warning: Please provide a movie or TV show title...");
+                await CTX.RespondAsync(":warning: A movie or TV show is required! :warning:");
             else
             {
                 await CTX.TriggerTypingAsync();
@@ -196,7 +196,7 @@ namespace FlawBOT.Modules
                 OMDbClient client = new OMDbClient(Token, true);
                 var movie = await client.GetItemByTitle(query.Replace(" ", "+"));
                 if (movie.Response == "False")
-                    await CTX.RespondAsync(":warning: No results found!");
+                    await CTX.RespondAsync(":warning: No results found! :warning:");
                 else
                 {
                     var output = new DiscordEmbedBuilder()
@@ -239,7 +239,7 @@ namespace FlawBOT.Modules
                 gallery = (await endpoint.SearchGalleryAsync(query)).ToList();
             var IMG = gallery.Any() ? gallery[RND.Next(0, gallery.Count)] : null;
             if (IMG == null)
-                await CTX.RespondAsync(":warning: No results found!");
+                await CTX.RespondAsync(":warning: No results found! :warning:");
             else
             {
                 if (IMG is GalleryAlbum)
@@ -287,28 +287,26 @@ namespace FlawBOT.Modules
         public async Task Overwatch(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync(":warning: Please provide a valid battletag like **CriticalFlaw#11354** (Case-sensitive)");
+                await CTX.RespondAsync(":warning: Blizzard Battletag is required! Try **.ow CriticalFlaw#11354** (Case-sensitive) :warning:");
             else
             {
-                using (var owClient = new OverwatchClient())
+                await CTX.TriggerTypingAsync();
+                OverwatchClient overwatch = new OverwatchClient();
+                Player player = await overwatch.GetPlayerAsync(query);
+                if (player == null)
+                    await CTX.RespondAsync(":warning: Player not found! Note; battletags are case-sensitive :warning:");
+                else
                 {
-                    await CTX.TriggerTypingAsync();
-                    Player player = await owClient.GetPlayerAsync(query);
-                    if (player == null)
-                        await CTX.RespondAsync("The player you were looking for was not found, please try again! (Battletags are case-sensitive)");
-                    else
-                    {
-                        var output = new DiscordEmbedBuilder()
-                            .WithTitle(player.Username)
-                            .AddField("Level", player.PlayerLevel.ToString(), true)
-                            .AddField("Competitive", player.CompetitiveRank.ToString(), true)
-                            .AddField("Platform", player.Platform.ToString().ToUpper(), true)
-                            .AddField("Achievements", player.Achievements.Count().ToString(), true)
-                            .WithThumbnailUrl(player.ProfilePortraitUrl)
-                            .WithUrl(player.ProfileUrl)
-                            .WithColor(DiscordColor.Gold);
-                        await CTX.RespondAsync(embed: output.Build());
-                    }
+                    var output = new DiscordEmbedBuilder()
+                        .WithTitle(player.Username)
+                        .AddField("Level", player.PlayerLevel.ToString(), true)
+                        .AddField("Competitive", player.CompetitiveRank.ToString(), true)
+                        .AddField("Platform", player.Platform.ToString().ToUpper(), true)
+                        .AddField("Achievements", player.Achievements.Count().ToString(), true)
+                        .WithThumbnailUrl(player.ProfilePortraitUrl)
+                        .WithUrl(player.ProfileUrl)
+                        .WithColor(DiscordColor.Gold);
+                    await CTX.RespondAsync(embed: output.Build());
                 }
             }
         }
@@ -320,7 +318,7 @@ namespace FlawBOT.Modules
         public async Task Pokemon(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync(":warning: Please provide a pokemon to search for...");
+                await CTX.RespondAsync(":warning: Pokemon name is required! Try **.poke charizard** :warning:");
             else
             {
                 await CTX.TriggerTypingAsync();
@@ -369,22 +367,6 @@ namespace FlawBOT.Modules
                 await CTX.RespondAsync($":dog: Bork! http://random.dog/{client.DownloadString("http://random.dog/woof")}");
         }
 
-        [Command("revav")]
-        [Description("Reverse image search someone's avatar")]
-        [Cooldown(3, 5, CooldownBucketType.User)]
-        public async Task SearchAvatarReverse(CommandContext CTX, [RemainingText] DiscordMember member)
-        {
-            if (member == null)
-                member = CTX.Member;
-            await CTX.TriggerTypingAsync();
-            var output = new DiscordEmbedBuilder()
-                .WithTitle("Google Reverse Image Search Results")
-                .WithImageUrl(member.AvatarUrl)
-                .WithUrl($"https://images.google.com/searchbyimage?image_url={member.AvatarUrl}")
-                .WithColor(DiscordColor.Purple);
-            await CTX.RespondAsync(embed: output.Build());
-        }
-
         [Command("simpsons")]
         [Aliases("doh")]
         [Description("Get a random Simpsons screenshot and episode")]
@@ -409,22 +391,27 @@ namespace FlawBOT.Modules
         [Command("simpsonsgif")]
         [Description("Get a random Simpsons gif")]
         [Cooldown(3, 5, CooldownBucketType.User)]
-        public async Task SimpsonsGif(CommandContext CTX)
+        public async Task SimpsonsGif(CommandContext CTX, [RemainingText] string input)
         {
             await CTX.TriggerTypingAsync();
-            SimpsonsService.RootObject data = new SimpsonsService.RootObject();
-            data = await SimpsonsService.GetSimpsonsDataAsync();
             var gif = await SimpsonsService.GetSimpsonsGifAsync();
-            var output = new DiscordEmbedBuilder()
-                .WithTitle(data.Episode.Title)
-                .AddField("Season/Episode", data.Episode.Key, true)
-                .AddField("Air Date", data.Episode.OriginalAirDate, true)
-                .AddField("Writer", data.Episode.Writer, true)
-                .AddField("Director", data.Episode.Director, true)
-                .WithFooter("Note: First time gifs take a few minutes to properly generate")
-                .WithUrl(data.Episode.WikiLink)
-                .WithColor(DiscordColor.Yellow);
-            await CTX.RespondAsync(gif.ToString(), embed: output.Build());
+            if (string.IsNullOrWhiteSpace(input))
+                await CTX.RespondAsync(gif.ToString());
+            else // Include episode information if any kind of parameter is inputted
+            {
+                SimpsonsService.RootObject data = new SimpsonsService.RootObject();
+                data = await SimpsonsService.GetSimpsonsDataAsync();
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(data.Episode.Title)
+                    .AddField("Season/Episode", data.Episode.Key, true)
+                    .AddField("Air Date", data.Episode.OriginalAirDate, true)
+                    .AddField("Writer", data.Episode.Writer, true)
+                    .AddField("Director", data.Episode.Director, true)
+                    .WithFooter("Note: First time gifs take a few minutes to properly generate")
+                    .WithUrl(data.Episode.WikiLink)
+                    .WithColor(DiscordColor.Yellow);
+                await CTX.RespondAsync(gif.ToString(), embed: output.Build());
+            }
         }
 
         [Command("sum")]
@@ -443,20 +430,21 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.User)]
         public async Task GetTime(CommandContext CTX, [RemainingText] string location)
         {
-            if (string.IsNullOrWhiteSpace(location))
-                await CTX.RespondAsync(":warning: Please provide a location, try **Ottawa, CA**...");
-            else
+            try
             {
-                using (var http = new HttpClient())
+                if (string.IsNullOrWhiteSpace(location))
+                    await CTX.RespondAsync(":warning: A valid location is required! Try **.time Ottawa, CA** :warning:");
+                else
                 {
                     await CTX.TriggerTypingAsync();
+                    HttpClient http = new HttpClient();
                     http.DefaultRequestHeaders.Clear();
                     APITokenService service = new APITokenService();
                     string Token = service.GetAPIToken("google");
                     var locationResource = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/geocode/json?address={location.Replace(" ", "")}&key={Token}");
                     var locationObject = JsonConvert.DeserializeObject<TimeService>(locationResource);
                     if (locationObject.status != "OK")
-                        await CTX.RespondAsync(":warning: Unable to find this location");
+                        await CTX.RespondAsync(":warning: Unable to find this location! :warning:");
                     else
                     {
                         var currentSeconds = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
@@ -472,6 +460,10 @@ namespace FlawBOT.Modules
                     }
                 }
             }
+            catch
+            {
+                await CTX.RespondAsync(":warning: Unable to find time data for this location! :warning:");
+            }
         }
 
         [Command("twitch")]
@@ -480,33 +472,40 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.User)]
         public async Task CheckTwitchStream(CommandContext CTX, [RemainingText] string stream)
         {
-            if (string.IsNullOrWhiteSpace(stream))
-                await CTX.RespondAsync(":warning: Please provide a Twitch channel to check...");
-            else
+            try
             {
-                await CTX.TriggerTypingAsync();
-                HttpClient http = new HttpClient();
-                APITokenService service = new APITokenService();
-                string Token = service.GetAPIToken("twitch");
-                var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id={Token}";
-                string response = await http.GetStringAsync(twitchUrl).ConfigureAwait(false);
-                var twitch = JsonConvert.DeserializeObject<TwitchService>(response);
-                twitch.Url = twitchUrl;
-                if (!twitch.IsLive)
-                    await CTX.RespondAsync("That Twitch channel is **Offline** (doesn't exist) :pensive:");
+                if (string.IsNullOrWhiteSpace(stream))
+                    await CTX.RespondAsync(":warning: A valid Twitch channel name is required! :warning:");
                 else
                 {
-                    var output = new DiscordEmbedBuilder()
-                        .WithTitle($"{twitch.stream.channel.display_name} is live streaming on Twitch!")
-                        .AddField("Now Playing", twitch.Game)
-                        .AddField("Stream Title", twitch.Title)
-                        .AddField("Followers", twitch.Followers.ToString(), true)
-                        .AddField("Viewers", twitch.Viewers.ToString(), true)
-                        .WithThumbnailUrl(twitch.Icon)
-                        .WithUrl(twitch.Url)
-                        .WithColor(DiscordColor.Purple);
-                    await CTX.RespondAsync(embed: output.Build());
+                    await CTX.TriggerTypingAsync();
+                    HttpClient http = new HttpClient();
+                    APITokenService service = new APITokenService();
+                    string Token = service.GetAPIToken("twitch");
+                    var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id={Token}";
+                    string response = await http.GetStringAsync(twitchUrl).ConfigureAwait(false);
+                    var twitch = JsonConvert.DeserializeObject<TwitchService>(response);
+                    twitch.Url = twitchUrl;
+                    if (!twitch.IsLive)
+                        await CTX.RespondAsync("That Twitch channel is **Offline** (or doesn't exist) :pensive:");
+                    else
+                    {
+                        var output = new DiscordEmbedBuilder()
+                            .WithTitle($"{twitch.stream.channel.display_name} is live streaming on Twitch!")
+                            .AddField("Now Playing", twitch.Game)
+                            .AddField("Stream Title", twitch.Title)
+                            .AddField("Followers", twitch.Followers.ToString(), true)
+                            .AddField("Viewers", twitch.Viewers.ToString(), true)
+                            .WithThumbnailUrl(twitch.Icon)
+                            .WithUrl(twitch.Url)
+                            .WithColor(DiscordColor.Purple);
+                        await CTX.RespondAsync(embed: output.Build());
+                    }
                 }
+            }
+            catch
+            {
+                await CTX.RespondAsync(":warning: Error processing channel status, please do not include special characters in your input! :warning:");
             }
         }
 
@@ -519,7 +518,7 @@ namespace FlawBOT.Modules
             try
             {
                 if (string.IsNullOrWhiteSpace(location))
-                    await CTX.RespondAsync(":warning: Please provide a location like **Ottawa, CA**...");
+                    await CTX.RespondAsync(":warning: A valid location is required! Try **.weather Ottawa, CA** :warning:");
                 else
                 {
                     await CTX.TriggerTypingAsync();
@@ -528,7 +527,7 @@ namespace FlawBOT.Modules
                     string response = await http.GetStringAsync($"http://api.openweathermap.org/data/2.5/weather?q={location}&appid=42cd627dd60debf25a5739e50a217d74&units=metric");
                     var weather = JsonConvert.DeserializeObject<WeatherService.WeatherData>(response);
                     if (weather.cod == 404)
-                        await CTX.RespondAsync(":warning: Unable to find this location");
+                        await CTX.RespondAsync(":warning: Unable to find this location! :warning:");
                     else
                     {
                         Func<double, double> format = WeatherService.CelsiusToFahrenheit;
@@ -546,7 +545,7 @@ namespace FlawBOT.Modules
             }
             catch
             {
-                await CTX.RespondAsync(":warning: Unable to find weather data for this location");
+                await CTX.RespondAsync(":warning: Unable to find weather data for this location! :warning:");
             }
         }
 
@@ -557,7 +556,7 @@ namespace FlawBOT.Modules
         public async Task SearchWikipedia(CommandContext CTX, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await CTX.RespondAsync(":warning: Please provide a Wikipedia entry to search for...");
+                await CTX.RespondAsync(":warning: Wikipedia search query is required! :warning:");
             else
             {
                 await CTX.TriggerTypingAsync();
@@ -565,7 +564,7 @@ namespace FlawBOT.Modules
                 var result = await http.GetStringAsync($"https://en.wikipedia.org//w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles={Uri.EscapeDataString(query)}");
                 var data = JsonConvert.DeserializeObject<WikipediaService>(result);
                 if (data.Query.Pages[0].Missing)
-                    await CTX.RespondAsync(":warning: Unable to find this Wikipedia page");
+                    await CTX.RespondAsync(":warning: Unable to find this Wikipedia page! :warning:");
                 else
                     await CTX.Channel.SendMessageAsync(data.Query.Pages[0].FullUrl).ConfigureAwait(false);
             }

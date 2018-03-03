@@ -2,11 +2,11 @@
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using Newtonsoft.Json;
-using SteamWebAPI2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -15,36 +15,15 @@ namespace FlawBOT.Services
     internal class GlobalVariables : Random
     {
         public static string Name = "FlawBOT";
-        public static string Version = "0.9.0";
+        public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public static DateTime ProcessStarted;
+        public static Dictionary<int, string> TFItemSchema = new Dictionary<int, string>();
+        public static Dictionary<uint, string> SteamAppList = new Dictionary<uint, string>();
         public static Random Instance => ThreadLocal.Value;
-        public static Dictionary<int, string> itemSchema = new Dictionary<int, string>();
-        public static Dictionary<int, string> gameList = new Dictionary<int, string>();
         private static int _seed;
         private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
 
         static GlobalVariables() => _seed = Environment.TickCount;
-
-        public static async void UpdateSteamAsync()
-        {
-            // Team Fortress 2 Item Schema
-            APITokenService service = new APITokenService();
-            string Token = service.GetAPIToken("steam");
-            EconItems schema = new EconItems(Token, EconItemsAppId.TeamFortress2);
-            var items = await schema.GetSchemaForTF2Async();
-            GlobalVariables.itemSchema.Clear();
-            foreach (var item in items.Data.Items)
-                if (!string.IsNullOrWhiteSpace(item.ItemName))
-                    GlobalVariables.itemSchema.Add(Convert.ToInt32(item.DefIndex), item.ItemName);
-
-            // Steam Games List
-            SteamService steam = new SteamService();
-            var games = await SteamService.GetSteamAppsListAsync();
-            GlobalVariables.gameList.Clear();
-            foreach (var game in games.applist.apps)
-                if (!string.IsNullOrWhiteSpace(game.name))
-                    GlobalVariables.gameList.Add(Convert.ToInt32(game.appid), game.name);
-        }
     }
 
     public class APITokenService
@@ -56,6 +35,12 @@ namespace FlawBOT.Services
                 JSON = SRD.ReadToEnd();
             switch (query.ToUpperInvariant())
             {
+                case "DISCORD":
+                    return JsonConvert.DeserializeObject<APITokenList>(JSON).Token;
+
+                case "PREFIX":
+                    return JsonConvert.DeserializeObject<APITokenList>(JSON).CommandPrefix;
+
                 case "GOOGLE":
                     return JsonConvert.DeserializeObject<APITokenList>(JSON).GoogleToken;
 
@@ -128,12 +113,6 @@ namespace FlawBOT.Services
             return this;
         }
 
-        public IHelpFormatter WithGroupExecutable()
-        {
-            MessageBuilder.AppendLine("This group is a standalone command.").AppendLine();
-            return this;
-        }
-
         public IHelpFormatter WithArguments(IEnumerable<CommandArgument> arguments)
         {
             MessageBuilder.Append("**Arguments**: ").AppendLine(string.Join(", ", arguments.Select(xarg => $"{xarg.Name} ({xarg.Type.ToUserFriendlyName()})")));
@@ -143,6 +122,12 @@ namespace FlawBOT.Services
         public IHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
         {
             MessageBuilder.Append("**Commands**: ").AppendLine(string.Join(", ", subcommands.Select(xc => xc.Name)));
+            return this;
+        }
+
+        public IHelpFormatter WithGroupExecutable()
+        {
+            MessageBuilder.AppendLine("This group is a standalone command.").AppendLine();
             return this;
         }
 

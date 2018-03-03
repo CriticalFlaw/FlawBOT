@@ -37,205 +37,13 @@ namespace FlawBOT.Services
         }
     }
 
-    public class SteamService
-    {
-        public static async Task<RootObject> GetSteamAppsListAsync()
-        {
-            using (var HTTP = new HttpClient())
-            {
-                var result = await HTTP.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
-                return JsonConvert.DeserializeObject<RootObject>(result);
-            }
-        }
-
-        public class App
-        {
-            public int appid { get; set; }
-            public string name { get; set; }
-        }
-
-        public class Applist
-        {
-            public List<App> apps { get; set; }
-        }
-
-        public class RootObject
-        {
-            public Applist applist { get; set; }
-        }
-    }
-
-    public class SteamGameService
-    {
-        public static async Task<RootObject> GetSteamAppsInfoAsync(uint appID)
-        {
-            using (var HTTP = new HttpClient())
-            {
-                var result = await HTTP.GetStringAsync($"http://store.steampowered.com/api/appdetails/?appids={appID}");
-                return JsonConvert.DeserializeObject<RootObject>(result);
-            }
-        }
-
-        public class PcRequirements
-        {
-            public string minimum { get; set; }
-        }
-
-        public class PriceOverview
-        {
-            public string currency { get; set; }
-            public int initial { get; set; }
-            public int final { get; set; }
-            public int discount_percent { get; set; }
-        }
-
-        public class Sub
-        {
-            public int packageid { get; set; }
-            public string percent_savings_text { get; set; }
-            public int percent_savings { get; set; }
-            public string option_text { get; set; }
-            public string option_description { get; set; }
-            public string can_get_free_license { get; set; }
-            public bool is_free_license { get; set; }
-            public int price_in_cents_with_discount { get; set; }
-        }
-
-        public class PackageGroup
-        {
-            public string name { get; set; }
-            public string title { get; set; }
-            public string description { get; set; }
-            public string selection_text { get; set; }
-            public string save_text { get; set; }
-            public int display_type { get; set; }
-            public string is_recurring_subscription { get; set; }
-            public List<Sub> subs { get; set; }
-        }
-
-        public class Platforms
-        {
-            public bool windows { get; set; }
-            public bool mac { get; set; }
-            public bool linux { get; set; }
-        }
-
-        public class Category
-        {
-            public int id { get; set; }
-            public string description { get; set; }
-        }
-
-        public class Genre
-        {
-            public string id { get; set; }
-            public string description { get; set; }
-        }
-
-        public class Screenshot
-        {
-            public int id { get; set; }
-            public string path_thumbnail { get; set; }
-            public string path_full { get; set; }
-        }
-
-        public class Webm
-        {
-            public string __invalid_name__480 { get; set; }
-            public string max { get; set; }
-        }
-
-        public class Movie
-        {
-            public int id { get; set; }
-            public string name { get; set; }
-            public string thumbnail { get; set; }
-            public Webm webm { get; set; }
-            public bool highlight { get; set; }
-        }
-
-        public class Recommendations
-        {
-            public int total { get; set; }
-        }
-
-        public class Highlighted
-        {
-            public string name { get; set; }
-            public string path { get; set; }
-        }
-
-        public class Achievements
-        {
-            public int total { get; set; }
-            public List<Highlighted> highlighted { get; set; }
-        }
-
-        public class ReleaseDate
-        {
-            public bool coming_soon { get; set; }
-            public string date { get; set; }
-        }
-
-        public class SupportInfo
-        {
-            public string url { get; set; }
-            public string email { get; set; }
-        }
-
-        public class Data
-        {
-            public string type { get; set; }
-            public string name { get; set; }
-            public int steam_appid { get; set; }
-            public int required_age { get; set; }
-            public bool is_free { get; set; }
-            public List<int> dlc { get; set; }
-            public string detailed_description { get; set; }
-            public string about_the_game { get; set; }
-            public string short_description { get; set; }
-            public string supported_languages { get; set; }
-            public string header_image { get; set; }
-            public string website { get; set; }
-            public PcRequirements pc_requirements { get; set; }
-            public List<object> mac_requirements { get; set; }
-            public List<object> linux_requirements { get; set; }
-            public List<string> developers { get; set; }
-            public List<string> publishers { get; set; }
-            public PriceOverview price_overview { get; set; }
-            public List<int> packages { get; set; }
-            public List<PackageGroup> package_groups { get; set; }
-            public Platforms platforms { get; set; }
-            public List<Category> categories { get; set; }
-            public List<Genre> genres { get; set; }
-            public List<Screenshot> screenshots { get; set; }
-            public List<Movie> movies { get; set; }
-            public Recommendations recommendations { get; set; }
-            public Achievements achievements { get; set; }
-            public ReleaseDate release_date { get; set; }
-            public SupportInfo support_info { get; set; }
-            public string background { get; set; }
-        }
-
-        public class __invalid_type__526160
-        {
-            public bool success { get; set; }
-            public Data data { get; set; }
-        }
-
-        public class RootObject
-        {
-            public __invalid_type__526160 __invalid_name__526160 { get; set; }
-        }
-    }
-
     public class DefinitionService
     {
         public static async Task<Data> GetDefinitionForTermAsync(string query)
         {
-            using (var HTTP = new HttpClient())
+            using (var http = new HttpClient())
             {
-                var result = await HTTP.GetStringAsync($"http://api.pearson.com/v2/dictionaries/entries?headword={WebUtility.UrlEncode(query.Trim())}");
+                var result = await http.GetStringAsync($"http://api.pearson.com/v2/dictionaries/entries?headword={WebUtility.UrlEncode(query.Trim())}");
                 return JsonConvert.DeserializeObject<Data>(result);
             }
         }
@@ -282,7 +90,7 @@ namespace FlawBOT.Services
         {
             using (var http = new HttpClient())
             {
-                var data = await http.GetStringAsync($"http://api.urbandictionary.com/v0/define?term={WebUtility.UrlEncode(query)}");
+                var data = await http.GetStringAsync($"http://api.urbandictionary.com/v0/define?term={WebUtility.UrlEncode(query.Trim())}");
                 return JsonConvert.DeserializeObject<RootObject>(data);
             }
         }
@@ -308,7 +116,7 @@ namespace FlawBOT.Services
         {
             using (var http = new HttpClient())
             {
-                var data = await http.GetStringAsync($"http://api.pokemontcg.io/v1/cards?name={query}");
+                var data = await http.GetStringAsync($"http://api.pokemontcg.io/v1/cards?name={query.Trim()}");
                 return JsonConvert.DeserializeObject<RootObject>(data);
             }
         }
@@ -330,7 +138,7 @@ namespace FlawBOT.Services
         {
             using (var http = new HttpClient())
             {
-                var result = await http.GetStringAsync($"https://frinkiac.com/api/random");
+                var result = await http.GetStringAsync("https://frinkiac.com/api/random");
                 return JsonConvert.DeserializeObject<RootObject>(result);
             }
         }
@@ -339,7 +147,7 @@ namespace FlawBOT.Services
         {
             using (var http = new HttpClient())
             {
-                var result = await http.GetStringAsync($"https://frinkiac.com/api/random");
+                var result = await http.GetStringAsync("https://frinkiac.com/api/random");
                 var content = JsonConvert.DeserializeObject<RootObject>(result);
                 var frames_result = await http.GetStringAsync($"https://frinkiac.com/api/frames/{content.Episode.Key}/{content.Frame.Timestamp}/3000/4000");
                 var frames = JsonConvert.DeserializeObject<List<Frame>>(frames_result);
@@ -371,6 +179,34 @@ namespace FlawBOT.Services
             public int Id { get; set; }
             public string Episode { get; set; }
             public int Timestamp { get; set; }
+        }
+    }
+
+    public class SteamService
+    {
+        public static async Task<RootObject> GetSteamAppsListAsync()
+        {
+            using (var http = new HttpClient())
+            {
+                var result = await http.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
+                return JsonConvert.DeserializeObject<RootObject>(result);
+            }
+        }
+
+        public class RootObject
+        {
+            public Applist applist { get; set; }
+        }
+
+        public class Applist
+        {
+            public List<App> apps { get; set; }
+        }
+
+        public class App
+        {
+            public int appid { get; set; }
+            public string name { get; set; }
         }
     }
 
@@ -435,11 +271,6 @@ namespace FlawBOT.Services
 
     public class WeatherService
     {
-        public static double CelsiusToFahrenheit(double cel)
-        {
-            return cel * 1.8f + 32;
-        }
-
         public class WeatherData
         {
             public int id { get; set; }
@@ -461,12 +292,8 @@ namespace FlawBOT.Services
         {
             public double temp { get; set; }
             public float humidity { get; set; }
-
-            //    [JsonProperty("temp_min")]
-            public double tempMin { get; set; }
-
-            //    [JsonProperty("temp_max")]
-            public double tempMax { get; set; }
+            public double tempMin { get; set; }     // [JsonProperty("temp_min")]
+            public double tempMax { get; set; }     // [JsonProperty("temp_max")]
         }
 
         public class Wind
@@ -478,6 +305,11 @@ namespace FlawBOT.Services
         {
             public int id { get; set; }
             public string main { get; set; }
+        }
+
+        public static double CelsiusToFahrenheit(double cel)
+        {
+            return cel * 1.8f + 32;
         }
     }
 
