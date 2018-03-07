@@ -17,44 +17,47 @@ namespace FlawBOT.Services
         public static string Name = "FlawBOT";
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public static DateTime ProcessStarted;
-        public static Dictionary<int, string> TFItemSchema = new Dictionary<int, string>();
         public static Dictionary<uint, string> SteamAppList = new Dictionary<uint, string>();
-        public static Random Instance => ThreadLocal.Value;
         private static int _seed;
         private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
-
-        static GlobalVariables() => _seed = Environment.TickCount;
+        public static Random Instance => ThreadLocal.Value;
+        //public static Dictionary<int, string> ItemSchema = new Dictionary<int, string>();
+        static GlobalVariables()
+        {
+            _seed = Environment.TickCount;
+        }
     }
 
     public class APITokenService
     {
         public string GetAPIToken(string query)
         {
-            string JSON = null;
-            using (var SRD = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
-                JSON = SRD.ReadToEnd();
+            string json;
+            using (var stream = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)))
+                json = stream.ReadToEnd();
+
             switch (query.ToUpperInvariant())
             {
                 case "DISCORD":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).Token;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).Token;
 
                 case "PREFIX":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).CommandPrefix;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).CommandPrefix;
 
                 case "GOOGLE":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).GoogleToken;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).GoogleToken;
 
                 case "STEAM":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).SteamToken;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).SteamToken;
 
                 case "IMGUR":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).ImgurToken;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).ImgurToken;
 
                 case "OMDB":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).OMDBToken;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).OMDBToken;
 
                 case "TWITCH":
-                    return JsonConvert.DeserializeObject<APITokenList>(JSON).TwitchToken;
+                    return JsonConvert.DeserializeObject<APITokenList>(json).TwitchToken;
 
                 default:
                     return null;
@@ -63,37 +66,30 @@ namespace FlawBOT.Services
 
         public struct APITokenList
         {
-            [JsonProperty("token")]
-            public string Token { get; private set; }
+            [JsonProperty("token")] public string Token { get; private set; }
 
-            [JsonProperty("prefix")]
-            public string CommandPrefix { get; private set; }
+            [JsonProperty("prefix")] public string CommandPrefix { get; private set; }
 
-            [JsonProperty("google")]
-            public string GoogleToken { get; private set; }
+            [JsonProperty("google")] public string GoogleToken { get; private set; }
 
-            [JsonProperty("steam")]
-            public string SteamToken { get; private set; }
+            [JsonProperty("steam")] public string SteamToken { get; private set; }
 
-            [JsonProperty("imgur")]
-            public string ImgurToken { get; private set; }
+            [JsonProperty("imgur")] public string ImgurToken { get; private set; }
 
-            [JsonProperty("omdb")]
-            public string OMDBToken { get; private set; }
+            [JsonProperty("omdb")] public string OMDBToken { get; private set; }
 
-            [JsonProperty("twitch")]
-            public string TwitchToken { get; private set; }
+            [JsonProperty("twitch")] public string TwitchToken { get; private set; }
         }
     }
 
     public class HelperService : IHelpFormatter
     {
-        private StringBuilder MessageBuilder { get; }
-
         public HelperService()
         {
             MessageBuilder = new StringBuilder();
         }
+
+        private StringBuilder MessageBuilder { get; }
 
         public IHelpFormatter WithCommandName(string name)
         {
@@ -139,7 +135,7 @@ namespace FlawBOT.Services
 
     public class MathService : IArgumentConverter<MathOperations>
     {
-        public bool TryConvert(string value, CommandContext CTX, out MathOperations result)
+        public bool TryConvert(string value, CommandContext ctx, out MathOperations result)
         {
             switch (value)
             {
@@ -162,14 +158,20 @@ namespace FlawBOT.Services
                 case "%":
                     result = MathOperations.Modulo;
                     return true;
+
+                default:
+                    result = MathOperations.Add;
+                    return false;
             }
-            result = MathOperations.Add;
-            return false;
         }
     }
 
     public enum MathOperations
     {
-        Add, Subtract, Multiply, Divide, Modulo
+        Add,
+        Subtract,
+        Multiply,
+        Divide,
+        Modulo
     }
 }

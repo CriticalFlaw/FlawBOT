@@ -6,35 +6,31 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Services
 {
-    public class CommonService
+    internal class EightBallAnswers
     {
-        public static List<string> Get8BallList()
+        public static List<string> list = new List<string>
         {
-            List<string> EightBallAnswers = new List<string>
-            {
-                "It is certain",
-                "It is decidedly so",
-                "Without a doubt",
-                "Yes definitely",
-                "You may rely on it",
-                "As I see it, yes",
-                "Most likely",
-                "Outlook good",
-                "Yes",
-                "Signs point to yes",
-                "Reply hazy try again",
-                "Ask again later",
-                "Better not tell you now",
-                "Cannot predict now",
-                "Concentrate and ask again",
-                "Don't count on it",
-                "My reply is no",
-                "My sources say no",
-                "Outlook not so good",
-                "Very doubtful"
-            };
-            return EightBallAnswers;
-        }
+            "It is certain",
+            "It is decidedly so",
+            "Without a doubt",
+            "Yes definitely",
+            "You may rely on it",
+            "As I see it, yes",
+            "Most likely",
+            "Outlook good",
+            "Yes",
+            "Signs point to yes",
+            "Reply hazy try again",
+            "Ask again later",
+            "Better not tell you now",
+            "Cannot predict now",
+            "Concentrate and ask again",
+            "Don't count on it",
+            "My reply is no",
+            "My sources say no",
+            "Outlook not so good",
+            "Very doubtful"
+        };
     }
 
     public class DefinitionService
@@ -242,35 +238,40 @@ namespace FlawBOT.Services
 
     public class TwitchService : IStreamResponse
     {
-        public StreamInfo stream { get; set; }
-        public string Game => stream?.game;
-        public int Viewers => stream?.viewers ?? 0;
-        public string Title => stream?.channel?.status;
-        public string Icon => stream?.channel?.logo;
-        public int Followers => stream?.channel?.followers ?? 0;
-        public bool IsLive => stream != null;
-        public bool Live => IsLive;
+        public StreamInfo Stream { get; set; }
+        public bool IsLive => Stream != null;
         public string Error { get; set; } = null;
+        public string Game => Stream?.Game;
+        public int Viewers => Stream?.Viewers ?? 0;
+        public string Title => Stream?.Channel?.Status;
+        public string Icon => Stream?.Channel?.Logo;
+        public int Followers => Stream?.Channel?.Followers ?? 0;
+        public bool Live => IsLive;
         public string Url { get; set; }
 
         public class StreamInfo
         {
-            public string game { get; set; }
-            public int viewers { get; set; }
-            public ChannelInfo channel { get; set; }
+            public string Game { get; set; }
+            public int Viewers { get; set; }
+            public ChannelInfo Channel { get; set; }
 
             public class ChannelInfo
             {
                 public string display_name { get; set; }
-                public string status { get; set; }
-                public string logo { get; set; }
-                public int followers { get; set; }
+                public string Status { get; set; }
+                public string Logo { get; set; }
+                public int Followers { get; set; }
             }
         }
     }
 
     public class WeatherService
     {
+        public static double CelsiusToFahrenheit(double cel)
+        {
+            return cel * 1.8f + 32;
+        }
+
         public class WeatherData
         {
             public int id { get; set; }
@@ -292,8 +293,8 @@ namespace FlawBOT.Services
         {
             public double temp { get; set; }
             public float humidity { get; set; }
-            public double tempMin { get; set; }     // [JsonProperty("temp_min")]
-            public double tempMax { get; set; }     // [JsonProperty("temp_max")]
+            public double tempMin { get; set; } // [JsonProperty("temp_min")]
+            public double tempMax { get; set; } // [JsonProperty("temp_max")]
         }
 
         public class Wind
@@ -305,11 +306,6 @@ namespace FlawBOT.Services
         {
             public int id { get; set; }
             public string main { get; set; }
-        }
-
-        public static double CelsiusToFahrenheit(double cel)
-        {
-            return cel * 1.8f + 32;
         }
     }
 
