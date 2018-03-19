@@ -39,6 +39,7 @@ namespace FlawBOT
             {
                 StringPrefix = service.GetAPIToken("prefix"), // Set the command prefix that will be used by the bot
                 EnableDms = false, // Set the boolean for responding to direct messages
+                EnableDefaultHelp = false,
                 EnableMentionPrefix = true // Set the boolean for mentioning the bot as a command prefix
             };
 
@@ -96,7 +97,7 @@ namespace FlawBOT
             switch (e.Exception)
             {
                 case CommandNotFoundException _:
-                    await e.Context.RespondAsync(":no_entry: This command does not exist!");
+                    //await e.Context.RespondAsync(":no_entry: This command does not exist!");
                     break;
 
                 case ArgumentNullException _:

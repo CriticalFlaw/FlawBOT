@@ -1,3 +1,6 @@
+[![Discord](https://discordapp.com/api/guilds/414544980971880449/widget.png)](https://discord.gg/vqz7KCh)
+[![Discord Bots](https://discordbots.org/api/widget/status/339833029013012483.svg)](https://discordbots.org/bot/339833029013012483)
+
 ![img](https://i.imgur.com/YlbST5I.jpg)
 
 Multipurpose Discord bot written using the [DSharpPlus C# library](https://github.com/DSharpPlus/DSharpPlus)

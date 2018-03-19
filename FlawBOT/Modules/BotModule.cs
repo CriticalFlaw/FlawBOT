@@ -28,6 +28,20 @@ namespace FlawBOT.Modules
             await ctx.RespondAsync(embed: output.Build());
         }
 
+        [Command("help")]
+        [Description("Get a sample of the commands list")]
+        [Cooldown(2, 5, CooldownBucketType.User)]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
+        public async Task HelpCommands(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle("FlawBOT Command List")
+                .WithDescription("For the **complete** command list, click [here](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing)!\n> **.info** Get the FlawBOT client information\n> **.report** Send a problem report to the developer\n> **.8ball** Roll an 8-ball\n> **.tf2** Get a random Team Fortress 2 item\n> **.pokemon** Get a random Pokemon card\n> **.overwatch** Get Overwatch player information\n> **.dictionary** Get an Urban Dictionary entry for a word or phrase\n> **.imdb** Get a movie or TV show from OMDB\n> **.imgur** Get an imager from Imgur\n> **.math** Perform a basic math operation\n> **.simpsons** Get a random Simpsons screenshot and episode\n> **.time** Get time for specified location\n> **.weather** Get weather information for specified location\n> **.twitch** Get Twitch stream information\n> **.youtube** Get the first YouTube video search result\n> **.steamgame** Get a random Steam game")
+                .WithColor(DiscordColor.Turquoise);
+            await ctx.RespondAsync(embed: output.Build());
+        }
+
         [Command("github")]
         [Aliases("git")]
         [Description("Get a link to the GitHub repository")]
@@ -73,6 +87,7 @@ namespace FlawBOT.Modules
                 .WithDescription("A multipurpose Discord bot created using [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
                 .AddField("Version", GlobalVariables.Version)
                 .AddField("Uptime", $"{(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                .AddField("Ping", $"{ctx.Client.Ping}", true)
                 .AddField("Links", "[Commands](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing) - [Invite](https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot) - [GitHub](https://github.com/criticalflaw/flawbot) - [Discord](https://discord.gg/vqz7KCh).")
                 .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
                 .WithFooter("Thank you for using FlawBOT!")
