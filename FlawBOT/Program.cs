@@ -1,4 +1,7 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.EventArgs;
@@ -6,9 +9,6 @@ using DSharpPlus.Interactivity;
 using FlawBOT.Modules;
 using FlawBOT.Services;
 using SteamWebAPI2.Interfaces;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace FlawBOT
 {

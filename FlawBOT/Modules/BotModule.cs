@@ -84,10 +84,10 @@ namespace FlawBOT.Modules
             var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
             var output = new DiscordEmbedBuilder()
                 .WithTitle("FlawBOT")
-                .WithDescription("A multipurpose Discord bot created using [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
-                .AddField("Version", GlobalVariables.Version)
+                .WithDescription("A multipurpose Discord bot created using [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).\nPlease work inline")
+                .AddField("Version", GlobalVariables.Version, true)
                 .AddField("Uptime", $"{(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
-                .AddField("Ping", $"{ctx.Client.Ping}", true)
+                .AddField("Ping", $"{ctx.Client.Ping}ms", true)
                 .AddField("Links", "[Commands](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing) - [Invite](https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot) - [GitHub](https://github.com/criticalflaw/flawbot) - [Discord](https://discord.gg/vqz7KCh).")
                 .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
                 .WithFooter("Thank you for using FlawBOT!")
