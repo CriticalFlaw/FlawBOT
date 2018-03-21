@@ -252,5 +252,14 @@ namespace FlawBOT.Modules
             var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
             await ctx.RespondAsync($"This bot has been running for {(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}");
         }
+
+        [Hidden]
+        [RequireOwner]
+        [Command("shutdown")]
+        [Description("Shutdown the FlawBOT client")]
+        public async Task Shutdown(CommandContext ctx)
+        {
+            await Task.Delay(0).ConfigureAwait(false);
+        }
     }
 }
