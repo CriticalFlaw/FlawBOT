@@ -34,7 +34,7 @@ namespace FlawBOT.Modules
             {
                 await ctx.TriggerTypingAsync();
                 var rnd = new Random();
-                await ctx.RespondAsync(EightBallAnswers.list[rnd.Next(0, EightBallAnswers.list.Count)]);
+                await ctx.RespondAsync($":8ball: {EightBallAnswers.list[rnd.Next(0, EightBallAnswers.list.Count)]}");
             }
         }
 
@@ -129,7 +129,7 @@ namespace FlawBOT.Modules
                                     output.AddField("Example", value.Examples.First().text);
                                 await ctx.RespondAsync(embed: output.Build());
 
-                                var interactivity = await ctx.Client.GetInteractivityModule()
+                                var interactivity = await ctx.Client.GetInteractivity()
                                     .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLower() == "go", TimeSpan.FromSeconds(10));
                                 if (interactivity != null) continue;
                                 index = data.Results.Count;
@@ -168,7 +168,7 @@ namespace FlawBOT.Modules
                             output.AddField("Example", value.example);
                         await ctx.RespondAsync(embed: output.Build());
 
-                        var interactivity = await ctx.Client.GetInteractivityModule()
+                        var interactivity = await ctx.Client.GetInteractivity()
                             .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLower() == "next", TimeSpan.FromSeconds(10));
                         if (interactivity == null) break;
                     }
@@ -251,37 +251,44 @@ namespace FlawBOT.Modules
         [Description("Perform a basic math operation")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Math(CommandContext ctx, double num1, MathOperations operation, double num2)
+        public async Task Math(CommandContext ctx, double num1, string operation, double num2)
         {
-            double result;
-            switch (operation)
+            try
             {
-                case MathOperations.Add:
-                    result = num1 + num2;
-                    break;
+                double result;
+                switch (operation)
+                {
+                    case "+":
+                        result = num1 + num2;
+                        break;
 
-                case MathOperations.Subtract:
-                    result = num1 - num2;
-                    break;
+                    case "-":
+                        result = num1 - num2;
+                        break;
 
-                case MathOperations.Multiply:
-                    result = num1 * num2;
-                    break;
+                    case "*":
+                        result = num1 * num2;
+                        break;
 
-                case MathOperations.Divide:
-                    result = num1 / num2;
-                    break;
+                    case "/":
+                        result = num1 / num2;
+                        break;
 
-                case MathOperations.Modulo:
-                    result = num1 % num2;
-                    break;
+                    case "%":
+                        result = num1 % num2;
+                        break;
 
-                default:
-                    result = num1 + num2;
-                    break;
+                    default:
+                        result = num1 + num2;
+                        break;
+                }
+
+                await ctx.RespondAsync($"{DiscordEmoji.FromName(ctx.Client, ":1234:")} The result is {result:#,##0.00}");
             }
-
-            await ctx.RespondAsync($"{DiscordEmoji.FromName(ctx.Client, ":1234:")} The result is {result:#,##0.00}");
+            catch
+            {
+                await ctx.RespondAsync(":warning: Error calculating math equation, make sure your values are integers and the operation is valid! :warning:");
+            }
         }
 
         [Command("overwatch")]

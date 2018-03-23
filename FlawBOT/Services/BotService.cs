@@ -1,11 +1,11 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -21,6 +21,7 @@ namespace FlawBOT.Services
         private static int _seed;
         private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
         public static Random Instance => ThreadLocal.Value;
+
         //public static Dictionary<int, string> ItemSchema = new Dictionary<int, string>();
         static GlobalVariables()
         {
@@ -59,6 +60,9 @@ namespace FlawBOT.Services
                 case "TWITCH":
                     return JsonConvert.DeserializeObject<APITokenList>(json).TwitchToken;
 
+                case "DATABASE":
+                    return JsonConvert.DeserializeObject<APITokenList>(json).ConnectionString;
+
                 default:
                     return null;
             }
@@ -79,99 +83,38 @@ namespace FlawBOT.Services
             [JsonProperty("omdb")] public string OMDBToken { get; private set; }
 
             [JsonProperty("twitch")] public string TwitchToken { get; private set; }
+
+            [JsonProperty("database")] public string ConnectionString { get; private set; }
         }
     }
 
-    public class HelperService : IHelpFormatter
+    public sealed class HelperService : BaseHelpFormatter
     {
-        public HelperService()
+        private readonly DefaultHelpFormatter helper;
+
+        public HelperService(CommandsNextExtension cnext) : base(cnext)
         {
-            MessageBuilder = new StringBuilder();
+            helper = new DefaultHelpFormatter(cnext);
         }
 
-        private StringBuilder MessageBuilder { get; }
-
-        public IHelpFormatter WithCommandName(string name)
+        public override BaseHelpFormatter WithCommand(Command command)
         {
-            MessageBuilder.Append("**Command**: ").AppendLine(name);
-            return this;
+            return helper.WithCommand(command);
         }
 
-        public IHelpFormatter WithAliases(IEnumerable<string> aliases)
+        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
         {
-            MessageBuilder.Append("**Aliases**: ").AppendLine(string.Join(", ", aliases));
-            return this;
+            return helper.WithSubcommands(subcommands);
         }
 
-        public IHelpFormatter WithDescription(string description)
+        public override CommandHelpMessage Build()
         {
-            MessageBuilder.Append("**Description**: ").AppendLine(description);
-            return this;
-        }
-
-        public IHelpFormatter WithArguments(IEnumerable<CommandArgument> arguments)
-        {
-            MessageBuilder.Append("**Arguments**: ").AppendLine(string.Join(", ", arguments.Select(xarg => $"{xarg.Name} ({xarg.Type.ToUserFriendlyName()})")));
-            return this;
-        }
-
-        public IHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
-        {
-            MessageBuilder.Append("**Commands**: ").AppendLine(string.Join(", ", subcommands.Select(xc => xc.Name)));
-            return this;
-        }
-
-        public IHelpFormatter WithGroupExecutable()
-        {
-            MessageBuilder.AppendLine("This group is a standalone command.").AppendLine();
-            return this;
-        }
-
-        public CommandHelpMessage Build()
-        {
-            return new CommandHelpMessage(MessageBuilder.ToString().Replace("\r\n", "\n"));
-        }
-    }
-
-    public class MathService : IArgumentConverter<MathOperations>
-    {
-        public bool TryConvert(string value, CommandContext ctx, out MathOperations result)
-        {
-            switch (value)
+            var hmsg = helper.Build();
+            var embed = new DiscordEmbedBuilder(hmsg.Embed)
             {
-                case "+":
-                    result = MathOperations.Add;
-                    return true;
-
-                case "-":
-                    result = MathOperations.Subtract;
-                    return true;
-
-                case "*":
-                    result = MathOperations.Multiply;
-                    return true;
-
-                case "/":
-                    result = MathOperations.Divide;
-                    return true;
-
-                case "%":
-                    result = MathOperations.Modulo;
-                    return true;
-
-                default:
-                    result = MathOperations.Add;
-                    return false;
-            }
+                Color = new DiscordColor(0xD091B2)
+            };
+            return new CommandHelpMessage(embed: embed);
         }
-    }
-
-    public enum MathOperations
-    {
-        Add,
-        Subtract,
-        Multiply,
-        Divide,
-        Modulo
     }
 }

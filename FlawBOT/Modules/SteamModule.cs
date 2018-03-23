@@ -169,10 +169,10 @@ namespace FlawBOT.Modules
             if (items.Data.Items[index].ItemDescription != null)
                 output.WithDescription(items.Data.Items[index].ItemDescription);
             if (items.Data.Items[index].ItemSlot != null)
-                output.AddField("Item Slot:", textInfo.ToTitleCase(items.Data.Items[index].ItemSlot));
+                output.AddField("Item Slot:", textInfo.ToTitleCase(items.Data.Items[index].ItemSlot), true);
             var classes = items.Data.Items[index].UsedByClasses.Aggregate<string, string>(null, (current, userClass) => current + $" {userClass} ");
             if (classes != null)
-                output.AddField("Used by:", textInfo.ToTitleCase(classes));
+                output.AddField("Used by:", textInfo.ToTitleCase(classes), true);
             if (items.Data.Items[index].ModelPlayer != null)
                 output.AddField("Model Path:", items.Data.Items[index].ModelPlayer);
             await ctx.RespondAsync(embed: output.Build());

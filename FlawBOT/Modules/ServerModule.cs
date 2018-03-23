@@ -93,7 +93,7 @@ namespace FlawBOT.Modules
                             Convert.ToByte(rgb ? int.Parse(arg) : Convert.ToInt32(arg.Substring(0, 2), 16)),
                             Convert.ToByte(rgb ? int.Parse(colors[2]) : Convert.ToInt32(arg.Substring(2, 2), 16)),
                             Convert.ToByte(rgb ? int.Parse(colors[3]) : Convert.ToInt32(arg.Substring(4, 2), 16)));
-                        await ctx.Guild.UpdateRoleAsync(role, color: color).ConfigureAwait(false);
+                        await role.UpdateAsync(color: color).ConfigureAwait(false);
                         await ctx.RespondAsync($"Color of the role **{roleName}** has been changed to **{color}**");
                     }
                 }
@@ -173,7 +173,7 @@ namespace FlawBOT.Modules
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Guild.DeleteRoleAsync(role);
+                await role.DeleteAsync();
                 await ctx.RespondAsync($"Role **{role.Name}** has been **removed**");
             }
         }
@@ -267,7 +267,7 @@ namespace FlawBOT.Modules
         public async Task LeaveAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var interactivity = ctx.Client.GetInteractivityModule();
+            var interactivity = ctx.Client.GetInteractivity();
             await ctx.RespondAsync("Are you sure you want to remove FlawBOT from this server?\nRespond with **yes** to proceed or wait 15 seconds to cancel this operation.");
             var response = await interactivity.WaitForMessageAsync(x => x.ChannelId == ctx.Channel.Id && x.Author.Id == ctx.Member.Id, TimeSpan.FromSeconds(15));
             if (response.Message.Content.ToUpper() == "YES")
@@ -285,22 +285,19 @@ namespace FlawBOT.Modules
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task MentionRole(CommandContext ctx, [RemainingText] string roleName)
+        public async Task MentionRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
-            var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
-            if (role != null)
+            if (role == null) return;
+            await ctx.TriggerTypingAsync();
+            if (role.IsMentionable)
             {
-                await ctx.TriggerTypingAsync();
-                if (role.IsMentionable)
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, mentionable: false);
-                    await ctx.RespondAsync($"Role **{role.Name}** is now **not-mentionable**");
-                }
-                else
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, mentionable: true);
-                    await ctx.RespondAsync($"Role **{role.Name}** is now **mentionable**");
-                }
+                await role.UpdateAsync(mentionable: false);
+                await ctx.RespondAsync($"Role **{role.Name}** is now **not-mentionable**");
+            }
+            else
+            {
+                await role.UpdateAsync(mentionable: true);
+                await ctx.RespondAsync($"Role **{role.Name}** is now **mentionable**");
             }
         }
 
@@ -337,7 +334,7 @@ namespace FlawBOT.Modules
             {
                 if (int.TryParse(time, out var minutes))
                 {
-                    var interactivity = ctx.Client.GetInteractivityModule();
+                    var interactivity = ctx.Client.GetInteractivity();
                     var pollOptions = options.Select(xe => xe.ToString());
                     var duration = new TimeSpan(0, 0, minutes, 0, 0);
                     var output = new DiscordEmbedBuilder()
@@ -490,7 +487,7 @@ namespace FlawBOT.Modules
             if (roles.Length == 0) roles.Append("None");
             output.AddField("Roles", roles.ToString());
             output.AddField("Member Count", ctx.Guild.MemberCount.ToString(), true);
-            output.AddField("Region", ctx.Guild.RegionId.ToUpperInvariant(), true);
+            output.AddField("Region", ctx.Guild.VoiceRegion.Name.ToUpperInvariant(), true);
             output.AddField("Authentication", ctx.Guild.MfaLevel.ToString(), true);
             output.AddField("Content Filter", ctx.Guild.ExplicitContentFilter.ToString(), true);
             output.AddField("Verification", ctx.Guild.VerificationLevel.ToString(), true);
@@ -510,7 +507,7 @@ namespace FlawBOT.Modules
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Channel.ModifyAsync(name.Trim().Replace(" ", "-"));
+                await ctx.Channel.ModifyAsync(chn => chn.Name = name.Trim().Replace(" ", "-"));
                 await ctx.RespondAsync($"Channel name has been changed to **{name.Trim().Replace(" ", "-")}**");
             }
         }
@@ -523,15 +520,10 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task SetNickname(CommandContext ctx, DiscordMember member, [RemainingText] string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                await member.ModifyAsync("");
-            else
-            {
-                await ctx.TriggerTypingAsync();
-                var nickname = member.DisplayName;
-                await member.ModifyAsync(name);
-                await ctx.RespondAsync($"{nickname}'s nickname has been changed to **{name}**");
-            }
+            await ctx.TriggerTypingAsync();
+            var nickname = member.DisplayName;
+            await member.ModifyAsync(usr => usr.Nickname = $"{name}");
+            await ctx.RespondAsync($"{nickname}'s nickname has been changed to **{name}**");
         }
 
         [Command("setrole")]
@@ -567,7 +559,7 @@ namespace FlawBOT.Modules
                     var data = client.DownloadData(query);
                     stream.Write(data, 0, data.Length);
                     stream.Position = 0;
-                    await ctx.Guild.ModifyAsync(icon: stream);
+                    await ctx.Guild.ModifyAsync(chn => chn.Icon = stream);
                     await ctx.RespondAsync($"{ctx.Guild.Name} server avatar has been updated!");
                 }
             }
@@ -585,7 +577,7 @@ namespace FlawBOT.Modules
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Guild.ModifyAsync(name.Trim());
+                await ctx.Guild.ModifyAsync(srv => srv.Name = $"{name}");
                 await ctx.RespondAsync($"Server name has been changed to **{name}**");
             }
         }
@@ -599,10 +591,7 @@ namespace FlawBOT.Modules
         public async Task SetChannelTopic(CommandContext ctx, [RemainingText] string topic)
         {
             await ctx.TriggerTypingAsync();
-            if (string.IsNullOrWhiteSpace(topic))
-                await ctx.Channel.ModifyAsync(topic: "");
-            else
-                await ctx.Channel.ModifyAsync(topic: topic);
+            await ctx.Channel.ModifyAsync(chn => chn.Topic = $"{topic}");
             await ctx.RespondAsync("Channel topic has been updated");
         }
 
@@ -612,22 +601,19 @@ namespace FlawBOT.Modules
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SidebarRole(CommandContext ctx, [RemainingText] string roleName)
+        public async Task SidebarRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
-            var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
-            if (role != null)
+            if (role == null) return;
+            await ctx.TriggerTypingAsync();
+            if (role.IsHoisted)
             {
-                await ctx.TriggerTypingAsync();
-                if (role.IsHoisted)
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, hoist: false);
-                    await ctx.RespondAsync($"Role {role.Name} is now **hidden**");
-                }
-                else
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, hoist: true);
-                    await ctx.RespondAsync($"Role {role.Name} is now **displayed**");
-                }
+                await role.UpdateAsync(hoist: false);
+                await ctx.RespondAsync($"Role {role.Name} is now **hidden**");
+            }
+            else
+            {
+                await role.UpdateAsync(hoist: true);
+                await ctx.RespondAsync($"Role {role.Name} is now **displayed**");
             }
         }
 

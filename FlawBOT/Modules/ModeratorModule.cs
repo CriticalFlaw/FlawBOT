@@ -99,7 +99,7 @@ namespace FlawBOT.Modules
         {
             if (limit <= 0 || limit > 100)
                 await ctx.RespondAsync("Invalid number of messages to delete (must be in range 1-100)!");
-            var messages = await ctx.Channel.GetMessagesAsync(limit, ctx.Message.Id);
+            var messages = await ctx.Channel.GetMessagesAfterAsync(ctx.Message.Id, limit);
             var delete = messages.Where(message => !string.IsNullOrWhiteSpace(member.ToString()) && message.Author.Id == member.Id).ToList();
             await ctx.Channel.DeleteMessagesAsync(delete).ConfigureAwait(false);
             await ctx.RespondAsync($"Purged **{delete.Count}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})");
