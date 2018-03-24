@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services
 {
@@ -18,6 +19,7 @@ namespace FlawBOT.Services
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public static DateTime ProcessStarted;
         public static Dictionary<uint, string> SteamAppList = new Dictionary<uint, string>();
+        public static Dictionary<uint, string> TFItemSchema = new Dictionary<uint, string>();
         private static int _seed;
         private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
         public static Random Instance => ThreadLocal.Value;
@@ -29,7 +31,7 @@ namespace FlawBOT.Services
         }
     }
 
-    public class APITokenService
+    public class BotServices
     {
         public string GetAPIToken(string query)
         {
@@ -85,6 +87,14 @@ namespace FlawBOT.Services
             [JsonProperty("twitch")] public string TwitchToken { get; private set; }
 
             [JsonProperty("database")] public string ConnectionString { get; private set; }
+        }
+
+        public static async Task SendErrorEmbedAsync(CommandContext ctx, string message)
+        {
+            var output = new DiscordEmbedBuilder()
+                .WithTitle(message)
+                .WithColor(DiscordColor.Yellow);
+            await ctx.RespondAsync(embed: output.Build());
         }
     }
 

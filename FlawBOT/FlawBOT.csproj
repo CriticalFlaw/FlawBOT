@@ -6,7 +6,7 @@
     <ApplicationIcon></ApplicationIcon>
     <StartupObject>FlawBOT.Program</StartupObject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.1</Version>
+    <Version>1.4.0</Version>
     <Win32Resource />
   </PropertyGroup>
 

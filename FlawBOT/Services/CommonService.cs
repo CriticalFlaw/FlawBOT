@@ -103,6 +103,8 @@ namespace FlawBOT.Services
             public string author { get; set; }
             public string permalink { get; set; }
             public string example { get; set; }
+            public int thumbs_up { get; set; }
+            public int thumbs_down { get; set; }
         }
     }
 

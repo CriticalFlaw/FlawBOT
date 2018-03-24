@@ -7,13 +7,11 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using FlawBOT.Modules;
 using FlawBOT.Services;
-using Microsoft.Extensions.DependencyInjection;
 using SteamWebAPI2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,33 +34,37 @@ namespace FlawBOT
 
         public async Task RunBotAsync()
         {
-            var service = new APITokenService();
+            var service = new BotServices();
             var cfg = new DiscordConfiguration
             {
                 Token = service.GetAPIToken("discord"),
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                LogLevel = LogLevel.Debug,
+                LogLevel = LogLevel.Info,
                 UseInternalLogHandler = false,  //true
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250
             };
             // initialize cnext dependencies
-            var deps = new ServiceCollection().AddSingleton(Client);
+            //var deps = new ServiceCollection().AddSingleton(Client);
             var cmd = new CommandsNextConfiguration
             {
                 PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
                 EnableDms = false, // Set the boolean for responding to direct messages
-                EnableDefaultHelp = true,   // false
+                EnableDefaultHelp = false,
                 EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
                 CaseSensitive = false,
-                DefaultHelpChecks = new List<CheckBaseAttribute>(),
+                DefaultHelpChecks = new List<CheckBaseAttribute>()
                 //Services = deps.BuildServiceProvider()
             };
 
             Client = new DiscordClient(cfg);
             Client.Ready += Client_Ready;
             Client.ClientErrored += Client_ClientError;
+            //Client.MessageCreated += Client_OnMessageCreated;
+            //Client.SocketErrored += Client_OnSocketErrored;
+            Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
+            //Interactivity = this.Client.UseInteractivity(new InteractivityConfiguration());
             Client.UseInteractivity(new InteractivityConfiguration
             {
                 PaginationBehavior = TimeoutBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
@@ -73,25 +75,16 @@ namespace FlawBOT
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.SetHelpFormatter<HelperService>(); // Set up the custom help formatter
-            //Commands.RegisterCommands<BotModule>();
-            //Commands.RegisterCommands<CommonModule>();
-            //Commands.RegisterCommands<GoogleModule>();
-            //Commands.RegisterCommands<ModeratorModule>();
-            //Commands.RegisterCommands<ServerModule>();
-            //Commands.RegisterCommands<SteamModule>();
+            Commands.RegisterCommands<BotModule>();
+            Commands.RegisterCommands<CommonModule>();
+            Commands.RegisterCommands<GoogleModule>();
+            Commands.RegisterCommands<ModeratorModule>();
+            Commands.RegisterCommands<ServerModule>();
+            Commands.RegisterCommands<SteamModule>();
+            //Commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
-            // Set up the custom name and type converter
-            GlobalVariables.ProcessStarted = DateTime.Now; // Start the uptime counter
-            //Client.MessageCreated += Client_OnMessageCreated;
-            //Client.SocketErrored += Client_OnSocketErrored;
-            Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
-            //Interactivity = this.Client.UseInteractivity(new InteractivityConfiguration());
-
-            Commands.RegisterCommands(Assembly.GetExecutingAssembly());
             // Start the uptime counter
-            Commands.SetHelpFormatter<HelperService>();
             GlobalVariables.ProcessStarted = DateTime.Now;
-            Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", "Updating Steam database...", DateTime.Now); // REMOVE
             FeedCheckTimer = new Timer(FeedCheckTimerCallback, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
             await UpdateSteamAsync(); // Update the Steam App list
             await Client.ConnectAsync(); // Connect and log into Discord
@@ -149,7 +142,7 @@ namespace FlawBOT
 
         private static Task<int> PrefixResolverAsync(DiscordMessage m)
         {
-            var service = new APITokenService();
+            var service = new BotServices();
             return Task.FromResult(m.GetStringPrefixLength(service.GetAPIToken("prefix")));
         }
 
@@ -208,7 +201,8 @@ namespace FlawBOT
 
         private static Task UpdateSteamAsync()
         {
-            var service = new APITokenService();
+            Console.WriteLine("Updating Steam App List...");
+            var service = new BotServices();
             var token = service.GetAPIToken("steam");
             var apps = new SteamApps(token);
             var games = apps.GetAppListAsync().Result.Data;
@@ -216,13 +210,16 @@ namespace FlawBOT
             foreach (var game in games)
                 if (!string.IsNullOrWhiteSpace(game.Name))
                     GlobalVariables.SteamAppList.Add(Convert.ToUInt32(game.AppId), game.Name);
+
+            Console.WriteLine("Updating TF2 Item Schema...");
+            var schema = new EconItems(token, EconItemsAppId.TeamFortress2);
+            var items = schema.GetSchemaForTF2Async();
+            GlobalVariables.TFItemSchema.Clear();
+            foreach (var item in items.Result.Data.Items)
+                if (!string.IsNullOrWhiteSpace(item.ItemName))
+                    GlobalVariables.TFItemSchema.Add(Convert.ToUInt32(item.DefIndex), item.ItemName);
+
             return Task.CompletedTask;
-            //var schema = new EconItems(token, EconItemsAppId.TeamFortress2);
-            //var items = await schema.GetSchemaForTF2Async();
-            //GlobalVariables.ItemSchema.Clear();
-            //foreach (var item in items.Data.Items)
-            //    if (!string.IsNullOrWhiteSpace(item.ItemName))
-            //        GlobalVariables.ItemSchema.Add(Convert.ToInt32(item.DefIndex), item.ItemName);
         }
 
         private static void FeedCheckTimerCallback(object _)

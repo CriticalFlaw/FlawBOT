@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    public class BotModule
+    public class BotModule : BaseCommandModule
     {
         [Command("help")]
         [Aliases("cmd", "command")]
         [Description("Get a short list of commands")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task BotCommands(CommandContext ctx)
+        public async Task Helper(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var output = new DiscordEmbedBuilder()
@@ -37,7 +37,7 @@ namespace FlawBOT.Modules
         [Description("Get a link to the GitHub repository")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task BotRepo(CommandContext ctx)
+        public async Task GitHub(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var output = new DiscordEmbedBuilder()
@@ -163,7 +163,7 @@ namespace FlawBOT.Modules
         [RequireOwner]
         [Command("setactivity")]
         [Description("Set FlawBOT's activity")]
-        public async Task SetBotActivity(CommandContext ctx, [RemainingText] string activity)
+        public async Task SetActivity(CommandContext ctx, [RemainingText] string activity)
         {
             await ctx.TriggerTypingAsync();
             if (string.IsNullOrWhiteSpace(activity))
@@ -183,7 +183,7 @@ namespace FlawBOT.Modules
         [RequireOwner]
         [Command("setavatar")]
         [Description("Set FlawBOT's avatar")]
-        public async Task SetBotAvatar(CommandContext ctx, [RemainingText] string query)
+        public async Task SetAvatar(CommandContext ctx, [RemainingText] string query)
         {
             try
             {
@@ -210,7 +210,7 @@ namespace FlawBOT.Modules
         [RequireOwner]
         [Command("setstatus")]
         [Description("Set FlawBOT's status")]
-        public async Task SetBotStatus(CommandContext ctx, [RemainingText] string status)
+        public async Task SetStatus(CommandContext ctx, [RemainingText] string status)
         {
             if (string.IsNullOrWhiteSpace(status))
                 await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Online);
@@ -257,7 +257,7 @@ namespace FlawBOT.Modules
         {
             try
             {
-                var service = new APITokenService();
+                var service = new BotServices();
                 using (var conn = new SqlConnection(service.GetAPIToken("database")))
                 using (var cmd = conn.CreateCommand())
                 {
@@ -282,6 +282,7 @@ namespace FlawBOT.Modules
         {
             await Task.Delay(0).ConfigureAwait(false);
         }
-        #endregion
+
+        #endregion OWNER-ONLY
     }
 }

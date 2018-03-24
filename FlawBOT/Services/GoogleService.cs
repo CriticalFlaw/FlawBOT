@@ -14,7 +14,7 @@ namespace FlawBOT.Services
     {
         public ShortenService()
         {
-            var service = new APITokenService();
+            var service = new BotServices();
             Shorten = new UrlshortenerService(new BaseClientService.Initializer
             {
                 ApiKey = service.GetAPIToken("google"),
@@ -35,7 +35,7 @@ namespace FlawBOT.Services
     {
         public YoutubeService()
         {
-            var service = new APITokenService();
+            var service = new BotServices();
             YouTube = new YouTubeService(new BaseClientService.Initializer
             {
                 ApiKey = service.GetAPIToken("google"),

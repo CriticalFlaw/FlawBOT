@@ -16,7 +16,7 @@ using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
 namespace FlawBOT.Modules
 {
-    public class SteamModule
+    public class SteamModule : BaseCommandModule
     {
         [Command("steamgame")]
         [Aliases("sg")]
@@ -31,9 +31,7 @@ namespace FlawBOT.Modules
                 {
                     var rnd = new Random();
                     var store = new SteamStore();
-                    var index = GlobalVariables.SteamAppList.Keys.ToArray()[
-                        rnd.Next(0, GlobalVariables.SteamAppList.Keys.Count - 1)];
-                    var app = await store.GetStoreAppDetailsAsync(index);
+                    var app = await store.GetStoreAppDetailsAsync(GlobalVariables.SteamAppList.Keys.ToArray()[rnd.Next(0, GlobalVariables.SteamAppList.Keys.Count - 1)]);
                     await ctx.TriggerTypingAsync();
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(app.Name)
@@ -42,10 +40,7 @@ namespace FlawBOT.Modules
                         .WithFooter($"App ID: {app.SteamAppId}")
                         .WithColor(DiscordColor.MidnightBlue);
                     if (!string.IsNullOrWhiteSpace(app.DetailedDescription))
-                        output.WithDescription(Regex.Replace(
-                            app.DetailedDescription.Length <= 500
-                                ? app.DetailedDescription
-                                : $"{app.DetailedDescription.Substring(0, 500)}...", "<[^>]*>", ""));
+                        output.WithDescription(Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : $"{app.DetailedDescription.Substring(0, 500)}...", "<[^>]*>", ""));
                     if (app.Developers.Length > 0 && !string.IsNullOrWhiteSpace(app.Developers[0]))
                         output.AddField("Developers", app.Developers[0], true);
                     if (app.Publishers.Length > 0 && !string.IsNullOrWhiteSpace(app.Publishers[0]))
@@ -71,12 +66,11 @@ namespace FlawBOT.Modules
         public async Task SteamUser(CommandContext ctx, string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: SteamID or Community URL are required! Try **.su criticalflaw** :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: SteamID or Community URL are required! Try **.su criticalflaw**");
             else
             {
-                var service = new APITokenService();
-                var token = service.GetAPIToken("steam");
-                var steam = new SteamUser(token);
+                var service = new BotServices();
+                var steam = new SteamUser(service.GetAPIToken("steam"));
                 SteamCommunityProfileModel profile = null;
                 ISteamWebResponse<PlayerSummaryModel> summary = null;
                 try
@@ -125,7 +119,7 @@ namespace FlawBOT.Modules
                         await ctx.RespondAsync(embed: output.Build());
                     }
                     else
-                        await ctx.RespondAsync(":warning: No results found! :warning:");
+                        await BotServices.SendErrorEmbedAsync(ctx, ":mag: No results found!");
                 }
             }
         }
@@ -143,7 +137,7 @@ namespace FlawBOT.Modules
             if (match.Success)
                 await ctx.RespondAsync(string.Format($"steam://connect/{match.Groups["ip"].Value}/{match.Groups["pw"].Value}"));
             else
-                await ctx.RespondAsync("Invalid connection info, follow the format: **connect 123.345.56.789:00000; password hello**");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Invalid connection info, follow the format: **connect 123.345.56.789:00000; password hello**");
         }
 
         [Command("tf2")]
@@ -155,9 +149,8 @@ namespace FlawBOT.Modules
             await ctx.TriggerTypingAsync();
             var rnd = new Random();
             var textInfo = new CultureInfo("en-US", false).TextInfo;
-            var service = new APITokenService();
-            var token = service.GetAPIToken("steam");
-            var schema = new EconItems(token, EconItemsAppId.TeamFortress2);
+            var service = new BotServices();
+            var schema = new EconItems(service.GetAPIToken("steam"), EconItemsAppId.TeamFortress2);
             var items = await schema.GetSchemaForTF2Async();
             var index = rnd.Next(0, items.Data.Items.Count);
             var wikiName = items.Data.Items[index].ItemName.Replace(' ', '_');
@@ -174,8 +167,7 @@ namespace FlawBOT.Modules
             if (classes != null)
                 output.AddField("Used by:", textInfo.ToTitleCase(classes), true);
             if (items.Data.Items[index].ModelPlayer != null)
-                output.AddField("Model Path:", items.Data.Items[index].ModelPlayer);
-            await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build());
         }
 
         [Command("tf2wiki")]
@@ -185,7 +177,7 @@ namespace FlawBOT.Modules
         public async Task TF2Wiki(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: TF2Wiki search query is a required!");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: TF2Wiki search query is a required!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -202,7 +194,7 @@ namespace FlawBOT.Modules
                     var result = await http.GetStringAsync($"https://wiki.teamfortress.com/w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles={Uri.EscapeDataString(search.Replace(' ', '_').Trim())}");
                     var data = JsonConvert.DeserializeObject<WikipediaService>(result);
                     if (data.Query.Pages[0].Missing)
-                        await ctx.RespondAsync(":warning: TF2Wiki page not found! :warning:").ConfigureAwait(false);
+                        await BotServices.SendErrorEmbedAsync(ctx, ":mag: TF2Wiki page not found!");
                     else
                         await ctx.Channel.SendMessageAsync(data.Query.Pages[0].FullUrl, embed: null).ConfigureAwait(false);
                 }

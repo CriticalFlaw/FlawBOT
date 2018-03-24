@@ -8,30 +8,29 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    public class GoogleModule
+    public class GoogleModule : BaseCommandModule
     {
         [Command("shorten")]
         [Description("Shorten the inputted URL")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task ShortenURL(CommandContext ctx, [RemainingText] string query)
+        public async Task Shorten(CommandContext ctx, [RemainingText] string query)
         {
-            if (Uri.IsWellFormedUriString(query, UriKind.RelativeOrAbsolute)) // && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+            if (!Uri.IsWellFormedUriString(query, UriKind.RelativeOrAbsolute)) // && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A valid URL link is required!");
+            else
             {
                 await ctx.TriggerTypingAsync();
                 var shortenService = new ShortenService();
-                var output = shortenService.shortenUrl(query);
-                await ctx.RespondAsync(output);
+                await ctx.RespondAsync(shortenService.shortenUrl(query));
             }
-            else
-                await ctx.RespondAsync(":warning: A valid URL is required! :warning:");
         }
 
-        [Command("revav")]
+        [Command("revav")]  // TODO: Merge with avatar command
         [Description("Reverse Googe Image Search user avatar")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchAvatarReverse(CommandContext ctx, [RemainingText] DiscordMember member)
+        public async Task ReverseAvatar(CommandContext ctx, [RemainingText] DiscordMember member)
         {
             if (member == null)
                 member = ctx.Member;
@@ -49,7 +48,7 @@ namespace FlawBOT.Modules
         [Description("Get the first YouTube video search result")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchVideoAsync(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTube(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 await ctx.RespondAsync("https://www.youtube.com/watch?v=rFA_auWj0rQ");
@@ -67,10 +66,10 @@ namespace FlawBOT.Modules
         [Description("Get the specified YouTube channel")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchChannelAsync(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubeChannel(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: YouTube channel search query is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Channel search query is required!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -85,10 +84,10 @@ namespace FlawBOT.Modules
         [Description("Get a list of YouTube search results")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchYoutube(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubeVideos(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: YouTube video search query is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Video search query is required!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -103,10 +102,10 @@ namespace FlawBOT.Modules
         [Description("Get the specified YouTube playlist")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchPlaylistAsync(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubePlaylist(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: YouTube playlist search query is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Playlist search query is required!");
             else
             {
                 await ctx.TriggerTypingAsync();
