@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using FlawBOT.Services;
 using System;
 using System.Globalization;
 using System.IO;
@@ -13,56 +14,50 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    public class ServerModule
+    public class ServerModule : BaseCommandModule
     {
         [Command("channel")]
         [Aliases("cid")]
         [Description("Get channel information")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task GetChannelID(CommandContext ctx, [RemainingText] DiscordChannel channel)
+        public async Task GetChannel(CommandContext ctx, [RemainingText] DiscordChannel channel)
         {
             if (channel == null)
                 channel = ctx.Channel;
-            var invite = await ctx.Channel.CreateInviteAsync();
             var output = new DiscordEmbedBuilder()
-                .WithTitle($"#{channel.Name} (ID: {channel.Id})")
-                .WithDescription($"Created on: {channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
+                .WithTitle($"#{channel.Name}")
+                .AddField("ID", channel.Id.ToString(), true)
+                .AddField("Created on", channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Type", channel.Type.ToString(), true)
                 .AddField("Private?", channel.IsPrivate ? "YES" : "NO", true)
                 .AddField("NSFW?", channel.IsNSFW ? "YES" : "NO", true)
+                .AddField("User Limit", channel.UserLimit.ToString(), true)
                 .WithThumbnailUrl(ctx.Guild.IconUrl)
                 .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
-                .WithUrl($"https://discord.gg/{invite.Code}");
-            if (!string.IsNullOrWhiteSpace(channel.Topic))
-                output.AddField("Topic", channel.Topic, true);
+                .WithUrl($"https://discord.gg/{ctx.Channel.CreateInviteAsync().Result.Code}");
+            if (!string.IsNullOrWhiteSpace(channel.Topic)) output.AddField("Topic", channel.Topic, true);
             await ctx.RespondAsync(embed: output.Build());
         }
 
         [Command("clean")]
+        [Aliases("clear")]
         [Description("Remove server messages")]
         [RequirePermissions(Permissions.ManageMessages)]
         [Cooldown(1, 5, CooldownBucketType.User)]
         [Cooldown(2, 10, CooldownBucketType.Guild)]
-        public async Task BotClean(CommandContext ctx, int limit, [RemainingText] DiscordChannel channel)
+        public async Task Clean(CommandContext ctx, int limit, [RemainingText] DiscordChannel channel)
         {
             if (limit <= 0 || limit > 100)
-                await ctx.RespondAsync(":warning: Invalid number of messages, must be in range of 1 to 100 :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Invalid number of messages to delete, must be in range of 1-100!");
             else
             {
                 await ctx.TriggerTypingAsync();
                 if (channel == null)
-                {
-                    var messages = await ctx.Channel.GetMessagesAsync(limit).ConfigureAwait(false);
-                    await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
-                    await ctx.RespondAsync($"**{messages.Count}** message(s) have been removed from #{ctx.Channel.Name}");
-                }
-                else
-                {
-                    var messages = await channel.GetMessagesAsync(limit).ConfigureAwait(false);
-                    await channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
-                    await ctx.RespondAsync($"**{messages.Count}** message(s) have been removed from #{channel.Name}");
-                }
+                    channel = ctx.Channel;
+                var messages = await ctx.Channel.GetMessagesAsync(limit).ConfigureAwait(false);
+                await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
+                await ctx.RespondAsync($"**{messages.Count}** message(s) have been removed from #{ctx.Channel.Name}");
             }
         }
 
@@ -77,14 +72,14 @@ namespace FlawBOT.Modules
             try
             {
                 if (colors.Length != 2 && colors.Length != 4)
-                    await ctx.RespondAsync(":warning: Invalid parameters, try **.colorrole admin [0-255] [0-255] [0-255]**");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":warning: Invalid parameters, try **.colorrole admin [0-255] [0-255] [0-255]**");
                 else
                 {
                     await ctx.TriggerTypingAsync();
                     var roleName = colors[0].ToLowerInvariant();
                     var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
                     if (role == null)
-                        await ctx.RespondAsync(":warning: This role does not exist in the server! :warning:");
+                        await BotServices.SendErrorEmbedAsync(ctx, ":mag: Role not found in this server!");
                     else
                     {
                         var rgb = colors.Length == 4;
@@ -93,14 +88,14 @@ namespace FlawBOT.Modules
                             Convert.ToByte(rgb ? int.Parse(arg) : Convert.ToInt32(arg.Substring(0, 2), 16)),
                             Convert.ToByte(rgb ? int.Parse(colors[2]) : Convert.ToInt32(arg.Substring(2, 2), 16)),
                             Convert.ToByte(rgb ? int.Parse(colors[3]) : Convert.ToInt32(arg.Substring(4, 2), 16)));
-                        await ctx.Guild.UpdateRoleAsync(role, color: color).ConfigureAwait(false);
+                        await role.UpdateAsync(color: color).ConfigureAwait(false);
                         await ctx.RespondAsync($"Color of the role **{roleName}** has been changed to **{color}**");
                     }
                 }
             }
             catch
             {
-                await ctx.RespondAsync(":warning: Unable to change role color values, try **.colorrole admin [0-255] [0-255] [0-255]** :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Unable to change role color, try **.colorrole admin [0-255] [0-255] [0-255]**");
             }
         }
 
@@ -113,7 +108,7 @@ namespace FlawBOT.Modules
         public async Task CreateRole(CommandContext ctx, [RemainingText] string role)
         {
             if (string.IsNullOrWhiteSpace(role))
-                await ctx.RespondAsync(":warning: Role name cannot be blank! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Role name cannot be blank!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -131,12 +126,11 @@ namespace FlawBOT.Modules
         public async Task CreateTextChannel(CommandContext ctx, [RemainingText] string channel)
         {
             if (string.IsNullOrWhiteSpace(channel))
-                await ctx.RespondAsync(":warning: Text channel name cannot be blank! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Channel name cannot be blank!");
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Guild.CreateChannelAsync(channel.Trim().Replace(" ", "-"), ChannelType.Text,
-                    ctx.Channel.Parent);
+                await ctx.Guild.CreateChannelAsync(channel.Trim().Replace(" ", "-"), ChannelType.Text, ctx.Channel.Parent);
                 await ctx.RespondAsync($"Text Channel **#{channel.Trim().Replace(" ", "-")}** has been **created**");
             }
         }
@@ -150,12 +144,11 @@ namespace FlawBOT.Modules
         public async Task CreateVoiceChannel(CommandContext ctx, [RemainingText] string channel)
         {
             if (string.IsNullOrWhiteSpace(channel))
-                await ctx.RespondAsync(":warning: Text channel name cannot be blank! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Channel name cannot be blank!");
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Guild.CreateChannelAsync(channel.Trim().Replace(" ", "-"), ChannelType.Voice,
-                    ctx.Channel.Parent);
+                await ctx.Guild.CreateChannelAsync(channel.Trim().Replace(" ", "-"), ChannelType.Voice, ctx.Channel.Parent);
                 await ctx.RespondAsync($"Voice Channel **#{channel.Trim().Replace(" ", "-")}** has been **created**");
             }
         }
@@ -169,11 +162,11 @@ namespace FlawBOT.Modules
         public async Task DeleteRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
             if (role == null)
-                await ctx.RespondAsync(":warning: That role does not exist! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":mag: Role not found in this server!");
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Guild.DeleteRoleAsync(role);
+                await role.DeleteAsync();
                 await ctx.RespondAsync($"Role **{role.Name}** has been **removed**");
             }
         }
@@ -187,9 +180,9 @@ namespace FlawBOT.Modules
         public async Task RemoveTextChannel(CommandContext ctx, [RemainingText] DiscordChannel channel)
         {
             if (channel == null)
-                await ctx.RespondAsync(":warning: That text channel does not exist! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":mag: Channel not found in this server!");
             else if (channel.Type != ChannelType.Text)
-                await ctx.RespondAsync("This is not a text channel, use **.deletevoice** instead.");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: This is not a text channel, use **.deletevoice** instead!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -207,9 +200,9 @@ namespace FlawBOT.Modules
         public async Task RemoveVoiceChannel(CommandContext ctx, [RemainingText] DiscordChannel channel)
         {
             if (channel == null)
-                await ctx.RespondAsync(":warning: That voice channel does not exist! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":mag: Channel not found in this server!");
             else if (channel.Type != ChannelType.Voice)
-                await ctx.RespondAsync("This is not a voice channel, use **.deletetext** instead.");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: This is not a voice channel, use **.deletetext** instead!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -255,8 +248,7 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task InviteAsync(CommandContext ctx)
         {
-            var invite = await ctx.Channel.CreateInviteAsync();
-            await ctx.RespondAsync($"Here is your instant invite link to **{ctx.Guild.Name}**: https://discord.gg/{invite.Code}");
+            await BotServices.SendErrorEmbedAsync(ctx, $"Instant Invite to **{ctx.Guild.Name}**: https://discord.gg/{ctx.Channel.CreateInviteAsync().Result.Code}");
         }
 
         [Command("leave")]
@@ -267,7 +259,7 @@ namespace FlawBOT.Modules
         public async Task LeaveAsync(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var interactivity = ctx.Client.GetInteractivityModule();
+            var interactivity = ctx.Client.GetInteractivity();
             await ctx.RespondAsync("Are you sure you want to remove FlawBOT from this server?\nRespond with **yes** to proceed or wait 15 seconds to cancel this operation.");
             var response = await interactivity.WaitForMessageAsync(x => x.ChannelId == ctx.Channel.Id && x.Author.Id == ctx.Member.Id, TimeSpan.FromSeconds(15));
             if (response.Message.Content.ToUpper() == "YES")
@@ -285,22 +277,19 @@ namespace FlawBOT.Modules
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task MentionRole(CommandContext ctx, [RemainingText] string roleName)
+        public async Task MentionRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
-            var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
-            if (role != null)
+            if (role == null) return;
+            await ctx.TriggerTypingAsync();
+            if (role.IsMentionable)
             {
-                await ctx.TriggerTypingAsync();
-                if (role.IsMentionable)
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, mentionable: false);
-                    await ctx.RespondAsync($"Role **{role.Name}** is now **not-mentionable**");
-                }
-                else
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, mentionable: true);
-                    await ctx.RespondAsync($"Role **{role.Name}** is now **mentionable**");
-                }
+                await role.UpdateAsync(mentionable: false);
+                await ctx.RespondAsync($"Role **{role.Name}** is now **not-mentionable**");
+            }
+            else
+            {
+                await role.UpdateAsync(mentionable: true);
+                await ctx.RespondAsync($"Role **{role.Name}** is now **mentionable**");
             }
         }
 
@@ -309,8 +298,7 @@ namespace FlawBOT.Modules
         [Description("Retrieve your server permissions")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task ListServerPermissions(CommandContext ctx, DiscordMember member = null,
-            DiscordChannel channel = null)
+        public async Task ListServerPermissions(CommandContext ctx, DiscordMember member = null, DiscordChannel channel = null)
         {
             if (member == null)
                 member = ctx.Member;
@@ -337,7 +325,7 @@ namespace FlawBOT.Modules
             {
                 if (int.TryParse(time, out var minutes))
                 {
-                    var interactivity = ctx.Client.GetInteractivityModule();
+                    var interactivity = ctx.Client.GetInteractivity();
                     var pollOptions = options.Select(xe => xe.ToString());
                     var duration = new TimeSpan(0, 0, minutes, 0, 0);
                     var output = new DiscordEmbedBuilder()
@@ -347,67 +335,15 @@ namespace FlawBOT.Modules
                     foreach (var t in options)
                         await message.CreateReactionAsync(t);
                     var pollResult = await interactivity.CollectReactionsAsync(message, duration);
-                    var results = pollResult.Reactions.Where(xkvp => options.Contains(xkvp.Key))
-                        .Select(xkvp => $"{xkvp.Key} wins the poll with **{xkvp.Value}** votes");
+                    var results = pollResult.Reactions.Where(xkvp => options.Contains(xkvp.Key)).Select(xkvp => $"{xkvp.Key} wins the poll with **{xkvp.Value}** votes");
                     await ctx.RespondAsync(string.Join("\n", results));
                 }
                 else
-                    await ctx.RespondAsync("Please input a valid number of days like **.poll 5** :open_mouth: :smile:");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":warning: Invalid number of days, try **.poll 5** :open_mouth: :smile:");
             }
             catch
             {
-                await ctx.RespondAsync(":warning: Unable to create the poll, please use stock Discord emojis as options!");
-            }
-        }
-
-        [Command("prune")]
-        [Description("Prune inactive server members")]
-        [RequirePermissions(Permissions.DeafenMembers)]
-        [Cooldown(2, 5, CooldownBucketType.User)]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task PruneUsers(CommandContext ctx, string day)
-        {
-            if (int.TryParse(day, out var days))
-            {
-                await ctx.TriggerTypingAsync();
-                await ctx.RespondAsync($"**{ctx.Guild.GetPruneCountAsync(days).Result}** server members have been pruned.");
-                await ctx.Guild.PruneAsync(days);
-            }
-            else
-                await ctx.RespondAsync(":warning: Please input a valid number of days, try **.prune 30** :warning:");
-        }
-
-        [Command("removerole")]
-        [Aliases("rr")]
-        [Description("Remove a role from mentioned user")]
-        [RequirePermissions(Permissions.ManageRoles)]
-        [Cooldown(2, 5, CooldownBucketType.User)]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RemoveUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
-        {
-            if (member != null && role != null)
-            {
-                await ctx.TriggerTypingAsync();
-                await member.RevokeRoleAsync(role);
-                await ctx.RespondAsync($"{member.DisplayName} has been revoked the role **{role.Name}**");
-            }
-        }
-
-        [Command("removeroles")]
-        [Aliases("rrs")]
-        [Description("Remove all roles from mentioned user")]
-        [RequirePermissions(Permissions.ManageRoles)]
-        [Cooldown(2, 5, CooldownBucketType.User)]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RemoveUserRoles(CommandContext ctx, DiscordMember member)
-        {
-            if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
-                await ctx.RespondAsync(":warning: You are not authorised to remove roles from this user! :warning:");
-            else
-            {
-                await ctx.TriggerTypingAsync();
-                await member.ReplaceRolesAsync(Enumerable.Empty<DiscordRole>()).ConfigureAwait(false);
-                await ctx.RespondAsync($"Removed all roles from {member.DisplayName}");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Unable to create the poll, please use stock Discord emojis as options!");
             }
         }
 
@@ -446,12 +382,14 @@ namespace FlawBOT.Modules
             await ctx.TriggerTypingAsync();
             var channels = new StringBuilder();
             var roles = new StringBuilder();
+            var emojis = new StringBuilder();
             var output = new DiscordEmbedBuilder()
                 .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", icon_url: string.IsNullOrEmpty(ctx.Guild.Owner.AvatarHash) ? null : ctx.Guild.Owner.AvatarUrl)
-                .WithTitle($"{ctx.Guild.Name} (ID: {ctx.Guild.Id})")
-                .WithDescription($"Created on: {ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
+                .WithTitle($"{ctx.Guild.Name}")
+                .AddField("ID", ctx.Guild.Id.ToString(), true)
+                .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
-                .WithColor(DiscordColor.Sienna);
+                .WithColor(DiscordColor.Rose);
             if (!string.IsNullOrEmpty(ctx.Guild.IconHash))
                 output.WithThumbnailUrl(ctx.Guild.IconUrl);
 
@@ -487,13 +425,16 @@ namespace FlawBOT.Modules
             output.AddField("Channels", channels.ToString());
             foreach (var role in ctx.Guild.Roles)
                 roles.Append($"[`{role.Name}`]");
+            foreach (var emoji in ctx.Guild.Emojis)
+                emojis.Append(emoji.Name);
             if (roles.Length == 0) roles.Append("None");
             output.AddField("Roles", roles.ToString());
             output.AddField("Member Count", ctx.Guild.MemberCount.ToString(), true);
-            output.AddField("Region", ctx.Guild.RegionId.ToUpperInvariant(), true);
+            output.AddField("Region", ctx.Guild.VoiceRegion.Name.ToUpperInvariant(), true);
             output.AddField("Authentication", ctx.Guild.MfaLevel.ToString(), true);
             output.AddField("Content Filter", ctx.Guild.ExplicitContentFilter.ToString(), true);
             output.AddField("Verification", ctx.Guild.VerificationLevel.ToString(), true);
+            if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
             await ctx.RespondAsync(embed: output.Build());
         }
 
@@ -506,11 +447,11 @@ namespace FlawBOT.Modules
         public async Task SetChannelName(CommandContext ctx, [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                await ctx.RespondAsync(":warning: Channel name cannot be blank! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Channel name cannot be blank!");
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Channel.ModifyAsync(name.Trim().Replace(" ", "-"));
+                await ctx.Channel.ModifyAsync(chn => chn.Name = name.Trim().Replace(" ", "-"));
                 await ctx.RespondAsync($"Channel name has been changed to **{name.Trim().Replace(" ", "-")}**");
             }
         }
@@ -521,21 +462,16 @@ namespace FlawBOT.Modules
         [RequireUserPermissions(Permissions.ChangeNickname)]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SetNickname(CommandContext ctx, DiscordMember member, [RemainingText] string name)
+        public async Task SetUserName(CommandContext ctx, DiscordMember member, [RemainingText] string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                await member.ModifyAsync("");
-            else
-            {
-                await ctx.TriggerTypingAsync();
-                var nickname = member.DisplayName;
-                await member.ModifyAsync(name);
-                await ctx.RespondAsync($"{nickname}'s nickname has been changed to **{name}**");
-            }
+            await ctx.TriggerTypingAsync();
+            var nickname = member.DisplayName;
+            await member.ModifyAsync(usr => usr.Nickname = $"{name}");
+            await ctx.RespondAsync($"{nickname}'s nickname has been changed to **{name}**");
         }
 
         [Command("setrole")]
-        [Aliases("sr")]
+        [Aliases("sr", "addrole")]
         [Description("Set a role for mentioned user")]
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(2, 5, CooldownBucketType.User)]
@@ -557,7 +493,7 @@ namespace FlawBOT.Modules
         public async Task SetServerAvatar(CommandContext ctx, string query)
         {
             if (!Uri.TryCreate(query, UriKind.Absolute, out var uriResult) && (!query.EndsWith(".img") || !query.EndsWith(".png") || !query.EndsWith(".jpg")))
-                await ctx.RespondAsync(":warning: An image URL ending with .img, .png or .jpg is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: An image URL ending with .img, .png or .jpg is required!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -567,7 +503,7 @@ namespace FlawBOT.Modules
                     var data = client.DownloadData(query);
                     stream.Write(data, 0, data.Length);
                     stream.Position = 0;
-                    await ctx.Guild.ModifyAsync(icon: stream);
+                    await ctx.Guild.ModifyAsync(chn => chn.Icon = stream);
                     await ctx.RespondAsync($"{ctx.Guild.Name} server avatar has been updated!");
                 }
             }
@@ -581,11 +517,11 @@ namespace FlawBOT.Modules
         public async Task SetServerName(CommandContext ctx, [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                await ctx.RespondAsync(":warning: Server name cannot be blank :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Server name cannot be blank!");
             else
             {
                 await ctx.TriggerTypingAsync();
-                await ctx.Guild.ModifyAsync(name.Trim());
+                await ctx.Guild.ModifyAsync(srv => srv.Name = $"{name}");
                 await ctx.RespondAsync($"Server name has been changed to **{name}**");
             }
         }
@@ -599,11 +535,8 @@ namespace FlawBOT.Modules
         public async Task SetChannelTopic(CommandContext ctx, [RemainingText] string topic)
         {
             await ctx.TriggerTypingAsync();
-            if (string.IsNullOrWhiteSpace(topic))
-                await ctx.Channel.ModifyAsync(topic: "");
-            else
-                await ctx.Channel.ModifyAsync(topic: topic);
-            await ctx.RespondAsync("Channel topic has been updated");
+            await ctx.Channel.ModifyAsync(chn => chn.Topic = $"{topic}");
+            await ctx.RespondAsync("Channel topic has been updated!");
         }
 
         [Command("showrole")]
@@ -612,22 +545,19 @@ namespace FlawBOT.Modules
         [RequirePermissions(Permissions.ManageRoles)]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SidebarRole(CommandContext ctx, [RemainingText] string roleName)
+        public async Task SidebarRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
-            var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
-            if (role != null)
+            if (role == null) return;
+            await ctx.TriggerTypingAsync();
+            if (role.IsHoisted)
             {
-                await ctx.TriggerTypingAsync();
-                if (role.IsHoisted)
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, hoist: false);
-                    await ctx.RespondAsync($"Role {role.Name} is now **hidden**");
-                }
-                else
-                {
-                    await ctx.Guild.UpdateRoleAsync(role, hoist: true);
-                    await ctx.RespondAsync($"Role {role.Name} is now **displayed**");
-                }
+                await role.UpdateAsync(hoist: false);
+                await ctx.RespondAsync($"Role {role.Name} is now **hidden**");
+            }
+            else
+            {
+                await role.UpdateAsync(hoist: true);
+                await ctx.RespondAsync($"Role {role.Name} is now **displayed**");
             }
         }
 
@@ -645,10 +575,11 @@ namespace FlawBOT.Modules
             var permsobj = member.PermissionsIn(ctx.Channel);
             var perms = permsobj.ToPermissionString();
             var output = new DiscordEmbedBuilder()
-                .WithTitle($"@{member.Username}#{member.Discriminator} (ID: {member.Id})")
+                .WithTitle($"@{member.Username}#{member.Discriminator}")
                 .WithDescription("Nickname: ")
-                .AddField("Registered on", member.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
-                .AddField("Joined on", member.JoinedAt.DateTime.ToString(CultureInfo.InvariantCulture))
+                .AddField("ID", member.Id.ToString(), true)
+                .AddField("Registered on", member.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
+                .AddField("Joined on", member.JoinedAt.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Muted?", member.IsMuted ? "YES" : "NO", true)
                 .AddField("Deafened?", member.IsDeafened ? "YES" : "NO", true)
                 .WithThumbnailUrl(member.AvatarUrl)
@@ -666,7 +597,7 @@ namespace FlawBOT.Modules
                 roles.Append($"[`{role.Name}`] ");
             if (roles.Length == 0)
                 roles.Append("*None*");
-            output.AddField("Roles", roles.ToString());
+            output.AddField("Roles", roles.ToString(), true);
             if (((permsobj & Permissions.Administrator) | (permsobj & Permissions.AccessChannels)) == 0)
                 perms = $"**This user cannot see this channel!**\n{perms}";
             if (string.IsNullOrWhiteSpace(perms))

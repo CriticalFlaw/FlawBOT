@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OMDbSharp;
 using OverwatchAPI;
+using OverwatchAPI.Extensions;
 using PokemonTcgSdk;
 using System;
 using System.Linq;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    public class CommonModule
+    public class CommonModule : BaseCommandModule
     {
         [Command("8ball")]
         [Description("Roll an 8-ball")]
@@ -29,12 +30,15 @@ namespace FlawBOT.Modules
         public async Task EightBall(CommandContext ctx, [RemainingText] string question)
         {
             if (string.IsNullOrWhiteSpace(question))
-                await ctx.RespondAsync(":warning: You have to ask a question! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: You have to ask a question!");
             else
             {
                 await ctx.TriggerTypingAsync();
                 var rnd = new Random();
-                await ctx.RespondAsync(EightBallAnswers.list[rnd.Next(0, EightBallAnswers.list.Count)]);
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle($":8ball: {EightBallAnswers.list[rnd.Next(0, EightBallAnswers.list.Count)]}")
+                    .WithColor(DiscordColor.Black);
+                await ctx.RespondAsync(embed: output.Build());
             }
         }
 
@@ -43,7 +47,7 @@ namespace FlawBOT.Modules
         [Description("Get server user's avatar")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task UserAvatar(CommandContext ctx, [RemainingText] DiscordMember member)
+        public async Task GetAvatar(CommandContext ctx, [RemainingText] DiscordMember member)
         {
             if (member == null)
                 member = ctx.Member;
@@ -66,7 +70,10 @@ namespace FlawBOT.Modules
             await ctx.TriggerTypingAsync();
             var http = new HttpClient();
             var response = await http.GetStringAsync("https://catfact.ninja/fact");
-            await ctx.RespondAsync($":cat: Meow! {JObject.Parse(response)["fact"]}");
+            var output = new DiscordEmbedBuilder()
+                .WithTitle($":cat: {JObject.Parse(response)["fact"]}")
+                .WithColor(DiscordColor.Orange);
+            await ctx.RespondAsync(embed: output.Build());
         }
 
         [Command("color")]
@@ -85,15 +92,15 @@ namespace FlawBOT.Modules
                 var blue = Convert.ToByte(rgb ? int.Parse(colors[2]) : Convert.ToInt32(arg.Substring(4, 2), 16));
                 var color = new DiscordColor(red, green, blue);
                 var output = new DiscordEmbedBuilder()
-                    .AddField("HEX:", $"{color.Value:X}", true)
                     .AddField("RGB:", $"{colors[0]} {colors[1]} {colors[2]}", true)
+                    .AddField("HEX:", $"{color.Value:X}", true)
                     .AddField("Decimal:", $"{color.Value}", true)
                     .WithColor(color);
                 await ctx.RespondAsync(embed: output.Build());
             }
             catch
             {
-                await ctx.RespondAsync(":warning: Unable to retrieve color values, try **.color [0-255] [0-255] [0-255]** :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Unable to retrieve color values, try **.color [0-255] [0-255] [0-255]**");
             }
         }
 
@@ -105,18 +112,18 @@ namespace FlawBOT.Modules
         public async Task Dictionary(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: A word or a phrase is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A word or phrase is required!");
             else
             {
-                await ctx.TriggerTypingAsync();
                 var data = await DefinitionService.GetDefinitionForTermAsync(query);
                 if (data.Results.Count == 0)
-                    await ctx.RespondAsync(":warning: No results found! :warning:");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: No results found!");
                 else
                     for (var index = 0; index < data.Results.Count; index++)
                         foreach (var value in data.Results[index].Senses)
                             if (value.Definition != null)
                             {
+                                await ctx.TriggerTypingAsync();
                                 var definition = value.Definition.ToString();
                                 if (!(value.Definition is string))
                                     definition = ((JArray)JToken.Parse(value.Definition.ToString())).First.ToString();
@@ -129,7 +136,7 @@ namespace FlawBOT.Modules
                                     output.AddField("Example", value.Examples.First().text);
                                 await ctx.RespondAsync(embed: output.Build());
 
-                                var interactivity = await ctx.Client.GetInteractivityModule()
+                                var interactivity = await ctx.Client.GetInteractivity()
                                     .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLower() == "go", TimeSpan.FromSeconds(10));
                                 if (interactivity != null) continue;
                                 index = data.Results.Count;
@@ -146,29 +153,29 @@ namespace FlawBOT.Modules
         public async Task UrbanDictionary(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: A word or a phrase is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A word or phrase is required!");
             else
             {
-                await ctx.TriggerTypingAsync();
                 var data = await DictionaryService.GetDictionaryForTermAsync(query);
                 if (data.result_type == "no_results")
-                    await ctx.RespondAsync(":warning: No results found! :warning:");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: No results found!");
                 else
                     foreach (var value in data.list)
                     {
+                        await ctx.TriggerTypingAsync();
                         var output = new DiscordEmbedBuilder()
                             .WithTitle($"Urban Dictionary definition for **{query}** by {value.author}")
-                            .WithDescription(value.definition.Length < 500
-                                ? value.definition
-                                : value.definition.Take(500) + "...")
+                            .WithDescription(value.definition.Length < 500 ? value.definition : value.definition.Take(500) + "...")
                             .WithUrl(value.permalink)
                             .WithFooter("Type next for the next definition")
                             .WithColor(DiscordColor.Blurple);
                         if (!string.IsNullOrWhiteSpace(value.example))
                             output.AddField("Example", value.example);
+                        output.AddField(":thumbsup:", value.thumbs_up.ToString(), true);
+                        output.AddField(":thumbsdown:", value.thumbs_down.ToString(), true);
                         await ctx.RespondAsync(embed: output.Build());
 
-                        var interactivity = await ctx.Client.GetInteractivityModule()
+                        var interactivity = await ctx.Client.GetInteractivity()
                             .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLower() == "next", TimeSpan.FromSeconds(10));
                         if (interactivity == null) break;
                     }
@@ -183,18 +190,17 @@ namespace FlawBOT.Modules
         public async Task OMDB(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: A movie or TV show is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A search query is required!");
             else
             {
-                await ctx.TriggerTypingAsync();
-                var service = new APITokenService();
-                var token = service.GetAPIToken("omdb");
-                var client = new OMDbClient(token, true);
+                var service = new BotServices();
+                var client = new OMDbClient(service.GetAPIToken("omdb"), true);
                 var movie = await client.GetItemByTitle(query.Replace(" ", "+"));
                 if (movie.Response == "False")
-                    await ctx.RespondAsync(":warning: No results found! :warning:");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: No results found!");
                 else
                 {
+                    await ctx.TriggerTypingAsync();
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(movie.Title)
                         .WithDescription(movie.Plot.Length < 500 ? movie.Plot : movie.Plot.Take(500) + "...")
@@ -225,63 +231,77 @@ namespace FlawBOT.Modules
         {
             await ctx.TriggerTypingAsync();
             var rnd = new Random();
-            var service = new APITokenService();
-            var token = service.GetAPIToken("imgur");
-            var imgur = new ImgurClient(token);
+            var service = new BotServices();
+            var imgur = new ImgurClient(service.GetAPIToken("imgur"));
             var endpoint = new GalleryEndpoint(imgur);
             var gallery = string.IsNullOrWhiteSpace(query) ? (await endpoint.GetRandomGalleryAsync()).ToList() : (await endpoint.SearchGalleryAsync(query)).ToList();
             var img = gallery.Any() ? gallery[rnd.Next(0, gallery.Count)] : null;
+            var output = new DiscordEmbedBuilder();
             switch (img)
             {
                 case null:
-                    await ctx.RespondAsync(":warning: No results found! :warning:");
+                    output.WithTitle(":mag: No results found!");
+                    output.WithColor(DiscordColor.Yellow);
                     break;
 
                 case GalleryAlbum _:
-                    await ctx.RespondAsync(((GalleryAlbum)img).Link);
+                    output.WithImageUrl(((GalleryAlbum)img).Link);
+                    output.WithColor(DiscordColor.SapGreen);
                     break;
 
                 case GalleryImage _:
-                    await ctx.RespondAsync(((GalleryImage)img).Link);
+                    output.WithImageUrl(((GalleryImage)img).Link);
+                    output.WithColor(DiscordColor.SapGreen);
                     break;
             }
+            await ctx.RespondAsync(embed: output.Build());
         }
 
         [Command("math")]
         [Description("Perform a basic math operation")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Math(CommandContext ctx, double num1, MathOperations operation, double num2)
+        public async Task Math(CommandContext ctx, double num1, string operation, double num2)
         {
-            double result;
-            switch (operation)
+            try
             {
-                case MathOperations.Add:
-                    result = num1 + num2;
-                    break;
+                double result;
+                switch (operation)
+                {
+                    case "+":
+                        result = num1 + num2;
+                        break;
 
-                case MathOperations.Subtract:
-                    result = num1 - num2;
-                    break;
+                    case "-":
+                        result = num1 - num2;
+                        break;
 
-                case MathOperations.Multiply:
-                    result = num1 * num2;
-                    break;
+                    case "*":
+                        result = num1 * num2;
+                        break;
 
-                case MathOperations.Divide:
-                    result = num1 / num2;
-                    break;
+                    case "/":
+                        result = num1 / num2;
+                        break;
 
-                case MathOperations.Modulo:
-                    result = num1 % num2;
-                    break;
+                    case "%":
+                        result = num1 % num2;
+                        break;
 
-                default:
-                    result = num1 + num2;
-                    break;
+                    default:
+                        result = num1 + num2;
+                        break;
+                }
+
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle($":1234: The result is {result:#,##0.00}")
+                    .WithColor(DiscordColor.CornflowerBlue);
+                await ctx.RespondAsync(embed: output.Build());
             }
-
-            await ctx.RespondAsync($"{DiscordEmoji.FromName(ctx.Client, ":1234:")} The result is {result:#,##0.00}");
+            catch
+            {
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Error calculating math equation, make sure your values are integers and the operation is valid!");
+            }
         }
 
         [Command("overwatch")]
@@ -289,19 +309,19 @@ namespace FlawBOT.Modules
         [Description("Get Overwatch player information")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Overwatch(CommandContext ctx, [RemainingText] string query)
+        public async Task Overwatch(CommandContext ctx, string battletag, [RemainingText] string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: Blizzard Battletag is required! Try **.ow CriticalFlaw#11354** (Case-sensitive) :warning:");
+            if (string.IsNullOrWhiteSpace(battletag))
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Battletag is required! Try **.ow CriticalFlaw#11354** (case-sensitive)");
             else
             {
-                await ctx.TriggerTypingAsync();
                 var overwatch = new OverwatchClient();
-                var player = await overwatch.GetPlayerAsync(query);
+                var player = await overwatch.GetPlayerAsync(battletag);
                 if (player == null)
-                    await ctx.RespondAsync(":warning: Player not found! Note; battletags are case-sensitive :warning:");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: Player not found! Remember, battletags are case-sensitive.");
                 else
                 {
+                    await ctx.TriggerTypingAsync();
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(player.Username)
                         .AddField("Level", player.PlayerLevel.ToString(), true)
@@ -311,6 +331,24 @@ namespace FlawBOT.Modules
                         .WithThumbnailUrl(player.ProfilePortraitUrl)
                         .WithUrl(player.ProfileUrl)
                         .WithColor(DiscordColor.Gold);
+                    // Add Casual or Competitive stats if a query is present
+                    switch (query.ToUpperInvariant())
+                    {
+                        case "CASUAL":
+                            output.AddField("Healing Done", player.CasualStats.GetStatExact("All Heroes", "Assists", "Healing Done").Value.ToString(), true);
+                            output.WithFooter("Casual stats shown are for All Heroes");
+                            break;
+
+                        case "COMP":
+                        case "COMPETITIVE":
+                            output.AddField("Healing Done", player.CompetitiveStats.GetStatExact("All Heroes", "Assists", "Healing Done").Value.ToString(), true);
+                            output.WithFooter("Competitive stats shown are for All Heroes");
+                            break;
+
+                        default:
+                            // Do nothing...
+                            break;
+                    }
                     await ctx.RespondAsync(embed: output.Build());
                 }
             }
@@ -324,22 +362,27 @@ namespace FlawBOT.Modules
         public async Task Pokemon(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: Pokemon name is required! Try **.poke charizard** :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: Pokemon name is required! Try **.poke charizard**");
             else
             {
-                await ctx.TriggerTypingAsync();
                 var pokemon = await PokemonService.GetPokemonDataAsync(query);
                 if (pokemon.cards.Count == 0)
-                    await ctx.RespondAsync(":warning: Unable to find this Pokemon");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: Pokemon not found!");
                 else
                 {
+                    await ctx.TriggerTypingAsync();
                     var rnd = new Random();
                     var cards = Card.Find<Pokemon>(pokemon.cards[rnd.Next(0, pokemon.cards.Count)].id);
                     var output = new DiscordEmbedBuilder()
                         .WithTitle($"{cards.Card.Name} (ID: {cards.Card.NationalPokedexNumber})")
+                        .AddField("Health Points", cards.Card.Hp, true)
+                        .AddField("Artist", cards.Card.Artist, true)
+                        .AddField("Rarity", cards.Card.Rarity, true)
+                        .AddField("Series", cards.Card.Series, true)
                         .WithImageUrl(cards.Card.ImageUrl)
                         .WithColor(DiscordColor.Lilac)
                         .WithFooter($"Card ID: {cards.Card.Id}");
+                    if (cards.Card.ImageUrlHiRes != null) output.WithImageUrl(cards.Card.ImageUrlHiRes);    // Replace with high resolution image if available
                     await ctx.RespondAsync(embed: output.Build());
                 }
             }
@@ -350,15 +393,19 @@ namespace FlawBOT.Modules
         [Description("Get a random cat image")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RandomCat(CommandContext ctx)
+        public async Task CatPic(CommandContext ctx)
         {
             using (var client = new WebClient())
             {
                 await ctx.TriggerTypingAsync();
-                var image = client.DownloadString("http://random.cat/meow");
-                var iFrom = image.IndexOf("\\/i\\/", StringComparison.Ordinal) + "\\/i\\/".Length;
-                var iTo = image.LastIndexOf("\"}", StringComparison.Ordinal);
-                await ctx.RespondAsync($":cat: Meow! http://random.cat/i/{image.Substring(iFrom, iTo - iFrom)}");
+                var image = client.DownloadString("http://aws.random.cat/meow");
+                var from = image.IndexOf("\\/i\\/", StringComparison.Ordinal) + "\\/i\\/".Length;
+                var to = image.LastIndexOf("\"}", StringComparison.Ordinal);
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(":cat: Meow!")
+                    .WithImageUrl($"http://random.cat/i/{image.Substring(from, to - from)}")
+                    .WithColor(DiscordColor.Orange);
+                await ctx.RespondAsync(embed: output.Build());
             }
         }
 
@@ -367,11 +414,18 @@ namespace FlawBOT.Modules
         [Description("Get a random dog image")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task RandomDog(CommandContext ctx)
+        public async Task DogPic(CommandContext ctx)
         {
-            await ctx.TriggerTypingAsync();
             using (var client = new WebClient())
-                await ctx.RespondAsync($":dog: Bork! http://random.dog/{client.DownloadString("http://random.dog/woof")}");
+            {
+                await ctx.TriggerTypingAsync();
+                var link = client.DownloadString("http://random.dog/woof");
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(":dog: Bork!")
+                    .WithImageUrl($"http://random.dog/{link}")
+                    .WithColor(DiscordColor.Brown);
+                await ctx.RespondAsync(embed: output.Build());
+            }
         }
 
         [Command("simpsons")]
@@ -379,7 +433,7 @@ namespace FlawBOT.Modules
         [Description("Get a random Simpsons screenshot and episode")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SimpsonsEpisode(CommandContext ctx)
+        public async Task Simpsons(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
             var data = await SimpsonsService.GetSimpsonsDataAsync();
@@ -399,7 +453,7 @@ namespace FlawBOT.Modules
         [Description("Get a random Simpsons gif")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SimpsonsGif(CommandContext ctx, [RemainingText] string input)
+        public async Task SimpsonsGIF(CommandContext ctx, [RemainingText] string input)
         {
             await ctx.TriggerTypingAsync();
             var gif = await SimpsonsService.GetSimpsonsGifAsync();
@@ -426,10 +480,13 @@ namespace FlawBOT.Modules
         [Description("Sum all inputted numbers")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SumOfNumbers(CommandContext ctx, params int[] args)
+        public async Task Sum(CommandContext ctx, params int[] args)
         {
             await ctx.TriggerTypingAsync();
-            await ctx.RespondAsync($":1234: The sum is {args.Sum():#,##0}");
+            var output = new DiscordEmbedBuilder()
+                .WithTitle($":1234: The sum is {args.Sum():#,##0}")
+                .WithColor(DiscordColor.CornflowerBlue);
+            await ctx.RespondAsync(embed: output.Build());
         }
 
         [Command("time")]
@@ -439,21 +496,21 @@ namespace FlawBOT.Modules
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetTime(CommandContext ctx, [RemainingText] string location)
         {
-            try
+            if (string.IsNullOrWhiteSpace(location))
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A valid location is required! Try **.time Ottawa, CA**");
+            else
             {
-                if (string.IsNullOrWhiteSpace(location))
-                    await ctx.RespondAsync(":warning: A valid location is required! Try **.time Ottawa, CA** :warning:");
-                else
+                try
                 {
                     await ctx.TriggerTypingAsync();
                     var http = new HttpClient();
                     http.DefaultRequestHeaders.Clear();
-                    var service = new APITokenService();
+                    var service = new BotServices();
                     var token = service.GetAPIToken("google");
                     var locationResource = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/geocode/json?address={location.Replace(" ", "")}&key={token}");
                     var locationObject = JsonConvert.DeserializeObject<TimeService>(locationResource);
                     if (locationObject.status != "OK")
-                        await ctx.RespondAsync(":warning: Unable to find this location! :warning:");
+                        await BotServices.SendErrorEmbedAsync(ctx, ":mag: Location not found!");
                     else
                     {
                         var currentSeconds = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
@@ -468,10 +525,10 @@ namespace FlawBOT.Modules
                         await ctx.RespondAsync(embed: output.Build());
                     }
                 }
-            }
-            catch
-            {
-                await ctx.RespondAsync(":warning: Unable to find time data for this location! :warning:");
+                catch
+                {
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: Unable to find time data for this location!");
+                }
             }
         }
 
@@ -480,24 +537,23 @@ namespace FlawBOT.Modules
         [Description("Get Twitch stream information")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task CheckTwitchStream(CommandContext ctx, [RemainingText] string stream)
+        public async Task Twitch(CommandContext ctx, [RemainingText] string stream)
         {
-            try
+            if (string.IsNullOrWhiteSpace(stream))
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: An existing Twitch channel name is required!");
+            else
             {
-                if (string.IsNullOrWhiteSpace(stream))
-                    await ctx.RespondAsync(":warning: A valid Twitch channel name is required! :warning:");
-                else
+                try
                 {
                     await ctx.TriggerTypingAsync();
                     var http = new HttpClient();
-                    var service = new APITokenService();
-                    var token = service.GetAPIToken("twitch");
-                    var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id={token}";
+                    var service = new BotServices();
+                    var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id={service.GetAPIToken("twitch")}";
                     var response = await http.GetStringAsync(twitchUrl).ConfigureAwait(false);
                     var twitch = JsonConvert.DeserializeObject<TwitchService>(response);
                     twitch.Url = twitchUrl;
                     if (!twitch.IsLive)
-                        await ctx.RespondAsync("That Twitch channel is **Offline** (or doesn't exist) :pensive:");
+                        await BotServices.SendErrorEmbedAsync(ctx, "Channel is **Offline** (or doesn't exist) :pensive:");
                     else
                     {
                         var output = new DiscordEmbedBuilder()
@@ -512,10 +568,10 @@ namespace FlawBOT.Modules
                         await ctx.RespondAsync(embed: output.Build());
                     }
                 }
-            }
-            catch
-            {
-                await ctx.RespondAsync(":warning: Error processing channel status, please do not include special characters in your input! :warning:");
+                catch
+                {
+                    await BotServices.SendErrorEmbedAsync(ctx, ":warning: Unable to determine channel status, please do not include special characters in your input!");
+                }
             }
         }
 
@@ -524,13 +580,13 @@ namespace FlawBOT.Modules
         [Description("Get weather information for specified location")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task GetWeather(CommandContext ctx, [RemainingText] string location)
+        public async Task Weather(CommandContext ctx, [RemainingText] string location)
         {
-            try
+            if (string.IsNullOrWhiteSpace(location))
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A valid location is required! Try **.weather Ottawa, CA**");
+            else
             {
-                if (string.IsNullOrWhiteSpace(location))
-                    await ctx.RespondAsync(":warning: A valid location is required! Try **.weather Ottawa, CA** :warning:");
-                else
+                try
                 {
                     await ctx.TriggerTypingAsync();
                     var http = new HttpClient();
@@ -538,7 +594,7 @@ namespace FlawBOT.Modules
                     var response = await http.GetStringAsync($"http://api.openweathermap.org/data/2.5/weather?q={location}&appid=42cd627dd60debf25a5739e50a217d74&units=metric");
                     var weather = JsonConvert.DeserializeObject<WeatherService.WeatherData>(response);
                     if (weather.cod == 404)
-                        await ctx.RespondAsync(":warning: Unable to find this location! :warning:");
+                        await BotServices.SendErrorEmbedAsync(ctx, ":mag: Location not found!");
                     else
                     {
                         Func<double, double> format = WeatherService.CelsiusToFahrenheit;
@@ -553,10 +609,10 @@ namespace FlawBOT.Modules
                         await ctx.RespondAsync(embed: output.Build());
                     }
                 }
-            }
-            catch
-            {
-                await ctx.RespondAsync(":warning: Unable to find weather data for this location! :warning:");
+                catch
+                {
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: Unable to find weather data for this location!");
+                }
             }
         }
 
@@ -565,10 +621,10 @@ namespace FlawBOT.Modules
         [Description("Retrieve a wikipedia link")]
         [Cooldown(2, 5, CooldownBucketType.User)]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task SearchWikipedia(CommandContext ctx, [RemainingText] string query)
+        public async Task Wikipedia(CommandContext ctx, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync(":warning: Wikipedia search query is required! :warning:");
+                await BotServices.SendErrorEmbedAsync(ctx, ":warning: A search query is required!");
             else
             {
                 await ctx.TriggerTypingAsync();
@@ -576,7 +632,7 @@ namespace FlawBOT.Modules
                 var result = await http.GetStringAsync($"https://en.wikipedia.org//w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles={Uri.EscapeDataString(query)}");
                 var data = JsonConvert.DeserializeObject<WikipediaService>(result);
                 if (data.Query.Pages[0].Missing)
-                    await ctx.RespondAsync(":warning: Unable to find this Wikipedia page! :warning:");
+                    await BotServices.SendErrorEmbedAsync(ctx, ":mag: Wikipedia page not found!");
                 else
                     await ctx.Channel.SendMessageAsync(data.Query.Pages[0].FullUrl).ConfigureAwait(false);
             }
