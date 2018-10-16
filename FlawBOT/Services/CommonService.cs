@@ -8,7 +8,7 @@ namespace FlawBOT.Services
 {
     internal class EightBallAnswers
     {
-        public static List<string> list = new List<string>
+        public readonly static List<string> list = new List<string>
         {
             "It is certain",
             "It is decidedly so",
@@ -242,7 +242,7 @@ namespace FlawBOT.Services
     {
         public StreamInfo Stream { get; set; }
         public bool IsLive => Stream != null;
-        public string Error { get; set; } = null;
+        public string Error { get; set; }
         public string Game => Stream?.Game;
         public int Viewers => Stream?.Viewers ?? 0;
         public string Title => Stream?.Channel?.Status;
@@ -295,8 +295,8 @@ namespace FlawBOT.Services
         {
             public double temp { get; set; }
             public float humidity { get; set; }
-            public double tempMin { get; set; } // [JsonProperty("temp_min")]
-            public double tempMax { get; set; } // [JsonProperty("temp_max")]
+            public double tempMin { get; set; }
+            public double tempMax { get; set; }
         }
 
         public class Wind
@@ -321,7 +321,7 @@ namespace FlawBOT.Services
 
             public class WikipediaPage
             {
-                public bool Missing { get; set; } = false;
+                public bool Missing { get; set; }
                 public string FullUrl { get; set; }
             }
         }

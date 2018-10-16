@@ -10,6 +10,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
@@ -183,15 +184,16 @@ namespace FlawBOT.Modules
                 await ctx.TriggerTypingAsync();
                 var http = new HttpClient();
                 var textInfo = new CultureInfo("en-US", false).TextInfo;
-                string search = null;
+                var search = new StringBuilder();
                 foreach (var term in query.Split(' '))
                     if (term.Length <= 2)
-                        search += $"{term} ";
+                        search.Append(term).Append(" ");
                     else
-                        search += $"{textInfo.ToTitleCase(term)} ";
+                        search.Append(textInfo.ToTitleCase(term)).Append(" ");
                 if (search != null)
                 {
-                    var result = await http.GetStringAsync($"https://wiki.teamfortress.com/w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles={Uri.EscapeDataString(search.Replace(' ', '_').Trim())}");
+                    var title = Uri.EscapeDataString(search.Replace(' ', '_').ToString().Trim());
+                    var result = await http.GetStringAsync($"https://wiki.teamfortress.com/w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles={title}");
                     var data = JsonConvert.DeserializeObject<WikipediaService>(result);
                     if (data.Query.Pages[0].Missing)
                         await BotServices.SendErrorEmbedAsync(ctx, ":mag: TF2Wiki page not found!");

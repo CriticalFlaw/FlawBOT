@@ -46,15 +46,14 @@ namespace FlawBOT.Modules
         [RequirePermissions(Permissions.ManageMessages)]
         [Cooldown(1, 5, CooldownBucketType.User)]
         [Cooldown(2, 10, CooldownBucketType.Guild)]
-        public async Task Clean(CommandContext ctx, int limit, [RemainingText] DiscordChannel channel)
+        public async Task Clean(CommandContext ctx, int limit)  //, [RemainingText] DiscordChannel channel)
         {
             if (limit <= 0 || limit > 100)
                 await BotServices.SendErrorEmbedAsync(ctx, ":warning: Invalid number of messages to delete, must be in range of 1-100!");
             else
             {
                 await ctx.TriggerTypingAsync();
-                if (channel == null)
-                    channel = ctx.Channel;
+                //if (channel == null) channel = ctx.Channel;
                 var messages = await ctx.Channel.GetMessagesAsync(limit).ConfigureAwait(false);
                 await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
                 await ctx.RespondAsync($"**{messages.Count}** message(s) have been removed from #{ctx.Channel.Name}");
@@ -222,19 +221,19 @@ namespace FlawBOT.Modules
             {
                 await ctx.TriggerTypingAsync();
                 var userCount = 0;
-                string usersList = null;
+                var usersList = new StringBuilder();
                 var users = (await ctx.Guild.GetAllMembersAsync()).ToArray();
                 foreach (var user in users)
                     if (user.Roles.Contains(role))
                     {
                         userCount++;
                         if (user.Equals(users.Last()))
-                            usersList += $"{user.DisplayName}";
+                            usersList.Append(user.DisplayName);
                         else
-                            usersList += $"{user.DisplayName}, ";
+                            usersList.Append(user.DisplayName).Append(", ");
                     }
 
-                if (string.IsNullOrWhiteSpace(usersList))
+                if (usersList.Length == 0)
                     await ctx.RespondAsync($"Role **{role.Name}** has no members");
                 else
                     await ctx.RespondAsync($"Role **{role.Name}** has **{userCount}** member(s): {usersList}");
@@ -262,7 +261,7 @@ namespace FlawBOT.Modules
             var interactivity = ctx.Client.GetInteractivity();
             await ctx.RespondAsync("Are you sure you want to remove FlawBOT from this server?\nRespond with **yes** to proceed or wait 15 seconds to cancel this operation.");
             var response = await interactivity.WaitForMessageAsync(x => x.ChannelId == ctx.Channel.Id && x.Author.Id == ctx.Member.Id, TimeSpan.FromSeconds(15));
-            if (response.Message.Content.ToUpper() == "YES")
+            if (response.Message.Content.ToUpperInvariant() == "YES")
             {
                 await ctx.RespondAsync("Thank you for using FlawBOT...");
                 await ctx.Guild.LeaveAsync();
@@ -396,6 +395,10 @@ namespace FlawBOT.Modules
             foreach (var channel in ctx.Guild.Channels)
                 switch (channel.Type)
                 {
+                    default:
+                        channels.Append($"`\n[{channel.Name}]`\n");
+                        break;
+
                     case ChannelType.Text:
                         channels.Append($"`[#{channel.Name}]`");
                         break;
@@ -405,20 +408,12 @@ namespace FlawBOT.Modules
                         break;
 
                     case ChannelType.Category:
-                        channels.Append($"`\n[{channel.Name.ToUpper()}]`\n");
+                        channels.Append($"`\n[{channel.Name.ToUpperInvariant()}]`\n");
                         break;
 
                     case ChannelType.Private:
-                        break;
-
                     case ChannelType.Group:
-                        break;
-
                     case ChannelType.Unknown:
-                        break;
-
-                    default:
-                        channels.Append($"`\n[{channel.Name}]`\n");
                         break;
                 }
             if (channels.Length == 0) channels.Append("None");

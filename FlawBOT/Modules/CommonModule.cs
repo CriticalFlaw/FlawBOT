@@ -137,7 +137,7 @@ namespace FlawBOT.Modules
                                 await ctx.RespondAsync(embed: output.Build());
 
                                 var interactivity = await ctx.Client.GetInteractivity()
-                                    .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLower() == "go", TimeSpan.FromSeconds(10));
+                                    .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "go", TimeSpan.FromSeconds(10));
                                 if (interactivity != null) continue;
                                 index = data.Results.Count;
                                 break;
@@ -176,7 +176,7 @@ namespace FlawBOT.Modules
                         await ctx.RespondAsync(embed: output.Build());
 
                         var interactivity = await ctx.Client.GetInteractivity()
-                            .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLower() == "next", TimeSpan.FromSeconds(10));
+                            .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
                         if (interactivity == null) break;
                     }
             }
@@ -210,14 +210,14 @@ namespace FlawBOT.Modules
                         .AddField("Country", movie.Country, true)
                         .AddField("Box Office", movie.BoxOffice, true)
                         .AddField("Production", movie.Production, true)
-                        .AddField("IMDB Rating", movie.imdbRating, true)
+                        .AddField("IMDB Rating", movie.IMDbRating, true)
                         .AddField("Metacritic", movie.Metascore, true)
-                        .AddField("Rotten Tomatoes", movie.tomatoRating, true)
+                        .AddField("Rotten Tomatoes", movie.TomatoRating, true)
                         .AddField("Director", movie.Director, true)
                         .AddField("Actors", movie.Actors, true)
                         .WithColor(DiscordColor.Goldenrod);
                     if (movie.Poster != "N/A") output.WithImageUrl(movie.Poster);
-                    if (movie.tomatoURL != "N/A") output.WithUrl(movie.tomatoURL);
+                    if (movie.TomatoURL != "N/A") output.WithUrl(movie.TomatoURL);
                     await ctx.RespondAsync(embed: output.Build());
                 }
             }
@@ -239,11 +239,6 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder();
             switch (img)
             {
-                case null:
-                    output.WithTitle(":mag: No results found!");
-                    output.WithColor(DiscordColor.Yellow);
-                    break;
-
                 case GalleryAlbum _:
                     output.WithImageUrl(((GalleryAlbum)img).Link);
                     output.WithColor(DiscordColor.SapGreen);
@@ -252,6 +247,11 @@ namespace FlawBOT.Modules
                 case GalleryImage _:
                     output.WithImageUrl(((GalleryImage)img).Link);
                     output.WithColor(DiscordColor.SapGreen);
+                    break;
+
+                default:
+                    output.WithTitle(":mag: No results found!");
+                    output.WithColor(DiscordColor.Yellow);
                     break;
             }
             await ctx.RespondAsync(embed: output.Build());
@@ -265,10 +265,11 @@ namespace FlawBOT.Modules
         {
             try
             {
-                double result;
+                double result = 0;
                 switch (operation)
                 {
                     case "+":
+                    default:
                         result = num1 + num2;
                         break;
 
@@ -286,10 +287,6 @@ namespace FlawBOT.Modules
 
                     case "%":
                         result = num1 % num2;
-                        break;
-
-                    default:
-                        result = num1 + num2;
                         break;
                 }
 
@@ -326,7 +323,7 @@ namespace FlawBOT.Modules
                         .WithTitle(player.Username)
                         .AddField("Level", player.PlayerLevel.ToString(), true)
                         .AddField("Competitive", player.CompetitiveRank.ToString(), true)
-                        .AddField("Platform", player.Platform.ToString().ToUpper(), true)
+                        .AddField("Platform", player.Platform.ToString().ToUpperInvariant(), true)
                         .AddField("Achievements", player.Achievements.Count.ToString(), true)
                         .WithThumbnailUrl(player.ProfilePortraitUrl)
                         .WithUrl(player.ProfileUrl)
@@ -335,6 +332,7 @@ namespace FlawBOT.Modules
                     switch (query.ToUpperInvariant())
                     {
                         case "CASUAL":
+                        default:
                             output.AddField("Healing Done", player.CasualStats.GetStatExact("All Heroes", "Assists", "Healing Done").Value.ToString(), true);
                             output.WithFooter("Casual stats shown are for All Heroes");
                             break;
@@ -343,10 +341,6 @@ namespace FlawBOT.Modules
                         case "COMPETITIVE":
                             output.AddField("Healing Done", player.CompetitiveStats.GetStatExact("All Heroes", "Assists", "Healing Done").Value.ToString(), true);
                             output.WithFooter("Competitive stats shown are for All Heroes");
-                            break;
-
-                        default:
-                            // Do nothing...
                             break;
                     }
                     await ctx.RespondAsync(embed: output.Build());
@@ -548,7 +542,7 @@ namespace FlawBOT.Modules
                     await ctx.TriggerTypingAsync();
                     var http = new HttpClient();
                     var service = new BotServices();
-                    var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLower()}?client_id={service.GetAPIToken("twitch")}";
+                    var twitchUrl = $"https://api.twitch.tv/kraken/streams/{stream.ToLowerInvariant()}?client_id={service.GetAPIToken("twitch")}";
                     var response = await http.GetStringAsync(twitchUrl).ConfigureAwait(false);
                     var twitch = JsonConvert.DeserializeObject<TwitchService>(response);
                     twitch.Url = twitchUrl;

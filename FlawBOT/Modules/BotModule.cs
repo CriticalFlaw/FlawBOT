@@ -4,7 +4,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Services;
 using System;
-using System.Data.SqlClient;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -217,7 +216,7 @@ namespace FlawBOT.Modules
             else
             {
                 await ctx.TriggerTypingAsync();
-                switch (status.Trim().ToUpper())
+                switch (status.Trim().ToUpperInvariant())
                 {
                     case "OFF":
                     case "OFFLINE":
@@ -246,31 +245,6 @@ namespace FlawBOT.Modules
                         await ctx.RespondAsync("FlawBOT status has been changed to **Online**");
                         break;
                 }
-            }
-        }
-
-        [Hidden]
-        [RequireOwner]
-        [Command("sql")]
-        [Description("Run a SQL query")]
-        public async Task SQLQuery(CommandContext ctx, [RemainingText] string query)
-        {
-            try
-            {
-                var service = new BotServices();
-                using (var conn = new SqlConnection(service.GetAPIToken("database")))
-                using (var cmd = conn.CreateCommand())
-                {
-                    await conn.OpenAsync().ConfigureAwait(false);
-                    cmd.CommandText = query;
-                    await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-                    await ctx.RespondAsync("SQL Query Executed...");
-                    Console.WriteLine($"Executed SQL Query: {query}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error updating RSS feeds! Exception: {ex.Message}");
             }
         }
 

@@ -11,11 +11,7 @@ using SteamWebAPI2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Terradue.ServiceModel.Syndication;
 
 namespace FlawBOT
 {
@@ -23,7 +19,6 @@ namespace FlawBOT
     {
         public DiscordClient Client { get; set; }
         public CommandsNextExtension Commands { get; private set; }
-        private static Timer FeedCheckTimer { get; set; }
         private static readonly object _lock = new object();
 
         public static void Main(string[] args)
@@ -41,12 +36,11 @@ namespace FlawBOT
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
                 LogLevel = LogLevel.Info,
-                UseInternalLogHandler = false,  //true
+                UseInternalLogHandler = false,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250
             };
-            // initialize cnext dependencies
-            //var deps = new ServiceCollection().AddSingleton(Client);
+
             var cmd = new CommandsNextConfiguration
             {
                 PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
@@ -55,16 +49,12 @@ namespace FlawBOT
                 EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
                 CaseSensitive = false,
                 DefaultHelpChecks = new List<CheckBaseAttribute>()
-                //Services = deps.BuildServiceProvider()
             };
 
             Client = new DiscordClient(cfg);
             Client.Ready += Client_Ready;
             Client.ClientErrored += Client_ClientError;
-            //Client.MessageCreated += Client_OnMessageCreated;
-            //Client.SocketErrored += Client_OnSocketErrored;
             Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
-            //Interactivity = this.Client.UseInteractivity(new InteractivityConfiguration());
             Client.UseInteractivity(new InteractivityConfiguration
             {
                 PaginationBehavior = TimeoutBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
@@ -81,14 +71,12 @@ namespace FlawBOT
             Commands.RegisterCommands<ModeratorModule>();
             Commands.RegisterCommands<ServerModule>();
             Commands.RegisterCommands<SteamModule>();
-            //Commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
             // Start the uptime counter
             GlobalVariables.ProcessStarted = DateTime.Now;
-            FeedCheckTimer = new Timer(FeedCheckTimerCallback, null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
-            await UpdateSteamAsync(); // Update the Steam App list
+            await UpdateSteamAsync().ConfigureAwait(false); // Update the Steam App list
             await Client.ConnectAsync(); // Connect and log into Discord
-            await Task.Delay(-1); // Prevent the console window from closing
+            await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }
 
         private static Task Client_Ready(ReadyEventArgs e)
@@ -114,7 +102,6 @@ namespace FlawBOT
             switch (e.Exception)
             {
                 case CommandNotFoundException _:
-                    //await e.Context.RespondAsync(":no_entry: This command does not exist!");
                     break;
 
                 case ArgumentNullException _:
@@ -215,83 +202,11 @@ namespace FlawBOT
             var schema = new EconItems(token, EconItemsAppId.TeamFortress2);
             var items = schema.GetSchemaForTF2Async();
             GlobalVariables.TFItemSchema.Clear();
-            foreach (var item in items.Result.Data.Items)
-                if (!string.IsNullOrWhiteSpace(item.ItemName))
-                    GlobalVariables.TFItemSchema.Add(Convert.ToUInt32(item.DefIndex), item.ItemName);
+            //foreach (var item in items.Result.Data.Items)
+            //    if (!string.IsNullOrWhiteSpace(item.ItemName))
+            //        GlobalVariables.TFItemSchema.Add(Convert.ToUInt32(item.DefIndex), item.ItemName);
 
             return Task.CompletedTask;
-        }
-
-        private static void FeedCheckTimerCallback(object _)
-        {
-            var client = _ as DiscordClient;
-            try
-            {
-                CheckFeedsForChangesAsync(client).ConfigureAwait(false).GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error updating RSS feeds! Exception: {ex.Message}");
-            }
-        }
-
-        public static async Task CheckFeedsForChangesAsync(object _)
-        {
-            var client = _ as DiscordClient;
-            var database = new DatabaseService();
-            var feeds = await database.GetAllSubscriptionsAsync().ConfigureAwait(false);
-            var regexes = new Regex("<span> *<a +href *= *\"([^\"]+)\"> *\\[link\\] *</a> *</span>", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-            foreach (var feed in feeds)
-            {
-                try
-                {
-                    if (!feed.Subscriptions.Any())
-                    {
-                        await database.RemoveFeedAsync(feed.Id).ConfigureAwait(false);
-                        continue;
-                    }
-
-                    var newest = DatabaseService.GetFeedResults(feed.URL).First();
-                    var url = newest.Links.First().Uri.ToString();
-                    if (string.Compare(url, feed.SavedURL, StringComparison.OrdinalIgnoreCase) == 0) continue;
-                    await database.UpdateFeedSavedURLAsync(feed.Id, url).ConfigureAwait(false);
-                    foreach (var sub in feed.Subscriptions)
-                    {
-                        DiscordChannel chn = null;
-                        try
-                        {
-                            chn = await client.GetChannelAsync(sub.ChannelId).ConfigureAwait(false);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error updating RSS feeds! Exception: {ex.Message}");
-                        }
-                        var output = new DiscordEmbedBuilder
-                        {
-                            Title = $"{newest.Title.Text}",
-                            Url = url,
-                            Timestamp = newest.LastUpdatedTime,
-                            Color = DiscordColor.White
-                        };
-
-                        if (newest.Content is TextSyndicationContent content)
-                        {
-                            var matches = regexes.Match(content.Text);
-                            if (matches.Success)
-                                output.WithImageUrl(matches.Groups[1].Value);
-                        }
-                        if (!string.IsNullOrWhiteSpace(sub.QualifiedName))
-                            output.AddField("From", sub.QualifiedName);
-                        output.AddField("Link to content", url);
-                        await chn.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
-                        await Task.Delay(100).ConfigureAwait(false);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error updating RSS feeds! Exception: {ex.Message}");
-                }
-            }
         }
     }
 }

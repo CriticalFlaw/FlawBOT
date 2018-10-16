@@ -24,7 +24,6 @@ namespace FlawBOT.Services
         private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
         public static Random Instance => ThreadLocal.Value;
 
-        //public static Dictionary<int, string> ItemSchema = new Dictionary<int, string>();
         static GlobalVariables()
         {
             _seed = Environment.TickCount;
