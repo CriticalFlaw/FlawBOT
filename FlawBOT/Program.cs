@@ -5,9 +5,13 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
-using FlawBOT.Modules;
+using FlawBOT.Models;
+using FlawBOT.Modules.Bot;
+using FlawBOT.Modules.Games;
+using FlawBOT.Modules.Misc;
+using FlawBOT.Modules.Search;
+using FlawBOT.Modules.Server;
 using FlawBOT.Services;
-using SteamWebAPI2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,9 +34,10 @@ namespace FlawBOT
         public async Task RunBotAsync()
         {
             var service = new BotServices();
+            service.LoadBotConfig();
             var cfg = new DiscordConfiguration
             {
-                Token = service.GetAPIToken("discord"),
+                Token = GlobalVariables.config.DiscordToken,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
                 LogLevel = LogLevel.Info,
@@ -66,15 +71,37 @@ namespace FlawBOT
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.SetHelpFormatter<HelperService>(); // Set up the custom help formatter
             Commands.RegisterCommands<BotModule>();
-            Commands.RegisterCommands<CommonModule>();
-            Commands.RegisterCommands<GoogleModule>();
-            Commands.RegisterCommands<ModeratorModule>();
-            Commands.RegisterCommands<ServerModule>();
+            Commands.RegisterCommands<OwnerModule>();
+
+            Commands.RegisterCommands<OverwatchModule>();
+            Commands.RegisterCommands<PokemonModule>();
+            Commands.RegisterCommands<SmashModule>();
+            Commands.RegisterCommands<TeamFortressModule>();
+
+            Commands.RegisterCommands<MathModule>();
+            Commands.RegisterCommands<MiscModule>();
+
+            Commands.RegisterCommands<DictionaryModule>();
+            Commands.RegisterCommands<IMDBModule>();
+            Commands.RegisterCommands<ImgurModule>();
+            Commands.RegisterCommands<SimpsonsModule>();
             Commands.RegisterCommands<SteamModule>();
+            Commands.RegisterCommands<TwitchModule>();
+            Commands.RegisterCommands<WeatherModule>();
+            Commands.RegisterCommands<WikipediaModule>();
+            Commands.RegisterCommands<YouTubeModule>();
+
+            Commands.RegisterCommands<ChannelModule>();
+            Commands.RegisterCommands<MessagesModule>();
+            Commands.RegisterCommands<PollModule>();
+            Commands.RegisterCommands<ServerModule>();
+            Commands.RegisterCommands<UserModule>();
+            Commands.RegisterCommands<UserRolesModule>();
 
             // Start the uptime counter
+            Console.Title = GlobalVariables.Name + " (" + GlobalVariables.Version + ")";
             GlobalVariables.ProcessStarted = DateTime.Now;
-            await UpdateSteamAsync().ConfigureAwait(false); // Update the Steam App list
+            await BotServices.UpdateSteamAsync().ConfigureAwait(false); // Update the Steam App list
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }
@@ -102,25 +129,32 @@ namespace FlawBOT
             switch (e.Exception)
             {
                 case CommandNotFoundException _:
+                    //await BotServices.SendEmbedAsync(e.Context, ":no_entry: This command does not exist!", EmbedType.Error);
+                    break;
+
+                case NullReferenceException _:
+                    //await BotServices.SendEmbedAsync(e.Context, ":mag: Data not found!", EmbedType.Error);
                     break;
 
                 case ArgumentNullException _:
-                    await e.Context.RespondAsync(":no_entry: Not enough arguments supplied to the command!");
+                    await BotServices.SendEmbedAsync(e.Context, ":no_entry: Not enough arguments supplied to the command!", EmbedType.Error);
                     break;
 
                 case ArgumentException _:
                     if (e.Exception.Message.Contains("Not enough arguments supplied to the command"))
-                        await e.Context.RespondAsync(":no_entry: Not enough arguments supplied to the command!");
+                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Not enough arguments supplied to the command!", EmbedType.Error);
                     break;
 
                 case InvalidDataException _:
                     if (e.Exception.Message.Contains("The data within the stream was not valid image data"))
-                        await e.Context.RespondAsync(":no_entry: Provided URL is not an image type!");
+                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Provided URL is not an image type!", EmbedType.Error);
                     break;
 
                 default:
                     if (e.Exception.Message.Contains("Given emote was not found"))
-                        await e.Context.RespondAsync(":no_entry: Given emote was not found!");
+                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Suggested emote was not found!", EmbedType.Error);
+                    if (e.Exception.Message.Contains("Unauthorized: 403"))
+                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Unsufficient Permissions", EmbedType.Error);
                     else
                         e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "FlawBOT", $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now); // DEBUG ONLY
                     break;
@@ -129,8 +163,7 @@ namespace FlawBOT
 
         private static Task<int> PrefixResolverAsync(DiscordMessage m)
         {
-            var service = new BotServices();
-            return Task.FromResult(m.GetStringPrefixLength(service.GetAPIToken("prefix")));
+            return Task.FromResult(m.GetStringPrefixLength(GlobalVariables.config.CommandPrefix));
         }
 
         private static void Client_LogMessageHandler(object sender, DebugLogMessageEventArgs ea)
@@ -184,29 +217,6 @@ namespace FlawBOT
                 Console.Write(" ");
                 Console.WriteLine(ea.Message);
             }
-        }
-
-        private static Task UpdateSteamAsync()
-        {
-            Console.WriteLine("Updating Steam App List...");
-            var service = new BotServices();
-            var token = service.GetAPIToken("steam");
-            var apps = new SteamApps(token);
-            var games = apps.GetAppListAsync().Result.Data;
-            GlobalVariables.SteamAppList.Clear();
-            foreach (var game in games)
-                if (!string.IsNullOrWhiteSpace(game.Name))
-                    GlobalVariables.SteamAppList.Add(Convert.ToUInt32(game.AppId), game.Name);
-
-            Console.WriteLine("Updating TF2 Item Schema...");
-            var schema = new EconItems(token, EconItemsAppId.TeamFortress2);
-            var items = schema.GetSchemaForTF2Async();
-            GlobalVariables.TFItemSchema.Clear();
-            //foreach (var item in items.Result.Data.Items)
-            //    if (!string.IsNullOrWhiteSpace(item.ItemName))
-            //        GlobalVariables.TFItemSchema.Add(Convert.ToUInt32(item.DefIndex), item.ItemName);
-
-            return Task.CompletedTask;
         }
     }
 }

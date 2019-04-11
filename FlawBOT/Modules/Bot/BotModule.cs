@@ -1,0 +1,148 @@
+﻿using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+using FlawBOT.Models;
+using FlawBOT.Services;
+using System;
+using System.Threading.Tasks;
+
+namespace FlawBOT.Modules.Bot
+{
+    [Group("bot")]
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
+    public class BotModule : BaseCommandModule
+    {
+        #region COMMAND_HELP
+
+        [Command("help")]
+        [Aliases("cmd")]
+        [Description("Print a short list of available commands")]
+        public async Task Helper(CommandContext ctx)
+        {
+            var output = new DiscordEmbedBuilder()
+                .WithTitle("FlawBOT Command List")
+                .WithDescription("The **complete** command list can be found [here](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing)!")
+                .AddField(":robot: Bot Commands", "info, leave, report")
+                .AddField(":mag: Lookup Commands", "8ball, catfact, define, imdb, imgur, overwatch, pokemon, math, randomdog, shorten, simpsons, steamgame, steamlink, steamuser, tf2, time, twitch, youtube, weather")
+                .AddField(":hammer: Moderation Commands", "ban, clean, deafen, kick, mute, purge, prune, removerole, removeroles, setrole, warn")
+                .AddField(":tools: Server Commands", "channel, inrole, invite, mentionrole, perms, role, poll, server, setname, setnickname, setserveravatar, setservername, settopic, user, createrole, createtext, createvoice")
+                .WithColor(DiscordColor.Turquoise);
+            await ctx.RespondAsync(embed: output.Build());
+        }
+
+        #endregion COMMAND_HELP
+
+        #region COMMAND_INFO
+
+        [Command("info")]
+        [Aliases("i")]
+        [Description("Print the FlawBOT information")]
+        public async Task BotInfo(CommandContext ctx)
+        {
+            var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
+            var output = new DiscordEmbedBuilder()
+                .WithTitle("FlawBOT")
+                .WithDescription("A multipurpose Discord bot created using [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
+                .AddField("FlawBOT Version", GlobalVariables.Version, true)
+                .AddField("DSharpPlus Version", ctx.Client.VersionString, true)
+                .AddField("Uptime", $"{(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                .AddField("Ping", $"{ctx.Client.Ping}ms", true)
+                .AddField("Links", "[Commands](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing) **|** [Invite](https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot) **|** [GitHub](https://github.com/criticalflaw/flawbot)")
+                .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
+                .WithFooter("Thank you for using FlawBOT!")
+                .WithUrl("https://github.com/criticalflaw/flawbot")
+                .WithColor(DiscordColor.Aquamarine);
+            await ctx.RespondAsync(embed: output.Build());
+        }
+
+        #endregion COMMAND_INFO
+
+        #region COMMAND_UPTIME
+
+        [Command("uptime")]
+        [Description("Print the FlawBOT uptime")]
+        public async Task Uptime(CommandContext ctx)
+        {
+            var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
+            await ctx.RespondAsync($":clock1: The bot has been running for {(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}");
+        }
+
+        #endregion COMMAND_UPTIME
+
+        #region COMMAND_PING
+
+        [Command("ping")]
+        [Aliases("pong")]
+        [Description("Ping the FlawBOT client")]
+        public async Task Ping(CommandContext ctx)
+        {
+            await ctx.RespondAsync($":ping_pong: Pong! Ping: **{ctx.Client.Ping}**ms");
+        }
+
+        #endregion COMMAND_PING
+
+        #region COMMAND_REPORT
+
+        [Command("report")]
+        [Aliases("issue")]
+        [Description("Send a problem report to the developer. Please do not abuse.")]
+        public async Task ReportIssue(CommandContext ctx, [RemainingText] string report)
+        {
+            if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
+                await ctx.RespondAsync("Please provide more information on the issue (50 characters minimum).");
+            else
+            {
+                var prompt = await ctx.RespondAsync("The following information will be sent to the developer for investigation: **User ID**, **Server ID**, **Server Name** and **Server Owner Name**.\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
+                var input = await ctx.Client.GetInteractivity().WaitForMessageAsync(x => x.Author.Id == ctx.User.Id && x.Channel.Id == ctx.Channel.Id && x.Content == "yes", TimeSpan.FromSeconds(10));
+                if (input == null)
+                    await ctx.RespondAsync("Timed Out! Your report has **NOT** been submitted.");
+                else
+                {
+                    await prompt.DeleteAsync();
+                    await input.Message.DeleteAsync();
+                    var dm = await ctx.Member.CreateDmChannelAsync();
+                    var output = new DiscordEmbedBuilder()
+                        .WithAuthor($"{ctx.User.Username}#{ctx.User.Discriminator}", icon_url: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
+                        .AddField("Issue", report)
+                        .AddField("Server", $"{ctx.Guild.Name} (ID: {ctx.Guild.Id})")
+                        .AddField("Owner", $"{ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}")
+                        .AddField("Confirm", "[Click here to add this issue to GitHub](https://github.com/criticalflaw/flawbot/issues/new)")
+                        .WithColor(DiscordColor.Turquoise);
+                    await dm.SendMessageAsync(embed: output.Build());
+                    await BotServices.SendEmbedAsync(ctx, "Thank You! Your report has been submitted.", EmbedType.Good);
+                }
+            }
+        }
+
+        #endregion COMMAND_REPORT
+
+        #region COMMAND_SAY
+
+        [Command("say")]
+        [Aliases("echo")]
+        [Description("Repeat a message")]
+        public Task Say(CommandContext ctx, [RemainingText] string message)
+        {
+            message = (string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message;
+            return ctx.RespondAsync(message);
+        }
+
+        #endregion COMMAND_SAY
+
+        #region COMMAND_HELLO
+
+        [Command("hello")]
+        [Aliases("hi", "howdy")]
+        [Description("Say hello to a user")]
+        public async Task Greet(CommandContext ctx, [RemainingText] DiscordMember member)
+        {
+            if (member == null)
+                await ctx.RespondAsync($":wave: Hello, {ctx.User.Mention}!");
+            else
+                await ctx.RespondAsync($":wave: Hello, {member.Mention} from {ctx.User.Mention}!");
+        }
+
+        #endregion COMMAND_HELLO
+    }
+}

@@ -3,11 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ApplicationIcon></ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>FlawBOT.Program</StartupObject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.5.0</Version>
+    <Version>1.9.9</Version>
     <Win32Resource />
+    <LangVersion>7.2</LangVersion>
+    <AssemblyVersion>1.9.9</AssemblyVersion>
+    <FileVersion>1.9.9</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,11 +19,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BitlyAPI" Version="1.0.3" />
     <PackageReference Include="DSharpPlus" Version="4.0.0-beta-00431" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-beta-00431" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-beta-00431" />
-    <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.37.0.138" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.37.0.1226" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.38.0.1488" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />
@@ -28,7 +37,7 @@
     <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
     <PackageReference Include="SteamWebAPI2" Version="4.0.8" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="TwitchLib.Api" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
