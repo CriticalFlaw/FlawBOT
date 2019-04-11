@@ -17,7 +17,7 @@ namespace FlawBOT.Modules.Search
 
         [Command("dictionary")]
         [Aliases("define", "def", "dic")]
-        [Description("Get an Urban Dictionary entry for a word or phrase")]
+        [Description("Retrieve an Urban Dictionary definition of a word or phrase")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task UrbanDictionary(CommandContext ctx, [RemainingText] string query)
         {

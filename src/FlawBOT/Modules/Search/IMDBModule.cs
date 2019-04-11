@@ -14,8 +14,8 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_IMDB
 
         [Command("imdb")]
-        [Aliases("omdb")]
-        [Description("Get a movie or TV show from OMDB")]
+        [Aliases("omdb", "movie")]
+        [Description("Retrieve a movie or TV show from OMDB")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task OMDB(CommandContext ctx, [RemainingText] string query)
         {

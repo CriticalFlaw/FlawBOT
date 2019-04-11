@@ -10,34 +10,15 @@ using System.Threading.Tasks;
 namespace FlawBOT.Modules.Server
 {
     [Group("message")]
-    [Description("Commands for manipulating server messages.")]
-    [Aliases("m", "msg", "msgs", "messages")]
+    [Aliases("msg", "msgs", "messages")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class MessagesModule : BaseCommandModule
     {
-        #region CHANNEL_PURGE
-
-        [Command("purge")]
-        [Aliases("p")]
-        [Description("Purge server users' messages")]
-        [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Purge(CommandContext ctx, DiscordMember member, [RemainingText] int limit = 10)
-        {
-            if (limit <= 0 || limit > 100)
-                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid number of messages to delete, must be in range of 1-100!", EmbedType.Warning);
-            var messages = await ctx.Channel.GetMessagesAfterAsync(ctx.Message.Id, limit);
-            var delete = messages.Where(message => !string.IsNullOrWhiteSpace(member.ToString()) && message.Author.Id == member.Id).ToList();
-            await ctx.Channel.DeleteMessagesAsync(delete).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx, $"Purged **{delete.Count}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
-        }
-
-        #endregion CHANNEL_PURGE
-
         #region CHANNEL_CLEAN
 
         [Command("clean")]
         [Aliases("clear")]
-        [Description("Remove server messages")]
+        [Description("Remove channel messages")]
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task Clean(CommandContext ctx, int limit)
         {
@@ -52,5 +33,22 @@ namespace FlawBOT.Modules.Server
         }
 
         #endregion CHANNEL_CLEAN
+
+        #region CHANNEL_PURGE
+
+        [Command("purge")]
+        [Description("Remove server user's channel messages")]
+        [RequirePermissions(Permissions.ManageMessages)]
+        public async Task Purge(CommandContext ctx, DiscordMember member, [RemainingText] int limit = 10)
+        {
+            if (limit <= 0 || limit > 100)
+                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid number of messages to delete, must be in range of 1-100!", EmbedType.Warning);
+            var messages = await ctx.Channel.GetMessagesAfterAsync(ctx.Message.Id, limit);
+            var delete = messages.Where(message => !string.IsNullOrWhiteSpace(member.ToString()) && message.Author.Id == member.Id).ToList();
+            await ctx.Channel.DeleteMessagesAsync(delete).ConfigureAwait(false);
+            await BotServices.SendEmbedAsync(ctx, $"Purged **{delete.Count}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+        }
+
+        #endregion CHANNEL_PURGE
     }
 }

@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
@@ -13,11 +14,26 @@ namespace FlawBOT.Modules.Bot
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class BotModule : BaseCommandModule
     {
+        #region COMMAND_HELLO
+
+        [Command("hello")]
+        [Aliases("hi", "howdy")]
+        [Description("Say hello to a user")]
+        public async Task Greet(CommandContext ctx, [RemainingText] DiscordMember member)
+        {
+            if (member == null)
+                await ctx.RespondAsync($":wave: Hello, {ctx.User.Mention}!");
+            else
+                await ctx.RespondAsync($":wave: Hello, {member.Mention} from {ctx.User.Mention}!");
+        }
+
+        #endregion COMMAND_HELLO
+
         #region COMMAND_HELP
 
         [Command("help")]
         [Aliases("cmd")]
-        [Description("Print a short list of available commands")]
+        [Description("Retrieve a short list of available commands")]
         public async Task Helper(CommandContext ctx)
         {
             var output = new DiscordEmbedBuilder()
@@ -33,7 +49,7 @@ namespace FlawBOT.Modules.Bot
 
         [Command("info")]
         [Aliases("i")]
-        [Description("Print the FlawBOT information")]
+        [Description("Retrieve FlawBOT information")]
         public async Task BotInfo(CommandContext ctx)
         {
             var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
@@ -54,17 +70,27 @@ namespace FlawBOT.Modules.Bot
 
         #endregion COMMAND_INFO
 
-        #region COMMAND_UPTIME
+        #region COMMAND_LEAVE
 
-        [Command("uptime")]
-        [Description("Print the FlawBOT uptime")]
-        public async Task Uptime(CommandContext ctx)
+        [Command("leave")]
+        [Description("Make FlawBOT leave the current server")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task LeaveAsync(CommandContext ctx)
         {
-            var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
-            await ctx.RespondAsync($":clock1: The bot has been running for {(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}");
+            await BotServices.SendEmbedAsync(ctx, "Are you sure you want FlawBOT to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
+
+            var interactivity = await ctx.Client.GetInteractivity()
+                .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+            if (interactivity == null)
+                await BotServices.SendEmbedAsync(ctx, "Request cancelled...");
+            else
+            {
+                await BotServices.SendEmbedAsync(ctx, "Thank you for using FlawBOT...");
+                await ctx.Guild.LeaveAsync();
+            }
         }
 
-        #endregion COMMAND_UPTIME
+        #endregion COMMAND_LEAVE
 
         #region COMMAND_PING
 
@@ -126,19 +152,17 @@ namespace FlawBOT.Modules.Bot
 
         #endregion COMMAND_SAY
 
-        #region COMMAND_HELLO
+        #region COMMAND_UPTIME
 
-        [Command("hello")]
-        [Aliases("hi", "howdy")]
-        [Description("Say hello to a user")]
-        public async Task Greet(CommandContext ctx, [RemainingText] DiscordMember member)
+        [Command("uptime")]
+        [Aliases("time")]
+        [Description("Retrieve the FlawBOT uptime")]
+        public async Task Uptime(CommandContext ctx)
         {
-            if (member == null)
-                await ctx.RespondAsync($":wave: Hello, {ctx.User.Mention}!");
-            else
-                await ctx.RespondAsync($":wave: Hello, {member.Mention} from {ctx.User.Mention}!");
+            var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
+            await ctx.RespondAsync($":clock1: The bot has been running for {(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}");
         }
 
-        #endregion COMMAND_HELLO
+        #endregion COMMAND_UPTIME
     }
 }

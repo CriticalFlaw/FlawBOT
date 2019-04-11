@@ -11,11 +11,12 @@ namespace FlawBOT.Modules.Bot
     [Cooldown(3, 5, CooldownBucketType.Global)]
     public class OwnerModule : BaseCommandModule
     {
-        #region COMMAND_BOTACTIVITY
+        #region COMMAND_ACTIVITY
 
         [Hidden]
         [RequireOwner]
-        [Command("setactivity")]
+        [Command("activity")]
+        [Aliases("setactivity")]
         [Description("Set FlawBOT's activity")]
         public async Task SetBotActivity(CommandContext ctx, [RemainingText] string activity)
         {
@@ -32,7 +33,7 @@ namespace FlawBOT.Modules.Bot
             }
         }
 
-        #endregion COMMAND_BOTACTIVITY
+        #endregion COMMAND_ACTIVITY
 
         #region COMMAND_AVATAR
 
@@ -57,11 +58,26 @@ namespace FlawBOT.Modules.Bot
 
         #endregion COMMAND_AVATAR
 
-        #region COMMAND_BOTSTATUS
+        #region COMMAND_SHUTDOWN
 
         [Hidden]
         [RequireOwner]
-        [Command("setstatus")]
+        [Command("shutdown")]
+        [Aliases("off", "exit")]
+        [Description("Shutdown the FlawBOT client")]
+        public async Task Shutdown(CommandContext ctx)
+        {
+            await Task.Delay(0).ConfigureAwait(false);
+        }
+
+        #endregion COMMAND_SHUTDOWN
+
+        #region COMMAND_STATUS
+
+        [Hidden]
+        [RequireOwner]
+        [Command("status")]
+        [Aliases("setstatus")]
         [Description("Set FlawBOT's status")]
         public async Task SetBotStatus(CommandContext ctx, [RemainingText] string status)
         {
@@ -101,27 +117,14 @@ namespace FlawBOT.Modules.Bot
             }
         }
 
-        #endregion COMMAND_BOTSTATUS
-
-        #region COMMAND_SHUTDOWN
-
-        [Hidden]
-        [RequireOwner]
-        [Command("shutdown")]
-        [Description("Shutdown the FlawBOT client")]
-        [Aliases("off", "quit", "exit")]
-        public async Task Shutdown(CommandContext ctx)
-        {
-            await Task.Delay(0).ConfigureAwait(false);
-        }
-
-        #endregion COMMAND_SHUTDOWN
+        #endregion COMMAND_STATUS
 
         #region COMMAND_UPDATE
 
         [Hidden]
         [RequireOwner]
         [Command("update")]
+        [Aliases("refresh")]
         [Description("Update FlawBOT libraries")]
         public async Task Update(CommandContext ctx)
         {

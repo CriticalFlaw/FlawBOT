@@ -22,7 +22,7 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_GAME
 
         [Command("game")]
-        [Description("Retrieve information on specific Steam game")]
+        [Description("Retrieve Steam game information")]
         public async Task SteamGame(CommandContext ctx, [RemainingText] string query)
         {
             var game = GlobalVariables.SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;

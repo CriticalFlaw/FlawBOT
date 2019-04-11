@@ -16,7 +16,7 @@ namespace FlawBOT.Modules.Server
         #region COMMAND_POLL
 
         [Command("poll")]
-        [Description("Run a reactions poll in the current channel.")]
+        [Description("Run a Yay or Nay poll in the current channel")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Poll(CommandContext ctx, string time, [RemainingText] string question)
         {

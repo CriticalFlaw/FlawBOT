@@ -13,6 +13,7 @@ namespace FlawBOT.Modules.Games
         #region COMMAND_SMASH
 
         [Command("smash")]
+        [Aliases("smashbros")]
         [Description("Get Smash Ultimate character information")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task GetCharacter(CommandContext ctx, [RemainingText] string query)

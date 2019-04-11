@@ -16,7 +16,7 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_IMGUR
 
         [Command("imgur")]
-        [Description("Get an imager from Imgur")]
+        [Description("Retrieve an imager from Imgur")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Imgur(CommandContext ctx, [RemainingText] string query)
         {

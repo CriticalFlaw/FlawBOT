@@ -13,8 +13,8 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_TWITCH
 
         [Command("twitch")]
-        [Aliases("tw")]
-        [Description("Get Twitch stream information")]
+        [Aliases("stream")]
+        [Description("Retrieve Twitch stream information")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Twitch(CommandContext ctx, [RemainingText] string query)
         {

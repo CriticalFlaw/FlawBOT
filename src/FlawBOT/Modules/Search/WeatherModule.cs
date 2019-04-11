@@ -15,7 +15,7 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_WEATHER
 
         [Command("weather")]
-        [Description("Get weather information for specified location")]
+        [Description("Retrieve the weather for specified location")]
         [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Weather(CommandContext ctx, [RemainingText] string query)
         {

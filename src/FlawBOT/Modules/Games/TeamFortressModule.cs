@@ -17,10 +17,52 @@ namespace FlawBOT.Modules.Games
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class TeamFortressModule : BaseCommandModule
     {
+        #region COMMAND_CONNECT
+
+        [Command("connect")]
+        [Aliases("serverinfo")]
+        [Description("Format TF2 connection information into a clickable link")]
+        public async Task SteamServerLink(CommandContext ctx, [RemainingText] string link)
+        {
+            var regex = new Regex(@"connect\s*(?'ip'\S+)\s*;\s*password\s*(?'pw'\S+);?", RegexOptions.Compiled).Match(link);
+            if (regex.Success)
+                await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
+            else
+                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid connection info, follow the format: **connect 123.345.56.789:00000; password hello**", EmbedType.Warning);
+        }
+
+        #endregion COMMAND_CONNECT
+
+        #region COMMAND_MAP
+
+        [Command("map")]
+        [Aliases("maps")]
+        [Description("Retrieve map information from teamwork.tf")]
+        public async Task TF2Map(CommandContext ctx, string query)
+        {
+            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            var data = await TeamFortressService.GetMapStatsAsync(query);
+            if (data == null)
+                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+            else
+            {
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(data.normalized_map_name)
+                    .AddField("Official", data.official_map ? "YES" : "NO")
+                    .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
+                    .WithImageUrl(data.thumbnail)
+                    .WithUrl("https://wiki.teamfortress.com/wiki/" + data.normalized_map_name)
+                    .WithColor(DiscordColor.Orange);
+                await ctx.RespondAsync(embed: output.Build());
+            }
+        }
+
+        #endregion COMMAND_MAP
+
         #region COMMAND_NEWS
 
         [Command("news")]
-        [Description("Get the latest news article from teamwork.tf")]
+        [Description("Retrieve the latest news article from teamwork.tf")]
         public async Task TF2News(CommandContext ctx)
         {
             var data = await TeamFortressService.GetNewsOverviewAsync();
@@ -49,9 +91,9 @@ namespace FlawBOT.Modules.Games
 
         #region COMMAND_SERVERS
 
-        [Command("servers")]
-        [Aliases("server")]
-        [Description("Get a list of servers with given gamemode")]
+        [Command("server")]
+        [Aliases("servers")]
+        [Description("Retrieve a list of servers with given gamemode")]
         public async Task TF2Servers(CommandContext ctx, [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
@@ -90,51 +132,10 @@ namespace FlawBOT.Modules.Games
 
         #endregion COMMAND_SERVERS
 
-        #region COMMAND_MAP
-
-        [Command("map")]
-        [Description("Retrieve map statistics for a certain map from teamwork.tf")]
-        public async Task TF2Map(CommandContext ctx, string query)
-        {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
-            var data = await TeamFortressService.GetMapStatsAsync(query);
-            if (data == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(data.normalized_map_name)
-                    .AddField("Official", data.official_map ? "YES" : "NO")
-                    .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
-                    .WithImageUrl(data.thumbnail)
-                    .WithUrl("https://wiki.teamfortress.com/wiki/" + data.normalized_map_name)
-                    .WithColor(DiscordColor.Orange);
-                await ctx.RespondAsync(embed: output.Build());
-            }
-        }
-
-        #endregion COMMAND_MAP
-
-        #region COMMAND_CONNECT
-
-        [Command("connect")]
-        [Aliases("server")]
-        [Description("Format TF2 connection information into a clickable link")]
-        public async Task SteamServerLink(CommandContext ctx, [RemainingText] string link)
-        {
-            var regex = new Regex(@"connect\s*(?'ip'\S+)\s*;\s*password\s*(?'pw'\S+);?", RegexOptions.Compiled).Match(link);
-            if (regex.Success)
-                await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
-            else
-                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid connection info, follow the format: **connect 123.345.56.789:00000; password hello**", EmbedType.Warning);
-        }
-
-        #endregion COMMAND_CONNECT
-
         #region UNUSED
 
         [Command("item"), Hidden]
-        [Description("Retrieve a Team Fortress item from schema")]
+        [Description("Retrieve an item from the latest TF2 item schema")]
         public async Task TF2Item(CommandContext ctx)
         {
             var data = TeamFortressService.GetSchemaItemAsync().Result;
@@ -157,7 +158,7 @@ namespace FlawBOT.Modules.Games
         }
 
         [Command("wiki"), Hidden]
-        [Description("Get a page from the Team Fortress 2 wiki")]
+        [Description("Retrieve a page from the Team Fortress 2 wiki")]
         public async Task TF2Wiki(CommandContext ctx, [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(ctx, query).Result) return;

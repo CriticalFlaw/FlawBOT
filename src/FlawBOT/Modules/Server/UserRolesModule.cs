@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 namespace FlawBOT.Modules.Server
 {
     [Group("roles")]
-    [Description("Miscellaneous role control commands. Group call lists all the roles in this guild or prints information about a given role.")]
     [Aliases("role", "rl")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
     public class UserRolesModule : BaseCommandModule
@@ -21,8 +20,8 @@ namespace FlawBOT.Modules.Server
         #region COMMAND_COLOR
 
         [Command("color")]
-        [Aliases("clrr")]
-        [Description("Set a role's color")]
+        [Aliases("clr")]
+        [Description("Set the role color")]
         [RequirePermissions(Permissions.ManageRoles)]
         public async Task ColorRole(CommandContext ctx, DiscordRole role, DiscordColor color)
         {
@@ -35,58 +34,48 @@ namespace FlawBOT.Modules.Server
 
         #endregion COMMAND_COLOR
 
-        #region COMMAND_MENTION
+        #region COMMAND_CREATE
 
-        [Command("mention")]
-        [Aliases("mr")]
-        [Description("Toggle whether this role can be mentioned by others")]
+        [Command("create")]
+        [Aliases("new")]
+        [Description("Create a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task MentionRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        public async Task CreateRole(CommandContext ctx, [RemainingText] string role)
         {
-            if (role == null) return;
-
-            if (role.IsMentionable)
-            {
-                await role.UpdateAsync(mentionable: false);
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** is now **not-mentionable**");
-            }
+            if (string.IsNullOrWhiteSpace(role))
+                await BotServices.SendEmbedAsync(ctx, ":warning: Role name cannot be blank!", EmbedType.Warning);
             else
             {
-                await role.UpdateAsync(mentionable: true);
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** is now **mentionable**");
+                await ctx.Guild.CreateRoleAsync(role);
+                await BotServices.SendEmbedAsync(ctx, $"Role **{role}** has been **created**", EmbedType.Good);
             }
         }
 
-        #endregion COMMAND_MENTION
+        #endregion COMMAND_CREATE
 
-        #region COMMAND_SHOW
+        #region COMMAND_DELETE
 
-        [Command("showrole")]
-        [Aliases("dr", "show", "display")]
-        [Description("Toggles whether this role is displayed in the sidebar or not")]
+        [Command("delete")]
+        [Aliases("remove")]
+        [Description("Delete a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task SidebarRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        public async Task DeleteRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
-            if (role == null) return;
-
-            if (role.IsHoisted)
-            {
-                await role.UpdateAsync(hoist: false);
-                await BotServices.SendEmbedAsync(ctx, $"Role {role.Name} is now **hidden**");
-            }
+            if (role == null)
+                await BotServices.SendEmbedAsync(ctx, ":mag: Role not found in the server!", EmbedType.Warning);
             else
             {
-                await role.UpdateAsync(hoist: true);
-                await BotServices.SendEmbedAsync(ctx, $"Role {role.Name} is now **displayed**");
+                await role.DeleteAsync();
+                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** has been **removed**", EmbedType.Good);
             }
         }
 
-        #endregion COMMAND_SHOW
+        #endregion COMMAND_DELETE
 
         #region COMMAND_INFO
 
         [Command("info")]
-        [Aliases("role")]
+        [Aliases("i")]
         [Description("Retrieve role information")]
         public async Task GetRole(CommandContext ctx, [RemainingText] string roleName)
         {
@@ -109,63 +98,10 @@ namespace FlawBOT.Modules.Server
 
         #endregion COMMAND_INFO
 
-        #region COMMAND_SETROLE
-
-        [Command("setrole")]
-        [Aliases("sr", "addrole")]
-        [Description("Set a role for mentioned user")]
-        [RequirePermissions(Permissions.ManageRoles)]
-        public async Task SetUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
-        {
-            member = member ?? ctx.Member;
-            await member.GrantRoleAsync(role);
-            await BotServices.SendEmbedAsync(ctx, member.DisplayName + $" been granted the role **{role.Name}**", EmbedType.Good);
-        }
-
-        #endregion COMMAND_SETROLE
-
-        #region COMMAND_REVOKEROLE
-
-        [Command("removerole")]
-        [Aliases("rr")]
-        [Description("Remove a role from mentioned user")]
-        [RequirePermissions(Permissions.ManageRoles)]
-        public async Task RemoveUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
-        {
-            member = member ?? ctx.Member;
-
-            if (role != null)
-            {
-                await member.RevokeRoleAsync(role);
-                await BotServices.SendEmbedAsync(ctx, member.DisplayName + $" has been revoked the role **{role.Name}**", EmbedType.Good);
-            }
-        }
-
-        #endregion COMMAND_REVOKEROLE
-
-        #region COMMAND_REVOKEROLES
-
-        [Command("removeroles")]
-        [Aliases("rrs")]
-        [Description("Remove all roles from mentioned user")]
-        [RequirePermissions(Permissions.ManageRoles)]
-        public async Task RemoveUserRoles(CommandContext ctx, DiscordMember member)
-        {
-            if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
-                await BotServices.SendEmbedAsync(ctx, ":warning: You are unauthorised to remove roles from this user!", EmbedType.Warning);
-            else
-            {
-                await member.ReplaceRolesAsync(Enumerable.Empty<DiscordRole>()).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, "Removed all roles from " + member.DisplayName, EmbedType.Good);
-            }
-        }
-
-        #endregion COMMAND_REVOKEROLES
-
         #region COMMAND_INROLE
 
         [Command("inrole")]
-        [Description("Lists all users in specified role")]
+        [Description("Retrieve a list of users in a given role")]
         public async Task UsersInRole(CommandContext ctx, [RemainingText] string roleName)
         {
             var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
@@ -193,42 +129,102 @@ namespace FlawBOT.Modules.Server
 
         #endregion COMMAND_INROLE
 
-        #region COMMAND_CREATEROLE
+        #region COMMAND_MENTION
 
-        [Command("create")]
-        [Aliases("new")]
-        [Description("Create a server role")]
+        [Command("mention")]
+        [Description("Toggle whether this role can be mentioned by others")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task CreateRole(CommandContext ctx, [RemainingText] string role)
+        public async Task MentionRole(CommandContext ctx, [RemainingText] DiscordRole role)
         {
-            if (string.IsNullOrWhiteSpace(role))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Role name cannot be blank!", EmbedType.Warning);
+            if (role == null) return;
+
+            if (role.IsMentionable)
+            {
+                await role.UpdateAsync(mentionable: false);
+                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** is now **not-mentionable**");
+            }
             else
             {
-                await ctx.Guild.CreateRoleAsync(role);
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role}** has been **created**", EmbedType.Good);
+                await role.UpdateAsync(mentionable: true);
+                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** is now **mentionable**");
             }
         }
 
-        #endregion COMMAND_CREATEROLE
+        #endregion COMMAND_MENTION
 
-        #region COMMAND_DELETEROLE
+        #region COMMAND_REVOKEROLE
 
-        [Command("delete")]
-        [Aliases("remove")]
-        [Description("Delete a server role")]
+        [Command("revoke")]
+        [Description("Remove a role from server user")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task DeleteRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        public async Task RemoveUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
         {
-            if (role == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Role not found in the server!", EmbedType.Warning);
-            else
+            member = member ?? ctx.Member;
+
+            if (role != null)
             {
-                await role.DeleteAsync();
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** has been **removed**", EmbedType.Good);
+                await member.RevokeRoleAsync(role);
+                await BotServices.SendEmbedAsync(ctx, member.DisplayName + $" has been revoked the role **{role.Name}**", EmbedType.Good);
             }
         }
 
-        #endregion COMMAND_DELETEROLE
+        #endregion COMMAND_REVOKEROLE
+
+        #region COMMAND_REVOKEROLES
+
+        [Command("revokeall")]
+        [Description("Remove all role from server user")]
+        [RequirePermissions(Permissions.ManageRoles)]
+        public async Task RemoveUserRoles(CommandContext ctx, DiscordMember member)
+        {
+            if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
+                await BotServices.SendEmbedAsync(ctx, ":warning: You are unauthorised to remove roles from this user!", EmbedType.Warning);
+            else
+            {
+                await member.ReplaceRolesAsync(Enumerable.Empty<DiscordRole>()).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Removed all roles from " + member.DisplayName, EmbedType.Good);
+            }
+        }
+
+        #endregion COMMAND_REVOKEROLES
+
+        #region COMMAND_SETROLE
+
+        [Command("setrole")]
+        [Aliases("addrole", "sr")]
+        [Description("Assign a role to server user")]
+        [RequirePermissions(Permissions.ManageRoles)]
+        public async Task SetUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
+        {
+            member = member ?? ctx.Member;
+            await member.GrantRoleAsync(role);
+            await BotServices.SendEmbedAsync(ctx, member.DisplayName + $" been granted the role **{role.Name}**", EmbedType.Good);
+        }
+
+        #endregion COMMAND_SETROLE
+
+        #region COMMAND_SHOW
+
+        [Command("show")]
+        [Aliases("display", "hide")]
+        [Description("Toggle whether this role is seen or not")]
+        [RequirePermissions(Permissions.ManageRoles)]
+        public async Task SidebarRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        {
+            if (role == null) return;
+
+            if (role.IsHoisted)
+            {
+                await role.UpdateAsync(hoist: false);
+                await BotServices.SendEmbedAsync(ctx, $"Role {role.Name} is now **hidden**");
+            }
+            else
+            {
+                await role.UpdateAsync(hoist: true);
+                await BotServices.SendEmbedAsync(ctx, $"Role {role.Name} is now **displayed**");
+            }
+        }
+
+        #endregion COMMAND_SHOW
     }
 }

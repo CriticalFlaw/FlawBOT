@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class OverwatchModule : BaseCommandModule
     {
         #region COMMAND_OVERWATCH
 
-        [Command("overwatch")]
-        [Aliases("ow")]
+        [Command("ow")]
+        [Aliases("overwatch")]
         [Description("Get Overwatch player information")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Overwatch(CommandContext ctx, string battletag, [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(battletag))

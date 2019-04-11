@@ -12,16 +12,72 @@ using System.Threading.Tasks;
 namespace FlawBOT.Modules.Server
 {
     [Group("user")]
-    [Description("Miscellaneous user control commands. Group call prints information about given user.")]
     [Aliases("users", "u", "usr")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class UserModule : BaseCommandModule
     {
+        #region COMMAND_AVATAR
+
+        [Command("avatar")]
+        [Aliases("getavatar")]
+        [Description("Retrieve server user's avatar")]
+        public async Task GetAvatar(CommandContext ctx, [RemainingText] DiscordMember member)
+        {
+            member = member ?? ctx.Member;
+            var output = new DiscordEmbedBuilder()
+                .WithTitle($"@{member.DisplayName}'s avatar...")
+                .WithImageUrl(member.AvatarUrl)
+                .WithUrl($"https://images.google.com/searchbyimage?image_url={member.AvatarUrl}")
+                .WithColor(DiscordColor.Lilac);
+            await ctx.RespondAsync(embed: output.Build());
+        }
+
+        #endregion COMMAND_AVATAR
+
+        #region COMMAND_BAN
+
+        [Command("ban")]
+        [Description("Ban server user")]
+        [RequirePermissions(Permissions.BanMembers)]
+        public async Task Ban(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        {
+            if (ctx.Member.Id == member.Id)
+                await BotServices.SendEmbedAsync(ctx, ":warning: You cannot ban yourself!", EmbedType.Warning);
+            else
+            {
+                var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
+                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
+                await ctx.Guild.BanMemberAsync(member, 7, $"{ustr}: {rstr}");
+                await BotServices.SendEmbedAsync(ctx, $"**Banned** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Banned by: **{ctx.Member.DisplayName}", EmbedType.Good);
+            }
+        }
+
+        #endregion COMMAND_BAN
+
+        #region COMMAND_DEAFEN
+
+        [Command("deafen")]
+        [Description("Deafen server user")]
+        [RequirePermissions(Permissions.DeafenMembers)]
+        public async Task Deafen(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        {
+            if (member.IsDeafened)
+                await BotServices.SendEmbedAsync(ctx, $"{member.DisplayName}#{member.Discriminator} is already **deafened**!", EmbedType.Warning);
+            else
+            {
+                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
+                await member.SetDeafAsync(true, rstr);
+                await BotServices.SendEmbedAsync(ctx, $"**Deafened** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Deafened by: **{ctx.Member.DisplayName}", EmbedType.Good);
+            }
+        }
+
+        #endregion COMMAND_DEAFEN
+
         #region COMMAND_INFO
 
         [Command("info")]
-        [Aliases("uid", "user")]
-        [Description("Retrieve User Information")]
+        [Aliases("i")]
+        [Description("Retrieve user information")]
         public async Task GetUser(CommandContext ctx, [RemainingText] DiscordMember member)
         {
             member = member ?? ctx.Member;
@@ -62,67 +118,9 @@ namespace FlawBOT.Modules.Server
 
         #endregion COMMAND_INFO
 
-        #region COMMAND_NICKNAME
-
-        [Command("setnickname")]
-        [Aliases("setnick")]
-        [Description("Set server member's nickname")]
-        [RequireUserPermissions(Permissions.ChangeNickname)]
-        public async Task SetUserName(CommandContext ctx, string name, [RemainingText] DiscordMember member)
-        {
-            member = member ?? ctx.Member;
-            var nickname = member.DisplayName;
-            await member.ModifyAsync(usr => usr.Nickname = name);
-            await BotServices.SendEmbedAsync(ctx, $"{nickname}'s nickname has been changed to **{name}**", EmbedType.Good);
-        }
-
-        #endregion COMMAND_NICKNAME
-
-        #region COMMAND_BAN
-
-        [Command("ban")]
-        [Aliases("b")]
-        [Description("Ban server user")]
-        [RequirePermissions(Permissions.BanMembers)]
-        public async Task Ban(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
-        {
-            if (ctx.Member.Id == member.Id)
-                await BotServices.SendEmbedAsync(ctx, ":warning: You cannot ban yourself!", EmbedType.Warning);
-            else
-            {
-                var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
-                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await ctx.Guild.BanMemberAsync(member, 7, $"{ustr}: {rstr}");
-                await BotServices.SendEmbedAsync(ctx, $"**Banned** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Banned by: **{ctx.Member.DisplayName}", EmbedType.Good);
-            }
-        }
-
-        #endregion COMMAND_BAN
-
-        #region COMMAND_DEAFEN
-
-        [Command("deafen")]
-        [Aliases("d")]
-        [Description("Deafen server user")]
-        [RequirePermissions(Permissions.DeafenMembers)]
-        public async Task Deafen(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
-        {
-            if (member.IsDeafened)
-                await BotServices.SendEmbedAsync(ctx, $"{member.DisplayName}#{member.Discriminator} is already **deafened**!", EmbedType.Warning);
-            else
-            {
-                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await member.SetDeafAsync(true, rstr);
-                await BotServices.SendEmbedAsync(ctx, $"**Deafened** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Deafened by: **{ctx.Member.DisplayName}", EmbedType.Good);
-            }
-        }
-
-        #endregion COMMAND_DEAFEN
-
         #region COMMAND_KICK
 
         [Command("kick")]
-        [Aliases("k")]
         [Description("Kick server user")]
         [RequirePermissions(Permissions.KickMembers)]
         public async Task Kick(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
@@ -143,7 +141,6 @@ namespace FlawBOT.Modules.Server
         #region COMMAND_MUTE
 
         [Command("mute")]
-        [Aliases("m")]
         [Description("Mute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
         public async Task Mute(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
@@ -161,10 +158,46 @@ namespace FlawBOT.Modules.Server
 
         #endregion COMMAND_MUTE
 
+        #region COMMAND_NICKNAME
+
+        [Command("nickname")]
+        [Aliases("setnick")]
+        [Description("Set server user's nickname")]
+        [RequireUserPermissions(Permissions.ChangeNickname)]
+        public async Task SetUserName(CommandContext ctx, string name, [RemainingText] DiscordMember member)
+        {
+            member = member ?? ctx.Member;
+            var nickname = member.DisplayName;
+            await member.ModifyAsync(usr => usr.Nickname = name);
+            await BotServices.SendEmbedAsync(ctx, $"{nickname}'s nickname has been changed to **{name}**", EmbedType.Good);
+        }
+
+        #endregion COMMAND_NICKNAME
+
+        #region COMMAND_PERMS
+
+        [Command("perms")]
+        [Aliases("prm")]
+        [Description("Retrieve server user's permissions")]
+        public async Task ListServerPermissions(CommandContext ctx, DiscordMember member = null, DiscordChannel channel = null)
+        {
+            member = member ?? ctx.Member;
+            channel = channel ?? ctx.Channel;
+            var perms = $"{Formatter.Bold(member.DisplayName)} cannot access channel {Formatter.Bold(channel.Name)}.";
+            if (member.PermissionsIn(channel).HasPermission(Permissions.AccessChannels))
+                perms = member.PermissionsIn(channel).ToPermissionString();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle($"Permissions for {member.Username} in #{channel.Name}:")
+                .WithDescription(perms)
+                .WithColor(DiscordColor.Turquoise);
+            await ctx.RespondAsync(embed: output.Build());
+        }
+
+        #endregion COMMAND_PERMS
+
         #region COMMAND_UNBAN
 
         [Command("unban")]
-        [Aliases("unb")]
         [Description("Unban server user")]
         [RequirePermissions(Permissions.BanMembers)]
         public async Task Remove(CommandContext ctx, ulong userID)
@@ -179,7 +212,6 @@ namespace FlawBOT.Modules.Server
         #region COMMAND_UNDEAFEN
 
         [Command("undeafen")]
-        [Aliases("und")]
         [Description("Undeafen server user")]
         [RequirePermissions(Permissions.DeafenMembers)]
         public async Task Undeafen(CommandContext ctx, [RemainingText] DiscordMember member)
@@ -193,7 +225,6 @@ namespace FlawBOT.Modules.Server
         #region COMMAND_UNMUTE
 
         [Command("unmute")]
-        [Aliases("unm")]
         [Description("Unmute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
         public async Task Unmute(CommandContext ctx, [RemainingText] DiscordMember member)
@@ -204,23 +235,5 @@ namespace FlawBOT.Modules.Server
         }
 
         #endregion COMMAND_UNMUTE
-
-        #region COMMAND_AVATAR
-
-        [Command("avatar")]
-        [Aliases("av")]
-        [Description("Get server user's avatar")]
-        public async Task GetAvatar(CommandContext ctx, [RemainingText] DiscordMember member)
-        {
-            member = member ?? ctx.Member;
-            var output = new DiscordEmbedBuilder()
-                .WithTitle($"@{member.DisplayName}'s avatar...")
-                .WithImageUrl(member.AvatarUrl)
-                .WithUrl($"https://images.google.com/searchbyimage?image_url={member.AvatarUrl}")
-                .WithColor(DiscordColor.Lilac);
-            await ctx.RespondAsync(embed: output.Build());
-        }
-
-        #endregion COMMAND_AVATAR
     }
 }

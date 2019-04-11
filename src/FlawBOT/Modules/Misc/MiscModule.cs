@@ -17,9 +17,9 @@ namespace FlawBOT.Modules.Misc
     {
         #region COMMAND_8BALL
 
-        [Command("8ball")]
-        [Aliases("8b")]
-        [Description("Roll an 8-ball")]
+        [Command("ask")]
+        [Aliases("8b", "8ball")]
+        [Description("Ask an 8-ball a question")]
         public Task EightBall(CommandContext ctx, [RemainingText] string question)
         {
             if (string.IsNullOrWhiteSpace(question))
@@ -32,80 +32,11 @@ namespace FlawBOT.Modules.Misc
 
         #endregion COMMAND_8BALL
 
-        #region COMMAND_COINFLIP
-
-        [Command("coinflip")]
-        [Aliases("coin", "flip")]
-        [Description("Flip a coin")]
-        public Task CoinFlip(CommandContext ctx)
-        {
-            var random = new Random();
-            var output = new DiscordEmbedBuilder()
-                .WithDescription($"#{ctx.User.Mention} flipped {Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails")}")
-                .WithColor(DiscordColor.Black);
-            return ctx.RespondAsync(embed: output.Build());
-        }
-
-        #endregion COMMAND_COINFLIP
-
-        #region COMMAND_DICEROLL
-
-        [Command("rolldice")]
-        [Aliases("dice", "roll")]
-        [Description("Roll a die")]
-        public Task RollDice(CommandContext ctx)
-        {
-            var random = new Random();
-            var output = new DiscordEmbedBuilder()
-                .WithDescription($"#{ctx.User.Mention} rolled a {Formatter.Bold(random.Next(1, 7).ToString())}")
-                .WithColor(DiscordColor.Black);
-            return ctx.RespondAsync(embed: output.Build());
-        }
-
-        #endregion COMMAND_DICEROLL
-
-        #region COMMAND_TTS
-
-        [Command("tts")]
-        [Description("Sends a Text-to-Speech message.")]
-        [RequirePermissions(Permissions.SendTtsMessages)]
-        public Task SayTTS(CommandContext ctx, [RemainingText] string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return ctx.RespondAsync("I need something to say...");
-            return ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(text)), isTTS: true);
-        }
-
-        #endregion COMMAND_TTS
-
-        #region COMMAND_COLOR
-
-        [Command("color")]
-        [Description("Get color values corresponding to the inputted RGB")]
-        public async Task GetColor(CommandContext ctx, DiscordColor color)
-        {
-            try
-            {
-                var output = new DiscordEmbedBuilder()
-                    .AddField("RGB:", $"{color.R} {color.G} {color.B}", true)
-                    .AddField("HEX:", $"{color.Value:X}", true)
-                    .AddField("Decimal:", $"{color.Value}", true)
-                    .WithColor(color);
-                await ctx.RespondAsync(embed: output.Build());
-            }
-            catch
-            {
-                await BotServices.SendEmbedAsync(ctx, ":warning: Unable to retrieve color values, try **.color [0-255] [0-255] [0-255]**", EmbedType.Warning);
-            }
-        }
-
-        #endregion COMMAND_COLOR
-
         #region COMMAND_CATFACT
 
-        [Command("catfact")]
-        [Aliases("cat")]
-        [Description("Get a random cat fact")]
+        [Command("cat")]
+        [Aliases("catfact")]
+        [Description("Retrieve a random cat fact")]
         public async Task CatFact(CommandContext ctx)
         {
             var http = new HttpClient();
@@ -122,7 +53,7 @@ namespace FlawBOT.Modules.Misc
 
         [Command("randomcat")]
         [Aliases("meow")]
-        [Description("Get a random cat image")]
+        [Description("Retrieve a random cat photo")]
         public async Task CatPic(CommandContext ctx)
         {
             var http = new HttpClient();
@@ -141,11 +72,67 @@ namespace FlawBOT.Modules.Misc
 
         #endregion COMMAND_CATPIC
 
+        #region COMMAND_COINFLIP
+
+        [Command("coinflip")]
+        [Aliases("coin", "flip")]
+        [Description("Flip a coin")]
+        public Task CoinFlip(CommandContext ctx)
+        {
+            var random = new Random();
+            var output = new DiscordEmbedBuilder()
+                .WithDescription($"#{ctx.User.Mention} flipped {Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails")}")
+                .WithColor(DiscordColor.Black);
+            return ctx.RespondAsync(embed: output.Build());
+        }
+
+        #endregion COMMAND_COINFLIP
+
+        #region COMMAND_COLOR
+
+        [Command("color")]
+        [Aliases("clr")]
+        [Description("Retrieve color values for a given HEX code")]
+        public async Task GetColor(CommandContext ctx, DiscordColor color)
+        {
+            try
+            {
+                var output = new DiscordEmbedBuilder()
+                    .AddField("RGB:", $"{color.R} {color.G} {color.B}", true)
+                    .AddField("HEX:", $"{color.Value:X}", true)
+                    .AddField("Decimal:", $"{color.Value}", true)
+                    .WithColor(color);
+                await ctx.RespondAsync(embed: output.Build());
+            }
+            catch
+            {
+                await BotServices.SendEmbedAsync(ctx, ":warning: Unable to retrieve color values, try **.color #C13AD8**", EmbedType.Warning);
+            }
+        }
+
+        #endregion COMMAND_COLOR
+
+        #region COMMAND_DICEROLL
+
+        [Command("diceroll")]
+        [Aliases("dice", "roll", "rolldice")]
+        [Description("Roll a six-sided die")]
+        public Task RollDice(CommandContext ctx)
+        {
+            var random = new Random();
+            var output = new DiscordEmbedBuilder()
+                .WithDescription($"#{ctx.User.Mention} rolled a {Formatter.Bold(random.Next(1, 7).ToString())}")
+                .WithColor(DiscordColor.Black);
+            return ctx.RespondAsync(embed: output.Build());
+        }
+
+        #endregion COMMAND_DICEROLL
+
         #region COMMAND_DOGPIC
 
         [Command("randomdog")]
         [Aliases("woof")]
-        [Description("Get a random dog image")]
+        [Description("Retrieve a random dog photo")]
         public async Task DogPic(CommandContext ctx)
         {
             var data = DogService.GetDogPhotoAsync().Result;
@@ -166,8 +153,8 @@ namespace FlawBOT.Modules.Misc
         #region COMMAND_TIME
 
         [Command("time")]
-        [Aliases("ti")]
-        [Description("Get time for specified location")]
+        [Aliases("clock")]
+        [Description("Retrieve the time for specified location")]
         public async Task GetTime(CommandContext ctx, [RemainingText] string location)
         {
             if (string.IsNullOrWhiteSpace(location))
@@ -185,9 +172,24 @@ namespace FlawBOT.Modules.Misc
 
         #endregion COMMAND_TIME
 
+        #region COMMAND_TTS
+
+        [Command("tts")]
+        [Description("Sends a Text-to-Speech message.")]
+        [RequirePermissions(Permissions.SendTtsMessages)]
+        public Task SayTTS(CommandContext ctx, [RemainingText] string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return ctx.RespondAsync("I need something to say...");
+            return ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(text)), isTTS: true);
+        }
+
+        #endregion COMMAND_TTS
+
         #region UNUSED
 
         [Command("shorten"), Hidden]
+        [Aliases("link")]
         [Description("Shorten the inputted URL")]
         public async Task Shorten(CommandContext ctx, [RemainingText] string query)
         {

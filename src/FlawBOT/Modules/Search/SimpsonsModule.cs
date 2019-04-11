@@ -15,8 +15,8 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_SIMPSONS
 
         [Command("simpsons")]
-        [Aliases("doh")]
-        [Description("Get a random Simpsons screenshot and episode")]
+        [Aliases("caramba")]
+        [Description("Retrieve a random Simpsons screenshot and episode")]
         public async Task Simpsons(CommandContext ctx)
         {
             var data = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
@@ -28,7 +28,8 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_SIMPSONS_GIF
 
         [Command("simpsonsgif")]
-        [Description("Get a random Simpsons gif")]
+        [Aliases("doh")]
+        [Description("Retrieve a random Simpsons gif")]
         public async Task SimpsonsGIF(CommandContext ctx, [RemainingText] string input)
         {
             var gif = await SimpsonsService.GetSimpsonsGifAsync(simpsons_site);
@@ -48,7 +49,7 @@ namespace FlawBOT.Modules.Search
 
         [Command("futurama")]
         [Aliases("bite")]
-        [Description("Get a random Futurama screenshot and episode")]
+        [Description("Retrieve a random Futurama screenshot and episode")]
         public async Task Futurama(CommandContext ctx)
         {
             var data = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
@@ -61,7 +62,8 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_FUTURAMA_GIF
 
         [Command("futuramagif")]
-        [Description("Get a random Futurama gif")]
+        [Aliases("neat")]
+        [Description("Retrieve a random Futurama gif")]
         public async Task FuturamaGIF(CommandContext ctx, [RemainingText] string input)
         {
             var gif = await SimpsonsService.GetSimpsonsGifAsync(futurama_site);

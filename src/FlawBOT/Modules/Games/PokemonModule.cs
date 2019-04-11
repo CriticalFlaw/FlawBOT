@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class PokemonModule : BaseCommandModule
     {
         #region COMMAND_POKEMON
 
         [Command("pokemon")]
         [Aliases("poke")]
-        [Description("Get Pokemon information")]
+        [Description("Get a Pokemon card")]
+        [Cooldown(3, 5, CooldownBucketType.Channel)]
         public async Task Pokemon(CommandContext ctx, [RemainingText] string query)
         {
             var pokemon = (string.IsNullOrWhiteSpace(query)) ? PokemonService.GetRandomPokemonAsync() : query;
