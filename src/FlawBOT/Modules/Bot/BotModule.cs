@@ -23,10 +23,6 @@ namespace FlawBOT.Modules.Bot
             var output = new DiscordEmbedBuilder()
                 .WithTitle("FlawBOT Command List")
                 .WithDescription("The **complete** command list can be found [here](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing)!")
-                .AddField(":robot: Bot Commands", "info, leave, report")
-                .AddField(":mag: Lookup Commands", "8ball, catfact, define, imdb, imgur, overwatch, pokemon, math, randomdog, shorten, simpsons, steamgame, steamlink, steamuser, tf2, time, twitch, youtube, weather")
-                .AddField(":hammer: Moderation Commands", "ban, clean, deafen, kick, mute, purge, prune, removerole, removeroles, setrole, warn")
-                .AddField(":tools: Server Commands", "channel, inrole, invite, mentionrole, perms, role, poll, server, setname, setnickname, setserveravatar, setservername, settopic, user, createrole, createtext, createvoice")
                 .WithColor(DiscordColor.Turquoise);
             await ctx.RespondAsync(embed: output.Build());
         }

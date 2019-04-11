@@ -185,9 +185,9 @@ namespace FlawBOT.Modules.Misc
 
         #endregion COMMAND_TIME
 
-        #region COMMAND_SHORTEN
+        #region UNUSED
 
-        [Command("shorten")]
+        [Command("shorten"), Hidden]
         [Description("Shorten the inputted URL")]
         public async Task Shorten(CommandContext ctx, [RemainingText] string query)
         {
@@ -203,6 +203,6 @@ namespace FlawBOT.Modules.Misc
             }
         }
 
-        #endregion COMMAND_SHORTEN
+        #endregion UNUSED
     }
 }
