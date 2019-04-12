@@ -56,7 +56,7 @@ namespace FlawBOT.Modules.Misc
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, ":warning: Error calculating math equation, make sure your values are integers and the operation is valid!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Error calculating math equation, make sure your values are integers and the operation is valid!", EmbedType.Warning);
             }
         }
 

@@ -108,7 +108,7 @@ namespace FlawBOT.Modules.Misc
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, ":warning: Unable to retrieve color values, try **.color #C13AD8**", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Unable to retrieve color values, try **.color #C13AD8**", EmbedType.Warning);
             }
         }
 
@@ -175,7 +175,7 @@ namespace FlawBOT.Modules.Misc
         public async Task Shorten(CommandContext ctx, [RemainingText] string query)
         {
             if (!Uri.IsWellFormedUriString(query, UriKind.RelativeOrAbsolute)) // && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                await BotServices.SendEmbedAsync(ctx, ":warning: A valid URL link is required!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "A valid URL link is required!", EmbedType.Warning);
             else
             {
                 //var shortenService = new ShortenService();

@@ -1,6 +1,5 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -15,8 +14,9 @@ using FlawBOT.Modules.Server;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlawBOT
@@ -27,10 +27,23 @@ namespace FlawBOT
         public CommandsNextExtension Commands { get; private set; }
         private static readonly object _lock = new object();
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var app = new Program();
-            app.RunBotAsync().GetAwaiter().GetResult();
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                Program app = new Program();
+                app.RunBotAsync().GetAwaiter().GetResult();
+                await Task.Delay(Timeout.Infinite);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\nException occured: {e.GetType()} :\n{e.Message}");
+                if (!(e.InnerException is null))
+                    Console.WriteLine($"Inner exception: {e.InnerException.GetType()} :\n{e.InnerException.Message}");
+                Console.ReadKey();
+            }
+            Console.WriteLine("\nPowering off...");
         }
 
         public async Task RunBotAsync()

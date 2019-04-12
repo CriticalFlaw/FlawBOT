@@ -22,13 +22,13 @@ namespace FlawBOT.Modules.Games
             [Description("Display competitive stats if this parameter is 'comp'")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(battletag))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Battletag is required! Try **.ow CriticalFlaw#11354** (case-sensitive)", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Battletag is required! Try **.ow CriticalFlaw#11354** (case-sensitive)", EmbedType.Warning);
             else
             {
                 var overwatch = new OverwatchClient();
                 var player = await overwatch.GetPlayerAsync(battletag);
                 if (player == null)
-                    await BotServices.SendEmbedAsync(ctx, ":mag: Player not found! Remember, battletags are case-sensitive.", EmbedType.Warning);
+                    await BotServices.SendEmbedAsync(ctx, "Player not found! Remember, battletags are case-sensitive.", EmbedType.Missing);
                 else
                 {
                     var output = new DiscordEmbedBuilder()

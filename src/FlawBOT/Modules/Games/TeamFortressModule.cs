@@ -29,7 +29,7 @@ namespace FlawBOT.Modules.Games
             if (regex.Success)
                 await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
             else
-                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid connection info, follow the format: 123.345.56.789:000; password hello", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Invalid connection info, follow the format: 123.345.56.789:000; password hello", EmbedType.Warning);
         }
 
         #endregion COMMAND_CONNECT
@@ -45,7 +45,7 @@ namespace FlawBOT.Modules.Games
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = await TeamFortressService.GetMapStatsAsync(query);
             if (results.normalized_map_name == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -74,7 +74,7 @@ namespace FlawBOT.Modules.Games
         {
             var results = await TeamFortressService.GetNewsOverviewAsync();
             if (results == null || results.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder { Color = new DiscordColor("#E7B53B") };
@@ -97,7 +97,7 @@ namespace FlawBOT.Modules.Games
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-'));
             if (results.Count <= 0)
-                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
                 foreach (var server in results)
@@ -164,7 +164,7 @@ namespace FlawBOT.Modules.Games
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = TeamFortressService.GetWikiPageAsync(query).Result.Query.Pages[0];
             if (results.Missing || results == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: TF2Wiki page not found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "TF2Wiki page not found!", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()

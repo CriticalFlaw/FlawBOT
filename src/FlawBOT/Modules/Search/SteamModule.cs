@@ -72,7 +72,7 @@ namespace FlawBOT.Modules.Search
             [Description("User to find on Steam")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, ":warning: SteamID or Community URL are required! Try **.steam user criticalflaw**", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "SteamID or Community URL are required! Try **.steam user criticalflaw**", EmbedType.Warning);
             else
             {
                 var steam = new SteamUser(GlobalVariables.config.SteamToken);
@@ -122,7 +122,7 @@ namespace FlawBOT.Modules.Search
                         await ctx.RespondAsync(embed: output.Build());
                     }
                     else
-                        await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+                        await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
                 }
             }
         }

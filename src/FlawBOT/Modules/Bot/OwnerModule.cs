@@ -45,7 +45,7 @@ namespace FlawBOT.Modules.Bot
         [Command("avatar"), Hidden]
         [Aliases("setavatar")]
         [Description("Set FlawBOT's avatar")]
-        public async Task SetBotAvatar(CommandContext ctx, 
+        public async Task SetBotAvatar(CommandContext ctx,
             [Description("Avatar URL. Must be in jpg, png or img format.")] string query)
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;

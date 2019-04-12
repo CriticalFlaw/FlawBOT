@@ -25,7 +25,7 @@ namespace FlawBOT.Modules.Games
             var pokemon = (string.IsNullOrWhiteSpace(query)) ? PokemonService.GetRandomPokemonAsync() : query;
             var results = await PokemonService.GetPokemonCardsAsync(pokemon);
             if (results.cards.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Pokemon not found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Pokemon not found!", EmbedType.Missing);
             else
             {
                 foreach (var value in results.cards)

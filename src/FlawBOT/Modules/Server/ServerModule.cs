@@ -100,7 +100,7 @@ namespace FlawBOT.Modules.Server
                 await ctx.Guild.PruneAsync(days);
             }
             else
-                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid number of days, try **.prune 30**", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Invalid number of days, try **.prune 30**", EmbedType.Warning);
         }
 
         #endregion COMMAND_PRUNE
@@ -115,7 +115,7 @@ namespace FlawBOT.Modules.Server
             [Description("New server name")] [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Server name cannot be blank!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Server name cannot be blank!", EmbedType.Warning);
             else
             {
                 await ctx.Guild.ModifyAsync(srv => srv.Name = $"{name}");

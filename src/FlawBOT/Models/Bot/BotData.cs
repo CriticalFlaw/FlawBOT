@@ -37,6 +37,7 @@ namespace FlawBOT.Models
         Default,
         Good,
         Warning,
+        Missing,
         Error
     }
 }

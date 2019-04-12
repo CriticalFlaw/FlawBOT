@@ -23,7 +23,7 @@ namespace FlawBOT.Modules.Search
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = IMDBService.GetMovieDataAsync(query).Result;
             if (results.Response == "False")
-                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()

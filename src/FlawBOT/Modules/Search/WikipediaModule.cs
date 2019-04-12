@@ -21,7 +21,7 @@ namespace FlawBOT.Modules.Search
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = WikipediaService.GetWikipediaDataAsync(query).Result.Query.Pages[0];
             if (results.Missing)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Wikipedia page not found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Wikipedia page not found!", EmbedType.Missing);
             else
                 await ctx.Channel.SendMessageAsync(results.FullUrl).ConfigureAwait(false);
         }

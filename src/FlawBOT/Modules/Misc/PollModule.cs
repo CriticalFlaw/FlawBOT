@@ -23,9 +23,9 @@ namespace FlawBOT.Modules.Misc
             [Description("Question to be polled")] [RemainingText] string question)
         {
             if (!int.TryParse(time, out var minutes))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Invalid number of minutes, try **.poll 3 What is the fifth digit of Pi?**", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Invalid number of minutes, try **.poll 3 What is the fifth digit of Pi?**", EmbedType.Warning);
             else if (string.IsNullOrWhiteSpace(question))
-                await BotServices.SendEmbedAsync(ctx, ":warning: You need to provide a poll question", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "You need to provide a poll question", EmbedType.Warning);
             else
             {
                 var interactivity = ctx.Client.GetInteractivity();

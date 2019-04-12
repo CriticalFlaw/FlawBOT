@@ -46,7 +46,7 @@ namespace FlawBOT.Modules.Server
             [Description("Reason for the ban")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
-                await BotServices.SendEmbedAsync(ctx, ":warning: You cannot ban yourself!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "You cannot ban yourself!", EmbedType.Warning);
             else
             {
                 var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
@@ -135,7 +135,7 @@ namespace FlawBOT.Modules.Server
             [Description("Reason for the kick")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
-                await BotServices.SendEmbedAsync(ctx, ":warning: You cannot kick yourself!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "You cannot kick yourself!", EmbedType.Warning);
             else
             {
                 var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";

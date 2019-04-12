@@ -29,9 +29,9 @@ namespace FlawBOT.Modules.Server
             [Description("New category name")] [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Category name cannot be blank!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Category name cannot be blank!", EmbedType.Warning);
             else if (name.Length > 100)
-                await BotServices.SendEmbedAsync(ctx, ":warning: Category name must be less than 100 characters long!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Category name must be less than 100 characters long!", EmbedType.Warning);
             else
             {
                 var category = await ctx.Guild.CreateChannelCategoryAsync(name.Trim());
@@ -77,7 +77,7 @@ namespace FlawBOT.Modules.Server
             channel = channel ?? ctx.Channel;
 
             if (!ctx.Member.PermissionsIn(channel).HasPermission(Permissions.AccessChannels))
-                return BotServices.SendEmbedAsync(ctx, ":warning: You are not allowed to see this channel!", EmbedType.Warning);
+                return BotServices.SendEmbedAsync(ctx, "You are not allowed to see this channel!", EmbedType.Warning);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -115,7 +115,7 @@ namespace FlawBOT.Modules.Server
             channel = channel ?? ctx.Channel;
 
             if (string.IsNullOrWhiteSpace(name))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel name cannot be blank!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel name cannot be blank!", EmbedType.Warning);
             else if (name.Length < 2 || name.Length > 100)
                 await BotServices.SendEmbedAsync(ctx, "Channel name must be between 2 and 100 characters.", EmbedType.Warning);
 
@@ -139,11 +139,11 @@ namespace FlawBOT.Modules.Server
             [Description("New text channel name")] [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel name cannot be blank!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel name cannot be blank!", EmbedType.Warning);
             else if (name.Length > 100)
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel name must be less than 100 characters long!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel name must be less than 100 characters long!", EmbedType.Warning);
             else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Name, true) == 0))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel with the same name already exists!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel with the same name already exists!", EmbedType.Warning);
             else
             {
                 var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-"));
@@ -165,7 +165,7 @@ namespace FlawBOT.Modules.Server
             if (string.IsNullOrWhiteSpace(topic))
                 await ctx.Channel.ModifyAsync(chn => chn.Topic = topic);
             else if (topic.Length > 1024)
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel topic must be less than 1024 characters long!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel topic must be less than 1024 characters long!", EmbedType.Warning);
             else
             {
                 await ctx.Channel.ModifyAsync(chn => chn.Topic = topic);
@@ -187,11 +187,11 @@ namespace FlawBOT.Modules.Server
             [Description("Bitrate limit")] int? bitrate = null)
         {
             if (string.IsNullOrWhiteSpace(name))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel name cannot be blank!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel name cannot be blank!", EmbedType.Warning);
             else if (name.Length > 100)
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel name must be less than 100 characters long!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel name must be less than 100 characters long!", EmbedType.Warning);
             else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Name, true) == 0))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel with the same name already exists!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel with the same name already exists!", EmbedType.Warning);
             else
             {
                 var channel = await ctx.Guild.CreateVoiceChannelAsync(name: name, bitrate: bitrate, user_limit: userlimit);

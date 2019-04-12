@@ -1,9 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Converters;
-using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
 using FlawBOT.Models;
-using FlawBOT.Services.Games;
 using Newtonsoft.Json;
 using SteamWebAPI2.Interfaces;
 using System;
@@ -57,10 +54,17 @@ namespace FlawBOT.Services
                     break;
 
                 case EmbedType.Warning:
+                    message = message.Insert(0, ":warning: ");
                     color = DiscordColor.Yellow;
                     break;
 
+                case EmbedType.Missing:
+                    message = message.Insert(0, ":mag: ");
+                    color = DiscordColor.Wheat;
+                    break;
+
                 case EmbedType.Error:
+                    message = message.Insert(0, ":no_entry: ");
                     color = DiscordColor.Red;
                     break;
             }

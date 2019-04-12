@@ -22,7 +22,7 @@ namespace FlawBOT.Modules.Search
             [Description("Location to retrieve time data from")] [RemainingText] string location)
         {
             if (string.IsNullOrWhiteSpace(location))
-                await BotServices.SendEmbedAsync(ctx, ":warning: A valid location is required! Try **.time Ottawa, CA**", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "A valid location is required! Try **.time Ottawa, CA**", EmbedType.Warning);
             else
             {
                 var results = TimeService.GetTimeDataAsync(location).Result;
@@ -46,7 +46,7 @@ namespace FlawBOT.Modules.Search
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = await WeatherService.GetWeatherDataAsync(query);
             if (results.cod == 404)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Location not found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Location not found!", EmbedType.Missing);
             else
             {
                 Func<double, double> format = WeatherService.CelsiusToFahrenheit;

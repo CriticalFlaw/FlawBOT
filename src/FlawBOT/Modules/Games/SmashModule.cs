@@ -22,7 +22,7 @@ namespace FlawBOT.Modules.Games
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = await SmashService.GetSmashCharacterAsync(query);
             if (results == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Smash character not found or not yet available!\nSee the available characters here: http://kuroganehammer.com/Ultimate", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Smash character not found or not yet available!\nSee the available characters here: http://kuroganehammer.com/Ultimate", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()

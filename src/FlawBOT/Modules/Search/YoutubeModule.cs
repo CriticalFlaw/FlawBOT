@@ -23,7 +23,7 @@ namespace FlawBOT.Modules.Search
             [Description("Channels to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel search query is required!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Channel search query is required!", EmbedType.Warning);
             else
             {
                 var service = new YoutubeService();
@@ -43,7 +43,7 @@ namespace FlawBOT.Modules.Search
             [Description("Playlist to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Playlist search query is required!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Playlist search query is required!", EmbedType.Warning);
             else
             {
                 var service = new YoutubeService();
@@ -83,7 +83,7 @@ namespace FlawBOT.Modules.Search
             [Description("Video to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Video search query is required!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Video search query is required!", EmbedType.Warning);
             else
             {
                 var service = new YoutubeService();

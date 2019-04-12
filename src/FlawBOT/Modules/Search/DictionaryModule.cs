@@ -25,7 +25,7 @@ namespace FlawBOT.Modules.Search
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = await DictionaryService.GetDictionaryForTermAsync(query);
             if (results.result_type == "no_results")
-                await BotServices.SendEmbedAsync(ctx, ":mag: No results found!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
                 foreach (var definition in results.list)

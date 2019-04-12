@@ -32,7 +32,6 @@ namespace FlawBOT.Models
 
     public class Result
     {
-
         [JsonProperty("name")]
         public string name { get; set; }
 

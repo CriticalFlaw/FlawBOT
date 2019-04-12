@@ -22,7 +22,7 @@ namespace FlawBOT.Modules.Search
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
             var results = await TwitchService.GetTwitchDataAsync(query);
             if (results.stream == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Twitch channel not found or it's offline", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Twitch channel not found or it's offline", EmbedType.Missing);
             else
             {
                 var stream = results.stream;
