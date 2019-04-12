@@ -11,6 +11,7 @@ namespace FlawBOT.Modules.Server
 {
     [Group("message")]
     [Aliases("msg", "msgs", "messages")]
+    [Description("Commands for cleaning channel messages")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class MessagesModule : BaseCommandModule
     {
@@ -20,7 +21,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("clear")]
         [Description("Remove channel messages")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Clean(CommandContext ctx, int limit)
+        public async Task Clean(CommandContext ctx,
+            [Description("Number of message to remove from the current channel")] int limit = 0)
         {
             if (limit <= 0 || limit > 100)
                 await BotServices.SendEmbedAsync(ctx, ":warning: Invalid number of messages to delete, must be in range of 1-100!", EmbedType.Warning);
@@ -39,7 +41,9 @@ namespace FlawBOT.Modules.Server
         [Command("purge")]
         [Description("Remove server user's channel messages")]
         [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Purge(CommandContext ctx, DiscordMember member, [RemainingText] int limit = 10)
+        public async Task Purge(CommandContext ctx,
+            [Description("Server user whose messages will be purged")] DiscordMember member,
+            [Description("Number of messages to purge")] [RemainingText] int limit = 10)
         {
             if (limit <= 0 || limit > 100)
                 await BotServices.SendEmbedAsync(ctx, ":warning: Invalid number of messages to delete, must be in range of 1-100!", EmbedType.Warning);

@@ -16,6 +16,7 @@ using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 namespace FlawBOT.Modules.Search
 {
     [Group("steam")]
+    [Description("Commands finding Steam games and users")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SteamModule : BaseCommandModule
     {
@@ -23,10 +24,10 @@ namespace FlawBOT.Modules.Search
 
         [Command("game")]
         [Description("Retrieve Steam game information")]
-        public async Task SteamGame(CommandContext ctx, [RemainingText] string query)
+        public async Task SteamGame(CommandContext ctx,
+            [Description("Game to find on Steam")] [RemainingText] string query = "Team Fortress 2")
         {
             var game = GlobalVariables.SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;
-
             var check = false;
             while (check == false)
                 try
@@ -41,7 +42,7 @@ namespace FlawBOT.Modules.Search
                         .WithThumbnailUrl(app.HeaderImage)
                         .WithUrl($"http://store.steampowered.com/app/{app.SteamAppId}")
                         .WithFooter($"App ID: {app.SteamAppId}")
-                        .WithColor(DiscordColor.MidnightBlue);
+                        .WithColor(new DiscordColor("#1B2838"));
                     if (!string.IsNullOrWhiteSpace(app.DetailedDescription))
                         output.WithDescription(Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : $"{app.DetailedDescription.Substring(0, 500)}...", "<[^>]*>", ""));
                     if (app.Developers.Length > 0 && !string.IsNullOrWhiteSpace(app.Developers[0]))
@@ -67,7 +68,8 @@ namespace FlawBOT.Modules.Search
 
         [Command("user")]
         [Description("Retrieve Steam user information")]
-        public async Task SteamUser(CommandContext ctx, string query)
+        public async Task SteamUser(CommandContext ctx,
+            [Description("User to find on Steam")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 await BotServices.SendEmbedAsync(ctx, ":warning: SteamID or Community URL are required! Try **.steam user criticalflaw**", EmbedType.Warning);
@@ -96,23 +98,22 @@ namespace FlawBOT.Modules.Search
                         if (summary.Data.ProfileVisibility == ProfileVisibility.Public)
                         {
                             output.WithThumbnailUrl(profile.AvatarFull.ToString());
-                            output.WithColor(DiscordColor.MidnightBlue);
-                            output.WithUrl($"http://steamcommunity.com/id/{profile.SteamID}/");
-                            output.WithFooter($"Steam ID: {profile.SteamID}");
-                            output.AddField("Member since",
-                                summary.Data.AccountCreatedDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
+                            output.WithColor(new DiscordColor("#1B2838"));
+                            output.WithUrl("http://steamcommunity.com/id/" + profile.SteamID);
+                            output.WithFooter("Steam ID: " + profile.SteamID);
+                            output.AddField("Member since", summary.Data.AccountCreatedDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
                             if (!string.IsNullOrWhiteSpace(profile.Summary))
                                 output.WithDescription(Regex.Replace(profile.Summary, "<[^>]*>", ""));
                             if (summary.Data.UserStatus != UserStatus.Offline)
-                                output.AddField("Status:", summary.Data.UserStatus.ToString(), true);
+                                output.AddField("Status", summary.Data.UserStatus.ToString(), true);
                             else
-                                output.AddField("Last seen:", summary.Data.LastLoggedOffDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
-                            output.AddField("VAC Banned?:", profile.IsVacBanned ? "YES" : "NO", true);
-                            output.AddField("Trade Banned?:", profile.TradeBanState, true);
+                                output.AddField("Last seen", summary.Data.LastLoggedOffDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
+                            output.AddField("VAC Banned?", profile.IsVacBanned ? "YES" : "NO", true);
+                            output.AddField("Trade Banned?", profile.TradeBanState, true);
                             if (profile.InGameInfo != null)
                             {
-                                output.AddField("In-Game:", $"[{profile.InGameInfo.GameName}]({profile.InGameInfo.GameLink})", true);
-                                output.AddField("Game Server IP:", profile.InGameServerIP, true);
+                                output.AddField("In-Game", $"[{profile.InGameInfo.GameName}]({profile.InGameInfo.GameLink})", true);
+                                output.AddField("Game Server IP", profile.InGameServerIP, true);
                                 output.WithImageUrl(profile.InGameInfo.GameLogoSmall);
                             }
                         }

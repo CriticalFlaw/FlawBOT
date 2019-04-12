@@ -19,8 +19,8 @@ namespace FlawBOT.Services.Search
             //client.Settings.ClientId = GlobalVariables.config.TwitchToken;
             //return await client.V5.Streams.GetLiveStreamsAsync(query);
 
-            var data = await http.GetStringAsync(base_url + query + "?client_id=" + GlobalVariables.config.TwitchToken);
-            return JsonConvert.DeserializeObject<TwitchData>(data);
+            var results = await http.GetStringAsync(base_url + query + "?client_id=" + GlobalVariables.config.TwitchToken);
+            return JsonConvert.DeserializeObject<TwitchData>(results);
         }
 
         public static async Task<GetGamesResponse> GetTwitchGameAsync(string query)

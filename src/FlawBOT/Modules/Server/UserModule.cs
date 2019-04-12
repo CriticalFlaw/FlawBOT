@@ -13,6 +13,7 @@ namespace FlawBOT.Modules.Server
 {
     [Group("user")]
     [Aliases("users", "u", "usr")]
+    [Description("Commands for controlling server users")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class UserModule : BaseCommandModule
     {
@@ -21,7 +22,8 @@ namespace FlawBOT.Modules.Server
         [Command("avatar")]
         [Aliases("getavatar")]
         [Description("Retrieve server user's avatar")]
-        public async Task GetAvatar(CommandContext ctx, [RemainingText] DiscordMember member)
+        public async Task GetAvatar(CommandContext ctx,
+            [Description("Server user whose avatar to retrieve")] [RemainingText] DiscordMember member)
         {
             member = member ?? ctx.Member;
             var output = new DiscordEmbedBuilder()
@@ -39,7 +41,9 @@ namespace FlawBOT.Modules.Server
         [Command("ban")]
         [Description("Ban server user")]
         [RequirePermissions(Permissions.BanMembers)]
-        public async Task Ban(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        public async Task Ban(CommandContext ctx,
+            [Description("Server user to ban")] DiscordMember member,
+            [Description("Reason for the ban")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
                 await BotServices.SendEmbedAsync(ctx, ":warning: You cannot ban yourself!", EmbedType.Warning);
@@ -59,7 +63,9 @@ namespace FlawBOT.Modules.Server
         [Command("deafen")]
         [Description("Deafen server user")]
         [RequirePermissions(Permissions.DeafenMembers)]
-        public async Task Deafen(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        public async Task Deafen(CommandContext ctx,
+            [Description("Server user to deafen")] DiscordMember member,
+            [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
             if (member.IsDeafened)
                 await BotServices.SendEmbedAsync(ctx, $"{member.DisplayName}#{member.Discriminator} is already **deafened**!", EmbedType.Warning);
@@ -78,7 +84,8 @@ namespace FlawBOT.Modules.Server
         [Command("info")]
         [Aliases("i")]
         [Description("Retrieve user information")]
-        public async Task GetUser(CommandContext ctx, [RemainingText] DiscordMember member)
+        public async Task GetUser(CommandContext ctx,
+            [Description("Server user whose information to retrieve")] [RemainingText] DiscordMember member)
         {
             member = member ?? ctx.Member;
             var roles = new StringBuilder();
@@ -123,7 +130,9 @@ namespace FlawBOT.Modules.Server
         [Command("kick")]
         [Description("Kick server user")]
         [RequirePermissions(Permissions.KickMembers)]
-        public async Task Kick(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        public async Task Kick(CommandContext ctx,
+            [Description("Server user to kick")] DiscordMember member,
+            [Description("Reason for the kick")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
                 await BotServices.SendEmbedAsync(ctx, ":warning: You cannot kick yourself!", EmbedType.Warning);
@@ -143,7 +152,9 @@ namespace FlawBOT.Modules.Server
         [Command("mute")]
         [Description("Mute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
-        public async Task Mute(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        public async Task Mute(CommandContext ctx,
+            [Description("Server user to mute")] DiscordMember member,
+            [Description("Reason for the mute")] [RemainingText] string reason = null)
         {
             if (member.IsMuted)
                 await BotServices.SendEmbedAsync(ctx, $"{member.DisplayName}#{member.Discriminator} is already **muted**!", EmbedType.Warning);
@@ -164,7 +175,9 @@ namespace FlawBOT.Modules.Server
         [Aliases("setnick")]
         [Description("Set server user's nickname")]
         [RequireUserPermissions(Permissions.ChangeNickname)]
-        public async Task SetUserName(CommandContext ctx, string name, [RemainingText] DiscordMember member)
+        public async Task SetUserName(CommandContext ctx,
+            [Description("Server user to nickname")] DiscordMember member,
+            [Description("The new nickname")] [RemainingText] string name)
         {
             member = member ?? ctx.Member;
             var nickname = member.DisplayName;
@@ -179,7 +192,9 @@ namespace FlawBOT.Modules.Server
         [Command("perms")]
         [Aliases("prm")]
         [Description("Retrieve server user's permissions")]
-        public async Task ListServerPermissions(CommandContext ctx, DiscordMember member = null, DiscordChannel channel = null)
+        public async Task ListServerPermissions(CommandContext ctx,
+            [Description("Server user whose permissions to retrieve")] DiscordMember member,
+            [Description("Server channel")] DiscordChannel channel = null)
         {
             member = member ?? ctx.Member;
             channel = channel ?? ctx.Channel;
@@ -200,7 +215,8 @@ namespace FlawBOT.Modules.Server
         [Command("unban")]
         [Description("Unban server user")]
         [RequirePermissions(Permissions.BanMembers)]
-        public async Task Remove(CommandContext ctx, ulong userID)
+        public async Task Remove(CommandContext ctx,
+            [Description("Discord user ID to unban from the server")] ulong userID)
         {
             var member = await ctx.Client.GetUserAsync(userID).ConfigureAwait(false);
             await ctx.Guild.UnbanMemberAsync(member).ConfigureAwait(false);
@@ -214,7 +230,8 @@ namespace FlawBOT.Modules.Server
         [Command("undeafen")]
         [Description("Undeafen server user")]
         [RequirePermissions(Permissions.DeafenMembers)]
-        public async Task Undeafen(CommandContext ctx, [RemainingText] DiscordMember member)
+        public async Task Undeafen(CommandContext ctx,
+            [Description("Server user to undeafen")] [RemainingText] DiscordMember member)
         {
             await member.SetDeafAsync(false);
             await BotServices.SendEmbedAsync(ctx, $"**Undeafened** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
@@ -227,7 +244,8 @@ namespace FlawBOT.Modules.Server
         [Command("unmute")]
         [Description("Unmute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
-        public async Task Unmute(CommandContext ctx, [RemainingText] DiscordMember member)
+        public async Task Unmute(CommandContext ctx,
+            [Description("Server user to unmute")] [RemainingText] DiscordMember member)
         {
             var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} (ID: {ctx.User.Id})";
             await member.SetMuteAsync(false, ustr);

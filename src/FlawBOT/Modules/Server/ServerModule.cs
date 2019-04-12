@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 namespace FlawBOT.Modules.Server
 {
     [Group("server")]
-    [Description("Server control commands.")]
     [Aliases("guild")]
+    [Description("Commands for controlling server")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
     public class ServerModule : BaseCommandModule
     {
@@ -23,7 +23,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("setavatar")]
         [Description("Set server avatar")]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task SetServerAvatar(CommandContext ctx, string query)
+        public async Task SetServerAvatar(CommandContext ctx,
+            [Description("Avatar URL. Must be in jpg, png or img format.")] string query)
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;
             try
@@ -46,45 +47,16 @@ namespace FlawBOT.Modules.Server
         [Description("Retrieve server information")]
         public async Task GetServer(CommandContext ctx)
         {
-            var channels = new StringBuilder();
             var roles = new StringBuilder();
             var emojis = new StringBuilder();
             var output = new DiscordEmbedBuilder()
                 .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", icon_url: string.IsNullOrEmpty(ctx.Guild.Owner.AvatarHash) ? null : ctx.Guild.Owner.AvatarUrl)
-                .WithTitle($"{ctx.Guild.Name}")
-                .AddField("ID", ctx.Guild.Id.ToString(), true)
+                .WithTitle(ctx.Guild.Name + $" (ID: {ctx.Guild.Id.ToString()})")
                 .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
                 .WithColor(DiscordColor.Rose);
             if (!string.IsNullOrEmpty(ctx.Guild.IconHash))
                 output.WithThumbnailUrl(ctx.Guild.IconUrl);
-
-            foreach (var channel in ctx.Guild.Channels)
-                switch (channel.Type)
-                {
-                    default:
-                        channels.Append($"`\n[{channel.Name}]`\n");
-                        break;
-
-                    case ChannelType.Text:
-                        channels.Append($"`[#{channel.Name}]`");
-                        break;
-
-                    case ChannelType.Voice:
-                        channels.Append($"`[{channel.Name}]`");
-                        break;
-
-                    case ChannelType.Category:
-                        channels.Append($"`\n[{channel.Name.ToUpperInvariant()}]`\n");
-                        break;
-
-                    case ChannelType.Private:
-                    case ChannelType.Group:
-                    case ChannelType.Unknown:
-                        break;
-                }
-            if (channels.Length == 0) channels.Append("None");
-            output.AddField("Channels", channels.ToString());
             foreach (var role in ctx.Guild.Roles)
                 roles.Append($"[`{role.Name}`]");
             foreach (var emoji in ctx.Guild.Emojis)
@@ -108,7 +80,7 @@ namespace FlawBOT.Modules.Server
         [Description("Retrieve an instant invite link to the server")]
         public async Task InviteAsync(CommandContext ctx)
         {
-            await BotServices.SendEmbedAsync(ctx, $"Instant Invite to **{ctx.Guild.Name}**: https://discord.gg/{ctx.Channel.CreateInviteAsync().Result.Code}", EmbedType.Warning);
+            await ctx.RespondAsync($"Instant Invite to **{ctx.Guild.Name}**: https://discord.gg/{ctx.Channel.CreateInviteAsync().Result.Code}");
         }
 
         #endregion COMMAND_INVITE
@@ -118,7 +90,8 @@ namespace FlawBOT.Modules.Server
         [Command("prune")]
         [Description("Prune inactive server members")]
         [RequirePermissions(Permissions.DeafenMembers)]
-        public async Task PruneUsers(CommandContext ctx, [RemainingText] string day)
+        public async Task PruneUsers(CommandContext ctx,
+            [Description("Number of days the user had to be inactive to get pruned")] [RemainingText] string day)
         {
             day = day ?? "30";
             if (int.TryParse(day, out var days))
@@ -138,7 +111,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("setname")]
         [Description("Set server name")]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task SetServerName(CommandContext ctx, [RemainingText] string name)
+        public async Task SetServerName(CommandContext ctx,
+            [Description("New server name")] [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Server name cannot be blank!", EmbedType.Warning);
@@ -156,7 +130,9 @@ namespace FlawBOT.Modules.Server
         [Command("warn")]
         [Aliases("scold")]
         [Description("Direct message user with a warning")]
-        public async Task Warn(CommandContext ctx, DiscordMember member, [RemainingText] string reason = null)
+        public async Task Warn(CommandContext ctx,
+            [Description("Server user to warn")] DiscordMember member,
+            [Description("Warning message")] [RemainingText] string reason = null)
         {
             var output = new DiscordEmbedBuilder()
                 .WithTitle("Warning received!")

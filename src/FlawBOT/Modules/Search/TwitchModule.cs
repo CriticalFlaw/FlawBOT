@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class TwitchModule : BaseCommandModule
     {
         #region COMMAND_TWITCH
@@ -15,26 +16,27 @@ namespace FlawBOT.Modules.Search
         [Command("twitch")]
         [Aliases("stream")]
         [Description("Retrieve Twitch stream information")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Twitch(CommandContext ctx, [RemainingText] string query)
+        public async Task Twitch(CommandContext ctx,
+            [Description("Channel to find on Twitch")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(ctx, query).Result) return;
-            var data = await TwitchService.GetTwitchDataAsync(query);
-            if (data.stream == null)
+            var results = await TwitchService.GetTwitchDataAsync(query);
+            if (results.stream == null)
                 await BotServices.SendEmbedAsync(ctx, ":mag: Twitch channel not found or it's offline", EmbedType.Warning);
             else
             {
+                var stream = results.stream;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(data.stream.channel.name + " is now live on Twitch!")
-                    .WithDescription(data.stream.channel.status)
-                    .AddField("Now Playing", data.stream.game)
-                    .AddField("Start Time", data.stream.created_at.ToString(), true)
-                    .AddField("Viewers", data.stream.viewers.ToString(), true)
-                    .WithThumbnailUrl(data.stream.channel.logo)
-                    .WithUrl(data.stream.channel.url)
-                    .WithColor(DiscordColor.Purple);
+                    .WithTitle(stream.channel.name + " is now live on Twitch!")
+                    .WithDescription(stream.channel.status)
+                    .AddField("Now Playing", stream.game)
+                    .AddField("Start Time", stream.created_at.ToString(), true)
+                    .AddField("Viewers", stream.viewers.ToString(), true)
+                    .WithThumbnailUrl(stream.channel.logo)
+                    .WithUrl(stream.channel.url)
+                    .WithColor(new DiscordColor("#6441A5"));
                 await ctx.RespondAsync(embed: output.Build());
-                await ctx.RespondAsync(data.stream.channel.url);
+                await ctx.RespondAsync(stream.channel.url);
             }
         }
 

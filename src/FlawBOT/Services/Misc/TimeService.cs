@@ -20,18 +20,18 @@ namespace FlawBOT.Services
                 var service = new BotServices();
                 var token = GlobalVariables.config.GoogleToken;
                 var result = await http.GetStringAsync(geocode_url + query.Replace(" ", "") + $"&key={token}");
-                var data = JsonConvert.DeserializeObject<TimeData>(result);
-                if (data.status != "OK")
+                var results = JsonConvert.DeserializeObject<TimeData>(result);
+                if (results.status != "OK")
                     return null;
                 else
                 {
                     var currentSeconds = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                    var url = timezone_url + data.results[0].geometry.location.lat + $",{data.results[0].geometry.location.lng}&timestamp={currentSeconds}&key={token}";
+                    var url = timezone_url + results.results[0].geometry.location.lat + $",{results.results[0].geometry.location.lng}&timestamp={currentSeconds}&key={token}";
                     var timeResource = await http.GetStringAsync(url);
-                    data.timezone = JsonConvert.DeserializeObject<TimeData.TimeZoneResult>(timeResource);
-                    data.time = DateTime.UtcNow.AddSeconds(data.timezone.dstOffset + data.timezone.rawOffset);
+                    results.timezone = JsonConvert.DeserializeObject<TimeData.TimeZoneResult>(timeResource);
+                    results.time = DateTime.UtcNow.AddSeconds(results.timezone.dstOffset + results.timezone.rawOffset);
                 }
-                return data;
+                return results;
             }
             catch
             {

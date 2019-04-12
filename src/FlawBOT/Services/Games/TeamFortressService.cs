@@ -28,15 +28,15 @@ namespace FlawBOT.Services.Games
 
         public static async Task<WikipediaData> GetWikiPageAsync(string query)
         {
-            var data = await http.GetStringAsync(wiki_url + query.Replace(' ', '_'));
-            return JsonConvert.DeserializeObject<WikipediaData>(data);
+            var results = await http.GetStringAsync(wiki_url + query.Replace(' ', '_'));
+            return JsonConvert.DeserializeObject<WikipediaData>(results);
         }
 
         public static async Task<List<TeamworkNews>> GetNewsOverviewAsync()
         {
             var token = GlobalVariables.config.TeamworkToken;
-            var data = await http.GetStringAsync(news_url + $"?key={token}");
-            return JsonConvert.DeserializeObject<List<TeamworkNews>>(data);
+            var results = await http.GetStringAsync(news_url + $"?key={token}");
+            return JsonConvert.DeserializeObject<List<TeamworkNews>>(results);
         }
 
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
@@ -77,15 +77,15 @@ namespace FlawBOT.Services.Games
             }
 
             var token = GlobalVariables.config.TeamworkToken;
-            var data = await http.GetStringAsync(servers_url + $"/{query}/servers?key={token}");
-            return JsonConvert.DeserializeObject<List<TeamworkServer>>(data);
+            var results = await http.GetStringAsync(servers_url + $"/{query}/servers?key={token}");
+            return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
         }
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
             var token = GlobalVariables.config.TeamworkToken;
-            var data = await http.GetStringAsync(maps_url + $"/{query}?key={token}");
-            return JsonConvert.DeserializeObject<TeamworkMap>(data);
+            var results = await http.GetStringAsync(maps_url + $"/{query}?key={token}");
+            return JsonConvert.DeserializeObject<TeamworkMap>(results);
         }
     }
 }

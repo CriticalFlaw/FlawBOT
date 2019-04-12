@@ -5,6 +5,7 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Modules.Bot;
 using FlawBOT.Modules.Games;
@@ -12,6 +13,7 @@ using FlawBOT.Modules.Misc;
 using FlawBOT.Modules.Search;
 using FlawBOT.Modules.Server;
 using FlawBOT.Services;
+using FlawBOT.Services.Games;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,7 +37,8 @@ namespace FlawBOT
         {
             var service = new BotServices();
             service.LoadBotConfig();
-            var cfg = new DiscordConfiguration
+
+            Client = new DiscordClient(new DiscordConfiguration
             {
                 Token = GlobalVariables.config.DiscordToken,
                 TokenType = TokenType.Bot,
@@ -44,19 +47,7 @@ namespace FlawBOT
                 UseInternalLogHandler = false,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250
-            };
-
-            var cmd = new CommandsNextConfiguration
-            {
-                PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
-                EnableDms = false, // Set the boolean for responding to direct messages
-                EnableDefaultHelp = false,
-                EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
-                CaseSensitive = false,
-                DefaultHelpChecks = new List<CheckBaseAttribute>()
-            };
-
-            Client = new DiscordClient(cfg);
+            });
             Client.Ready += Client_Ready;
             Client.ClientErrored += Client_ClientError;
             Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
@@ -66,10 +57,19 @@ namespace FlawBOT
                 PaginationTimeout = TimeSpan.FromMinutes(5), // Default pagination timeout to 5 minutes
                 Timeout = TimeSpan.FromMinutes(2) // Default timeout for other actions to 2 minutes
             });
-            Commands = Client.UseCommandsNext(cmd);
+
+            Commands = Client.UseCommandsNext(new CommandsNextConfiguration
+            {
+                PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
+                EnableDms = false, // Set the boolean for responding to direct messages
+                //EnableDefaultHelp = false,
+                EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
+                CaseSensitive = false,
+                //DefaultHelpChecks = new List<CheckBaseAttribute>()
+            });
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
-            Commands.SetHelpFormatter<HelperService>(); // Set up the custom help formatter
+            Commands.SetHelpFormatter<HelpFormatter>();
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<OwnerModule>();
 
@@ -82,12 +82,12 @@ namespace FlawBOT
             Commands.RegisterCommands<MiscModule>();
 
             Commands.RegisterCommands<DictionaryModule>();
+            Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<IMDBModule>();
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<SimpsonsModule>();
             Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TwitchModule>();
-            Commands.RegisterCommands<WeatherModule>();
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
 
@@ -102,19 +102,20 @@ namespace FlawBOT
             Console.Title = GlobalVariables.Name + " (" + GlobalVariables.Version + ")";
             GlobalVariables.ProcessStarted = DateTime.Now;
             await BotServices.UpdateSteamAsync().ConfigureAwait(false); // Update the Steam App list
+            await PokemonService.GetPokemonDataAsync().ConfigureAwait(false); // Update the Pokemon list
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }
 
         private static Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"{GlobalVariables.Name}, version: {GlobalVariables.Version}", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", GlobalVariables.Name + $", version: " + GlobalVariables.Version, DateTime.Now);
             return Task.CompletedTask;
         }
 
         private static Task Client_ClientError(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, "FlawBOT", $"Exception occured: {e.Exception.GetType()}: {e.Exception.Message}", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, "FlawBOT", $"Exception occured: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
             return Task.CompletedTask;
         }
 

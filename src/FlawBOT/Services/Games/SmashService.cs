@@ -17,8 +17,8 @@ namespace FlawBOT.Services.Games
         {
             try
             {
-                var data = await http.GetStringAsync(base_url + query + "?game=ultimate");
-                return JsonConvert.DeserializeObject<SmashCharacter>(data);
+                var results = await http.GetStringAsync(base_url + query + "?game=ultimate");
+                return JsonConvert.DeserializeObject<SmashCharacter>(results);
             }
             catch
             {
@@ -28,20 +28,20 @@ namespace FlawBOT.Services.Games
 
         public static async Task<SmashCharacter> GetSmashAttributesAsync(string query)
         {
-            var data = await http.GetStringAsync(base_url + query + attributes_url);
-            return JsonConvert.DeserializeObject<SmashCharacter>(data);
+            var results = await http.GetStringAsync(base_url + query + attributes_url);
+            return JsonConvert.DeserializeObject<SmashCharacter>(results);
         }
 
         public static async Task<SmashCharacter> GetSmashMovementsAsync(string query)
         {
-            var data = await http.GetStringAsync(base_url + query + movements_url);
-            return JsonConvert.DeserializeObject<SmashCharacter>(data);
+            var results = await http.GetStringAsync(base_url + query + movements_url);
+            return JsonConvert.DeserializeObject<SmashCharacter>(results);
         }
 
         public static async Task<SmashCharacter> GetSmashMovesAsync(string query)
         {
-            var data = await http.GetStringAsync(base_url + query + moves_url);
-            return JsonConvert.DeserializeObject<SmashCharacter>(data);
+            var results = await http.GetStringAsync(base_url + query + moves_url);
+            return JsonConvert.DeserializeObject<SmashCharacter>(results);
         }
     }
 }

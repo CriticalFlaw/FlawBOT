@@ -10,6 +10,7 @@ namespace FlawBOT.Modules.Search
 {
     [Group("youtube")]
     [Aliases("yt")]
+    [Description("Commands for finding YouTube videos, channels and playlists")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class YouTubeModule : BaseCommandModule
     {
@@ -18,7 +19,8 @@ namespace FlawBOT.Modules.Search
         [Command("channel")]
         [Aliases("chn")]
         [Description("Retrieve a list of YouTube channel given a query")]
-        public async Task YouTubeChannel(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubeChannel(CommandContext ctx,
+            [Description("Channels to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Channel search query is required!", EmbedType.Warning);
@@ -37,7 +39,8 @@ namespace FlawBOT.Modules.Search
         [Command("playlist")]
         [Aliases("list")]
         [Description("Retrieve a list of YouTube playlists given a query")]
-        public async Task YouTubePlaylist(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubePlaylist(CommandContext ctx,
+            [Description("Playlist to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Playlist search query is required!", EmbedType.Warning);
@@ -56,7 +59,8 @@ namespace FlawBOT.Modules.Search
         [Command("search")]
         [Aliases("find")]
         [Description("Retrieve the first YouTube search result given a query")]
-        public async Task YouTubeVideo(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubeVideo(CommandContext ctx,
+            [Description("First result video to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 await ctx.RespondAsync("https://www.youtube.com/watch?v=rFA_auWj0rQ");
@@ -75,7 +79,8 @@ namespace FlawBOT.Modules.Search
         [Command("video")]
         [Aliases("vid")]
         [Description("Retrieve a list of YouTube videos given a query")]
-        public async Task YouTubeSearch(CommandContext ctx, [RemainingText] string query)
+        public async Task YouTubeSearch(CommandContext ctx,
+            [Description("Video to find on YouTube")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Video search query is required!", EmbedType.Warning);

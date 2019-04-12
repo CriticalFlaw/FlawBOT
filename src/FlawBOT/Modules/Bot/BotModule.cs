@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace FlawBOT.Modules.Bot
 {
     [Group("bot")]
+    [Description("Basic commands for interacting with FlawBOT")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class BotModule : BaseCommandModule
     {
@@ -18,8 +19,9 @@ namespace FlawBOT.Modules.Bot
 
         [Command("hello")]
         [Aliases("hi", "howdy")]
-        [Description("Say hello to a user")]
-        public async Task Greet(CommandContext ctx, [RemainingText] DiscordMember member)
+        [Description("Say hello to another server user")]
+        public async Task Greet(CommandContext ctx,
+            [Description("User to say hello to")] [RemainingText] DiscordMember member)
         {
             if (member == null)
                 await ctx.RespondAsync($":wave: Hello, {ctx.User.Mention}!");
@@ -28,22 +30,6 @@ namespace FlawBOT.Modules.Bot
         }
 
         #endregion COMMAND_HELLO
-
-        #region COMMAND_HELP
-
-        [Command("help")]
-        [Aliases("cmd")]
-        [Description("Retrieve a short list of available commands")]
-        public async Task Helper(CommandContext ctx)
-        {
-            var output = new DiscordEmbedBuilder()
-                .WithTitle("FlawBOT Command List")
-                .WithDescription("The **complete** command list can be found [here](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing)!")
-                .WithColor(DiscordColor.Turquoise);
-            await ctx.RespondAsync(embed: output.Build());
-        }
-
-        #endregion COMMAND_HELP
 
         #region COMMAND_INFO
 
@@ -78,9 +64,7 @@ namespace FlawBOT.Modules.Bot
         public async Task LeaveAsync(CommandContext ctx)
         {
             await BotServices.SendEmbedAsync(ctx, "Are you sure you want FlawBOT to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
-
-            var interactivity = await ctx.Client.GetInteractivity()
-                .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
             if (interactivity == null)
                 await BotServices.SendEmbedAsync(ctx, "Request cancelled...");
             else
@@ -109,7 +93,8 @@ namespace FlawBOT.Modules.Bot
         [Command("report")]
         [Aliases("issue")]
         [Description("Send a problem report to the developer. Please do not abuse.")]
-        public async Task ReportIssue(CommandContext ctx, [RemainingText] string report)
+        public async Task ReportIssue(CommandContext ctx,
+            [Description("Detailed description of the issue")] [RemainingText] string report)
         {
             if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
                 await ctx.RespondAsync("Please provide more information on the issue (50 characters minimum).");
@@ -144,7 +129,8 @@ namespace FlawBOT.Modules.Bot
         [Command("say")]
         [Aliases("echo")]
         [Description("Repeat a message")]
-        public Task Say(CommandContext ctx, [RemainingText] string message)
+        public Task Say(CommandContext ctx,
+            [Description("Message for the bot to repeat")] [RemainingText] string message)
         {
             message = (string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message;
             return ctx.RespondAsync(message);
@@ -160,7 +146,7 @@ namespace FlawBOT.Modules.Bot
         public async Task Uptime(CommandContext ctx)
         {
             var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
-            await ctx.RespondAsync($":clock1: The bot has been running for {(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}");
+            await BotServices.SendEmbedAsync(ctx, $":clock1: FlawBOT has been online for {(int)uptime.TotalDays:00} days ({uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00})");
         }
 
         #endregion COMMAND_UPTIME

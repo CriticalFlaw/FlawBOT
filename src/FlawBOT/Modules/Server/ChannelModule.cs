@@ -15,6 +15,7 @@ namespace FlawBOT.Modules.Server
 {
     [Group("channel")]
     [Aliases("chn", "ch", "c")]
+    [Description("Commands for controlling channels")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class ChannelModule : BaseCommandModule
     {
@@ -24,7 +25,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("createcategory", "newcategory", "ct")]
         [Description("Create a new channel category")]
         [RequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateChannelCategory(CommandContext ctx, [RemainingText] string name)
+        public async Task CreateChannelCategory(CommandContext ctx,
+            [Description("New category name")] [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Category name cannot be blank!", EmbedType.Warning);
@@ -45,19 +47,20 @@ namespace FlawBOT.Modules.Server
         [Aliases("remove")]
         [Description("Delete a channel. If a channel isn't specified, the current one will be deleted")]
         [RequirePermissions(Permissions.ManageChannels)]
-        public async Task RemoveTextChannel(CommandContext ctx, DiscordChannel channel = null, [RemainingText] string reason = null)
+        public async Task RemoveTextChannel(CommandContext ctx,
+            [Description("Channel to delete")] DiscordChannel channel = null,
+            [Description("Reason for the deletion")] [RemainingText] string reason = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel = channel ?? ctx.Channel;
 
-            var prompt = await ctx.RespondAsync("You're about to delete the **current** channel. Respond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.");
+            var prompt = await ctx.RespondAsync("You're about to delete the channel **" + channel + "**.\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.");
 
-            var interactivity = await ctx.Client.GetInteractivity()
-                .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity == null)
-                await ctx.RespondAsync("Timed Out! Your report has **NOT** been submitted.");
-            else
-                await channel.DeleteAsync(reason);
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+            if (interactivity == null) return;
+            await channel.DeleteAsync(reason);
+            await prompt.DeleteAsync();
+            await interactivity.Message.DeleteAsync();
         }
 
         #endregion COMMAND_DELETE
@@ -67,7 +70,8 @@ namespace FlawBOT.Modules.Server
         [Command("info")]
         [Aliases("i", "help")]
         [Description("Print channel information. If a channel isn't specified, the current one will be used")]
-        public Task GetChannel(CommandContext ctx, DiscordChannel channel = null)
+        public Task GetChannel(CommandContext ctx,
+            [Description("Channel to retrieve information from")] DiscordChannel channel = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel = channel ?? ctx.Channel;
@@ -79,13 +83,13 @@ namespace FlawBOT.Modules.Server
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(channel.Name)
                     .WithDescription($"Channel topic: {Formatter.Italic(string.IsNullOrWhiteSpace(channel.Topic) ? "None" : channel.Topic)}")
-                    .WithColor(DiscordColor.Aquamarine)
                     .AddField("ID", channel.Id.ToString(), true)
                     .AddField("Type", channel.Type.ToString(), true)
                     .AddField("Private", channel.IsPrivate ? "YES" : "NO", true)
                     .AddField("NSFW", channel.IsNSFW ? "YES" : "NO", true)
                     .WithThumbnailUrl(ctx.Guild.IconUrl)
                     .WithFooter($"Created on {channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
+                    .WithColor(DiscordColor.Aquamarine)
                     .WithUrl($"https://discord.gg/{ctx.Channel.CreateInviteAsync().Result.Code}");
                 if (channel.Type == ChannelType.Voice)
                 {
@@ -103,7 +107,9 @@ namespace FlawBOT.Modules.Server
         [Command("rename")]
         [Description("Rename a channel. If a channel isn't specified, the current one will be used")]
         [RequirePermissions(Permissions.ManageChannels)]
-        public async Task SetChannelName(CommandContext ctx, DiscordChannel channel, [RemainingText] string name)
+        public async Task SetChannelName(CommandContext ctx,
+            [Description("Channel to rename")] DiscordChannel channel,
+            [Description("New channel name")] [RemainingText] string name)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel = channel ?? ctx.Channel;
@@ -129,7 +135,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("createtext", "newtext", "ctc")]
         [Description("Create a new text channel")]
         [RequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateTextChannel(CommandContext ctx, [RemainingText] string name)
+        public async Task CreateTextChannel(CommandContext ctx,
+            [Description("New text channel name")] [RemainingText] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Channel name cannot be blank!", EmbedType.Warning);
@@ -152,19 +159,17 @@ namespace FlawBOT.Modules.Server
         [Aliases("settopic", "st")]
         [Description("Set channel topic. If a channel isn't specified, the current one will be used")]
         [RequirePermissions(Permissions.ManageChannels)]
-        public async Task SetChannelTopic(CommandContext ctx, DiscordChannel channel, [RemainingText] string topic)
+        public async Task SetChannelTopic(CommandContext ctx,
+            [Description("New channel topic")] [RemainingText] string topic = "")
         {
-            // Set the current channel for deletion if one isn't provided by the user
-            channel = channel ?? ctx.Channel;
-
             if (string.IsNullOrWhiteSpace(topic))
-                await BotServices.SendEmbedAsync(ctx, ":warning: Channel topic cannot be blank!", EmbedType.Warning);
+                await ctx.Channel.ModifyAsync(chn => chn.Topic = topic);
             else if (topic.Length > 1024)
                 await BotServices.SendEmbedAsync(ctx, ":warning: Channel topic must be less than 1024 characters long!", EmbedType.Warning);
             else
             {
                 await ctx.Channel.ModifyAsync(chn => chn.Topic = topic);
-                await BotServices.SendEmbedAsync(ctx, "Successfully updated topic for #" + Formatter.Bold(channel.Name), EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, "Successfully updated topic for #" + Formatter.Bold(ctx.Channel.Name), EmbedType.Good);
             }
         }
 
@@ -176,7 +181,10 @@ namespace FlawBOT.Modules.Server
         [Aliases("createvoice", "newvoice", "cvc")]
         [Description("Create a new voice channel")]
         [RequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateVoiceChannel(CommandContext ctx, string name, int? userlimit = null, int? bitrate = null)
+        public async Task CreateVoiceChannel(CommandContext ctx,
+            [Description("New voice channel name")] string name,
+            [Description("User limit")] int? userlimit = null,
+            [Description("Bitrate limit")] int? bitrate = null)
         {
             if (string.IsNullOrWhiteSpace(name))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Channel name cannot be blank!", EmbedType.Warning);

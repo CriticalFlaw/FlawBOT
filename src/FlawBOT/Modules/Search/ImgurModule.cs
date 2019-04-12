@@ -11,14 +11,15 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class ImgurModule : BaseCommandModule
     {
         #region COMMAND_IMGUR
 
         [Command("imgur")]
         [Description("Retrieve an imager from Imgur")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Imgur(CommandContext ctx, [RemainingText] string query)
+        public async Task Imgur(CommandContext ctx,
+            [Description("Search query to pass to Imgur")] [RemainingText] string query)
         {
             var rnd = new Random();
             var imgur = new ImgurClient(GlobalVariables.config.ImgurToken);
@@ -30,12 +31,12 @@ namespace FlawBOT.Modules.Search
             {
                 case GalleryAlbum _:
                     output.WithImageUrl(((GalleryAlbum)img).Link);
-                    output.WithColor(DiscordColor.SapGreen);
+                    output.WithColor(new DiscordColor("#85BF25"));
                     break;
 
                 case GalleryImage _:
                     output.WithImageUrl(((GalleryImage)img).Link);
-                    output.WithColor(DiscordColor.SapGreen);
+                    output.WithColor(new DiscordColor("#85BF25"));
                     break;
 
                 default:

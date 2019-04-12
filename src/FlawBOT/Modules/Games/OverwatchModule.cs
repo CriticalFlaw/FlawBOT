@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class OverwatchModule : BaseCommandModule
     {
         #region COMMAND_OVERWATCH
 
         [Command("ow")]
         [Aliases("overwatch")]
-        [Description("Get Overwatch player information")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Overwatch(CommandContext ctx, string battletag, [RemainingText] string query)
+        [Description("Retrieve Overwatch player information")]
+        public async Task Overwatch(CommandContext ctx,
+            [Description("Player battletag. Must follow the exact format.")] string battletag,
+            [Description("Display competitive stats if this parameter is 'comp'")] [RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(battletag))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Battletag is required! Try **.ow CriticalFlaw#11354** (case-sensitive)", EmbedType.Warning);
@@ -36,7 +38,7 @@ namespace FlawBOT.Modules.Games
                         .AddField("Platform", player.Platform.ToString().ToUpperInvariant(), true)
                         .WithThumbnailUrl(player.ProfilePortraitUrl)
                         .WithUrl(player.ProfileUrl)
-                        .WithColor(DiscordColor.Gold);
+                        .WithColor(new DiscordColor("#F99E1A"));
                     if (player.IsProfilePrivate) output.WithFooter("This profile is private. No other data can be displayed");
                     else
                     {

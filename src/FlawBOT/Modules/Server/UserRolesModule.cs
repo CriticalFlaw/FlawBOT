@@ -14,6 +14,7 @@ namespace FlawBOT.Modules.Server
 {
     [Group("roles")]
     [Aliases("role", "rl")]
+    [Description("Commands for controlling server roles")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
     public class UserRolesModule : BaseCommandModule
     {
@@ -23,7 +24,9 @@ namespace FlawBOT.Modules.Server
         [Aliases("clr")]
         [Description("Set the role color")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task ColorRole(CommandContext ctx, DiscordRole role, DiscordColor color)
+        public async Task ColorRole(CommandContext ctx,
+            [Description("Server role to recolor")] DiscordRole role,
+            [Description("HEX color code to set for the role")] DiscordColor color)
         {
             await role.UpdateAsync(color: color).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
@@ -40,7 +43,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("new")]
         [Description("Create a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task CreateRole(CommandContext ctx, [RemainingText] string role)
+        public async Task CreateRole(CommandContext ctx,
+            [Description("New role name")] [RemainingText] string role)
         {
             if (string.IsNullOrWhiteSpace(role))
                 await BotServices.SendEmbedAsync(ctx, ":warning: Role name cannot be blank!", EmbedType.Warning);
@@ -59,7 +63,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("remove")]
         [Description("Delete a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task DeleteRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        public async Task DeleteRole(CommandContext ctx,
+            [Description("Server role to delete")] [RemainingText] DiscordRole role)
         {
             if (role == null)
                 await BotServices.SendEmbedAsync(ctx, ":mag: Role not found in the server!", EmbedType.Warning);
@@ -77,7 +82,8 @@ namespace FlawBOT.Modules.Server
         [Command("info")]
         [Aliases("i")]
         [Description("Retrieve role information")]
-        public async Task GetRole(CommandContext ctx, [RemainingText] string roleName)
+        public async Task GetRole(CommandContext ctx,
+            [Description("Server role information to retrieve")] [RemainingText] string roleName)
         {
             var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
             if (role != null)
@@ -102,7 +108,8 @@ namespace FlawBOT.Modules.Server
 
         [Command("inrole")]
         [Description("Retrieve a list of users in a given role")]
-        public async Task UsersInRole(CommandContext ctx, [RemainingText] string roleName)
+        public async Task UsersInRole(CommandContext ctx,
+            [Description("Server role")] [RemainingText] string roleName)
         {
             var role = ctx.Guild.Roles.FirstOrDefault(r => r.Name.ToLowerInvariant() == roleName);
             if (role != null)
@@ -134,7 +141,8 @@ namespace FlawBOT.Modules.Server
         [Command("mention")]
         [Description("Toggle whether this role can be mentioned by others")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task MentionRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        public async Task MentionRole(CommandContext ctx,
+            [Description("Server role to toggle")] [RemainingText] DiscordRole role)
         {
             if (role == null) return;
 
@@ -157,7 +165,9 @@ namespace FlawBOT.Modules.Server
         [Command("revoke")]
         [Description("Remove a role from server user")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task RemoveUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
+        public async Task RemoveUserRole(CommandContext ctx,
+            [Description("Server user to get revoked")] DiscordMember member,
+            [Description("Server role to revoke from user")] [RemainingText] DiscordRole role)
         {
             member = member ?? ctx.Member;
 
@@ -175,7 +185,8 @@ namespace FlawBOT.Modules.Server
         [Command("revokeall")]
         [Description("Remove all role from server user")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task RemoveUserRoles(CommandContext ctx, DiscordMember member)
+        public async Task RemoveUserRoles(CommandContext ctx,
+            [Description("Server user to get revoked")] DiscordMember member)
         {
             if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
                 await BotServices.SendEmbedAsync(ctx, ":warning: You are unauthorised to remove roles from this user!", EmbedType.Warning);
@@ -194,7 +205,9 @@ namespace FlawBOT.Modules.Server
         [Aliases("addrole", "sr")]
         [Description("Assign a role to server user")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task SetUserRole(CommandContext ctx, DiscordMember member, [RemainingText] DiscordRole role)
+        public async Task SetUserRole(CommandContext ctx,
+            [Description("Server user to get role assigned")] DiscordMember member,
+            [Description("Server role to assign to the user")] [RemainingText] DiscordRole role)
         {
             member = member ?? ctx.Member;
             await member.GrantRoleAsync(role);
@@ -209,7 +222,8 @@ namespace FlawBOT.Modules.Server
         [Aliases("display", "hide")]
         [Description("Toggle whether this role is seen or not")]
         [RequirePermissions(Permissions.ManageRoles)]
-        public async Task SidebarRole(CommandContext ctx, [RemainingText] DiscordRole role)
+        public async Task SidebarRole(CommandContext ctx,
+            [Description("Server role to toggle")] [RemainingText] DiscordRole role)
         {
             if (role == null) return;
 

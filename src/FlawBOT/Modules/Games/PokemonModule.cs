@@ -11,25 +11,26 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class PokemonModule : BaseCommandModule
     {
         #region COMMAND_POKEMON
 
         [Command("pokemon")]
         [Aliases("poke")]
-        [Description("Get a Pokemon card")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Pokemon(CommandContext ctx, [RemainingText] string query)
+        [Description("Retrieve a Pokemon card")]
+        public async Task Pokemon(CommandContext ctx,
+            [Description("Name of the pokemon")] [RemainingText] string query)
         {
             var pokemon = (string.IsNullOrWhiteSpace(query)) ? PokemonService.GetRandomPokemonAsync() : query;
-            var data = await PokemonService.GetPokemonDataAsync(pokemon);
-            if (data.cards.Count == 0)
+            var results = await PokemonService.GetPokemonCardsAsync(pokemon);
+            if (results.cards.Count == 0)
                 await BotServices.SendEmbedAsync(ctx, ":mag: Pokemon not found!", EmbedType.Warning);
             else
             {
-                foreach (var value in data.cards)
+                foreach (var value in results.cards)
                 {
-                    var card = Card.Find<Pokemon>(value.id).Card;
+                    var card = PokemonTcgSdk.Card.Find<Pokemon>(value.id).Card;
                     var output = new DiscordEmbedBuilder()
                         .WithTitle($"{card.Name} (ID: {card.NationalPokedexNumber})")
                         .AddField("Health Points", card.Hp, true)
@@ -37,14 +38,14 @@ namespace FlawBOT.Modules.Games
                         .AddField("Rarity", card.Rarity, true)
                         .AddField("Series", card.Series, true)
                         .WithImageUrl(card.ImageUrl)
-                        .WithColor(DiscordColor.Lilac)
-                        .WithFooter("Type next for the next definition");
+                        .WithColor(DiscordColor.Gold)
+                        .WithFooter("Type next for the next card");
                     if (card.ImageUrlHiRes != null) output.WithImageUrl(card.ImageUrlHiRes);
                     await ctx.RespondAsync(embed: output.Build());
 
-                    var interactivity = await ctx.Client.GetInteractivity()
-                        .WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
                     if (interactivity == null) break;
+                    await interactivity.Message.DeleteAsync();
                 }
             }
         }

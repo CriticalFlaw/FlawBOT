@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
 using FlawBOT.Models;
+using FlawBOT.Services.Games;
 using Newtonsoft.Json;
 using SteamWebAPI2.Interfaces;
 using System;
@@ -23,6 +24,7 @@ namespace FlawBOT.Services
         public static DateTime ProcessStarted;
         public static Dictionary<uint, string> SteamAppList = new Dictionary<uint, string>();
         public static Dictionary<uint, string> TFItemSchema = new Dictionary<uint, string>();
+        public static List<string> PokemonList = new List<string>();
         public static BotConfig config = new BotConfig();
         private static int _seed;
         private static readonly ThreadLocal<Random> ThreadLocal = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
@@ -47,11 +49,11 @@ namespace FlawBOT.Services
 
         public static async Task SendEmbedAsync(CommandContext ctx, string message, EmbedType type = EmbedType.Default)
         {
-            var color = DiscordColor.DarkButNotBlack;
+            var color = DiscordColor.SpringGreen;
             switch (type)
             {
                 case EmbedType.Good:
-                    color = DiscordColor.SpringGreen;
+                    color = DiscordColor.Green;
                     break;
 
                 case EmbedType.Warning:
@@ -87,8 +89,8 @@ namespace FlawBOT.Services
             {
                 using (var client = new WebClient())
                 {
-                    var data = client.DownloadData(input);
-                    stream.Write(data, 0, data.Length);
+                    var results = client.DownloadData(input);
+                    stream.Write(results, 0, results.Length);
                     stream.Position = 0;
                 }
             }
@@ -122,36 +124,4 @@ namespace FlawBOT.Services
             return Task.CompletedTask;
         }
     }
-
-    #region HELPER_SERVICE
-
-    public sealed class HelperService : BaseHelpFormatter
-    {
-        private readonly DefaultHelpFormatter helper;
-
-        public HelperService(CommandsNextExtension cnext) : base(cnext)
-        {
-            helper = new DefaultHelpFormatter(cnext);
-        }
-
-        public override BaseHelpFormatter WithCommand(Command command)
-        {
-            return helper.WithCommand(command);
-        }
-
-        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
-        {
-            return helper.WithSubcommands(subcommands);
-        }
-
-        public override CommandHelpMessage Build()
-        {
-            var hmsg = helper.Build();
-            var embed = new DiscordEmbedBuilder(hmsg.Embed);
-            embed.Color = new DiscordColor(0xD091B2);
-            return new CommandHelpMessage(embed: embed);
-        }
-    }
-
-    #endregion HELPER_SERVICE
 }
