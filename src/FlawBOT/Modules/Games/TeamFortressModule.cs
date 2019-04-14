@@ -26,7 +26,7 @@ namespace FlawBOT.Modules.Games
         public async Task SteamServerLink(CommandContext ctx,
             [Description("Connection string")] [RemainingText] string link)
         {
-            var regex = new Regex(@"connect\s*(?'ip'\S+)\s*;\s*password\s*(?'pw'\S+);?", RegexOptions.Compiled).Match(link);
+            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
             if (regex.Success)
                 await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
             else

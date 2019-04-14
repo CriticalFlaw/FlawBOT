@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Models;
@@ -27,8 +28,8 @@ namespace FlawBOT.Modules.Search
             {
                 var results = TimeService.GetTimeDataAsync(location).Result;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle("Time in " + results.results[0].formatted_address)
-                    .WithDescription($":clock1: **{results.time.ToShortTimeString()}** {results.timezone.timeZoneName}")
+                    .WithTitle(":clock1: Time in " + results.results[0].formatted_address)
+                    .WithDescription(Formatter.Bold(results.time.ToShortTimeString()) + " " + results.timezone.timeZoneName)
                     .WithColor(DiscordColor.Cyan);
                 await ctx.RespondAsync(embed: output.Build());
             }
@@ -51,7 +52,7 @@ namespace FlawBOT.Modules.Search
             {
                 Func<double, double> format = WeatherService.CelsiusToFahrenheit;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle("Current weather in " + results.name + ", " + results.sys.country)
+                    .WithTitle(":partly_sunny: Current weather in " + results.name + ", " + results.sys.country)
                     .AddField("Temperature", $"{results.main.temp:F1}°C / {format(results.main.temp):F1}°F", true)
                     .AddField("Conditions", string.Join(", ", results.weather.Select(w => w.main)), true)
                     .AddField("Humidity", $"{results.main.humidity}%", true)

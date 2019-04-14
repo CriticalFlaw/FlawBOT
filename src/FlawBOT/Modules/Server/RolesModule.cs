@@ -194,7 +194,9 @@ namespace FlawBOT.Modules.Server
         public async Task RemoveUserRoles(CommandContext ctx,
             [Description("Server user to get revoked")] DiscordMember member)
         {
-            if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
+            if (member.Roles.Count() == 0)
+                await BotServices.SendEmbedAsync(ctx, "This user doesn't have any roles", EmbedType.Warning);
+            else if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
                 await BotServices.SendEmbedAsync(ctx, "You are unauthorised to remove roles from this user!", EmbedType.Warning);
             else
             {

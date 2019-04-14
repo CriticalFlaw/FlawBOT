@@ -21,7 +21,7 @@ namespace FlawBOT.Modules.Search
             [Description("Movie or TV show to find on IMDB")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = IMDBService.GetMovieDataAsync(query).Result;
+            var results = IMDBService.GetMovieDataAsync(query.Replace(" ", "+")).Result;
             if (results.Response == "False")
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else

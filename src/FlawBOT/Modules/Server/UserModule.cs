@@ -52,7 +52,7 @@ namespace FlawBOT.Modules.Server
                 var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
                 var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
                 await ctx.Guild.BanMemberAsync(member, 7, ustr + ": " + rstr);
-                await BotServices.SendEmbedAsync(ctx, $"**Banned** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Banned by: **{ctx.Member.DisplayName}", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, $"Banned: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nBanned by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
             }
         }
 
@@ -73,7 +73,7 @@ namespace FlawBOT.Modules.Server
             {
                 var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
                 await member.SetDeafAsync(true, rstr);
-                await BotServices.SendEmbedAsync(ctx, $"**Deafened** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Deafened by: **{ctx.Member.DisplayName}", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, $"Deafened: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nDeafened by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
             }
         }
 
@@ -141,7 +141,7 @@ namespace FlawBOT.Modules.Server
                 var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
                 var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
                 await member.RemoveAsync($"{ustr}: {rstr}");
-                await BotServices.SendEmbedAsync(ctx, $"**Kicked** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, $"Kicked: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nKicked by {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
             }
         }
 
@@ -163,7 +163,7 @@ namespace FlawBOT.Modules.Server
                 var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
                 var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
                 await member.SetMuteAsync(true, $"{ustr}: {rstr}");
-                await BotServices.SendEmbedAsync(ctx, $"**Muted** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, $"Muted: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nMuted by {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
             }
         }
 
@@ -221,7 +221,7 @@ namespace FlawBOT.Modules.Server
         {
             var member = await ctx.Client.GetUserAsync(userID).ConfigureAwait(false);
             await ctx.Guild.UnbanMemberAsync(member).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx, $"**Unbanned** user {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await BotServices.SendEmbedAsync(ctx, $"Unbanned {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
         }
 
         #endregion COMMAND_UNBAN
@@ -235,7 +235,7 @@ namespace FlawBOT.Modules.Server
             [Description("Server user to undeafen")] [RemainingText] DiscordMember member)
         {
             await member.SetDeafAsync(false);
-            await BotServices.SendEmbedAsync(ctx, $"**Undeafened** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await BotServices.SendEmbedAsync(ctx, $"Undeafened {member.DisplayName}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
         }
 
         #endregion COMMAND_UNDEAFEN
@@ -250,7 +250,7 @@ namespace FlawBOT.Modules.Server
         {
             var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} (ID: {ctx.User.Id})";
             await member.SetMuteAsync(false, ustr);
-            await BotServices.SendEmbedAsync(ctx, $"**Unmuted** user {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await BotServices.SendEmbedAsync(ctx, $"Unmuted {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
         }
 
         #endregion COMMAND_UNMUTE

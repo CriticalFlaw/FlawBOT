@@ -16,10 +16,6 @@ namespace FlawBOT.Services.Search
 
         public static async Task<TwitchData> GetTwitchDataAsync(string query)
         {
-            //var client = new TwitchAPI();
-            //client.Settings.ClientId = SharedData.config.TwitchToken;
-            //return await client.V5.Streams.GetLiveStreamsAsync(query);
-
             var results = await http.GetStringAsync(base_url + query + "?client_id=" + SharedData.Tokens.TwitchToken);
             return JsonConvert.DeserializeObject<TwitchData>(results);
         }

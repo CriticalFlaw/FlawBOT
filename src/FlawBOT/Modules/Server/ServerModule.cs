@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
 using FlawBOT.Models;
 using FlawBOT.Services;
 using System;
@@ -53,6 +54,9 @@ namespace FlawBOT.Modules.Server
                 .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Member Count", ctx.Guild.MemberCount.ToString(), true)
                 .AddField("Region", ctx.Guild.VoiceRegion.Name.ToUpperInvariant(), true)
+                .AddField("Authentication", ctx.Guild.MfaLevel.ToString(), true)
+                .AddField("Content Filter", ctx.Guild.ExplicitContentFilter.ToString(), true)
+                .AddField("Verification", ctx.Guild.VerificationLevel.ToString(), true)
                 .WithFooter(ctx.Guild.Name + " / #" + ctx.Channel.Name + " / " + DateTime.Now)
                 .WithColor(DiscordColor.Rose);
             if (!string.IsNullOrEmpty(ctx.Guild.IconHash))
@@ -63,10 +67,6 @@ namespace FlawBOT.Modules.Server
                 roles.Append($"[`{role.Name}`]");
             if (roles.Length == 0) roles.Append("None");
             output.AddField("Roles", roles.ToString());
-
-            output.AddField("Authentication", ctx.Guild.MfaLevel.ToString(), true);
-            output.AddField("Content Filter", ctx.Guild.ExplicitContentFilter.ToString(), true);
-            output.AddField("Verification", ctx.Guild.VerificationLevel.ToString(), true);
 
             var emojis = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis)
@@ -94,15 +94,22 @@ namespace FlawBOT.Modules.Server
         [Description("Prune inactive server members")]
         [RequirePermissions(Permissions.DeafenMembers)]
         public async Task PruneUsers(CommandContext ctx,
-            [Description("Number of days the user had to be inactive to get pruned")] [RemainingText] int days = 90)
+            [Description("Number of days the user had to be inactive to get pruned")] [RemainingText] int days = 7)
         {
-            if (days <= 30)
-                await BotServices.SendEmbedAsync(ctx, "You can only prune users who have been inactive for more than 30", EmbedType.Warning);
-            else
+            if (days < 1 || days > 30)
+                await BotServices.SendEmbedAsync(ctx, "Number of days must be between 1 and 30", EmbedType.Warning);
+            int count = await ctx.Guild.GetPruneCountAsync(days);
+            if (count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, "Pruned " + Formatter.Bold(ctx.Guild.GetPruneCountAsync(days).Result.ToString()) + " server members who have been inactive for " + Formatter.Bold(days.ToString()) + " days", EmbedType.Good);
-                await ctx.Guild.PruneAsync(days);
+                await BotServices.SendEmbedAsync(ctx, "No inactive members found to prune", EmbedType.Warning);
+                return;
             }
+            var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.");
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+            if (interactivity == null) return;
+            await BotServices.RemoveMessage(interactivity.Message);
+            await BotServices.RemoveMessage(prompt);
+            await ctx.Guild.PruneAsync(days);
         }
 
         #endregion COMMAND_PRUNE
@@ -139,10 +146,12 @@ namespace FlawBOT.Modules.Server
             var output = new DiscordEmbedBuilder()
                 .WithTitle("Warning received!")
                 .WithDescription(Formatter.Bold(ctx.Guild.Name) + " has issued you a server warning!")
+                .AddField("Sender:", ctx.Member.Username + "#" + ctx.Member.Discriminator, true)
+                .AddField("Server Owner:", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, true)
+                .WithThumbnailUrl(ctx.Guild.IconUrl)
                 .WithTimestamp(DateTime.Now)
                 .WithColor(DiscordColor.Red);
             if (!string.IsNullOrWhiteSpace(reason)) output.AddField("Warning message:", reason);
-            output.AddField("Sender:", ctx.Member.Username + "#" + ctx.Member.Discriminator);
             var dm = await member.CreateDmChannelAsync().ConfigureAwait(false);
             if (dm == null)
                 await BotServices.SendEmbedAsync(ctx, "Unable to direct message this user", EmbedType.Warning);

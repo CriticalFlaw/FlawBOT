@@ -37,7 +37,6 @@ namespace FlawBOT.Modules.Search
                     .WithUrl(stream.channel.url)
                     .WithColor(new DiscordColor("#6441A5"));
                 await ctx.RespondAsync(embed: output.Build());
-                await ctx.RespondAsync(stream.channel.url);
             }
         }
 

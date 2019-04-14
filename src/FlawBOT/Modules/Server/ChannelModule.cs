@@ -48,7 +48,7 @@ namespace FlawBOT.Modules.Server
         [Description("Remove channel messages")]
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task Clean(CommandContext ctx,
-            [Description("Number of message to remove from the current channel")] int limit = 0)
+            [Description("Number of message to remove from the current channel")] int limit = 1)
         {
             if (limit <= 0 || limit > 100)
                 await BotServices.SendEmbedAsync(ctx, "Invalid number of messages to delete, please enter a number 1-100!", EmbedType.Warning);
@@ -69,8 +69,7 @@ namespace FlawBOT.Modules.Server
         [Description("Delete a channel. If a channel isn't specified, the current one will be deleted")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task RemoveTextChannel(CommandContext ctx,
-            [Description("Channel to delete")] DiscordChannel channel = null,
-            [Description("Reason for the deletion")] [RemainingText] string reason = null)
+            [Description("Channel to delete")] [RemainingText] DiscordChannel channel = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel = channel ?? ctx.Channel;
@@ -81,7 +80,7 @@ namespace FlawBOT.Modules.Server
             await BotServices.RemoveMessage(interactivity.Message);
             await BotServices.RemoveMessage(prompt);
             await BotServices.SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(channel.Name), EmbedType.Good);
-            await channel.DeleteAsync(reason);
+            await channel.DeleteAsync();
         }
 
         #endregion COMMAND_DELETE
@@ -92,7 +91,7 @@ namespace FlawBOT.Modules.Server
         [Aliases("i")]
         [Description("Print channel information. If a channel isn't specified, the current one will be used")]
         public Task GetChannel(CommandContext ctx,
-            [Description("Channel to retrieve information from")] DiscordChannel channel = null)
+            [Description("Channel to retrieve information from")] [RemainingText] DiscordChannel channel = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel = channel ?? ctx.Channel;
@@ -102,16 +101,14 @@ namespace FlawBOT.Modules.Server
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(channel.Name)
-                    .WithDescription("Channel topic: " + Formatter.Italic(string.IsNullOrWhiteSpace(channel.Topic) ? "None" : channel.Topic))
-                    .AddField("ID", channel.Id.ToString(), true)
+                    .WithTitle(channel.Name + $" (ID: {channel.Id})")
+                    .WithDescription("Channel topic: " + Formatter.Italic(string.IsNullOrWhiteSpace(channel.Topic) ? "" : channel.Topic))
                     .AddField("Type", channel.Type.ToString(), true)
                     .AddField("Private", channel.IsPrivate ? "YES" : "NO", true)
                     .AddField("NSFW", channel.IsNSFW ? "YES" : "NO", true)
                     .WithThumbnailUrl(ctx.Guild.IconUrl)
                     .WithFooter("Created on " + channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
-                    .WithColor(DiscordColor.Aquamarine)
-                    .WithUrl("https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code);
+                    .WithColor(DiscordColor.Aquamarine);
                 if (channel.Type == ChannelType.Voice)
                 {
                     output.AddField("Bitrate", channel.Bitrate.ToString(), true);
@@ -224,9 +221,7 @@ namespace FlawBOT.Modules.Server
         [Description("Create a new voice channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task CreateVoiceChannel(CommandContext ctx,
-            [Description("New voice channel name")] string name = "",
-            [Description("User limit")] int? userlimit = null,
-            [Description("Bitrate limit")] int? bitrate = null)
+            [Description("New voice channel name")] [RemainingText] string name = "")
         {
             if (string.IsNullOrWhiteSpace(name) || (name.Length > 100))
                 await BotServices.SendEmbedAsync(ctx, "Channel name cannot be blank or over 100 characters!", EmbedType.Warning);
@@ -234,7 +229,7 @@ namespace FlawBOT.Modules.Server
                 await BotServices.SendEmbedAsync(ctx, "Channel with the same name already exists!", EmbedType.Warning);
             else
             {
-                var channel = await ctx.Guild.CreateVoiceChannelAsync(name: name.Trim().Replace(" ", "-"), bitrate: bitrate, user_limit: userlimit);
+                var channel = await ctx.Guild.CreateVoiceChannelAsync(name: name.Trim().Replace(" ", "-"));
                 await BotServices.SendEmbedAsync(ctx, "Successfully created the voice channel " + Formatter.Bold(channel.Name), EmbedType.Good);
             }
         }
