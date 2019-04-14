@@ -21,21 +21,6 @@ namespace FlawBOT.Models
 
         [JsonProperty("link")]
         public string link { get; set; }
-
-        [JsonProperty("created_at")]
-        public CreatedAt created_at { get; set; }
-    }
-
-    public class CreatedAt
-    {
-        [JsonProperty("date")]
-        public string date { get; set; }
-
-        [JsonProperty("timezone_type")]
-        public int timezone_type { get; set; }
-
-        [JsonProperty("timezone")]
-        public string timezone { get; set; }
     }
 
     #endregion TEAMWORK_NEWS
@@ -61,9 +46,6 @@ namespace FlawBOT.Models
 
         [JsonProperty("valve_secure")]
         public bool valve_secure { get; set; }
-
-        [JsonProperty("sourcecbl_secure")]
-        public bool sourcecbl_secure { get; set; }
 
         [JsonProperty("map_name")]
         public string map_name { get; set; }
@@ -146,63 +128,6 @@ namespace FlawBOT.Models
 
         [JsonProperty("related_maps")]
         public List<string> related_maps { get; set; }
-
-        [JsonProperty("context")]
-        public Context context { get; set; }
-    }
-
-    public class Context
-    {
-        [JsonProperty("normalized_map_name")]
-        public string normalized_map_name { get; set; }
-
-        [JsonProperty("file_hash")]
-        public string file_hash { get; set; }
-
-        [JsonProperty("map_version_sampled")]
-        public int map_version_sampled { get; set; }
-
-        [JsonProperty("entity_count")]
-        public int entity_count { get; set; }
-
-        [JsonProperty("level_overview")]
-        public LevelOverview level_overview { get; set; }
-
-        [JsonProperty("screenshots")]
-        public List<string> screenshots { get; set; }
-
-        [JsonProperty("elo_rating_best")]
-        public int elo_rating_best { get; set; }
-    }
-
-    public class Context2
-    {
-        [JsonProperty("screenHeight")]
-        public int screenHeight { get; set; }
-
-        [JsonProperty("scale")]
-        public int scale { get; set; }
-
-        [JsonProperty("screenWidth")]
-        public int screenWidth { get; set; }
-
-        [JsonProperty("y")]
-        public int? y { get; set; }
-
-        [JsonProperty("x")]
-        public int? x { get; set; }
-
-        [JsonProperty("z")]
-        public int? z { get; set; }
-    }
-
-    public class LevelOverview
-    {
-        [JsonProperty("image")]
-        public string image { get; set; }
-
-        [JsonProperty("context")]
-        public List<Context2> context { get; set; }
     }
 
     #endregion TEAMWORK_MAPS

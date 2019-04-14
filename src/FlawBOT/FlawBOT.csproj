@@ -6,11 +6,11 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>FlawBOT.Program</StartupObject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.9.9</Version>
+    <Version>2.0.0</Version>
     <Win32Resource />
     <LangVersion>7.2</LangVersion>
-    <AssemblyVersion>1.9.9</AssemblyVersion>
-    <FileVersion>1.9.9</FileVersion>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,19 +25,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BitlyAPI" Version="1.0.3" />
+    <PackageReference Include="BackpackTfApi" Version="1.0.3" />
     <PackageReference Include="DSharpPlus" Version="4.0.0-beta-00431" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-beta-00431" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-beta-00431" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.38.0.1488" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.38.2.1488" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />
-    <PackageReference Include="Overwatch.Net" Version="4.2.0" />
-    <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
     <PackageReference Include="SteamWebAPI2" Version="4.0.8" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="TwitchLib.Api" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PokemonTcgSdk">
+      <HintPath>Resources\PokemonTcgSdk.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Modules.Bot;
 using FlawBOT.Modules.Games;
@@ -12,9 +12,11 @@ using FlawBOT.Modules.Misc;
 using FlawBOT.Modules.Search;
 using FlawBOT.Modules.Server;
 using FlawBOT.Services;
+using FlawBOT.Services.Games;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlawBOT
@@ -25,38 +27,40 @@ namespace FlawBOT
         public CommandsNextExtension Commands { get; private set; }
         private static readonly object _lock = new object();
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var app = new Program();
-            app.RunBotAsync().GetAwaiter().GetResult();
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                Program app = new Program();
+                app.RunBotAsync().GetAwaiter().GetResult();
+                await Task.Delay(Timeout.Infinite);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\nException occured: {e.GetType()} :\n{e.Message}");
+                if (!(e.InnerException is null))
+                    Console.WriteLine($"Inner exception: {e.InnerException.GetType()} :\n{e.InnerException.Message}");
+                Console.ReadKey();
+            }
+            Console.WriteLine("\nPowering off...");
         }
 
         public async Task RunBotAsync()
         {
             var service = new BotServices();
-            service.LoadBotConfig();
-            var cfg = new DiscordConfiguration
+            service.UpdateTokenList();
+
+            Client = new DiscordClient(new DiscordConfiguration
             {
-                Token = GlobalVariables.config.DiscordToken,
+                Token = SharedData.Tokens.DiscordToken,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
                 LogLevel = LogLevel.Info,
                 UseInternalLogHandler = false,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250
-            };
-
-            var cmd = new CommandsNextConfiguration
-            {
-                PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
-                EnableDms = false, // Set the boolean for responding to direct messages
-                EnableDefaultHelp = false,
-                EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
-                CaseSensitive = false,
-                DefaultHelpChecks = new List<CheckBaseAttribute>()
-            };
-
-            Client = new DiscordClient(cfg);
+            });
             Client.Ready += Client_Ready;
             Client.ClientErrored += Client_ClientError;
             Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
@@ -66,61 +70,66 @@ namespace FlawBOT
                 PaginationTimeout = TimeSpan.FromMinutes(5), // Default pagination timeout to 5 minutes
                 Timeout = TimeSpan.FromMinutes(2) // Default timeout for other actions to 2 minutes
             });
-            Commands = Client.UseCommandsNext(cmd);
+
+            Commands = Client.UseCommandsNext(new CommandsNextConfiguration
+            {
+                PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
+                EnableDms = false, // Set the boolean for responding to direct messages
+                //EnableDefaultHelp = false,
+                EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
+                CaseSensitive = false,
+                //DefaultHelpChecks = new List<CheckBaseAttribute>()
+            });
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
-            Commands.SetHelpFormatter<HelperService>(); // Set up the custom help formatter
+
+            Commands.SetHelpFormatter<HelpFormatter>();
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<OwnerModule>();
-
-            Commands.RegisterCommands<OverwatchModule>();
             Commands.RegisterCommands<PokemonModule>();
             Commands.RegisterCommands<SmashModule>();
             Commands.RegisterCommands<TeamFortressModule>();
-
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
-
             Commands.RegisterCommands<DictionaryModule>();
+            Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<IMDBModule>();
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<SimpsonsModule>();
             Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TwitchModule>();
-            Commands.RegisterCommands<WeatherModule>();
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
-
             Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<MessagesModule>();
             Commands.RegisterCommands<PollModule>();
+            Commands.RegisterCommands<RolesModule>();
             Commands.RegisterCommands<ServerModule>();
             Commands.RegisterCommands<UserModule>();
-            Commands.RegisterCommands<UserRolesModule>();
 
             // Start the uptime counter
-            Console.Title = GlobalVariables.Name + " (" + GlobalVariables.Version + ")";
-            GlobalVariables.ProcessStarted = DateTime.Now;
-            await BotServices.UpdateSteamAsync().ConfigureAwait(false); // Update the Steam App list
+            Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
+            SharedData.ProcessStarted = DateTime.Now;
+            await BotServices.UpdateSteamList().ConfigureAwait(false); // Update the Steam App list
+            await PokemonService.UpdatePokemonList().ConfigureAwait(false); // Update the Pokemon list
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }
 
         private static Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"{GlobalVariables.Name}, version: {GlobalVariables.Version}", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, SharedData.Name, SharedData.Name + $", version: " + SharedData.Version, DateTime.Now);
             return Task.CompletedTask;
         }
 
         private static Task Client_ClientError(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, "FlawBOT", $"Exception occured: {e.Exception.GetType()}: {e.Exception.Message}", DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"Exception occured: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
             return Task.CompletedTask;
         }
 
         private static Task Commands_CommandExecuted(CommandExecutionEventArgs e)
         {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "FlawBOT", $"'{e.Command.QualifiedName}' executed by {e.Context.User.Username} from {e.Context.Guild.Name} : {e.Context.Channel.Name}", DateTime.Now);
+            e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, SharedData.Name, $"'{e.Command.QualifiedName}' executed by {e.Context.User.Username} from {e.Context.Guild.Name} : {e.Context.Channel.Name}", DateTime.Now);
             return Task.CompletedTask;
         }
 
@@ -129,41 +138,41 @@ namespace FlawBOT
             switch (e.Exception)
             {
                 case CommandNotFoundException _:
-                    //await BotServices.SendEmbedAsync(e.Context, ":no_entry: This command does not exist!", EmbedType.Error);
+                    //await BotServices.SendEmbedAsync(e.Context, "This command does not exist!", EmbedType.Error);
                     break;
 
                 case NullReferenceException _:
-                    //await BotServices.SendEmbedAsync(e.Context, ":mag: Data not found!", EmbedType.Error);
+                    //await BotServices.SendEmbedAsync(e.Context, "Data not found!", EmbedType.Missing);
                     break;
 
                 case ArgumentNullException _:
-                    await BotServices.SendEmbedAsync(e.Context, ":no_entry: Not enough arguments supplied to the command!", EmbedType.Error);
+                    await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error);
                     break;
 
                 case ArgumentException _:
                     if (e.Exception.Message.Contains("Not enough arguments supplied to the command"))
-                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Not enough arguments supplied to the command!", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error);
                     break;
 
                 case InvalidDataException _:
                     if (e.Exception.Message.Contains("The data within the stream was not valid image data"))
-                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Provided URL is not an image type!", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Provided URL is not an image type!", EmbedType.Error);
                     break;
 
                 default:
                     if (e.Exception.Message.Contains("Given emote was not found"))
-                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Suggested emote was not found!", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Suggested emote was not found!", EmbedType.Error);
                     if (e.Exception.Message.Contains("Unauthorized: 403"))
-                        await BotServices.SendEmbedAsync(e.Context, ":no_entry: Unsufficient Permissions", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Unsufficient Permissions", EmbedType.Error);
                     else
-                        e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "FlawBOT", $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now); // DEBUG ONLY
+                        e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now); // DEBUG ONLY
                     break;
             }
         }
 
         private static Task<int> PrefixResolverAsync(DiscordMessage m)
         {
-            return Task.FromResult(m.GetStringPrefixLength(GlobalVariables.config.CommandPrefix));
+            return Task.FromResult(m.GetStringPrefixLength(SharedData.Tokens.CommandPrefix));
         }
 
         private static void Client_LogMessageHandler(object sender, DebugLogMessageEventArgs ea)

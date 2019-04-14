@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.Entities;
+using FlawBOT.Common;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
@@ -14,8 +15,8 @@ namespace FlawBOT.Services.Search
         {
             YouTube = new YouTubeService(new BaseClientService.Initializer
             {
-                ApiKey = GlobalVariables.config.GoogleToken,
-                ApplicationName = "FlawBOT"
+                ApiKey = SharedData.Tokens.GoogleToken,
+                ApplicationName = SharedData.Name
             });
         }
 

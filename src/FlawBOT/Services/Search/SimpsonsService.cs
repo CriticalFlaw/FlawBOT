@@ -14,8 +14,8 @@ namespace FlawBOT.Services.Search
         public static async Task<DiscordEmbedBuilder> GetSimpsonsDataAsync(string site)
         {
             var result = await http.GetStringAsync($"https://{site}.com/api/random");
-            var data = JsonConvert.DeserializeObject<SimpsonsData>(result);
-            return EmbedSimpsonsEpisode(data, site);
+            var results = JsonConvert.DeserializeObject<SimpsonsData>(result);
+            return EmbedSimpsonsEpisode(results, site);
         }
 
         public static async Task<string> GetSimpsonsGifAsync(string site)
@@ -38,7 +38,7 @@ namespace FlawBOT.Services.Search
                 .AddField("Writer", data.Episode.Writer, true)
                 .AddField("Director", data.Episode.Director, true)
                 .WithImageUrl($"https://{site}.com/img/{data.Frame.Episode}/{data.Frame.Timestamp}.jpg")
-                .WithColor(DiscordColor.Yellow)
+                .WithColor(new DiscordColor("#FFBB22"))
                 .WithUrl(data.Episode.WikiLink);
             return output;
         }

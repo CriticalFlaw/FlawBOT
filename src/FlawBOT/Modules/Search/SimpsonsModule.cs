@@ -11,16 +11,17 @@ namespace FlawBOT.Modules.Search
     {
         private readonly string simpsons_site = "frinkiac";
         private readonly string futurama_site = "morbotron";
+        private readonly string rickmorty_site = "masterofallscience";
 
         #region COMMAND_SIMPSONS
 
         [Command("simpsons")]
-        [Aliases("doh")]
-        [Description("Get a random Simpsons screenshot and episode")]
+        [Aliases("caramba")]
+        [Description("Retrieve a random Simpsons screenshot and episode")]
         public async Task Simpsons(CommandContext ctx)
         {
-            var data = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
-            await ctx.RespondAsync(embed: data.Build());
+            var results = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
+            await ctx.RespondAsync(embed: results.Build());
         }
 
         #endregion COMMAND_SIMPSONS
@@ -28,17 +29,19 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_SIMPSONS_GIF
 
         [Command("simpsonsgif")]
-        [Description("Get a random Simpsons gif")]
-        public async Task SimpsonsGIF(CommandContext ctx, [RemainingText] string input)
+        [Aliases("doh")]
+        [Description("Retrieve a random Simpsons gif")]
+        public async Task SimpsonsGIF(CommandContext ctx,
+            [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
-            var gif = await SimpsonsService.GetSimpsonsGifAsync(simpsons_site);
+            var output = await SimpsonsService.GetSimpsonsGifAsync(simpsons_site);
             if (string.IsNullOrWhiteSpace(input))
-                await ctx.RespondAsync(gif);
+                await ctx.RespondAsync(output);
             else // Include episode information if any kind of parameter is inputted
             {
-                var data = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
-                data.WithFooter("Note: First time gifs take a few minutes to properly generate");
-                await ctx.RespondAsync(gif, embed: data.Build());
+                var results = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
+                results.WithFooter("Note: First time gifs take a few minutes to properly generate");
+                await ctx.RespondAsync(output, embed: results.Build());
             }
         }
 
@@ -48,12 +51,12 @@ namespace FlawBOT.Modules.Search
 
         [Command("futurama")]
         [Aliases("bite")]
-        [Description("Get a random Futurama screenshot and episode")]
+        [Description("Retrieve a random Futurama screenshot and episode")]
         public async Task Futurama(CommandContext ctx)
         {
-            var data = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
-            data.WithColor(DiscordColor.DarkBlue);
-            await ctx.RespondAsync(embed: data.Build());
+            var results = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
+            results.WithColor(new DiscordColor("#69E398"));
+            await ctx.RespondAsync(embed: results.Build());
         }
 
         #endregion COMMAND_FUTURAMA
@@ -61,21 +64,59 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_FUTURAMA_GIF
 
         [Command("futuramagif")]
-        [Description("Get a random Futurama gif")]
-        public async Task FuturamaGIF(CommandContext ctx, [RemainingText] string input)
+        [Aliases("neat")]
+        [Description("Retrieve a random Futurama gif")]
+        public async Task FuturamaGIF(CommandContext ctx,
+            [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
-            var gif = await SimpsonsService.GetSimpsonsGifAsync(futurama_site);
+            var output = await SimpsonsService.GetSimpsonsGifAsync(futurama_site);
             if (string.IsNullOrWhiteSpace(input))
-                await ctx.RespondAsync(gif);
+                await ctx.RespondAsync(output);
             else // Include episode information if any kind of parameter is inputted
             {
-                var data = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
-                data.WithFooter("Note: First time gifs take a few minutes to properly generate");
-                data.WithColor(DiscordColor.DarkBlue);
-                await ctx.RespondAsync(gif, embed: data.Build());
+                var results = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
+                results.WithFooter("Note: First time gifs take a few minutes to properly generate");
+                results.WithColor(new DiscordColor("#69E398"));
+                await ctx.RespondAsync(output, embed: results.Build());
             }
         }
 
         #endregion COMMAND_FUTURAMA_GIF
+
+        #region COMMAND_RICKMORTY
+
+        [Command("rick")]
+        [Aliases("morty")]
+        [Description("Retrieve a random Rick and Morty screenshot and episode")]
+        public async Task RickMorty(CommandContext ctx)
+        {
+            var results = await SimpsonsService.GetSimpsonsDataAsync(rickmorty_site);
+            results.WithColor(new DiscordColor("#ABD5EC"));
+            await ctx.RespondAsync(embed: results.Build());
+        }
+
+        #endregion COMMAND_RICKMORTY
+
+        #region COMMAND_RICKMORTY_GIF
+
+        [Command("rickgif")]
+        [Aliases("mortygif")]
+        [Description("Retrieve a random Rick and Morty gif")]
+        public async Task RickMortyGif(CommandContext ctx,
+            [Description("Inputting anything will add episode information")] [RemainingText] string input)
+        {
+            var output = await SimpsonsService.GetSimpsonsGifAsync(rickmorty_site);
+            if (string.IsNullOrWhiteSpace(input))
+                await ctx.RespondAsync(output);
+            else // Include episode information if any kind of parameter is inputted
+            {
+                var results = await SimpsonsService.GetSimpsonsDataAsync(rickmorty_site);
+                results.WithFooter("Note: First time gifs take a few minutes to properly generate");
+                results.WithColor(new DiscordColor("#ABD5EC"));
+                await ctx.RespondAsync(output, embed: results.Build());
+            }
+        }
+
+        #endregion COMMAND_RICKMORTY_GIF
     }
 }

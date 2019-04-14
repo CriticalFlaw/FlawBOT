@@ -8,26 +8,29 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SmashModule : BaseCommandModule
     {
         #region COMMAND_SMASH
 
         [Command("smash")]
-        [Description("Get Smash Ultimate character information")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task GetCharacter(CommandContext ctx, [RemainingText] string query)
+        [Aliases("smashbros")]
+        [Description("Retrieve Smash Ultimate character information")]
+        public async Task GetCharacter(CommandContext ctx,
+            [Description("Name of the Smash character")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
-            var data = await SmashService.GetSmashCharacterAsync(query);
-            if (data == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Smash character not found or not yet available! See the available characters here: http://kuroganehammer.com/Ultimate", EmbedType.Warning);
+            if (!BotServices.CheckUserInput(query)) return;
+            var results = await SmashService.GetSmashCharacterAsync(query);
+            if (results == null)
+                await BotServices.SendEmbedAsync(ctx, "Smash character not found or not yet available!\nSee the available characters here: http://kuroganehammer.com/Ultimate", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(data.DisplayName)
-                    .WithDescription($"[Attributes]({data.Related.Ultimate.Attributes}) **|** [Movements]({data.Related.Ultimate.Movements}) **|** [Moves]({data.Related.Ultimate.Moves})")
-                    .WithThumbnailUrl(data.ThumbnailUrl)
-                    .WithUrl(data.FullUrl);
+                    .WithTitle(results.DisplayName)
+                    .WithDescription($"[Attributes]({results.Related.Ultimate.Attributes}) **|** [Movements]({results.Related.Ultimate.Movements}) **|** [Moves]({results.Related.Ultimate.Moves})")
+                    .WithThumbnailUrl(results.ThumbnailUrl)
+                    .WithColor(new DiscordColor(results.ColorTheme))
+                    .WithUrl(results.FullUrl);
                 await ctx.RespondAsync(embed: output.Build());
             }
         }

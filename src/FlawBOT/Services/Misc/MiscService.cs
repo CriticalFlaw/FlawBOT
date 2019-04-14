@@ -11,8 +11,8 @@ namespace FlawBOT.Services
     {
         public static string GetAnswer()
         {
-            var rnd = new Random();
-            return Answers[rnd.Next(0, Answers.Count)];
+            var random = new Random();
+            return Answers[random.Next(0, Answers.Count)];
         }
 
         public readonly static List<string> Answers = new List<string>
@@ -47,8 +47,8 @@ namespace FlawBOT.Services
 
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var data = await http.GetStringAsync(base_url);
-            return JsonConvert.DeserializeObject<DogData>(data);
+            var results = await http.GetStringAsync(base_url);
+            return JsonConvert.DeserializeObject<DogData>(results);
         }
     }
 }

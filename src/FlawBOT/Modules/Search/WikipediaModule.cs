@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class WikipediaModule : BaseCommandModule
     {
         #region COMMAND_WIKIPEDIA
@@ -14,15 +15,15 @@ namespace FlawBOT.Modules.Search
         [Command("wiki")]
         [Aliases("wikipedia")]
         [Description("Search Wikipedia for a given query")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Wikipedia(CommandContext ctx, [RemainingText] string query)
+        public async Task Wikipedia(CommandContext ctx,
+            [Description("Query to search on Wikipedia")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
-            var data = WikipediaService.GetWikipediaDataAsync(query).Result.Query.Pages[0];
-            if (data.Missing)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Wikipedia page not found!", EmbedType.Warning);
+            if (!BotServices.CheckUserInput(query)) return;
+            var results = WikipediaService.GetWikipediaDataAsync(query).Result.Query.Pages[0];
+            if (results.Missing)
+                await BotServices.SendEmbedAsync(ctx, "Wikipedia page not found!", EmbedType.Missing);
             else
-                await ctx.Channel.SendMessageAsync(data.FullUrl).ConfigureAwait(false);
+                await ctx.Channel.SendMessageAsync(results.FullUrl).ConfigureAwait(false);
         }
 
         #endregion COMMAND_WIKIPEDIA

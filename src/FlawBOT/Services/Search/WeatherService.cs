@@ -13,8 +13,8 @@ namespace FlawBOT.Services.Search
         public static async Task<WeatherData> GetWeatherDataAsync(string query)
         {
             http.DefaultRequestHeaders.Clear();
-            var data = await http.GetStringAsync(base_url + $"q={query}&appid=42cd627dd60debf25a5739e50a217d74&units=metric");
-            return JsonConvert.DeserializeObject<WeatherData>(data);
+            var results = await http.GetStringAsync(base_url + $"q={query}&appid=42cd627dd60debf25a5739e50a217d74&units=metric");
+            return JsonConvert.DeserializeObject<WeatherData>(results);
         }
 
         public static double CelsiusToFahrenheit(double cel)

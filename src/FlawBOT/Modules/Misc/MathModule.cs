@@ -14,8 +14,12 @@ namespace FlawBOT.Modules.Misc
         #region COMMAND_MATH
 
         [Command("math")]
+        [Aliases("calculate")]
         [Description("Perform a basic math operation")]
-        public async Task Math(CommandContext ctx, double num1, string operation, double num2)
+        public async Task Math(CommandContext ctx,
+            [Description("First operand")] double num1,
+            [Description("Operator")] string operation,
+            [Description("Second operand")] double num2)
         {
             try
             {
@@ -52,7 +56,7 @@ namespace FlawBOT.Modules.Misc
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, ":warning: Error calculating math equation, make sure your values are integers and the operation is valid!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Error calculating math equation, make sure your values are integers and the operation is valid!", EmbedType.Warning);
             }
         }
 
@@ -62,8 +66,9 @@ namespace FlawBOT.Modules.Misc
 
         [Command("sum")]
         [Aliases("total")]
-        [Description("Sum all inputted numbers")]
-        public async Task Sum(CommandContext ctx, params int[] args)
+        [Description("Calculate the sum of all inputted values")]
+        public async Task Sum(CommandContext ctx,
+            [Description("Numbers to sum up")] params int[] args)
         {
             var output = new DiscordEmbedBuilder()
                 .WithTitle($":1234: The sum is {args.Sum():#,##0}")

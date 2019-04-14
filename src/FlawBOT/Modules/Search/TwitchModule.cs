@@ -8,33 +8,35 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
+    [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class TwitchModule : BaseCommandModule
     {
         #region COMMAND_TWITCH
 
         [Command("twitch")]
-        [Aliases("tw")]
-        [Description("Get Twitch stream information")]
-        [Cooldown(3, 5, CooldownBucketType.Channel)]
-        public async Task Twitch(CommandContext ctx, [RemainingText] string query)
+        [Aliases("stream")]
+        [Description("Retrieve Twitch stream information")]
+        public async Task Twitch(CommandContext ctx,
+            [Description("Channel to find on Twitch")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
-            var data = await TwitchService.GetTwitchDataAsync(query);
-            if (data.stream == null)
-                await BotServices.SendEmbedAsync(ctx, ":mag: Twitch channel not found or it's offline", EmbedType.Warning);
+            if (!BotServices.CheckUserInput(query)) return;
+            var results = await TwitchService.GetTwitchDataAsync(query);
+            if (results.stream == null)
+                await BotServices.SendEmbedAsync(ctx, "Twitch channel not found or it's offline", EmbedType.Missing);
             else
             {
+                var stream = results.stream;
+                stream.game = (string.IsNullOrWhiteSpace(stream.game)) ? "Nothing" : stream.game;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(data.stream.channel.name + " is now live on Twitch!")
-                    .WithDescription(data.stream.channel.status)
-                    .AddField("Now Playing", data.stream.game)
-                    .AddField("Start Time", data.stream.created_at.ToString(), true)
-                    .AddField("Viewers", data.stream.viewers.ToString(), true)
-                    .WithThumbnailUrl(data.stream.channel.logo)
-                    .WithUrl(data.stream.channel.url)
-                    .WithColor(DiscordColor.Purple);
+                    .WithTitle(stream.channel.name + " is now live on Twitch!")
+                    .WithDescription(stream.channel.status)
+                    .AddField("Now Playing", stream.game)
+                    .AddField("Start Time", stream.created_at.ToString(), true)
+                    .AddField("Viewers", $"{stream.viewers:#,##0}", true)
+                    .WithThumbnailUrl(stream.channel.logo)
+                    .WithUrl(stream.channel.url)
+                    .WithColor(new DiscordColor("#6441A5"));
                 await ctx.RespondAsync(embed: output.Build());
-                await ctx.RespondAsync(data.stream.channel.url);
             }
         }
 

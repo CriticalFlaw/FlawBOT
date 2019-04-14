@@ -13,8 +13,8 @@ namespace FlawBOT.Services.Search
 
         public static async Task<DictionaryData> GetDictionaryForTermAsync(string query)
         {
-            var data = await http.GetStringAsync(base_url + WebUtility.UrlEncode(query.Trim()));
-            return JsonConvert.DeserializeObject<DictionaryData>(data);
+            var results = await http.GetStringAsync(base_url + WebUtility.UrlEncode(query.Trim()));
+            return JsonConvert.DeserializeObject<DictionaryData>(results);
         }
     }
 }

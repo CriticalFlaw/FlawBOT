@@ -7,9 +7,6 @@ namespace FlawBOT.Models
     {
         [JsonProperty("stream")]
         public Stream stream { get; set; }
-
-        [JsonProperty("_links")]
-        public Links3 _links { get; set; }
     }
 
     public class Channel
@@ -99,7 +96,7 @@ namespace FlawBOT.Models
         public int video_height { get; set; }
 
         [JsonProperty("average_fps")]
-        public int average_fps { get; set; }
+        public double average_fps { get; set; }
 
         [JsonProperty("delay")]
         public int delay { get; set; }

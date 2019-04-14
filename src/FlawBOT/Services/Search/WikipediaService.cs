@@ -13,8 +13,8 @@ namespace FlawBOT.Services.Search
 
         public static async Task<WikipediaData> GetWikipediaDataAsync(string query)
         {
-            var data = await http.GetStringAsync(base_url + Uri.EscapeDataString(query));
-            return JsonConvert.DeserializeObject<WikipediaData>(data);
+            var results = await http.GetStringAsync(base_url + Uri.EscapeDataString(query));
+            return JsonConvert.DeserializeObject<WikipediaData>(results);
         }
     }
 }
