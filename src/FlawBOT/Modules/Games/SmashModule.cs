@@ -19,7 +19,7 @@ namespace FlawBOT.Modules.Games
         public async Task GetCharacter(CommandContext ctx,
             [Description("Name of the Smash character")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = await SmashService.GetSmashCharacterAsync(query);
             if (results == null)
                 await BotServices.SendEmbedAsync(ctx, "Smash character not found or not yet available!\nSee the available characters here: http://kuroganehammer.com/Ultimate", EmbedType.Missing);

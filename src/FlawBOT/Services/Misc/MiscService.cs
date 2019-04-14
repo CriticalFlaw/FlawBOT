@@ -11,8 +11,8 @@ namespace FlawBOT.Services
     {
         public static string GetAnswer()
         {
-            var rnd = new Random();
-            return Answers[rnd.Next(0, Answers.Count)];
+            var random = new Random();
+            return Answers[random.Next(0, Answers.Count)];
         }
 
         public readonly static List<string> Answers = new List<string>

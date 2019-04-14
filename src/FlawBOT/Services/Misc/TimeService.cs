@@ -1,4 +1,5 @@
-﻿using FlawBOT.Models;
+﻿using FlawBOT.Common;
+using FlawBOT.Models;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -18,7 +19,7 @@ namespace FlawBOT.Services
             {
                 http.DefaultRequestHeaders.Clear();
                 var service = new BotServices();
-                var token = GlobalVariables.config.GoogleToken;
+                var token = SharedData.Tokens.GoogleToken;
                 var result = await http.GetStringAsync(geocode_url + query.Replace(" ", "") + $"&key={token}");
                 var results = JsonConvert.DeserializeObject<TimeData>(result);
                 if (results.status != "OK")

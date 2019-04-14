@@ -28,7 +28,7 @@ namespace FlawBOT.Modules.Search
             {
                 var service = new YoutubeService();
                 var output = await service.GetEmbeddedResults(query, 5, "channel");
-                await ctx.RespondAsync($"Search results for {Formatter.Bold(query)}", embed: output);
+                await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: output);
             }
         }
 
@@ -48,7 +48,7 @@ namespace FlawBOT.Modules.Search
             {
                 var service = new YoutubeService();
                 var output = await service.GetEmbeddedResults(query, 5, "playlist");
-                await ctx.RespondAsync($"Search results for {Formatter.Bold(query)}", embed: output);
+                await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: output);
             }
         }
 
@@ -88,7 +88,7 @@ namespace FlawBOT.Modules.Search
             {
                 var service = new YoutubeService();
                 var output = await service.GetEmbeddedResults(query, 5, "video");
-                await ctx.RespondAsync($"Search results for {Formatter.Bold(query)}", embed: output);
+                await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: output);
             }
         }
 

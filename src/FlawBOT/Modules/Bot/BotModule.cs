@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Services;
 using System;
@@ -15,22 +16,6 @@ namespace FlawBOT.Modules.Bot
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class BotModule : BaseCommandModule
     {
-        #region COMMAND_HELLO
-
-        [Command("hello")]
-        [Aliases("hi", "howdy")]
-        [Description("Say hello to another server user")]
-        public async Task Greet(CommandContext ctx,
-            [Description("User to say hello to")] [RemainingText] DiscordMember member)
-        {
-            if (member == null)
-                await ctx.RespondAsync($":wave: Hello, {ctx.User.Mention}!");
-            else
-                await ctx.RespondAsync($":wave: Hello, {member.Mention} from {ctx.User.Mention}!");
-        }
-
-        #endregion COMMAND_HELLO
-
         #region COMMAND_INFO
 
         [Command("info")]
@@ -38,18 +23,17 @@ namespace FlawBOT.Modules.Bot
         [Description("Retrieve FlawBOT information")]
         public async Task BotInfo(CommandContext ctx)
         {
-            var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
+            var uptime = DateTime.Now - SharedData.ProcessStarted;
             var output = new DiscordEmbedBuilder()
-                .WithTitle("FlawBOT")
-                .WithDescription("A multipurpose Discord bot created using [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
-                .AddField("FlawBOT Version", GlobalVariables.Version, true)
-                .AddField("DSharpPlus Version", ctx.Client.VersionString, true)
-                .AddField("Uptime", $"{(int)uptime.TotalDays:00}:{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
-                .AddField("Ping", $"{ctx.Client.Ping}ms", true)
-                .AddField("Links", "[Commands](https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing) **|** [Invite](https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot) **|** [GitHub](https://github.com/criticalflaw/flawbot)")
+                .WithTitle(SharedData.Name)
+                .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
+                .AddField(":robot: Version", SharedData.Version, true)
+                .AddField(":link: Links", $"[Commands]({SharedData.CommandsList}) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})", true)
+                .AddField(":ping_pong: Ping", $"{ctx.Client.Ping}ms", true)
+                .AddField(":clock1: Uptime", $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
-                .WithFooter("Thank you for using FlawBOT!")
-                .WithUrl("https://github.com/criticalflaw/flawbot")
+                .WithFooter("Thank you for using " + SharedData.Name)
+                .WithUrl(SharedData.GitHubLink)
                 .WithColor(DiscordColor.Aquamarine);
             await ctx.RespondAsync(embed: output.Build());
         }
@@ -63,13 +47,13 @@ namespace FlawBOT.Modules.Bot
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task LeaveAsync(CommandContext ctx)
         {
-            await BotServices.SendEmbedAsync(ctx, "Are you sure you want FlawBOT to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
+            await BotServices.SendEmbedAsync(ctx, $"Are you sure you want {SharedData.Name} to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
             if (interactivity == null)
-                await BotServices.SendEmbedAsync(ctx, "Request cancelled...");
+                await BotServices.SendEmbedAsync(ctx, "Request timed out...");
             else
             {
-                await BotServices.SendEmbedAsync(ctx, "Thank you for using FlawBOT...");
+                await BotServices.SendEmbedAsync(ctx, "Thank you for using " + SharedData.Name);
                 await ctx.Guild.LeaveAsync();
             }
         }
@@ -100,21 +84,20 @@ namespace FlawBOT.Modules.Bot
                 await ctx.RespondAsync("Please provide more information on the issue (50 characters minimum).");
             else
             {
-                var prompt = await ctx.RespondAsync("The following information will be sent to the developer for investigation: **User ID**, **Server ID**, **Server Name** and **Server Owner Name**.\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
-                var input = await ctx.Client.GetInteractivity().WaitForMessageAsync(x => x.Author.Id == ctx.User.Id && x.Channel.Id == ctx.Channel.Id && x.Content == "yes", TimeSpan.FromSeconds(10));
-                if (input == null)
-                    await ctx.RespondAsync("Timed Out! Your report has **NOT** been submitted.");
+                await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be cancelled.");
+                var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+                if (interactivity == null)
+                    await BotServices.SendEmbedAsync(ctx, "Request timed out...");
                 else
                 {
-                    await prompt.DeleteAsync();
-                    await input.Message.DeleteAsync();
                     var dm = await ctx.Member.CreateDmChannelAsync();
                     var output = new DiscordEmbedBuilder()
-                        .WithAuthor($"{ctx.User.Username}#{ctx.User.Discriminator}", icon_url: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
+                        .WithAuthor(ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, icon_url: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
                         .AddField("Issue", report)
-                        .AddField("Server", $"{ctx.Guild.Name} (ID: {ctx.Guild.Id})")
-                        .AddField("Owner", $"{ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}")
-                        .AddField("Confirm", "[Click here to add this issue to GitHub](https://github.com/criticalflaw/flawbot/issues/new)")
+                        .AddField("Sent By", ctx.User.Username + "#" + ctx.User.Discriminator)
+                        .AddField("Server", ctx.Guild.Name + $" (ID: {ctx.Guild.Id})")
+                        .AddField("Owner", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator)
+                        .AddField("Confirm", $"[Click here to add this issue to GitHub]({SharedData.GitHubLink}/issues/new)")
                         .WithColor(DiscordColor.Turquoise);
                     await dm.SendMessageAsync(embed: output.Build());
                     await BotServices.SendEmbedAsync(ctx, "Thank You! Your report has been submitted.", EmbedType.Good);
@@ -145,8 +128,8 @@ namespace FlawBOT.Modules.Bot
         [Description("Retrieve the FlawBOT uptime")]
         public async Task Uptime(CommandContext ctx)
         {
-            var uptime = DateTime.Now - GlobalVariables.ProcessStarted;
-            await BotServices.SendEmbedAsync(ctx, $":clock1: FlawBOT has been online for {(int)uptime.TotalDays:00} days ({uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00})");
+            var uptime = DateTime.Now - SharedData.ProcessStarted;
+            await BotServices.SendEmbedAsync(ctx, ":clock1: " + SharedData.Name + $" has been online for {(int)uptime.TotalDays:00} days ({uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00})");
         }
 
         #endregion COMMAND_UPTIME

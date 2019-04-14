@@ -18,7 +18,7 @@ namespace FlawBOT.Modules.Search
         public async Task Wikipedia(CommandContext ctx,
             [Description("Query to search on Wikipedia")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = WikipediaService.GetWikipediaDataAsync(query).Result.Query.Pages[0];
             if (results.Missing)
                 await BotServices.SendEmbedAsync(ctx, "Wikipedia page not found!", EmbedType.Missing);

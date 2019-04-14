@@ -8,6 +8,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Server
@@ -16,7 +17,7 @@ namespace FlawBOT.Modules.Server
     [Aliases("role", "rl")]
     [Description("Commands for controlling server roles")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
-    public class UserRolesModule : BaseCommandModule
+    public class RolesModule : BaseCommandModule
     {
         #region COMMAND_COLOR
 
@@ -28,11 +29,17 @@ namespace FlawBOT.Modules.Server
             [Description("HEX color code to set for the role")] DiscordColor color,
             [Description("Server role to recolor")] [RemainingText] DiscordRole role)
         {
-            await role.UpdateAsync(color: color).ConfigureAwait(false);
-            var output = new DiscordEmbedBuilder()
-                .WithTitle($"Successfully set the color for the role {Formatter.Bold(role.Name)} to {Formatter.InlineCode(role.Color.ToString())}")
-                .WithColor(color);
-            await ctx.RespondAsync(embed: output.Build());
+            var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
+            if (regex.Success)
+            {
+                await role.UpdateAsync(color: color).ConfigureAwait(false);
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle("Successfully set the color for the role " + Formatter.Bold(role.Name) + " to " + Formatter.InlineCode(role.Color.ToString()))
+                    .WithColor(color);
+                await ctx.RespondAsync(embed: output.Build());
+            }
+            else
+                await BotServices.SendEmbedAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B", EmbedType.Warning);
         }
 
         #endregion COMMAND_COLOR
@@ -44,14 +51,14 @@ namespace FlawBOT.Modules.Server
         [Description("Create a server role")]
         [RequirePermissions(Permissions.ManageRoles)]
         public async Task CreateRole(CommandContext ctx,
-            [Description("New role name")] [RemainingText] string role)
+            [Description("New role name")] [RemainingText] string role = "")
         {
             if (string.IsNullOrWhiteSpace(role))
                 await BotServices.SendEmbedAsync(ctx, "Role name cannot be blank!", EmbedType.Warning);
             else
             {
                 await ctx.Guild.CreateRoleAsync(role);
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role}** has been **created**", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, "Successfully created the server role " + Formatter.Bold(role), EmbedType.Good);
             }
         }
 
@@ -71,7 +78,7 @@ namespace FlawBOT.Modules.Server
             else
             {
                 await role.DeleteAsync();
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** has been **removed**", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, "Successfully removed the server role " + Formatter.Bold(role.Name), EmbedType.Good);
             }
         }
 
@@ -129,9 +136,9 @@ namespace FlawBOT.Modules.Server
                     }
 
                 if (usersList.Length == 0)
-                    await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** has no members");
+                    await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " has no members");
                 else
-                    await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** has **{userCount}** member(s): {usersList}");
+                    await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + $" has **{userCount}** member(s): {usersList}");
             }
         }
 
@@ -146,16 +153,15 @@ namespace FlawBOT.Modules.Server
             [Description("Server role to toggle")] [RemainingText] DiscordRole role)
         {
             if (role == null) return;
-
             if (role.IsMentionable)
             {
                 await role.UpdateAsync(mentionable: false);
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** is now **not-mentionable**");
+                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **not-mentionable**");
             }
             else
             {
                 await role.UpdateAsync(mentionable: true);
-                await BotServices.SendEmbedAsync(ctx, $"Role **{role.Name}** is now **mentionable**");
+                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **mentionable**");
             }
         }
 
@@ -170,12 +176,11 @@ namespace FlawBOT.Modules.Server
             [Description("Server user to get revoked")] DiscordMember member,
             [Description("Server role to revoke from user")] [RemainingText] DiscordRole role)
         {
-            member = member ?? ctx.Member;
-
             if (role != null)
             {
+                member = member ?? ctx.Member;
                 await member.RevokeRoleAsync(role);
-                await BotServices.SendEmbedAsync(ctx, member.DisplayName + $" has been revoked the role **{role.Name}**", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(member.DisplayName) + " has been removed from the role " + Formatter.Bold(role.Name), EmbedType.Good);
             }
         }
 
@@ -194,7 +199,7 @@ namespace FlawBOT.Modules.Server
             else
             {
                 await member.ReplaceRolesAsync(Enumerable.Empty<DiscordRole>()).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, "Removed all roles from " + member.DisplayName, EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, "Removed all roles from " + Formatter.Bold(member.DisplayName), EmbedType.Good);
             }
         }
 
@@ -212,7 +217,7 @@ namespace FlawBOT.Modules.Server
         {
             member = member ?? ctx.Member;
             await member.GrantRoleAsync(role);
-            await BotServices.SendEmbedAsync(ctx, member.DisplayName + $" been granted the role **{role.Name}**", EmbedType.Good);
+            await BotServices.SendEmbedAsync(ctx, member.DisplayName + " been granted the role " + Formatter.Bold(role.Name), EmbedType.Good);
         }
 
         #endregion COMMAND_SETROLE
@@ -231,12 +236,12 @@ namespace FlawBOT.Modules.Server
             if (role.IsHoisted)
             {
                 await role.UpdateAsync(hoist: false);
-                await BotServices.SendEmbedAsync(ctx, $"Role {role.Name} is now **hidden**");
+                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **hidden**");
             }
             else
             {
                 await role.UpdateAsync(hoist: true);
-                await BotServices.SendEmbedAsync(ctx, $"Role {role.Name} is now **displayed**");
+                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **displayed**");
             }
         }
 

@@ -43,7 +43,7 @@ namespace FlawBOT.Modules.Search
         public async Task Weather(CommandContext ctx,
             [Description("Location to retrieve weather data from")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = await WeatherService.GetWeatherDataAsync(query);
             if (results.cod == 404)
                 await BotServices.SendEmbedAsync(ctx, "Location not found!", EmbedType.Missing);
@@ -56,7 +56,6 @@ namespace FlawBOT.Modules.Search
                     .AddField("Conditions", string.Join(", ", results.weather.Select(w => w.main)), true)
                     .AddField("Humidity", $"{results.main.humidity}%", true)
                     .AddField("Wind Speed", $"{results.wind.speed}m/s", true)
-                    //.AddField("Temperature (Min/Max)", $"{results.main.tempMin:F1}°C - {results.main.tempMax:F1}°C\n{format(results.main.tempMin):F1}°F - {format(results.main.tempMax):F1}°F", true)
                     .WithUrl("https://openweathermap.org/city/" + results.id)
                     .WithColor(DiscordColor.Cyan);
                 await ctx.RespondAsync(embed: output.Build());

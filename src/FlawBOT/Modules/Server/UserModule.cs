@@ -27,9 +27,9 @@ namespace FlawBOT.Modules.Server
         {
             member = member ?? ctx.Member;
             var output = new DiscordEmbedBuilder()
-                .WithTitle($"@{member.DisplayName}'s avatar...")
+                .WithDescription(member.Mention + "'s avatar...")
                 .WithImageUrl(member.AvatarUrl)
-                .WithUrl($"https://images.google.com/searchbyimage?image_url={member.AvatarUrl}")
+                .WithUrl("https://images.google.com/searchbyimage?image_url=" + member.AvatarUrl)
                 .WithColor(DiscordColor.Lilac);
             await ctx.RespondAsync(embed: output.Build());
         }
@@ -51,7 +51,7 @@ namespace FlawBOT.Modules.Server
             {
                 var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
                 var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await ctx.Guild.BanMemberAsync(member, 7, $"{ustr}: {rstr}");
+                await ctx.Guild.BanMemberAsync(member, 7, ustr + ": " + rstr);
                 await BotServices.SendEmbedAsync(ctx, $"**Banned** user {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\n**Reason:** {rstr}\n**Banned by: **{ctx.Member.DisplayName}", EmbedType.Good);
             }
         }
@@ -177,12 +177,13 @@ namespace FlawBOT.Modules.Server
         [RequireUserPermissions(Permissions.ChangeNickname)]
         public async Task SetUserName(CommandContext ctx,
             [Description("Server user to nickname")] DiscordMember member,
-            [Description("The new nickname")] [RemainingText] string name)
+            [Description("The new nickname")] [RemainingText] string name = null)
         {
             member = member ?? ctx.Member;
             var nickname = member.DisplayName;
             await member.ModifyAsync(usr => usr.Nickname = name);
-            await BotServices.SendEmbedAsync(ctx, $"{nickname}'s nickname has been changed to **{name}**", EmbedType.Good);
+            if (!string.IsNullOrWhiteSpace(name))
+                await BotServices.SendEmbedAsync(ctx, $"{nickname}'s nickname has been changed to **{name}**", EmbedType.Good);
         }
 
         #endregion COMMAND_NICKNAME
@@ -193,12 +194,12 @@ namespace FlawBOT.Modules.Server
         [Aliases("prm")]
         [Description("Retrieve server user's permissions")]
         public async Task ListServerPermissions(CommandContext ctx,
-            [Description("Server user whose permissions to retrieve")] DiscordMember member,
+            [Description("Server user whose permissions to retrieve")] DiscordMember member = null,
             [Description("Server channel")] DiscordChannel channel = null)
         {
             member = member ?? ctx.Member;
             channel = channel ?? ctx.Channel;
-            var perms = $"{Formatter.Bold(member.DisplayName)} cannot access channel {Formatter.Bold(channel.Name)}.";
+            var perms = Formatter.Bold(member.DisplayName) + " cannot access channel " + Formatter.Bold(channel.Name);
             if (member.PermissionsIn(channel).HasPermission(Permissions.AccessChannels))
                 perms = member.PermissionsIn(channel).ToPermissionString();
             var output = new DiscordEmbedBuilder()

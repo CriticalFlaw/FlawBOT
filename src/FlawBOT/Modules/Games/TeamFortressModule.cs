@@ -8,6 +8,7 @@ using FlawBOT.Services.Games;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -42,24 +43,30 @@ namespace FlawBOT.Modules.Games
         public async Task TF2Map(CommandContext ctx,
             [Description("Normalized map name, like pl_upward")] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
-            var results = await TeamFortressService.GetMapStatsAsync(query);
+            if (!BotServices.CheckUserInput(query)) return;
+            var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant());
             if (results.normalized_map_name == null)
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.normalized_map_name)
-                    .AddField("Official", results.official_map ? "YES" : "NO")
-                    .AddField("Avg. Players", results.alltime_avg_players)
-                    .AddField("First Seen", results.first_seen.ToString())
-                    .AddField("Highest Player Count", results.highest_players.ToString())
-                    .AddField("Highest Server Count", results.highest_servers.ToString())
+                    .AddField("Official", results.official_map ? "YES" : "NO", true)
+                    .AddField("Avg. Players", results.alltime_avg_players ?? "Unknown", true)
+                    .AddField("Highest Player Count", results.highest_players.ToString() ?? "Unknown", true)
+                    .AddField("Highest Server Count", results.highest_servers.ToString() ?? "Unknown", true)
                     .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
                     .WithImageUrl(results.thumbnail)
                     .WithUrl("https://wiki.teamfortress.com/wiki/" + results.normalized_map_name)
                     .WithColor(new DiscordColor("#E7B53B"));
                 if (results.related_maps.Count > 0) output.AddField("Related Map", results.related_maps[0]);
+
+                var related_maps = new StringBuilder();
+                foreach (var map in results.related_maps.Take(5))
+                    related_maps.Append(map + "\n");
+                if (related_maps.Length > 0)
+                    output.AddField("Related map(s)", related_maps.ToString(), true);
+
                 await ctx.RespondAsync(embed: output.Build());
             }
         }
@@ -94,7 +101,7 @@ namespace FlawBOT.Modules.Games
         public async Task TF2Servers(CommandContext ctx,
             [Description("Name of the gamemode, like payload")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-'));
             if (results.Count <= 0)
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
@@ -105,26 +112,25 @@ namespace FlawBOT.Modules.Games
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(server.name)
                         .WithDescription("steam://connect/" + server.ip + ":" + server.port)
-                        //.AddField("Reachable", server.reachable ? "YES" : "NO", true)
-                        //.AddField("Provider", server.provider ?? "Unknown", true)
                         .AddField("Secure", server.valve_secure ? "YES" : "NO", true)
-                        .AddField("Current Map", server.map_name ?? "Unknown", true)
-                        //.AddField("Next Map", server.map_name_next ?? "Unknown", true)
-                        .AddField("Max Players", server.max_players.ToString() ?? "Unknown", true)
                         //.AddField("Password", server.has_password ? "YES" : "NO", true)
+                        .AddField("Max Players", (server.players.ToString() ?? "Unknown") + "/" + (server.max_players.ToString() ?? "Unknown"), true)
+                        .AddField("Current Map", server.map_name ?? "Unknown", true)
+                        .AddField("Next Map", server.map_name_next ?? "Unknown", true)
+                        .AddField("Provider", server.provider ?? "Unknown", true)
                         .AddField("Roll the Dice", server.has_rtd ? "YES" : "NO", true)
                         //.AddField("Random Crits", server.has_randomcrits.ToString() ?? "Unknown", true)
                         .AddField("Respawn Timer", server.has_norespawntime ? "YES" : "NO", true)
                         .AddField("All Talk", server.has_alltalk ? "YES" : "NO", true)
                         .WithThumbnailUrl("https://teamwork.tf" + server.map_name_thumbnail)
-                        .WithFooter("Type next for the next server")
+                        .WithFooter("Type next in the next 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
                     if (interactivity == null) break;
-                    await interactivity.Message.DeleteAsync();
-                    await message.DeleteAsync();
+                    await BotServices.RemoveMessage(interactivity.Message);
+                    await BotServices.RemoveMessage(message);
                 }
             }
         }
@@ -146,13 +152,13 @@ namespace FlawBOT.Modules.Games
                 .WithThumbnailUrl(results.ImageUrl)
                 .WithUrl("https://wiki.teamfortress.com/wiki/" + wikiLink)
                 .WithColor(DiscordColor.Orange);
-            if (results.ItemDescription != null)
+            if (!string.IsNullOrWhiteSpace(results.ItemDescription))
                 output.WithDescription(results.ItemDescription);
-            if (results.ItemSlot != null)
+            if (!string.IsNullOrWhiteSpace(results.ItemSlot))
                 output.AddField("Item Slot:", textInfo.ToTitleCase(results.ItemSlot), true);
-            if (classes != null)
+            if (!string.IsNullOrWhiteSpace(classes))
                 output.AddField("Used by:", textInfo.ToTitleCase(classes), true);
-            if (results.ModelPlayer != null)
+            if (!string.IsNullOrWhiteSpace(results.ModelPlayer))
                 await ctx.RespondAsync(embed: output.Build());
         }
 
@@ -161,16 +167,16 @@ namespace FlawBOT.Modules.Games
         public async Task TF2Wiki(CommandContext ctx,
             [Description("Search query to take to the TF2 wiki")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = TeamFortressService.GetWikiPageAsync(query).Result.Query.Pages[0];
             if (results.Missing || results == null)
                 await BotServices.SendEmbedAsync(ctx, "TF2Wiki page not found!", EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()
-                .WithTitle(results.Title)
-                .WithUrl(results.FullUrl)
-                .WithColor(DiscordColor.Orange); ;
+                    .WithTitle(results.Title)
+                    .WithUrl(results.FullUrl)
+                    .WithColor(DiscordColor.Orange); ;
                 await ctx.RespondAsync(embed: output.Build());
             }
         }

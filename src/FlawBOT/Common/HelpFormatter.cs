@@ -19,7 +19,7 @@ namespace FlawBOT.Common
         {
             output = new DiscordEmbedBuilder()
                 .WithColor(DiscordColor.Turquoise)
-                .WithUrl("https://docs.google.com/spreadsheets/d/15c0Q7Cm07wBRNeSFwkagwDOe6zk9rVMvlM7H_Y7nGUs/edit?usp=sharing");
+                .WithUrl(SharedData.CommandsList);
         }
 
         public override CommandHelpMessage Build()
@@ -46,13 +46,13 @@ namespace FlawBOT.Common
                     var ab = new StringBuilder();
                     foreach (var arg in overload.Arguments)
                     {
-                        if (arg.IsOptional)
-                            ab.Append("(optional) ");
                         ab.Append(Formatter.InlineCode($"[{CommandsNext.GetUserFriendlyTypeName(arg.Type)}]"));
                         ab.Append(" ");
                         ab.Append(string.IsNullOrWhiteSpace(arg.Description) ? "No description provided." : arg.Description);
                         if (arg.IsOptional)
                             ab.Append(" (def: ").Append(Formatter.InlineCode(arg.DefaultValue is null ? "None" : arg.DefaultValue.ToString())).Append(")");
+                        if (arg.IsOptional)
+                            ab.Append(" (optional)");
                         ab.AppendLine();
                     }
                     string args = ab.ToString();

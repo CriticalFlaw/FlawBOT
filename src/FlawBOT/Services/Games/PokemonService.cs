@@ -1,4 +1,5 @@
-﻿using FlawBOT.Models;
+﻿using FlawBOT.Common;
+using FlawBOT.Models;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -21,16 +22,16 @@ namespace FlawBOT.Services.Games
         public static string GetRandomPokemonAsync()
         {
             var random = new Random();
-            return GlobalVariables.PokemonList[random.Next(0, GlobalVariables.PokemonList.Count)];
+            return SharedData.PokemonList[random.Next(0, SharedData.PokemonList.Count)];
         }
 
-        public static async Task GetPokemonDataAsync()
+        public static async Task UpdatePokemonList()
         {
             var results = await http.GetStringAsync(poke_url);
-            GlobalVariables.PokemonList.Clear();
+            SharedData.PokemonList.Clear();
             var list = JsonConvert.DeserializeObject<PokemonData>(results);
             foreach (var pokemon in list.results)
-                GlobalVariables.PokemonList.Add(pokemon.name);
+                SharedData.PokemonList.Add(pokemon.name);
         }
     }
 }

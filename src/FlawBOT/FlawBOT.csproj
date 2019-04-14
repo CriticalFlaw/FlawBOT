@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BitlyAPI" Version="1.0.3" />
+    <PackageReference Include="BackpackTfApi" Version="1.0.3" />
     <PackageReference Include="DSharpPlus" Version="4.0.0-beta-00431" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-beta-00431" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-beta-00431" />
@@ -33,11 +33,15 @@
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />
-    <PackageReference Include="Overwatch.Net" Version="4.2.0" />
-    <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
     <PackageReference Include="SteamWebAPI2" Version="4.0.8" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="TwitchLib.Api" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PokemonTcgSdk">
+      <HintPath>Resources\PokemonTcgSdk.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

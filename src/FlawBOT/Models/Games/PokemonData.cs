@@ -17,15 +17,6 @@ namespace FlawBOT.Models
 
     public class PokemonData
     {
-        [JsonProperty("count")]
-        public int count { get; set; }
-
-        [JsonProperty("next")]
-        public string next { get; set; }
-
-        [JsonProperty("previous")]
-        public object previous { get; set; }
-
         [JsonProperty("results")]
         public List<Result> results { get; set; }
     }

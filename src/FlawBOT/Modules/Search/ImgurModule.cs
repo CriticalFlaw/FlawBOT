@@ -1,7 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using FlawBOT.Services;
+using FlawBOT.Common;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models.Impl;
@@ -21,30 +20,25 @@ namespace FlawBOT.Modules.Search
         public async Task Imgur(CommandContext ctx,
             [Description("Search query to pass to Imgur")] [RemainingText] string query)
         {
-            var rnd = new Random();
-            var imgur = new ImgurClient(GlobalVariables.config.ImgurToken);
+            var random = new Random();
+            var imgur = new ImgurClient(SharedData.Tokens.ImgurToken);
             var endpoint = new GalleryEndpoint(imgur);
             var gallery = string.IsNullOrWhiteSpace(query) ? (await endpoint.GetRandomGalleryAsync()).ToList() : (await endpoint.SearchGalleryAsync(query)).ToList();
-            var img = gallery.Any() ? gallery[rnd.Next(0, gallery.Count)] : null;
-            var output = new DiscordEmbedBuilder();
+            var img = gallery.Any() ? gallery[random.Next(0, gallery.Count)] : null;
             switch (img)
             {
                 case GalleryAlbum _:
-                    output.WithImageUrl(((GalleryAlbum)img).Link);
-                    output.WithColor(new DiscordColor("#85BF25"));
+                    await ctx.RespondAsync(((GalleryAlbum)img).Link);
                     break;
 
                 case GalleryImage _:
-                    output.WithImageUrl(((GalleryImage)img).Link);
-                    output.WithColor(new DiscordColor("#85BF25"));
+                    await ctx.RespondAsync(((GalleryImage)img).Link);
                     break;
 
                 default:
-                    output.WithTitle(":mag: No results found!");
-                    output.WithColor(DiscordColor.Yellow);
+                    await ctx.RespondAsync(":mag: No results found!");
                     break;
             }
-            await ctx.RespondAsync(embed: output.Build());
         }
 
         #endregion COMMAND_IMGUR

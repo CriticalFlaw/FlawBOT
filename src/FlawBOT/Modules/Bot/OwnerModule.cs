@@ -1,11 +1,11 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
+using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
-using System;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Bot
@@ -27,13 +27,13 @@ namespace FlawBOT.Modules.Bot
             if (string.IsNullOrWhiteSpace(activity))
             {
                 await ctx.Client.UpdateStatusAsync(null);
-                await BotServices.SendEmbedAsync(ctx, "FlawBOT activity has been changed to **Normal**");
+                await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to " + Formatter.Bold("Normal"));
             }
             else
             {
-                var game = new DiscordActivity { Name = activity };
+                var game = new DiscordActivity(activity);
                 await ctx.Client.UpdateStatusAsync(game);
-                await BotServices.SendEmbedAsync(ctx, $"FlawBOT activity has been changed to **Playing {game.Name}**", EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to " + Formatter.Bold("Playing " + game.Name), EmbedType.Good);
             }
         }
 
@@ -49,37 +49,12 @@ namespace FlawBOT.Modules.Bot
             [Description("Avatar URL. Must be in jpg, png or img format.")] string query)
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;
-            try
-            {
-                await ctx.Client.UpdateCurrentUserAsync(avatar: stream);
-                await BotServices.SendEmbedAsync(ctx, "FlawBOT avatar has been updated!", EmbedType.Good);
-            }
-            catch
-            {
-                await BotServices.SendEmbedAsync(ctx, "FlawBOT avatar has not been updated!", EmbedType.Error);
-            }
+            if (stream.Length <= 0) return;
+            await ctx.Client.UpdateCurrentUserAsync(avatar: stream);
+            await BotServices.SendEmbedAsync(ctx, SharedData.Name + " avatar has been updated!", EmbedType.Good);
         }
 
         #endregion COMMAND_AVATAR
-
-        #region COMMAND_SHUTDOWN
-
-        [RequireOwner]
-        [Command("shutdown"), Hidden]
-        [Aliases("off", "exit")]
-        [Description("Shutdown the FlawBOT client")]
-        public async Task Shutdown(CommandContext ctx)
-        {
-            await BotServices.SendEmbedAsync(ctx, "Are you sure you want shutdown FlawBOT?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity != null)
-            {
-                await BotServices.SendEmbedAsync(ctx, "Shutting down FlawBOT...");
-                await Task.Delay(0).ConfigureAwait(false);
-            }
-        }
-
-        #endregion COMMAND_SHUTDOWN
 
         #region COMMAND_STATUS
 
@@ -96,28 +71,28 @@ namespace FlawBOT.Modules.Bot
                 case "OFF":
                 case "OFFLINE":
                     await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Offline);
-                    await BotServices.SendEmbedAsync(ctx, "FlawBOT status has been changed to **Offline**");
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to **Offline**");
                     break;
 
                 case "INVISIBLE":
                     await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Invisible);
-                    await BotServices.SendEmbedAsync(ctx, "FlawBOT status has been changed to **Invisible**");
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to **Invisible**");
                     break;
 
                 case "IDLE":
                     await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Idle);
-                    await BotServices.SendEmbedAsync(ctx, "FlawBOT status has been changed to **Idle**", EmbedType.Warning);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to **Idle**", EmbedType.Warning);
                     break;
 
                 case "DND":
                 case "DO NOT DISTURB":
                     await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb);
-                    await BotServices.SendEmbedAsync(ctx, "FlawBOT status has been changed to **Do Not Disturb**", EmbedType.Error);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to **Do Not Disturb**", EmbedType.Error);
                     break;
 
                 default:
                     await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Online);
-                    await BotServices.SendEmbedAsync(ctx, "FlawBOT status has been changed to **Online**", EmbedType.Good);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to **Online**", EmbedType.Good);
                     break;
             }
         }
@@ -133,9 +108,9 @@ namespace FlawBOT.Modules.Bot
         public async Task Update(CommandContext ctx)
         {
             var message = await ctx.RespondAsync("Starting update...");
-            await BotServices.UpdateSteamAsync();
-            await PokemonService.GetPokemonDataAsync();
-            await message.ModifyAsync("Starting update...Done!");
+            await BotServices.UpdateSteamList();
+            await PokemonService.UpdatePokemonList();
+            await message.ModifyAsync("Starting update...done!");
         }
 
         #endregion COMMAND_UPDATE

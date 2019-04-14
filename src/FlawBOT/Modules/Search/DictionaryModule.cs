@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
@@ -22,7 +23,7 @@ namespace FlawBOT.Modules.Search
         public async Task UrbanDictionary(CommandContext ctx,
             [Description("Query to pass to Urban Dictionary")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = await DictionaryService.GetDictionaryForTermAsync(query);
             if (results.result_type == "no_results")
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
@@ -31,10 +32,10 @@ namespace FlawBOT.Modules.Search
                 foreach (var definition in results.list)
                 {
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle($"Urban Dictionary definition for **{query}** by {definition.author}")
+                        .WithTitle("Urban Dictionary definition for " + Formatter.Bold(query) + (!string.IsNullOrWhiteSpace(definition.author) ? $" by {definition.author}" : ""))
                         .WithDescription(definition.definition.Length < 500 ? definition.definition : definition.definition.Take(500) + "...")
                         .WithUrl(definition.permalink)
-                        .WithFooter("Type next for the next definition")
+                        .WithFooter("Type next in the next 10 seconds the next definition")
                         .WithColor(new DiscordColor("#1F2439"));
                     if (!string.IsNullOrWhiteSpace(definition.example))
                         output.AddField("Example", definition.example);
@@ -44,8 +45,8 @@ namespace FlawBOT.Modules.Search
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
                     if (interactivity == null) break;
-                    await interactivity.Message.DeleteAsync();
-                    await message.DeleteAsync();
+                    await BotServices.RemoveMessage(interactivity.Message);
+                    await BotServices.RemoveMessage(message);
                 }
             }
         }

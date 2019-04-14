@@ -1,4 +1,5 @@
-﻿using FlawBOT.Models;
+﻿using FlawBOT.Common;
+using FlawBOT.Models;
 using Newtonsoft.Json;
 using Steam.Models.TF2;
 using SteamWebAPI2.Interfaces;
@@ -19,10 +20,10 @@ namespace FlawBOT.Services.Games
 
         public static async Task<SchemaItemModel> GetSchemaItemAsync()
         {
-            var rnd = new Random();
-            var schema = new EconItems(GlobalVariables.config.SteamToken, EconItemsAppId.TeamFortress2);
+            var random = new Random();
+            var schema = new EconItems(SharedData.Tokens.SteamToken, EconItemsAppId.TeamFortress2);
             var items = await schema.GetSchemaForTF2Async();
-            var index = rnd.Next(0, items.Data.Items.Count);
+            var index = random.Next(0, items.Data.Items.Count);
             return items.Data.Items[index];
         }
 
@@ -34,58 +35,52 @@ namespace FlawBOT.Services.Games
 
         public static async Task<List<TeamworkNews>> GetNewsOverviewAsync()
         {
-            var token = GlobalVariables.config.TeamworkToken;
+            var token = SharedData.Tokens.TeamworkToken;
             var results = await http.GetStringAsync(news_url + $"?key={token}");
             return JsonConvert.DeserializeObject<List<TeamworkNews>>(results);
         }
 
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
         {
-            switch (query.ToUpperInvariant())
-            {
-                case "AD":
-                case "ATTACK-DEFENSE":
-                    query = "attack-defend";
-                    break;
-
-                case "CAPTURE-THE-FLAG":
-                    query = "ctf";
-                    break;
-
-                case "CP":
-                    query = "control-point";
-                    break;
-
-                case "KING OF THE HILL":
-                    query = "koth";
-                    break;
-
-                case "MANN VS MACHINE":
-                    query = "mvm";
-                    break;
-
-                case "PL":
-                    query = "payload";
-                    break;
-
-                case "PLR":
-                    query = "payload-race";
-                    break;
-
-                default:
-                    break;
-            }
-
-            var token = GlobalVariables.config.TeamworkToken;
-            var results = await http.GetStringAsync(servers_url + $"/{query}/servers?key={token}");
+            var token = SharedData.Tokens.TeamworkToken;
+            var results = await http.GetStringAsync(servers_url + $"/{NormalizedGameMode(query)}/servers?key={token}");
             return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
         }
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
-            var token = GlobalVariables.config.TeamworkToken;
+            var token = SharedData.Tokens.TeamworkToken;
             var results = await http.GetStringAsync(maps_url + $"/{query}?key={token}");
             return JsonConvert.DeserializeObject<TeamworkMap>(results);
+        }
+
+        public static string NormalizedGameMode(string input)
+        {
+            switch (input.ToUpperInvariant())
+            {
+                default:
+                case "AD":
+                case "ATTACK-DEFENSE":
+                    return "attack-defend";
+
+                case "CAPTURE-THE-FLAG":
+                    return "ctf";
+
+                case "CP":
+                    return "control-point";
+
+                case "KING OF THE HILL":
+                    return "koth";
+
+                case "MANN VS MACHINE":
+                    return "mvm";
+
+                case "PL":
+                    return "payload";
+
+                case "PLR":
+                    return "payload-race";
+            }
         }
     }
 }

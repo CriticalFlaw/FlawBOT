@@ -105,7 +105,7 @@ namespace FlawBOT.Modules.Search
         public async Task RickMortyGif(CommandContext ctx,
             [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
-            var output = await SimpsonsService.GetSimpsonsGifAsync(futurama_site);
+            var output = await SimpsonsService.GetSimpsonsGifAsync(rickmorty_site);
             if (string.IsNullOrWhiteSpace(input))
                 await ctx.RespondAsync(output);
             else // Include episode information if any kind of parameter is inputted

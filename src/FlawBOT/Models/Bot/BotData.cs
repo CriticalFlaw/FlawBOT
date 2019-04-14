@@ -2,7 +2,7 @@
 
 namespace FlawBOT.Models
 {
-    public class BotConfig
+    public class TokenData
     {
         [JsonProperty("prefix")]
         public string CommandPrefix { get; private set; }
@@ -24,9 +24,6 @@ namespace FlawBOT.Models
 
         [JsonProperty("twitch")]
         public string TwitchToken { get; private set; }
-
-        [JsonProperty("bitly")]
-        public string BitlyToken { get; private set; }
 
         [JsonProperty("teamworktf")]
         public string TeamworkToken { get; private set; }

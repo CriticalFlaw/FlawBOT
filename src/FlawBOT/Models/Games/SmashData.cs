@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace FlawBOT.Models
 {
@@ -34,42 +33,12 @@ namespace FlawBOT.Models
 
         [JsonProperty("Related")]
         public Related Related { get; set; }
-
-        [JsonProperty("Links")]
-        public List<Link> Links { get; set; }
     }
 
     public class Related
     {
-        [JsonProperty("Smash4")]
-        public Smash4 Smash4 { get; set; }
-
         [JsonProperty("Ultimate")]
         public Ultimate Ultimate { get; set; }
-    }
-
-    public class Link
-    {
-        [JsonProperty("Rel")]
-        public string Rel { get; set; }
-
-        [JsonProperty("Href")]
-        public string Href { get; set; }
-    }
-
-    public class Smash4
-    {
-        [JsonProperty("Self")]
-        public string Self { get; set; }
-
-        [JsonProperty("Moves")]
-        public string Moves { get; set; }
-
-        [JsonProperty("Movements")]
-        public string Movements { get; set; }
-
-        [JsonProperty("Attributes")]
-        public string Attributes { get; set; }
     }
 
     public class Ultimate

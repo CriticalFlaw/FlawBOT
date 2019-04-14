@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Services;
 using Steam.Models.SteamCommunity;
@@ -27,27 +28,26 @@ namespace FlawBOT.Modules.Search
         public async Task SteamGame(CommandContext ctx,
             [Description("Game to find on Steam")] [RemainingText] string query = "Team Fortress 2")
         {
-            var game = GlobalVariables.SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;
+            var game = SharedData.SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;
             var check = false;
             while (check == false)
                 try
                 {
-                    var rnd = new Random();
+                    var random = new Random();
                     var store = new SteamStore();
-                    var random = GlobalVariables.SteamAppList.Keys.ToArray()[rnd.Next(0, GlobalVariables.SteamAppList.Keys.Count - 1)];
-                    var appId = (game >= 0) ? game : random;
+                    var appId = (game >= 0) ? game : SharedData.SteamAppList.Keys.ToArray()[random.Next(0, SharedData.SteamAppList.Keys.Count - 1)];
                     var app = await store.GetStoreAppDetailsAsync(appId);
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(app.Name)
                         .WithThumbnailUrl(app.HeaderImage)
-                        .WithUrl($"http://store.steampowered.com/app/{app.SteamAppId}")
-                        .WithFooter($"App ID: {app.SteamAppId}")
+                        .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId.ToString())
+                        .WithFooter("App ID: " + app.SteamAppId.ToString())
                         .WithColor(new DiscordColor("#1B2838"));
                     if (!string.IsNullOrWhiteSpace(app.DetailedDescription))
-                        output.WithDescription(Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : $"{app.DetailedDescription.Substring(0, 500)}...", "<[^>]*>", ""));
-                    if (app.Developers.Length > 0 && !string.IsNullOrWhiteSpace(app.Developers[0]))
+                        output.WithDescription(Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : app.DetailedDescription.Substring(0, 500) + "...", "<[^>]*>", ""));
+                    if (!string.IsNullOrWhiteSpace(app.Developers[0]))
                         output.AddField("Developers", app.Developers[0], true);
-                    if (app.Publishers.Length > 0 && !string.IsNullOrWhiteSpace(app.Publishers[0]))
+                    if (!string.IsNullOrWhiteSpace(app.Publishers[0]))
                         output.AddField("Publisher", app.Publishers[0], true);
                     if (!string.IsNullOrWhiteSpace(app.ReleaseDate.Date))
                         output.AddField("Release Date", app.ReleaseDate.Date, true);
@@ -75,7 +75,7 @@ namespace FlawBOT.Modules.Search
                 await BotServices.SendEmbedAsync(ctx, "SteamID or Community URL are required! Try **.steam user criticalflaw**", EmbedType.Warning);
             else
             {
-                var steam = new SteamUser(GlobalVariables.config.SteamToken);
+                var steam = new SteamUser(SharedData.Tokens.SteamToken);
                 SteamCommunityProfileModel profile = null;
                 ISteamWebResponse<PlayerSummaryModel> summary = null;
                 try
@@ -93,8 +93,7 @@ namespace FlawBOT.Modules.Search
                 {
                     if (profile != null && summary != null)
                     {
-                        var output = new DiscordEmbedBuilder()
-                            .WithTitle(summary.Data.Nickname);
+                        var output = new DiscordEmbedBuilder().WithTitle(summary.Data.Nickname);
                         if (summary.Data.ProfileVisibility == ProfileVisibility.Public)
                         {
                             output.WithThumbnailUrl(profile.AvatarFull.ToString());
@@ -109,7 +108,7 @@ namespace FlawBOT.Modules.Search
                             else
                                 output.AddField("Last seen", summary.Data.LastLoggedOffDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
                             output.AddField("VAC Banned?", profile.IsVacBanned ? "YES" : "NO", true);
-                            output.AddField("Trade Banned?", profile.TradeBanState, true);
+                            output.AddField("Trade Bans?", profile.TradeBanState, true);
                             if (profile.InGameInfo != null)
                             {
                                 output.AddField("In-Game", $"[{profile.InGameInfo.GameName}]({profile.InGameInfo.GameLink})", true);

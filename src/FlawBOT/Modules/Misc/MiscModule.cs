@@ -1,5 +1,4 @@
-﻿using BitlyAPI;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -8,6 +7,7 @@ using FlawBOT.Services;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Misc
@@ -21,7 +21,7 @@ namespace FlawBOT.Modules.Misc
         [Aliases("8b", "8ball")]
         [Description("Ask an 8-ball a question")]
         public Task EightBall(CommandContext ctx,
-            [Description("Question to ask the 8-Ball")] [RemainingText] string question)
+            [Description("Question to ask the 8-Ball")] [RemainingText] string question = "")
         {
             if (string.IsNullOrWhiteSpace(question))
                 return BotServices.SendEmbedAsync(ctx, ":8ball: The almighty 8 ball requests a question", EmbedType.Warning);
@@ -97,19 +97,18 @@ namespace FlawBOT.Modules.Misc
         public async Task GetColor(CommandContext ctx,
             [Description("HEX color code to process")] DiscordColor color)
         {
-            try
+            var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
+            if (regex.Success)
             {
                 var output = new DiscordEmbedBuilder()
                     .AddField("HEX:", $"{color.Value:X}", true)
                     .AddField("RGB:", $"{color.R} {color.G} {color.B}", true)
-                    .AddField("Decimal:", $"{color.Value}", true)
+                    .AddField("Decimal:", color.Value.ToString(), true)
                     .WithColor(color);
                 await ctx.RespondAsync(embed: output.Build());
             }
-            catch
-            {
-                await BotServices.SendEmbedAsync(ctx, "Unable to retrieve color values, try **.color #C13AD8**", EmbedType.Warning);
-            }
+            else
+                await BotServices.SendEmbedAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B", EmbedType.Warning);
         }
 
         #endregion COMMAND_COLOR
@@ -143,7 +142,7 @@ namespace FlawBOT.Modules.Misc
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":dog: Bork!")
+                    .WithTitle(":dog: Woof!")
                     .WithImageUrl(results.message)
                     .WithColor(DiscordColor.Brown);
                 await ctx.RespondAsync(embed: output.Build());
@@ -151,6 +150,22 @@ namespace FlawBOT.Modules.Misc
         }
 
         #endregion COMMAND_DOGPIC
+
+        #region COMMAND_HELLO
+
+        [Command("hello")]
+        [Aliases("hi", "howdy")]
+        [Description("Welcome another user to the server")]
+        public async Task Greet(CommandContext ctx,
+            [Description("User to say hello to")] [RemainingText] DiscordMember member)
+        {
+            if (member == null)
+                await ctx.RespondAsync($":wave: Hello, " + ctx.User.Mention);
+            else
+                await ctx.RespondAsync($":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name + ". Enjoy your stay!");
+        }
+
+        #endregion COMMAND_HELLO
 
         #region COMMAND_TTS
 
@@ -166,26 +181,5 @@ namespace FlawBOT.Modules.Misc
         }
 
         #endregion COMMAND_TTS
-
-        #region UNUSED
-
-        [Command("shorten"), Hidden]
-        [Aliases("link")]
-        [Description("Shorten the inputted URL")]
-        public async Task Shorten(CommandContext ctx, [RemainingText] string query)
-        {
-            if (!Uri.IsWellFormedUriString(query, UriKind.RelativeOrAbsolute)) // && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                await BotServices.SendEmbedAsync(ctx, "A valid URL link is required!", EmbedType.Warning);
-            else
-            {
-                //var shortenService = new ShortenService();
-                //await ctx.RespondAsync(shortenService.shortenUrl(query));
-                var shortenService = new Bitly(GlobalVariables.config.BitlyToken);
-                var response = shortenService.Shorten(query);
-                await ctx.RespondAsync(response.data.custom_short_domain);
-            }
-        }
-
-        #endregion UNUSED
     }
 }

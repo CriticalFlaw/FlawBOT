@@ -20,7 +20,7 @@ namespace FlawBOT.Modules.Search
         public async Task OMDB(CommandContext ctx,
             [Description("Movie or TV show to find on IMDB")] [RemainingText] string query)
         {
-            if (!BotServices.CheckUserInput(ctx, query).Result) return;
+            if (!BotServices.CheckUserInput(query)) return;
             var results = IMDBService.GetMovieDataAsync(query).Result;
             if (results.Response == "False")
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
@@ -32,12 +32,12 @@ namespace FlawBOT.Modules.Search
                     .AddField("Released", results.Released, true)
                     .AddField("Runtime", results.Runtime, true)
                     .AddField("Genre", results.Genre, true)
+                    .AddField("Rating", results.Rated, true)
                     .AddField("Country", results.Country, true)
                     .AddField("Box Office", results.BoxOffice, true)
                     .AddField("Production", results.Production, true)
                     .AddField("IMDB Rating", results.IMDbRating, true)
                     .AddField("Metacritic", results.Metascore, true)
-                    .AddField("Rotten Tomatoes", results.TomatoRating, true)
                     .AddField("Director", results.Director, true)
                     .AddField("Actors", results.Actors, true)
                     .WithColor(DiscordColor.Goldenrod);
