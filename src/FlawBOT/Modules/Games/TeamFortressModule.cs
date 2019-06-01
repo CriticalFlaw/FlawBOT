@@ -49,10 +49,11 @@ namespace FlawBOT.Modules.Games
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
+                Double.TryParse(results.alltime_avg_players, out var avg_players);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.normalized_map_name)
                     .AddField("Official", results.official_map ? "YES" : "NO", true)
-                    .AddField("Avg. Players", results.alltime_avg_players ?? "Unknown", true)
+                    .AddField("Avg. Players", Math.Round(avg_players, 2).ToString() ?? "Unknown", true)
                     .AddField("Highest Player Count", results.highest_players.ToString() ?? "Unknown", true)
                     .AddField("Highest Server Count", results.highest_servers.ToString() ?? "Unknown", true)
                     .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
@@ -84,7 +85,9 @@ namespace FlawBOT.Modules.Games
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                var output = new DiscordEmbedBuilder { Color = new DiscordColor("#E7B53B") };
+                var output = new DiscordEmbedBuilder()
+                    .WithFooter("These are the latest new articles retrieved from teamwork.tf")
+                    .WithColor(new DiscordColor("#E7B53B"));
                 foreach (var result in results.Take(5))
                     output.AddField(result.title, result.link);
                 await ctx.RespondAsync(embed: output.Build());
@@ -102,12 +105,13 @@ namespace FlawBOT.Modules.Games
             [Description("Name of the gamemode, like payload")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
+            query = TeamFortressService.NormalizedGameMode(query);
             var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-'));
             if (results.Count <= 0)
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                foreach (var server in results)
+                foreach (var server in results.Where(n => n.map_name.Contains(query)))
                 {
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(server.name)

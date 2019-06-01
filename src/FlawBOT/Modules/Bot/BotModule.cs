@@ -27,12 +27,11 @@ namespace FlawBOT.Modules.Bot
             var output = new DiscordEmbedBuilder()
                 .WithTitle(SharedData.Name)
                 .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
-                .AddField(":robot: Version", SharedData.Version, true)
-                .AddField(":link: Links", $"[Commands]({SharedData.CommandsList}) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})", true)
                 .AddField(":ping_pong: Ping", $"{ctx.Client.Ping}ms", true)
                 .AddField(":clock1: Uptime", $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                .AddField(":link: Links", $"[Commands]({SharedData.CommandsList}) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})")
                 .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
-                .WithFooter("Thank you for using " + SharedData.Name)
+                .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
                 .WithColor(DiscordColor.Aquamarine);
             await ctx.RespondAsync(embed: output.Build());
@@ -74,7 +73,7 @@ namespace FlawBOT.Modules.Bot
 
         #region COMMAND_REPORT
 
-        [Command("report")]
+        [Command("report"), Hidden]
         [Aliases("issue")]
         [Description("Send a problem report to the developer. Please do not abuse.")]
         public async Task ReportIssue(CommandContext ctx,
@@ -109,7 +108,7 @@ namespace FlawBOT.Modules.Bot
 
         #region COMMAND_SAY
 
-        [Command("say")]
+        [Command("say"), Hidden]
         [Aliases("echo")]
         [Description("Repeat a message")]
         public Task Say(CommandContext ctx,

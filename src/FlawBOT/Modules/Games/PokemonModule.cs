@@ -39,11 +39,9 @@ namespace FlawBOT.Modules.Games
                         .AddField("Artist", card.Artist, true)
                         .AddField("Rarity", card.Rarity, true)
                         .AddField("Series", card.Series, true)
-                        .WithImageUrl(card.ImageUrl)
+                        .WithImageUrl((!string.IsNullOrWhiteSpace(card.ImageUrlHiRes)) ? card.ImageUrlHiRes : card.ImageUrl)
                         .WithColor(DiscordColor.Gold)
                         .WithFooter("Type next in the next 10 seconds for the next card");
-                    if (card.ImageUrlHiRes != null)
-                        output.WithImageUrl(card.ImageUrlHiRes);
 
                     var types = new StringBuilder();
                     foreach (var type in card.Types)

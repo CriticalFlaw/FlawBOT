@@ -17,7 +17,7 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_CHANNEL
 
         [Command("channel")]
-        [Aliases("chn")]
+        [Aliases("channels", "chn")]
         [Description("Retrieve a list of YouTube channel given a query")]
         public async Task YouTubeChannel(CommandContext ctx,
             [Description("Channels to find on YouTube")] [RemainingText] string query)
@@ -37,7 +37,7 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_PLAYLIST
 
         [Command("playlist")]
-        [Aliases("list")]
+        [Aliases("playlists", "list")]
         [Description("Retrieve a list of YouTube playlists given a query")]
         public async Task YouTubePlaylist(CommandContext ctx,
             [Description("Playlist to find on YouTube")] [RemainingText] string query)
@@ -77,7 +77,7 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_VIDEO
 
         [Command("video")]
-        [Aliases("vid")]
+        [Aliases("videos", "vid")]
         [Description("Retrieve a list of YouTube videos given a query")]
         public async Task YouTubeSearch(CommandContext ctx,
             [Description("Video to find on YouTube")] [RemainingText] string query)

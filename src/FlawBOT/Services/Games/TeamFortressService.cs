@@ -43,7 +43,7 @@ namespace FlawBOT.Services.Games
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
         {
             var token = SharedData.Tokens.TeamworkToken;
-            var results = await http.GetStringAsync(servers_url + $"/{NormalizedGameMode(query)}/servers?key={token}");
+            var results = await http.GetStringAsync(servers_url + $"/{query}/servers?key={token}");
             return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
         }
 
