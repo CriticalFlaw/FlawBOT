@@ -26,10 +26,9 @@ namespace FlawBOT.Modules.Bot
             var uptime = DateTime.Now - SharedData.ProcessStarted;
             var output = new DiscordEmbedBuilder()
                 .WithTitle(SharedData.Name)
-                .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/NaamloosDT/DSharpPlus).")
-                .AddField(":ping_pong: Ping", $"{ctx.Client.Ping}ms", true)
+                .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime", $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
-                .AddField(":link: Links", $"[Commands]({SharedData.CommandsList}) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})")
+                .AddField(":link: Links", $"[Commands]({SharedData.GitHubLink}wiki) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})")
                 .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
                 .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
@@ -48,7 +47,7 @@ namespace FlawBOT.Modules.Bot
         {
             await BotServices.SendEmbedAsync(ctx, $"Are you sure you want {SharedData.Name} to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity == null)
+            if (interactivity.Result == null)
                 await BotServices.SendEmbedAsync(ctx, "Request timed out...");
             else
             {
@@ -75,7 +74,7 @@ namespace FlawBOT.Modules.Bot
 
         [Command("report"), Hidden]
         [Aliases("issue")]
-        [Description("Send a problem report to the developer. Please do not abuse.")]
+        [Description("Report a problem with FlawBOT to the developer. Please do not abuse.")]
         public async Task ReportIssue(CommandContext ctx,
             [Description("Detailed description of the issue")] [RemainingText] string report)
         {
@@ -85,13 +84,13 @@ namespace FlawBOT.Modules.Bot
             {
                 await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be cancelled.");
                 var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-                if (interactivity == null)
+                if (interactivity.Result == null)
                     await BotServices.SendEmbedAsync(ctx, "Request timed out...");
                 else
                 {
                     var dm = await ctx.Member.CreateDmChannelAsync();
                     var output = new DiscordEmbedBuilder()
-                        .WithAuthor(ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, icon_url: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
+                        .WithAuthor(ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, iconUrl: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
                         .AddField("Issue", report)
                         .AddField("Sent By", ctx.User.Username + "#" + ctx.User.Discriminator)
                         .AddField("Server", ctx.Guild.Name + $" (ID: {ctx.Guild.Id})")
@@ -110,7 +109,7 @@ namespace FlawBOT.Modules.Bot
 
         [Command("say"), Hidden]
         [Aliases("echo")]
-        [Description("Repeat a message")]
+        [Description("Make FlawBOT repeat a message")]
         public Task Say(CommandContext ctx,
             [Description("Message for the bot to repeat")] [RemainingText] string message)
         {

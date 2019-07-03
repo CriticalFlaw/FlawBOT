@@ -32,7 +32,7 @@ namespace FlawBOT.Modules.Server
             var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
             if (regex.Success)
             {
-                await role.UpdateAsync(color: color).ConfigureAwait(false);
+                await role.ModifyAsync(color: color).ConfigureAwait(false);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle("Successfully set the color for the role " + Formatter.Bold(role.Name) + " to " + Formatter.InlineCode(role.Color.ToString()))
                     .WithColor(color);
@@ -155,12 +155,12 @@ namespace FlawBOT.Modules.Server
             if (role == null) return;
             if (role.IsMentionable)
             {
-                await role.UpdateAsync(mentionable: false);
+                await role.ModifyAsync(mentionable: false);
                 await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **not-mentionable**");
             }
             else
             {
-                await role.UpdateAsync(mentionable: true);
+                await role.ModifyAsync(mentionable: true);
                 await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **mentionable**");
             }
         }
@@ -237,12 +237,12 @@ namespace FlawBOT.Modules.Server
 
             if (role.IsHoisted)
             {
-                await role.UpdateAsync(hoist: false);
+                await role.ModifyAsync(hoist: false);
                 await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **hidden**");
             }
             else
             {
-                await role.UpdateAsync(hoist: true);
+                await role.ModifyAsync(hoist: true);
                 await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **displayed**");
             }
         }

@@ -17,7 +17,7 @@ namespace FlawBOT.Services
         public static async Task SendEmbedAsync(CommandContext ctx, string message, EmbedType type = EmbedType.Default)
         {
             var prefix = "";
-            var color = SharedData.DefaultColor;
+            DiscordColor color;
             switch (type)
             {
                 case EmbedType.Good:
@@ -37,6 +37,10 @@ namespace FlawBOT.Services
                 case EmbedType.Error:
                     prefix = ":no_entry: ";
                     color = DiscordColor.Red;
+                    break;
+
+                default:
+                    color = SharedData.DefaultColor;
                     break;
             }
             var output = new DiscordEmbedBuilder()
@@ -67,7 +71,7 @@ namespace FlawBOT.Services
         {
             var stream = new MemoryStream();
             if (!Uri.TryCreate(input, UriKind.Absolute, out var uriResult) && (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
-                await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning);
+                await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 using (var client = new WebClient())
@@ -98,7 +102,25 @@ namespace FlawBOT.Services
             }
             catch
             {
-                Console.WriteLine("Error updating Steam libraries...");
+                Console.WriteLine("Error loading Steam games list...");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public static Task UpdateTF2Schema()
+        {
+            try
+            {
+                var schema = new EconItems(SharedData.Tokens.SteamToken, EconItemsAppId.TeamFortress2).GetSchemaForTF2Async().Result.Data;
+                SharedData.TF2ItemSchema.Clear();
+                foreach (var item in schema.Items)
+                    if (!string.IsNullOrWhiteSpace(item.Name))
+                        SharedData.TF2ItemSchema.Add(Convert.ToUInt32(item.DefIndex), item);
+            }
+            catch
+            {
+                Console.WriteLine("Error loading TF2 item schema...");
             }
 
             return Task.CompletedTask;

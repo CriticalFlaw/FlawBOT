@@ -18,7 +18,6 @@ namespace FlawBOT.Services
             try
             {
                 http.DefaultRequestHeaders.Clear();
-                var service = new BotServices();
                 var token = SharedData.Tokens.GoogleToken;
                 var result = await http.GetStringAsync(geocode_url + query.Replace(" ", "") + $"&key={token}");
                 var results = JsonConvert.DeserializeObject<TimeData>(result);
@@ -27,10 +26,10 @@ namespace FlawBOT.Services
                 else
                 {
                     var currentSeconds = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                    var url = timezone_url + results.results[0].geometry.location.lat + $",{results.results[0].geometry.location.lng}&timestamp={currentSeconds}&key={token}";
+                    var url = timezone_url + results.Results[0].geometry.location.lat + $",{results.Results[0].geometry.location.lng}&timestamp={currentSeconds}&key={token}";
                     var timeResource = await http.GetStringAsync(url);
-                    results.timezone = JsonConvert.DeserializeObject<TimeData.TimeZoneResult>(timeResource);
-                    results.time = DateTime.UtcNow.AddSeconds(results.timezone.dstOffset + results.timezone.rawOffset);
+                    results.Timezone = JsonConvert.DeserializeObject<TimeData.TimeZoneResult>(timeResource);
+                    results.Time = DateTime.UtcNow.AddSeconds(results.Timezone.dstOffset + results.Timezone.rawOffset);
                 }
                 return results;
             }

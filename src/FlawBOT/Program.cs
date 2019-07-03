@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Enums;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Modules.Bot;
@@ -34,7 +35,7 @@ namespace FlawBOT
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 Program app = new Program();
                 app.RunBotAsync().GetAwaiter().GetResult();
-                await Task.Delay(Timeout.Infinite);
+                await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -66,9 +67,8 @@ namespace FlawBOT
             Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
             Client.UseInteractivity(new InteractivityConfiguration
             {
-                PaginationBehavior = TimeoutBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
-                PaginationTimeout = TimeSpan.FromMinutes(5), // Default pagination timeout to 5 minutes
-                Timeout = TimeSpan.FromMinutes(2) // Default timeout for other actions to 2 minutes
+                PaginationBehaviour = PaginationBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
+                Timeout = TimeSpan.FromMinutes(2) // Default pagination timeout to 2 minutes
             });
 
             Commands = Client.UseCommandsNext(new CommandsNextConfiguration
@@ -91,6 +91,7 @@ namespace FlawBOT
             Commands.RegisterCommands<TeamFortressModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
+            Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<IMDBModule>();
@@ -101,7 +102,6 @@ namespace FlawBOT
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
             Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<RolesModule>();
             Commands.RegisterCommands<ServerModule>();
             Commands.RegisterCommands<UserModule>();

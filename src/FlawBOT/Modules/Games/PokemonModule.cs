@@ -51,8 +51,8 @@ namespace FlawBOT.Modules.Games
                     await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
-                    if (interactivity == null) break;
-                    await BotServices.RemoveMessage(interactivity.Message);
+                    if (interactivity.Result == null) break;
+                    await BotServices.RemoveMessage(interactivity.Result);
                 }
             }
         }

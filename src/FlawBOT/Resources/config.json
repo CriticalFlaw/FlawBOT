@@ -1,10 +1,15 @@
 {
-  "discord": "BOT TOKEN HERE",
   "prefix": ".",
-  "steam": "null",
+  "discord": "BOT TOKEN HERE",
   "google": "null",
+  "steam": "null",
+  "steam64": "null",
   "imgur": "null",
   "omdb": "null",
   "twitch": "null",
-  "teamworktf": "null"
+  "teamworktf": "null",
+  "backpacktf": "null",
+  "backpacktf_secret": "null",
+  "reddit": "null",
+  "reddit_secret": "null"
 }

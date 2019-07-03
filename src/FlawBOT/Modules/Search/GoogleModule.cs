@@ -28,8 +28,8 @@ namespace FlawBOT.Modules.Search
             {
                 var results = TimeService.GetTimeDataAsync(location).Result;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":clock1: Time in " + results.results[0].formatted_address)
-                    .WithDescription(Formatter.Bold(results.time.ToShortTimeString()) + " " + results.timezone.timeZoneName)
+                    .WithTitle(":clock1: Time in " + results.Results[0].formatted_address)
+                    .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.timeZoneName)
                     .WithColor(DiscordColor.Cyan);
                 await ctx.RespondAsync(embed: output.Build());
             }

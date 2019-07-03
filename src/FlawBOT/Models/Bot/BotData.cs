@@ -16,6 +16,9 @@ namespace FlawBOT.Models
         [JsonProperty("steam")]
         public string SteamToken { get; private set; }
 
+        [JsonProperty("steam64")]
+        public string SteamID { get; private set; }
+
         [JsonProperty("imgur")]
         public string ImgurToken { get; private set; }
 
@@ -27,6 +30,18 @@ namespace FlawBOT.Models
 
         [JsonProperty("teamworktf")]
         public string TeamworkToken { get; private set; }
+
+        [JsonProperty("backpacktf")]
+        public string BackpackToken { get; private set; }
+
+        [JsonProperty("backpacktf_secret")]
+        public string BackpackAccess { get; private set; }
+
+        [JsonProperty("reddit")]
+        public string RedditToken { get; private set; }
+
+        [JsonProperty("reddit_secret")]
+        public string RedditSecretToken { get; private set; }
     }
 
     public enum EmbedType

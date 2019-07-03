@@ -9,16 +9,20 @@ namespace FlawBOT.Models
     public class TimeData
     {
         [JsonProperty("results")]
-        public GeolocationModel[] results;
+        private GeolocationModel[] results;
 
         [JsonProperty("timezone")]
-        public TimeZoneResult timezone;
+        private TimeZoneResult timezone;
 
         [JsonProperty("time")]
-        public DateTime time;
+        private DateTime time;
 
         [JsonProperty("status")]
         public string status { get; set; }
+
+        public GeolocationModel[] Results { get => results; set => results = value; }
+        public TimeZoneResult Timezone { get => timezone; set => timezone = value; }
+        public DateTime Time { get => time; set => time = value; }
 
         public class GeolocationModel
         {

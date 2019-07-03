@@ -1,7 +1,8 @@
 ﻿using FlawBOT.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,10 +13,10 @@ namespace FlawBOT.Services
         public static string GetAnswer()
         {
             var random = new Random();
-            return Answers[random.Next(0, Answers.Count)];
+            return Answers.ElementAt(random.Next(Answers.Count()));
         }
 
-        public readonly static List<string> Answers = new List<string>
+        private static ImmutableArray<string> Answers = new[]
         {
             "It is certain",
             "It is decidedly so",
@@ -37,7 +38,7 @@ namespace FlawBOT.Services
             "My sources say no",
             "Outlook not so good",
             "Very doubtful"
-        };
+        }.ToImmutableArray();
     }
 
     public class DogService

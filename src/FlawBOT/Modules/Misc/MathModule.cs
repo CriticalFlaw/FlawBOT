@@ -26,8 +26,7 @@ namespace FlawBOT.Modules.Misc
                 double result = 0;
                 switch (operation)
                 {
-                    case "+":
-                    default:
+                    default:    //case "+":
                         result = num1 + num2;
                         break;
 

@@ -46,7 +46,7 @@ namespace FlawBOT.Modules.Bot
         [Aliases("setavatar")]
         [Description("Set FlawBOT's avatar")]
         public async Task SetBotAvatar(CommandContext ctx,
-            [Description("Avatar URL. Must be in jpg, png or img format.")] string query)
+            [Description("Image URL. Must be in jpg, png or img format.")] string query)
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;
             if (stream.Length <= 0) return;
@@ -109,6 +109,7 @@ namespace FlawBOT.Modules.Bot
         {
             var message = await ctx.RespondAsync("Starting update...");
             await BotServices.UpdateSteamList();
+            await BotServices.UpdateTF2Schema();
             await PokemonService.UpdatePokemonList();
             await message.ModifyAsync("Starting update...done!");
         }
