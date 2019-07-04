@@ -4,9 +4,9 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Services;
+using FlawBOT.Services.Search;
 using Steam.Models.SteamCommunity;
 using SteamWebAPI2.Interfaces;
-using SteamWebAPI2.Utilities;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -75,53 +75,39 @@ namespace FlawBOT.Modules.Search
                 await BotServices.SendEmbedAsync(ctx, "SteamID or Community URL are required! Try **.steam user criticalflaw**", EmbedType.Warning);
             else
             {
-                var steam = new SteamUser(SharedData.Tokens.SteamToken);
-                SteamCommunityProfileModel profile = null;
-                ISteamWebResponse<PlayerSummaryModel> summary = null;
-                try
+                var profile = SteamService.GetSteamUserProfileAsync(query).Result;
+                var summary = SteamService.GetSteamUserSummaryAsync(query).Result;
+
+                if (profile == null && summary == null)
+                    await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                else
                 {
-                    var decode = await steam.ResolveVanityUrlAsync(query);
-                    profile = await steam.GetCommunityProfileAsync(decode.Data).ConfigureAwait(false);
-                    summary = await steam.GetPlayerSummaryAsync(decode.Data).ConfigureAwait(false);
-                }
-                catch
-                {
-                    profile = await steam.GetCommunityProfileAsync(ulong.Parse(query)).ConfigureAwait(false);
-                    summary = await steam.GetPlayerSummaryAsync(ulong.Parse(query)).ConfigureAwait(false);
-                }
-                finally
-                {
-                    if (profile != null && summary != null)
-                    {
-                        var output = new DiscordEmbedBuilder().WithTitle(summary.Data.Nickname);
-                        if (summary.Data.ProfileVisibility == ProfileVisibility.Public)
-                        {
-                            output.WithThumbnailUrl(profile.AvatarFull.ToString());
-                            output.WithColor(new DiscordColor("#1B2838"));
-                            output.WithUrl("http://steamcommunity.com/id/" + profile.SteamID);
-                            output.WithFooter("Steam ID: " + profile.SteamID);
-                            output.AddField("Member since", summary.Data.AccountCreatedDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
-                            if (!string.IsNullOrWhiteSpace(profile.Summary))
-                                output.WithDescription(Regex.Replace(profile.Summary, "<[^>]*>", ""));
-                            if (summary.Data.UserStatus != UserStatus.Offline)
-                                output.AddField("Status", summary.Data.UserStatus.ToString(), true);
-                            else
-                                output.AddField("Last seen", summary.Data.LastLoggedOffDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
-                            output.AddField("VAC Banned?", profile.IsVacBanned ? "YES" : "NO", true);
-                            output.AddField("Trade Bans?", profile.TradeBanState, true);
-                            if (profile.InGameInfo != null)
-                            {
-                                output.AddField("In-Game", $"[{profile.InGameInfo.GameName}]({profile.InGameInfo.GameLink})", true);
-                                output.AddField("Game Server IP", profile.InGameServerIP, true);
-                                output.WithImageUrl(profile.InGameInfo.GameLogoSmall);
-                            }
-                        }
-                        else
-                            output.Description = "This profile is private...";
-                        await ctx.RespondAsync(embed: output.Build());
-                    }
+                    var output = new DiscordEmbedBuilder().WithTitle(summary.Data.Nickname);
+                    if (summary.Data.ProfileVisibility != ProfileVisibility.Public)
+                        await BotServices.SendEmbedAsync(ctx, "This profile is private...", EmbedType.Warning);
                     else
-                        await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                    {
+                        output.WithThumbnailUrl(profile.AvatarFull.ToString());
+                        output.WithColor(new DiscordColor("#1B2838"));
+                        output.WithUrl("http://steamcommunity.com/id/" + profile.SteamID);
+                        output.WithFooter("Steam ID: " + profile.SteamID);
+                        output.AddField("Member since", summary.Data.AccountCreatedDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
+                        if (!string.IsNullOrWhiteSpace(profile.Summary))
+                            output.WithDescription(Regex.Replace(profile.Summary, "<[^>]*>", ""));
+                        if (summary.Data.UserStatus != UserStatus.Offline)
+                            output.AddField("Status", summary.Data.UserStatus.ToString(), true);
+                        else
+                            output.AddField("Last seen", summary.Data.LastLoggedOffDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true);
+                        output.AddField("VAC Banned?", profile.IsVacBanned ? "YES" : "NO", true);
+                        output.AddField("Trade Bans?", profile.TradeBanState, true);
+                        if (profile.InGameInfo != null)
+                        {
+                            output.AddField("In-Game", $"[{profile.InGameInfo.GameName}]({profile.InGameInfo.GameLink})", true);
+                            output.AddField("Game Server IP", profile.InGameServerIP, true);
+                            output.WithImageUrl(profile.InGameInfo.GameLogoSmall);
+                        }
+                    }
+                    await ctx.RespondAsync(embed: output.Build());
                 }
             }
         }
