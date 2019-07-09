@@ -6,7 +6,6 @@ using FlawBOT.Models;
 using FlawBOT.Services;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -40,10 +39,9 @@ namespace FlawBOT.Modules.Misc
         [Description("Retrieve a random cat fact")]
         public async Task CatFact(CommandContext ctx)
         {
-            var http = new HttpClient();
-            var response = await http.GetStringAsync("https://catfact.ninja/fact");
+            var results = CatService.GetCatFactAsync().Result;
             var output = new DiscordEmbedBuilder()
-                .WithTitle($":cat: {JObject.Parse(response)["fact"]}")
+                .WithTitle($":cat: {JObject.Parse(results)["fact"]}")
                 .WithColor(DiscordColor.Orange);
             await ctx.RespondAsync(embed: output.Build());
         }
@@ -57,16 +55,13 @@ namespace FlawBOT.Modules.Misc
         [Description("Retrieve a random cat photo")]
         public async Task CatPic(CommandContext ctx)
         {
-            var http = new HttpClient();
-            var results = await http.GetStringAsync("http://aws.random.cat/meow").ConfigureAwait(false);
-            string url = JObject.Parse(results)["file"].ToString();
-
-            if (string.IsNullOrWhiteSpace(url))
+            var results = CatService.GetCatPhotoAsync().Result;
+            if (string.IsNullOrWhiteSpace(results))
                 await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning);
 
             var output = new DiscordEmbedBuilder()
                 .WithTitle(":cat: Meow!")
-                .WithImageUrl(url)
+                .WithImageUrl(results)
                 .WithColor(DiscordColor.Orange);
             await ctx.RespondAsync(embed: output.Build());
         }

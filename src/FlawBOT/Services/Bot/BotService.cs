@@ -3,7 +3,6 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using Newtonsoft.Json;
-using SteamWebAPI2.Interfaces;
 using System;
 using System.IO;
 using System.Net;
@@ -88,42 +87,6 @@ namespace FlawBOT.Services
         {
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
             SharedData.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
-        }
-
-        public static Task UpdateSteamList()
-        {
-            try
-            {
-                var games = new SteamApps(SharedData.Tokens.SteamToken).GetAppListAsync().Result.Data;
-                SharedData.SteamAppList.Clear();
-                foreach (var game in games)
-                    if (!string.IsNullOrWhiteSpace(game.Name))
-                        SharedData.SteamAppList.Add(Convert.ToUInt32(game.AppId), game.Name);
-            }
-            catch
-            {
-                Console.WriteLine("Error loading Steam games list...");
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public static Task UpdateTF2Schema()
-        {
-            try
-            {
-                var schema = new EconItems(SharedData.Tokens.SteamToken, EconItemsAppId.TeamFortress2).GetSchemaForTF2Async().Result.Data;
-                SharedData.TF2ItemSchema.Clear();
-                foreach (var item in schema.Items)
-                    if (!string.IsNullOrWhiteSpace(item.Name))
-                        SharedData.TF2ItemSchema.Add(Convert.ToUInt32(item.DefIndex), item);
-            }
-            catch
-            {
-                Console.WriteLine("Error loading TF2 item schema...");
-            }
-
-            return Task.CompletedTask;
         }
     }
 }

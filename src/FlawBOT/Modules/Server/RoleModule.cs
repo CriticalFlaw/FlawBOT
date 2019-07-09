@@ -17,7 +17,7 @@ namespace FlawBOT.Modules.Server
     [Aliases("role", "rl")]
     [Description("Commands for controlling server roles")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
-    public class RolesModule : BaseCommandModule
+    public class RoleModule : BaseCommandModule
     {
         #region COMMAND_COLOR
 

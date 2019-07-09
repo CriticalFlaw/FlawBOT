@@ -22,11 +22,12 @@ namespace FlawBOT.Modules.Search
         public async Task GetTime(CommandContext ctx,
             [Description("Location to retrieve time data from")] [RemainingText] string location)
         {
-            if (string.IsNullOrWhiteSpace(location))
-                await BotServices.SendEmbedAsync(ctx, "A valid location is required! Try **.time Ottawa, CA**", EmbedType.Warning);
+            if (!BotServices.CheckUserInput(location)) return;
+            var results = GoogleService.GetTimeDataAsync(location).Result;
+            if (results.status != "OK")
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                var results = TimeService.GetTimeDataAsync(location).Result;
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":clock1: Time in " + results.Results[0].formatted_address)
                     .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.timeZoneName)
@@ -45,12 +46,12 @@ namespace FlawBOT.Modules.Search
             [Description("Location to retrieve weather data from")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await WeatherService.GetWeatherDataAsync(query);
+            var results = await GoogleService.GetWeatherDataAsync(query);
             if (results.cod == 404)
                 await BotServices.SendEmbedAsync(ctx, "Location not found!", EmbedType.Missing);
             else
             {
-                Func<double, double> format = WeatherService.CelsiusToFahrenheit;
+                Func<double, double> format = GoogleService.CelsiusToFahrenheit;
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":partly_sunny: Current weather in " + results.name + ", " + results.sys.country)
                     .AddField("Temperature", $"{results.main.temp:F1}°C / {format(results.main.temp):F1}°F", true)

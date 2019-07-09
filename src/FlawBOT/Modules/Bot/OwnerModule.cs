@@ -6,6 +6,7 @@ using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
+using FlawBOT.Services.Search;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Bot
@@ -108,9 +109,9 @@ namespace FlawBOT.Modules.Bot
         public async Task Update(CommandContext ctx)
         {
             var message = await ctx.RespondAsync("Starting update...");
-            await BotServices.UpdateSteamList();
-            await BotServices.UpdateTF2Schema();
-            await PokemonService.UpdatePokemonList();
+            await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await message.ModifyAsync("Starting update...done!");
         }
 

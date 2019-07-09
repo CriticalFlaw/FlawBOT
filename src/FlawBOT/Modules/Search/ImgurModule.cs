@@ -1,11 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using FlawBOT.Common;
-using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
+using DSharpPlus.Entities;
+using FlawBOT.Services.Search;
 using Imgur.API.Models.Impl;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
@@ -20,19 +17,15 @@ namespace FlawBOT.Modules.Search
         public async Task Imgur(CommandContext ctx,
             [Description("Search query to pass to Imgur")] [RemainingText] string query)
         {
-            var random = new Random();
-            var imgur = new ImgurClient(SharedData.Tokens.ImgurToken);
-            var endpoint = new GalleryEndpoint(imgur);
-            var gallery = string.IsNullOrWhiteSpace(query) ? (await endpoint.GetRandomGalleryAsync()).ToList() : (await endpoint.SearchGalleryAsync(query)).ToList();
-            var img = gallery.Any() ? gallery[random.Next(0, gallery.Count)] : null;
-            switch (img)
+            var results = ImgurService.GetImgurGalleryAsync(query).Result;
+            switch (results)
             {
                 case GalleryAlbum _:
-                    await ctx.RespondAsync(((GalleryAlbum)img).Link);
+                    await ctx.RespondAsync(((GalleryAlbum)results).Link);
                     break;
 
                 case GalleryImage _:
-                    await ctx.RespondAsync(((GalleryImage)img).Link);
+                    await ctx.RespondAsync(((GalleryImage)results).Link);
                     break;
 
                 default:

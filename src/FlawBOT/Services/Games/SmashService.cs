@@ -1,20 +1,17 @@
-﻿using FlawBOT.Models;
+﻿using FlawBOT.Common;
+using FlawBOT.Models;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Games
 {
-    public class SmashService
+    public class SmashService : HttpHandler
     {
-        private static readonly string base_url = "https://test-khapi.frannsoft.com/api/characters/name/";
-        private static readonly HttpClient http = new HttpClient();
-
         public static async Task<SmashCharacter> GetSmashCharacterAsync(string query)
         {
             try
             {
-                var results = await http.GetStringAsync(base_url + query + "?game=ultimate");
+                var results = await _http.GetStringAsync("https://test-khapi.frannsoft.com/api/characters/name/" + query + "?game=ultimate");
                 return JsonConvert.DeserializeObject<SmashCharacter>(results);
             }
             catch

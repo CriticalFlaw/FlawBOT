@@ -28,9 +28,8 @@ namespace FlawBOT.Modules.Bot
                 .WithTitle(SharedData.Name)
                 .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime", $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
-                .AddField(":link: Links", $"[Commands]({SharedData.GitHubLink}wiki) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})")
-                .WithThumbnailUrl(ctx.Client.CurrentUser.AvatarUrl)
-                .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
+                .AddField(":link: Links", $"[Commands]({SharedData.GitHubLink}wiki) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})", true)
+                .WithFooter($"Thank you for using {SharedData.Name} (v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
                 .WithColor(DiscordColor.Aquamarine);
             await ctx.RespondAsync(embed: output.Build());
@@ -122,7 +121,6 @@ namespace FlawBOT.Modules.Bot
         #region COMMAND_UPTIME
 
         [Command("uptime")]
-        [Aliases("time")]
         [Description("Retrieve the FlawBOT uptime")]
         public async Task Uptime(CommandContext ctx)
         {

@@ -4,19 +4,25 @@ using Newtonsoft.Json;
 using Steam.Models.SteamCommunity;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
-using System.Net.Http;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Search
 {
-    public class SteamService
+    public class SteamService : HttpHandler
     {
-        private static readonly string base_url = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";
-        private static readonly HttpClient http = new HttpClient();
+        public static uint GetSteamAppAsync(string query)
+        {
+            var random = new Random();
+            var game = SharedData.SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;
+            var results = (game >= 0) ? game : SharedData.SteamAppList.Keys.ToArray()[random.Next(0, SharedData.SteamAppList.Keys.Count - 1)];
+            return results;
+        }
 
         public static async Task<SteamData> GetSteamAppsListAsync()
         {
-            var result = await http.GetStringAsync(base_url);
+            var result = await _http.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
             return JsonConvert.DeserializeObject<SteamData>(result);
         }
 
@@ -50,6 +56,25 @@ namespace FlawBOT.Services.Search
                 summary = await steam.GetPlayerSummaryAsync(ulong.Parse(query)).ConfigureAwait(false);
             }
             return summary;
+        }
+
+        public static async Task<bool> UpdateSteamListAsync()
+        {
+            try
+            {
+                var client = new SteamApps(SharedData.Tokens.SteamToken);
+                var games = (await client.GetAppListAsync()).Data;
+                SharedData.SteamAppList.Clear();
+                foreach (var game in games)
+                    if (!string.IsNullOrWhiteSpace(game.Name))
+                        SharedData.SteamAppList.Add(Convert.ToUInt32(game.AppId), game.Name);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating Steam games list. " + ex.Message);
+                return false;
+            }
         }
     }
 }
