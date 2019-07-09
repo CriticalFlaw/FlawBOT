@@ -37,11 +37,14 @@ namespace FlawBOT.Models
         [JsonProperty("backpacktf_secret")]
         public string BackpackAccess { get; private set; }
 
-        [JsonProperty("reddit")]
-        public string RedditToken { get; private set; }
+        [JsonProperty("reddit_appid")]
+        public string RedditAppToken { get; private set; }
 
-        [JsonProperty("reddit_secret")]
-        public string RedditSecretToken { get; private set; }
+        [JsonProperty("reddit_access")]
+        public string RedditAccessToken { get; private set; }
+
+        [JsonProperty("reddit_refresh")]
+        public string RedditRefreshToken { get; private set; }
     }
 
     public enum EmbedType

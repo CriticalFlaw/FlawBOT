@@ -10,6 +10,7 @@
   "teamworktf": "null",
   "backpacktf": "null",
   "backpacktf_secret": "null",
-  "reddit": "null",
-  "reddit_secret": "null"
+  "reddit_appid": "null",
+  "reddit_access": "null",
+  "reddit_refresh": "null"
 }
