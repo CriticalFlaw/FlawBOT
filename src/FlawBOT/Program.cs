@@ -14,6 +14,7 @@ using FlawBOT.Modules.Search;
 using FlawBOT.Modules.Server;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
+using FlawBOT.Services.Search;
 using System;
 using System.IO;
 using System.Net;
@@ -88,6 +89,7 @@ namespace FlawBOT
             Commands.RegisterCommands<OwnerModule>();
             Commands.RegisterCommands<PokemonModule>();
             Commands.RegisterCommands<SmashModule>();
+            Commands.RegisterCommands<SpeedrunModule>();
             Commands.RegisterCommands<TeamFortressModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
@@ -96,21 +98,23 @@ namespace FlawBOT
             Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<IMDBModule>();
             Commands.RegisterCommands<ImgurModule>();
+            Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<SimpsonsModule>();
             Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
             Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<RolesModule>();
+            Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
             Commands.RegisterCommands<UserModule>();
 
             // Start the uptime counter
             Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
             SharedData.ProcessStarted = DateTime.Now;
-            await BotServices.UpdateSteamList().ConfigureAwait(false); // Update the Steam App list
-            await PokemonService.UpdatePokemonList().ConfigureAwait(false); // Update the Pokemon list
+            await SteamService.UpdateSteamListAsync().ConfigureAwait(false); // Update the Steam App list
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false); // Update the Pokemon list
+            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false); // Update the Pokemon list
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }

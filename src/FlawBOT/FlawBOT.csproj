@@ -20,16 +20,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\**" />
-    <EmbeddedResource Remove="Resources\**" />
-    <None Remove="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BackpackTfApi" Version="1.0.3" />
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00600" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00600" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00600" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00613" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00613" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00613" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.40.2.1593" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.11" />
@@ -47,11 +41,12 @@
       <Private></Private>
       <SpecificVersion></SpecificVersion>
     </Reference>
-    <Reference Include="SpeedrunComSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>Resources\SpeedrunComSharp.dll</HintPath>
-      <Private></Private>
-      <SpecificVersion></SpecificVersion>
-    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
