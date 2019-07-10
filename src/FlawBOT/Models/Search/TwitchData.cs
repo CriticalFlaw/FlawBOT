@@ -6,180 +6,180 @@ namespace FlawBOT.Models
     public class TwitchData
     {
         [JsonProperty("stream")]
-        public Stream stream { get; set; }
+        public Stream Stream { get; set; }
     }
 
     public class Channel
     {
         [JsonProperty("mature")]
-        public bool mature { get; set; }
+        public bool IsMature { get; set; }
 
         [JsonProperty("partner")]
-        public bool partner { get; set; }
+        public bool IsPartner { get; set; }
 
         [JsonProperty("status")]
-        public string status { get; set; }
+        public string Status { get; set; }
 
         [JsonProperty("broadcaster_language")]
-        public string broadcaster_language { get; set; }
+        public string BroadcasterLanguage { get; set; }
 
         [JsonProperty("broadcaster_software")]
-        public string broadcaster_software { get; set; }
+        public string Software { get; set; }
 
         [JsonProperty("display_name")]
-        public string display_name { get; set; }
+        public string DisplayName { get; set; }
 
         [JsonProperty("game")]
-        public string game { get; set; }
+        public string Game { get; set; }
 
         [JsonProperty("language")]
-        public string language { get; set; }
+        public string Language { get; set; }
 
         [JsonProperty("_id")]
-        public int _id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("name")]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime created_at { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("updated_at")]
-        public DateTime updated_at { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [JsonProperty("delay")]
-        public object delay { get; set; }
+        public object Delay { get; set; }
 
         [JsonProperty("logo")]
-        public string logo { get; set; }
+        public string Logo { get; set; }
 
         [JsonProperty("banner")]
-        public object banner { get; set; }
+        public object Banner { get; set; }
 
         [JsonProperty("video_banner")]
-        public string video_banner { get; set; }
+        public string VideoBanner { get; set; }
 
         [JsonProperty("background")]
-        public object background { get; set; }
+        public object Background { get; set; }
 
         [JsonProperty("profile_banner")]
-        public string profile_banner { get; set; }
+        public string ProfileBanner { get; set; }
 
         [JsonProperty("profile_banner_background_color")]
-        public string profile_banner_background_color { get; set; }
+        public string ProfileBannerColor { get; set; }
 
         [JsonProperty("url")]
-        public string url { get; set; }
+        public string Url { get; set; }
 
         [JsonProperty("views")]
-        public int views { get; set; }
+        public int Views { get; set; }
 
         [JsonProperty("followers")]
-        public int followers { get; set; }
+        public int Followers { get; set; }
 
         [JsonProperty("_links")]
-        public Links _links { get; set; }
+        public Links Links { get; set; }
     }
 
     public class Stream
     {
         [JsonProperty("_id")]
-        public long _id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("game")]
-        public string game { get; set; }
+        public string Game { get; set; }
 
         [JsonProperty("viewers")]
-        public int viewers { get; set; }
+        public int Viewers { get; set; }
 
         [JsonProperty("video_height")]
-        public int video_height { get; set; }
+        public int VideoHeight { get; set; }
 
         [JsonProperty("average_fps")]
-        public double average_fps { get; set; }
+        public double AverageFPS { get; set; }
 
         [JsonProperty("delay")]
-        public int delay { get; set; }
+        public int Delay { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime created_at { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("is_playlist")]
-        public bool is_playlist { get; set; }
+        public bool IsPlayList { get; set; }
 
         [JsonProperty("stream_type")]
-        public string stream_type { get; set; }
+        public string StreamType { get; set; }
 
         [JsonProperty("preview")]
-        public Preview preview { get; set; }
+        public Preview Preview { get; set; }
 
         [JsonProperty("channel")]
-        public Channel channel { get; set; }
+        public Channel Channel { get; set; }
 
         [JsonProperty("_links")]
-        public Links2 _links { get; set; }
+        public Links2 Links { get; set; }
     }
 
     public class Preview
     {
         [JsonProperty("small")]
-        public string small { get; set; }
+        public string Small { get; set; }
 
         [JsonProperty("medium")]
-        public string medium { get; set; }
+        public string Medium { get; set; }
 
         [JsonProperty("large")]
-        public string large { get; set; }
+        public string Large { get; set; }
 
         [JsonProperty("template")]
-        public string template { get; set; }
+        public string Template { get; set; }
     }
 
     public class Links
     {
         [JsonProperty("self")]
-        public string self { get; set; }
+        public string Self { get; set; }
 
         [JsonProperty("follows")]
-        public string follows { get; set; }
+        public string Follows { get; set; }
 
         [JsonProperty("commercial")]
-        public string commercial { get; set; }
+        public string Commercial { get; set; }
 
         [JsonProperty("stream_key")]
-        public string stream_key { get; set; }
+        public string StreamKey { get; set; }
 
         [JsonProperty("chat")]
-        public string chat { get; set; }
+        public string Chat { get; set; }
 
         [JsonProperty("features")]
-        public string features { get; set; }
+        public string Features { get; set; }
 
         [JsonProperty("subscriptions")]
-        public string subscriptions { get; set; }
+        public string Subscriptions { get; set; }
 
         [JsonProperty("editors")]
-        public string editors { get; set; }
+        public string Editors { get; set; }
 
         [JsonProperty("teams")]
-        public string teams { get; set; }
+        public string Teams { get; set; }
 
         [JsonProperty("videos")]
-        public string videos { get; set; }
+        public string Videos { get; set; }
     }
 
     public class Links2
     {
         [JsonProperty("self")]
-        public string self { get; set; }
+        public string Self { get; set; }
     }
 
     public class Links3
     {
         [JsonProperty("self")]
-        public string self { get; set; }
+        public string Self { get; set; }
 
         [JsonProperty("channel")]
-        public string channel { get; set; }
+        public string Channel { get; set; }
     }
 }

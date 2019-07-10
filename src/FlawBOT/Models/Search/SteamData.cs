@@ -6,21 +6,21 @@ namespace FlawBOT.Models
     public class SteamData
     {
         [JsonProperty("applist")]
-        public Applist applist { get; set; }
+        public Applist AppList { get; set; }
     }
 
     public class Applist
     {
         [JsonProperty("apps")]
-        public List<App> apps { get; set; }
+        public List<App> Apps { get; set; }
     }
 
     public class App
     {
         [JsonProperty("appid")]
-        public int appid { get; set; }
+        public int ID { get; set; }
 
         [JsonProperty("name")]
-        public string name { get; set; }
+        public string Name { get; set; }
     }
 }

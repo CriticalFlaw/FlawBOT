@@ -15,8 +15,8 @@ namespace SearchModule
         [Test]
         public void GetWeatherData()
         {
-            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottawa").Result.cod != 404);
-            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottura").Result.cod == 404);
+            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottawa").Result.COD != 404);
+            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottura").Result.COD == 404);
         }
     }
 }

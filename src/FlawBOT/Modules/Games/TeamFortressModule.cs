@@ -32,7 +32,6 @@ namespace FlawBOT.Modules.Games
             else
             {
                 var textInfo = new CultureInfo("en-US", false).TextInfo;
-                var classes = item.UsedByClasses.Aggregate<string, string>(null, (current, userClass) => current + $" {userClass} ");
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(item.ItemName)
                     .WithThumbnailUrl(item.ImageUrl)
@@ -42,8 +41,6 @@ namespace FlawBOT.Modules.Games
                     output.WithDescription(item.ItemDescription);
                 if (!string.IsNullOrWhiteSpace(item.ItemSlot))
                     output.AddField("Item Slot:", textInfo.ToTitleCase(item.ItemSlot), true);
-                if (!string.IsNullOrWhiteSpace(classes))
-                    output.AddField("Used by:", textInfo.ToTitleCase(classes), true);
                 if (!string.IsNullOrWhiteSpace(item.ModelPlayer))
                     await ctx.RespondAsync(embed: output.Build());
             }
@@ -77,25 +74,25 @@ namespace FlawBOT.Modules.Games
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant());
-            if (results.normalized_map_name == null)
+            if (results.MapName == null)
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                Double.TryParse(results.alltime_avg_players, out var avg_players);
+                Double.TryParse(results.AvgPlayers, out var avg_players);
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.normalized_map_name)
-                    .AddField("Official", results.official_map ? "YES" : "NO", true)
+                    .WithTitle(results.MapName)
+                    .AddField("Official", results.OfficialMap ? "YES" : "NO", true)
                     .AddField("Avg. Players", Math.Round(avg_players, 2).ToString() ?? "Unknown", true)
-                    .AddField("Highest Player Count", results.highest_players.ToString() ?? "Unknown", true)
-                    .AddField("Highest Server Count", results.highest_servers.ToString() ?? "Unknown", true)
+                    .AddField("Highest Player Count", results.HighestPlayerCount.ToString() ?? "Unknown", true)
+                    .AddField("Highest Server Count", results.HighestServerCount.ToString() ?? "Unknown", true)
                     .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
-                    .WithImageUrl(results.thumbnail)
-                    .WithUrl("https://wiki.teamfortress.com/wiki/" + results.normalized_map_name)
+                    .WithImageUrl(results.Thumbnail)
+                    .WithUrl("https://wiki.teamfortress.com/wiki/" + results.MapName)
                     .WithColor(new DiscordColor("#E7B53B"));
-                if (results.related_maps.Count > 0) output.AddField("Related Map", results.related_maps[0]);
+                if (results.RelatedMaps.Count > 0) output.AddField("Related Map", results.RelatedMaps[0]);
 
                 var related_maps = new StringBuilder();
-                foreach (var map in results.related_maps.Take(5))
+                foreach (var map in results.RelatedMaps.Take(5))
                     related_maps.Append(map + "\n");
                 if (related_maps.Length > 0)
                     output.AddField("Related map(s)", related_maps.ToString(), true);
@@ -121,7 +118,7 @@ namespace FlawBOT.Modules.Games
                     .WithFooter("These are the latest news articles retrieved from teamwork.tf")
                     .WithColor(new DiscordColor("#E7B53B"));
                 foreach (var result in results.Take(5))
-                    output.AddField(result.title, result.link);
+                    output.AddField(result.Title, result.Link);
                 await ctx.RespondAsync(embed: output.Build());
             }
         }
@@ -143,22 +140,22 @@ namespace FlawBOT.Modules.Games
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                foreach (var server in results.Where(n => n.map_name.Contains(query)))
+                foreach (var server in results.Where(n => n.MapName.Contains(query)))
                 {
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(server.name)
-                        .WithDescription("steam://connect/" + server.ip + ":" + server.port)
-                        .AddField("Secure", server.valve_secure ? "YES" : "NO", true)
+                        .WithTitle(server.Name)
+                        .WithDescription("steam://connect/" + server.IP + ":" + server.Port)
+                        .AddField("Secure", server.ValveSecure ? "YES" : "NO", true)
                         //.AddField("Password", server.has_password ? "YES" : "NO", true)
-                        .AddField("Max Players", (server.players.ToString() ?? "Unknown") + "/" + (server.max_players.ToString() ?? "Unknown"), true)
-                        .AddField("Current Map", server.map_name ?? "Unknown", true)
-                        .AddField("Next Map", server.map_name_next ?? "Unknown", true)
-                        .AddField("Provider", server.provider ?? "Unknown", true)
-                        .AddField("Roll the Dice", server.has_rtd ? "YES" : "NO", true)
+                        .AddField("Max Players", (server.PlayerCount.ToString() ?? "Unknown") + "/" + (server.PlayerMax.ToString() ?? "Unknown"), true)
+                        .AddField("Current Map", server.MapName ?? "Unknown", true)
+                        .AddField("Next Map", server.NextMap ?? "Unknown", true)
+                        .AddField("Provider", server.Provider ?? "Unknown", true)
+                        .AddField("Roll the Dice", server.HasRTD ? "YES" : "NO", true)
                         //.AddField("Random Crits", server.has_randomcrits.ToString() ?? "Unknown", true)
-                        .AddField("Respawn Timer", server.has_norespawntime ? "YES" : "NO", true)
-                        .AddField("All Talk", server.has_alltalk ? "YES" : "NO", true)
-                        .WithThumbnailUrl("https://teamwork.tf" + server.map_name_thumbnail)
+                        .AddField("Respawn Timer", server.HasNoSpawnTimer ? "YES" : "NO", true)
+                        .AddField("All Talk", server.HasAllTalk ? "YES" : "NO", true)
+                        .WithThumbnailUrl("https://teamwork.tf" + server.MapThumbnail)
                         .WithFooter("Type next in the next 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
                     var message = await ctx.RespondAsync(embed: output.Build());

@@ -22,7 +22,7 @@ namespace MiscModule
         [Test]
         public void GetDogPhoto()
         {
-            Assert.IsTrue(DogService.GetDogPhotoAsync().Result.status == "success");
+            Assert.IsTrue(DogService.GetDogPhotoAsync().Result.Status == "success");
         }
 
         // TODO: Add Coin-Flip, Color, Dice Roll

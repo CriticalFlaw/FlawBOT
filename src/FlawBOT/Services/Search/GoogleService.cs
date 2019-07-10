@@ -21,8 +21,8 @@ namespace FlawBOT.Services.Search
                     return null;
                 else
                 {
-                    var latitude = results.Results[0].geometry.location.lat;
-                    var longitude = results.Results[0].geometry.location.lng;
+                    var latitude = results.Results[0].Geometry.Location.Latitude;
+                    var longitude = results.Results[0].Geometry.Location.Longitude;
                     var currentSeconds = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                     var url = timezone_url + latitude + "," + longitude + $"&timestamp={currentSeconds}&key={SharedData.Tokens.GoogleToken}";
                     var timeResource = await _http.GetStringAsync(url);

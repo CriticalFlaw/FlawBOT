@@ -132,13 +132,13 @@ namespace FlawBOT.Modules.Misc
         public async Task DogPic(CommandContext ctx)
         {
             var results = DogService.GetDogPhotoAsync().Result;
-            if (results.status != "success")
+            if (results.Status != "success")
                 await BotServices.SendEmbedAsync(ctx, "Unable to retrieve a pupper photo :(", EmbedType.Warning);
             else
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":dog: Woof!")
-                    .WithImageUrl(results.message)
+                    .WithImageUrl(results.Message)
                     .WithColor(DiscordColor.Brown);
                 await ctx.RespondAsync(embed: output.Build());
             }

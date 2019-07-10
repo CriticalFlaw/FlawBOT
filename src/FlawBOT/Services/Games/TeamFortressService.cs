@@ -6,8 +6,6 @@ using BackpackTfApi.SteamUser.UserInventory.Models;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using Newtonsoft.Json;
-using Steam.Models.TF2;
-using SteamWebAPI2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +15,9 @@ namespace FlawBOT.Services.Games
 {
     public class TeamFortressService : HttpHandler
     {
-        private static readonly string news_url = "https://teamwork.tf/api/v1/news";
-        private static readonly string servers_url = "https://teamwork.tf/api/v1/quickplay";
-        private static readonly string maps_url = "https://teamwork.tf/api/v1/map-stats/map";
-
-        public static SchemaItemModel GetSchemaItemAsync(string query)
+        public static SchemaItem GetSchemaItemAsync(string query)
         {
-            var results = SharedData.TF2ItemSchema.FirstOrDefault(n => n.Value.Name.ToUpperInvariant() == query.ToUpperInvariant()).Value;
+            var results = SharedData.TF2ItemSchema.FirstOrDefault(n => n.Value.Name.Contains(query)).Value;
             return results;
         }
 
@@ -31,19 +25,19 @@ namespace FlawBOT.Services.Games
 
         public static async Task<List<TeamworkNews>> GetNewsOverviewAsync()
         {
-            var results = await _http.GetStringAsync(news_url + $"?key={SharedData.Tokens.TeamworkToken}");
+            var results = await _http.GetStringAsync("https://teamwork.tf/api/v1/news?key=" + SharedData.Tokens.TeamworkToken);
             return JsonConvert.DeserializeObject<List<TeamworkNews>>(results);
         }
 
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
         {
-            var results = await _http.GetStringAsync(servers_url + $"/{query}/servers?key={SharedData.Tokens.TeamworkToken}");
+            var results = await _http.GetStringAsync("https://teamwork.tf/api/v1/quickplay/" + query + "/servers?key=" + SharedData.Tokens.TeamworkToken);
             return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
         }
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
-            var results = await _http.GetStringAsync(maps_url + $"/{query}?key={SharedData.Tokens.TeamworkToken}");
+            var results = await _http.GetStringAsync("https://teamwork.tf/api/v1/map-stats/map/" + query + "?key=" + SharedData.Tokens.TeamworkToken);
             return JsonConvert.DeserializeObject<TeamworkMap>(results);
         }
 
@@ -169,10 +163,10 @@ namespace FlawBOT.Services.Games
         {
             try
             {
-                var client = new EconItems(SharedData.Tokens.SteamToken, EconItemsAppId.TeamFortress2);
-                var schema = (await client.GetSchemaForTF2Async()).Data;
+                var schema = await _http.GetStringAsync("https://api.steampowered.com/IEconItems_440/GetSchemaItems/v0001/?key=" + SharedData.Tokens.SteamToken);
+                var results = JsonConvert.DeserializeObject<TF2ItemSchema>(schema);
                 SharedData.TF2ItemSchema.Clear();
-                foreach (var item in schema.Items)
+                foreach (var item in results.Result.Items)
                     if (!string.IsNullOrWhiteSpace(item.Name))
                         SharedData.TF2ItemSchema.Add(Convert.ToUInt32(item.DefIndex), item);
                 return true;
@@ -181,21 +175,6 @@ namespace FlawBOT.Services.Games
             {
                 Console.WriteLine("Error updating TF2 item schema. " + ex.Message);
                 return false;
-            }
-        }
-
-        public static string TestTF2ItemSchema()
-        {
-            try
-            {
-                var econ = new EconItems(SharedData.Tokens.SteamToken, EconItemsAppId.TeamFortress2);
-                var schema = econ.GetSchemaForTF2Async().Result;
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception Occured: {0}", ex.Message);
-                return ex.Message;
             }
         }
     }

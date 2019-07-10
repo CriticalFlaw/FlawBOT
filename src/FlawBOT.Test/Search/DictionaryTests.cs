@@ -8,7 +8,7 @@ namespace SearchModule
         [Test]
         public void GetDictionaryDefinition()
         {
-            Assert.IsFalse(DictionaryService.GetDictionaryForTermAsync("computer").Result.result_type == "no_results");
+            Assert.IsFalse(DictionaryService.GetDictionaryForTermAsync("computer").Result.ResultType == "no_results");
         }
     }
 }

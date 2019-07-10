@@ -29,11 +29,11 @@ namespace FlawBOT.Services.Games
             {
                 var client = new HttpClient();
                 var list = await client.GetStringAsync("https://pokeapi.co/api/v2/pokemon/?limit=100");
-                var results = JsonConvert.DeserializeObject<PokemonData>(list).results;
+                var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 SharedData.PokemonList.Clear();
                 foreach (var pokemon in results)
-                    if (!string.IsNullOrWhiteSpace(pokemon.name))
-                        SharedData.PokemonList.Add(pokemon.name);
+                    if (!string.IsNullOrWhiteSpace(pokemon.Name))
+                        SharedData.PokemonList.Add(pokemon.Name);
                 return true;
             }
             catch (Exception ex)

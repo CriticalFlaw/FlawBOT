@@ -16,7 +16,7 @@ namespace FlawBOT.Common
         public static DiscordColor DefaultColor { get; set; } = new DiscordColor("#00FF7F");
         public static DateTime ProcessStarted { get; set; }
         public static Dictionary<uint, string> SteamAppList { get; set; } = new Dictionary<uint, string>();
-        public static Dictionary<uint, SchemaItemModel> TF2ItemSchema { get; set; } = new Dictionary<uint, SchemaItemModel>();
+        public static Dictionary<uint, SchemaItem> TF2ItemSchema { get; set; } = new Dictionary<uint, SchemaItem>();
         public static List<string> PokemonList { get; set; } = new List<string>();
         public static TokenData Tokens { get; set; } = new TokenData();
     }

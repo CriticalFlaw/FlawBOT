@@ -13,12 +13,6 @@ namespace GamesModule
         }
 
         [Test]
-        public void GetSchemaItem()
-        {
-            Assert.IsNull(TeamFortressService.TestTF2ItemSchema());
-        }
-
-        [Test]
         public void GetConnectLink()
         {
             var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match("192.168.22.11");
@@ -28,7 +22,7 @@ namespace GamesModule
         [Test]
         public void GetTeamworkMap()
         {
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result.normalized_map_name);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result.MapName);
         }
 
         [Test]

@@ -6,30 +6,30 @@ namespace FlawBOT.Models
     public class DictionaryData
     {
         [JsonProperty("result_type")]
-        public string result_type { get; set; }
+        public string ResultType { get; set; }
 
         [JsonProperty("list")]
-        public List<DictionaryDataList> list { get; set; }
+        public List<DictionaryDataList> List { get; set; }
     }
 
     public class DictionaryDataList
     {
         [JsonProperty("definition")]
-        public string definition { get; set; }
+        public string Definition { get; set; }
 
         [JsonProperty("author")]
-        public string author { get; set; }
+        public string Author { get; set; }
 
         [JsonProperty("permalink")]
-        public string permalink { get; set; }
+        public string Permalink { get; set; }
 
         [JsonProperty("example")]
-        public string example { get; set; }
+        public string Example { get; set; }
 
         [JsonProperty("thumbs_up")]
-        public int thumbs_up { get; set; }
+        public int ThumbsUp { get; set; }
 
         [JsonProperty("thumbs_down")]
-        public int thumbs_down { get; set; }
+        public int ThumbsDown { get; set; }
     }
 }

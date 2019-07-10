@@ -24,13 +24,13 @@ namespace FlawBOT.Modules.Games
             [Description("Name of the pokemon")] [RemainingText] string query)
         {
             var results = await PokemonService.GetPokemonCardsAsync(query);
-            if (results.cards.Count == 0)
+            if (results.Cards.Count == 0)
                 await BotServices.SendEmbedAsync(ctx, "Pokemon not found!", EmbedType.Missing);
             else
             {
-                foreach (var value in results.cards)
+                foreach (var value in results.Cards)
                 {
-                    var card = PokemonTcgSdk.Card.Find<Pokemon>(value.id).Card;
+                    var card = PokemonTcgSdk.Card.Find<Pokemon>(value.ID).Card;
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(card.Name + $" (PokeDex ID: {card.NationalPokedexNumber})")
                         .AddField("Health Points", card.Hp ?? "Unknown", true)
