@@ -1,8 +1,10 @@
-﻿using FlawBOT.Models;
+﻿using FlawBOT.Common;
+using FlawBOT.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Net.Http;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services
@@ -12,10 +14,10 @@ namespace FlawBOT.Services
         public static string GetAnswer()
         {
             var random = new Random();
-            return Answers[random.Next(0, Answers.Count)];
+            return Answers.ElementAt(random.Next(Answers.Count()));
         }
 
-        public readonly static List<string> Answers = new List<string>
+        private static ImmutableArray<string> Answers = new[]
         {
             "It is certain",
             "It is decidedly so",
@@ -37,17 +39,33 @@ namespace FlawBOT.Services
             "My sources say no",
             "Outlook not so good",
             "Very doubtful"
-        };
+        }.ToImmutableArray();
     }
 
-    public class DogService
+    public class CatService : HttpHandler
+    {
+        private static readonly string fact_url = "https://catfact.ninja/fact";
+        private static readonly string photo_url = "http://aws.random.cat/meow";
+
+        public static async Task<string> GetCatFactAsync()
+        {
+            return await _http.GetStringAsync(fact_url);
+        }
+
+        public static async Task<string> GetCatPhotoAsync()
+        {
+            var results = await _http.GetStringAsync(photo_url).ConfigureAwait(false);
+            return JObject.Parse(results)["file"].ToString();
+        }
+    }
+
+    public class DogService : HttpHandler
     {
         private static readonly string base_url = "https://dog.ceo/api/breeds/image/random";
-        private static readonly HttpClient http = new HttpClient();
 
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await http.GetStringAsync(base_url);
+            var results = await _http.GetStringAsync(base_url);
             return JsonConvert.DeserializeObject<DogData>(results);
         }
     }

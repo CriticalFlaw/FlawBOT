@@ -22,14 +22,15 @@ namespace FlawBOT.Modules.Search
         public async Task GetTime(CommandContext ctx,
             [Description("Location to retrieve time data from")] [RemainingText] string location)
         {
-            if (string.IsNullOrWhiteSpace(location))
-                await BotServices.SendEmbedAsync(ctx, "A valid location is required! Try **.time Ottawa, CA**", EmbedType.Warning);
+            if (!BotServices.CheckUserInput(location)) return;
+            var results = GoogleService.GetTimeDataAsync(location).Result;
+            if (results.status != "OK")
+                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                var results = TimeService.GetTimeDataAsync(location).Result;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":clock1: Time in " + results.results[0].formatted_address)
-                    .WithDescription(Formatter.Bold(results.time.ToShortTimeString()) + " " + results.timezone.timeZoneName)
+                    .WithTitle(":clock1: Time in " + results.Results[0].FormattedAddress)
+                    .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.timeZoneName)
                     .WithColor(DiscordColor.Cyan);
                 await ctx.RespondAsync(embed: output.Build());
             }
@@ -45,19 +46,19 @@ namespace FlawBOT.Modules.Search
             [Description("Location to retrieve weather data from")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await WeatherService.GetWeatherDataAsync(query);
-            if (results.cod == 404)
+            var results = await GoogleService.GetWeatherDataAsync(query);
+            if (results.COD == 404)
                 await BotServices.SendEmbedAsync(ctx, "Location not found!", EmbedType.Missing);
             else
             {
-                Func<double, double> format = WeatherService.CelsiusToFahrenheit;
+                Func<double, double> format = GoogleService.CelsiusToFahrenheit;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":partly_sunny: Current weather in " + results.name + ", " + results.sys.country)
-                    .AddField("Temperature", $"{results.main.temp:F1}°C / {format(results.main.temp):F1}°F", true)
-                    .AddField("Conditions", string.Join(", ", results.weather.Select(w => w.main)), true)
-                    .AddField("Humidity", $"{results.main.humidity}%", true)
-                    .AddField("Wind Speed", $"{results.wind.speed}m/s", true)
-                    .WithUrl("https://openweathermap.org/city/" + results.id)
+                    .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
+                    .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
+                    .AddField("Conditions", string.Join(", ", results.Weather.Select(w => w.Main)), true)
+                    .AddField("Humidity", $"{results.Main.Humidity}%", true)
+                    .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
+                    .WithUrl("https://openweathermap.org/city/" + results.ID)
                     .WithColor(DiscordColor.Cyan);
                 await ctx.RespondAsync(embed: output.Build());
             }

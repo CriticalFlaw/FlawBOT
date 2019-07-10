@@ -9,37 +9,41 @@ namespace FlawBOT.Models
     public class TimeData
     {
         [JsonProperty("results")]
-        public GeolocationModel[] results;
+        private GeolocationModel[] results;
 
         [JsonProperty("timezone")]
-        public TimeZoneResult timezone;
+        private TimeZoneResult timeZone;
 
         [JsonProperty("time")]
-        public DateTime time;
+        private DateTime time;
 
         [JsonProperty("status")]
         public string status { get; set; }
 
+        public GeolocationModel[] Results { get => results; set => results = value; }
+        public TimeZoneResult Timezone { get => timeZone; set => timeZone = value; }
+        public DateTime Time { get => time; set => time = value; }
+
         public class GeolocationModel
         {
             [JsonProperty("formatted_address")]
-            public string formatted_address { get; set; }
+            public string FormattedAddress { get; set; }
 
             [JsonProperty("geometry")]
-            public GeometryModel geometry { get; set; }
+            public GeometryModel Geometry { get; set; }
 
             public class GeometryModel
             {
                 [JsonProperty("location")]
-                public LocationModel location { get; set; }
+                public LocationModel Location { get; set; }
 
                 public class LocationModel
                 {
                     [JsonProperty("lat")]
-                    public float lat { get; set; }
+                    public float Latitude { get; set; }
 
                     [JsonProperty("lng")]
-                    public float lng { get; set; }
+                    public float Longitude { get; set; }
                 }
             }
         }
@@ -64,64 +68,64 @@ namespace FlawBOT.Models
     public class WeatherData
     {
         [JsonProperty("id")]
-        public int id { get; set; }
+        public int ID { get; set; }
 
         [JsonProperty("name")]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("sys")]
-        public Sys sys { get; set; }
+        public Sys Sys { get; set; }
 
         [JsonProperty("main")]
-        public Main main { get; set; }
+        public Main Main { get; set; }
 
         [JsonProperty("wind")]
-        public Wind wind { get; set; }
+        public Wind Wind { get; set; }
 
         [JsonProperty("weather")]
-        public List<Weather> weather { get; set; }
+        public List<Weather> Weather { get; set; }
 
         [JsonProperty("cod")]
-        public int cod { get; set; }
+        public int COD { get; set; }
     }
 
     public class Sys
     {
         [JsonProperty("id")]
-        public int id { get; set; }
+        public int ID { get; set; }
 
         [JsonProperty("country")]
-        public string country { get; set; }
+        public string Country { get; set; }
     }
 
     public class Main
     {
         [JsonProperty("temp")]
-        public double temp { get; set; }
+        public double Temperature { get; set; }
 
         [JsonProperty("humidity")]
-        public float humidity { get; set; }
+        public float Humidity { get; set; }
 
         [JsonProperty("tempMin")]
-        public double tempMin { get; set; }
+        public double MinTemp { get; set; }
 
         [JsonProperty("tempMax")]
-        public double tempMax { get; set; }
+        public double MaxTemp { get; set; }
     }
 
     public class Wind
     {
         [JsonProperty("speed")]
-        public double speed { get; set; }
+        public double Speed { get; set; }
     }
 
     public class Weather
     {
         [JsonProperty("id")]
-        public int id { get; set; }
+        public int ID { get; set; }
 
         [JsonProperty("main")]
-        public string main { get; set; }
+        public string Main { get; set; }
     }
 
     #endregion WEATHER

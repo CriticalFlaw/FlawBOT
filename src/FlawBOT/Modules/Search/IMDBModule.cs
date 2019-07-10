@@ -16,7 +16,7 @@ namespace FlawBOT.Modules.Search
 
         [Command("imdb")]
         [Aliases("omdb", "movie")]
-        [Description("Retrieve a movie or TV show from OMDB")]
+        [Description("Retrieve a movie or TV show from IMDB")]
         public async Task OMDB(CommandContext ctx,
             [Description("Movie or TV show to find on IMDB")] [RemainingText] string query)
         {
@@ -42,7 +42,6 @@ namespace FlawBOT.Modules.Search
                     .AddField("Actors", results.Actors, true)
                     .WithColor(DiscordColor.Goldenrod);
                 if (results.Poster != "N/A") output.WithImageUrl(results.Poster);
-                if (results.TomatoURL != "N/A") output.WithUrl(results.TomatoURL);
                 await ctx.RespondAsync(embed: output.Build());
             }
         }

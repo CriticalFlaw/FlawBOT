@@ -11,6 +11,8 @@ namespace FlawBOT.Services.Search
 {
     public class YoutubeService
     {
+        private YouTubeService YouTube { get; }
+
         public YoutubeService()
         {
             YouTube = new YouTubeService(new BaseClientService.Initializer
@@ -19,8 +21,6 @@ namespace FlawBOT.Services.Search
                 ApplicationName = SharedData.Name
             });
         }
-
-        private YouTubeService YouTube { get; }
 
         public async Task<string> GetFirstVideoResultAsync(string query)
         {

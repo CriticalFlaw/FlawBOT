@@ -76,8 +76,8 @@ namespace FlawBOT.Modules.Server
 
             var prompt = await ctx.RespondAsync("You're about to delete the **" + channel + "**.\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity == null) return;
-            await BotServices.RemoveMessage(interactivity.Message);
+            if (interactivity.Result == null) return;
+            await BotServices.RemoveMessage(interactivity.Result);
             await BotServices.RemoveMessage(prompt);
             await BotServices.SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(channel.Name), EmbedType.Good);
             await channel.DeleteAsync();
@@ -182,7 +182,7 @@ namespace FlawBOT.Modules.Server
         {
             if (string.IsNullOrWhiteSpace(name) || (name.Length > 100))
                 await BotServices.SendEmbedAsync(ctx, "Channel name cannot be blank or over 100 characters!", EmbedType.Warning);
-            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Name, true) == 0))
+            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, true) == 0))
                 await BotServices.SendEmbedAsync(ctx, "Channel with the same name already exists!", EmbedType.Warning);
             else
             {
@@ -225,7 +225,7 @@ namespace FlawBOT.Modules.Server
         {
             if (string.IsNullOrWhiteSpace(name) || (name.Length > 100))
                 await BotServices.SendEmbedAsync(ctx, "Channel name cannot be blank or over 100 characters!", EmbedType.Warning);
-            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Name, true) == 0))
+            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, true) == 0))
                 await BotServices.SendEmbedAsync(ctx, "Channel with the same name already exists!", EmbedType.Warning);
             else
             {

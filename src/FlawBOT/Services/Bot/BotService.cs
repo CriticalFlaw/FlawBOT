@@ -3,7 +3,6 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using Newtonsoft.Json;
-using SteamWebAPI2.Interfaces;
 using System;
 using System.IO;
 using System.Net;
@@ -17,7 +16,7 @@ namespace FlawBOT.Services
         public static async Task SendEmbedAsync(CommandContext ctx, string message, EmbedType type = EmbedType.Default)
         {
             var prefix = "";
-            var color = SharedData.DefaultColor;
+            DiscordColor color;
             switch (type)
             {
                 case EmbedType.Good:
@@ -37,6 +36,10 @@ namespace FlawBOT.Services
                 case EmbedType.Error:
                     prefix = ":no_entry: ";
                     color = DiscordColor.Red;
+                    break;
+
+                default:
+                    color = SharedData.DefaultColor;
                     break;
             }
             var output = new DiscordEmbedBuilder()
@@ -67,7 +70,7 @@ namespace FlawBOT.Services
         {
             var stream = new MemoryStream();
             if (!Uri.TryCreate(input, UriKind.Absolute, out var uriResult) && (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
-                await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning);
+                await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 using (var client = new WebClient())
@@ -84,24 +87,6 @@ namespace FlawBOT.Services
         {
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
             SharedData.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
-        }
-
-        public static Task UpdateSteamList()
-        {
-            try
-            {
-                var games = new SteamApps(SharedData.Tokens.SteamToken).GetAppListAsync().Result.Data;
-                SharedData.SteamAppList.Clear();
-                foreach (var game in games)
-                    if (!string.IsNullOrWhiteSpace(game.Name))
-                        SharedData.SteamAppList.Add(Convert.ToUInt32(game.AppId), game.Name);
-            }
-            catch
-            {
-                Console.WriteLine("Error updating Steam libraries...");
-            }
-
-            return Task.CompletedTask;
         }
     }
 }

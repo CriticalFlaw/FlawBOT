@@ -6,6 +6,7 @@ using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
+using FlawBOT.Services.Search;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Bot
@@ -26,13 +27,13 @@ namespace FlawBOT.Modules.Bot
         {
             if (string.IsNullOrWhiteSpace(activity))
             {
-                await ctx.Client.UpdateStatusAsync(null);
+                await ctx.Client.UpdateStatusAsync(activity: null);
                 await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to " + Formatter.Bold("Normal"));
             }
             else
             {
                 var game = new DiscordActivity(activity);
-                await ctx.Client.UpdateStatusAsync(game);
+                await ctx.Client.UpdateStatusAsync(activity: game);
                 await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to " + Formatter.Bold("Playing " + game.Name), EmbedType.Good);
             }
         }
@@ -46,7 +47,7 @@ namespace FlawBOT.Modules.Bot
         [Aliases("setavatar")]
         [Description("Set FlawBOT's avatar")]
         public async Task SetBotAvatar(CommandContext ctx,
-            [Description("Avatar URL. Must be in jpg, png or img format.")] string query)
+            [Description("Image URL. Must be in jpg, png or img format.")] string query)
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;
             if (stream.Length <= 0) return;
@@ -108,8 +109,9 @@ namespace FlawBOT.Modules.Bot
         public async Task Update(CommandContext ctx)
         {
             var message = await ctx.RespondAsync("Starting update...");
-            await BotServices.UpdateSteamList();
-            await PokemonService.UpdatePokemonList();
+            await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await message.ModifyAsync("Starting update...done!");
         }
 

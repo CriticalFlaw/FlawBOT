@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Enums;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Modules.Bot;
@@ -13,6 +14,7 @@ using FlawBOT.Modules.Search;
 using FlawBOT.Modules.Server;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
+using FlawBOT.Services.Search;
 using System;
 using System.IO;
 using System.Net;
@@ -34,7 +36,7 @@ namespace FlawBOT
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 Program app = new Program();
                 app.RunBotAsync().GetAwaiter().GetResult();
-                await Task.Delay(Timeout.Infinite);
+                await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -66,9 +68,8 @@ namespace FlawBOT
             Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
             Client.UseInteractivity(new InteractivityConfiguration
             {
-                PaginationBehavior = TimeoutBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
-                PaginationTimeout = TimeSpan.FromMinutes(5), // Default pagination timeout to 5 minutes
-                Timeout = TimeSpan.FromMinutes(2) // Default timeout for other actions to 2 minutes
+                PaginationBehaviour = PaginationBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
+                Timeout = TimeSpan.FromMinutes(2) // Default pagination timeout to 2 minutes
             });
 
             Commands = Client.UseCommandsNext(new CommandsNextConfiguration
@@ -88,29 +89,32 @@ namespace FlawBOT
             Commands.RegisterCommands<OwnerModule>();
             Commands.RegisterCommands<PokemonModule>();
             Commands.RegisterCommands<SmashModule>();
+            Commands.RegisterCommands<SpeedrunModule>();
             Commands.RegisterCommands<TeamFortressModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
+            Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<IMDBModule>();
             Commands.RegisterCommands<ImgurModule>();
+            Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<SimpsonsModule>();
             Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
             Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<PollModule>();
-            Commands.RegisterCommands<RolesModule>();
+            Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
             Commands.RegisterCommands<UserModule>();
 
             // Start the uptime counter
             Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
             SharedData.ProcessStarted = DateTime.Now;
-            await BotServices.UpdateSteamList().ConfigureAwait(false); // Update the Steam App list
-            await PokemonService.UpdatePokemonList().ConfigureAwait(false); // Update the Pokemon list
+            await SteamService.UpdateSteamListAsync().ConfigureAwait(false); // Update the Steam App list
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false); // Update the Pokemon list
+            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false); // Update the Pokemon list
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }

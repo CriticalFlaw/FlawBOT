@@ -25,7 +25,7 @@ namespace FlawBOT.Modules.Server
         [Description("Set server avatar")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerAvatar(CommandContext ctx,
-            [Description("Avatar URL. Must be in jpg, png or img format.")] string query)
+            [Description("Image URL. Must be in jpg, png or img format.")] string query)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace FlawBOT.Modules.Server
         public async Task GetServer(CommandContext ctx)
         {
             var output = new DiscordEmbedBuilder()
-                .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", icon_url: string.IsNullOrEmpty(ctx.Guild.Owner.AvatarHash) ? null : ctx.Guild.Owner.AvatarUrl)
+                .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", iconUrl: string.IsNullOrEmpty(ctx.Guild.Owner.AvatarHash) ? null : ctx.Guild.Owner.AvatarUrl)
                 .WithTitle(ctx.Guild.Name + $" (ID: {ctx.Guild.Id.ToString()})")
                 .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Member Count", ctx.Guild.MemberCount.ToString(), true)
@@ -64,13 +64,13 @@ namespace FlawBOT.Modules.Server
 
             var roles = new StringBuilder();
             foreach (var role in ctx.Guild.Roles)
-                roles.Append($"[`{role.Name}`]");
+                roles.Append($"[`{role.Value.Name}`]");
             if (roles.Length == 0) roles.Append("None");
             output.AddField("Roles", roles.ToString());
 
             var emojis = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis)
-                emojis.Append(emoji.Name);
+                emojis.Append(emoji.Value.Name);
             if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
             await ctx.RespondAsync(embed: output.Build());
         }
@@ -106,8 +106,8 @@ namespace FlawBOT.Modules.Server
             }
             var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity == null) return;
-            await BotServices.RemoveMessage(interactivity.Message);
+            if (interactivity.Result == null) return;
+            await BotServices.RemoveMessage(interactivity.Result);
             await BotServices.RemoveMessage(prompt);
             await ctx.Guild.PruneAsync(days);
         }

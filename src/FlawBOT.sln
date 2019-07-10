@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2011
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlawBOT", "FlawBOT\FlawBOT.csproj", "{C3A935C2-D74A-47A0-A1F6-BA1FADA54F6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlawBOT", "FlawBOT\FlawBOT.csproj", "{C3A935C2-D74A-47A0-A1F6-BA1FADA54F6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlawBOT.Test", "FlawBOT.Test\FlawBOT.Test.csproj", "{7E946A49-2539-45FA-A5C3-DC3411CBC399}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C3A935C2-D74A-47A0-A1F6-BA1FADA54F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3A935C2-D74A-47A0-A1F6-BA1FADA54F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3A935C2-D74A-47A0-A1F6-BA1FADA54F6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,9 +5,9 @@ namespace FlawBOT.Models
     public class DogData
     {
         [JsonProperty("status")]
-        public string status { get; set; }
+        public string Status { get; set; }
 
         [JsonProperty("message")]
-        public string message { get; set; }
+        public string Message { get; set; }
     }
 }

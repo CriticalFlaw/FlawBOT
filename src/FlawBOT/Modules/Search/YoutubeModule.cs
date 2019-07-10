@@ -1,7 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using FlawBOT.Models;
 using FlawBOT.Services;
 using FlawBOT.Services.Search;
 using System.Threading.Tasks;
@@ -17,19 +16,15 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_CHANNEL
 
         [Command("channel")]
-        [Aliases("chn")]
+        [Aliases("channels", "chn")]
         [Description("Retrieve a list of YouTube channel given a query")]
         public async Task YouTubeChannel(CommandContext ctx,
             [Description("Channels to find on YouTube")] [RemainingText] string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, "Channel search query is required!", EmbedType.Warning);
-            else
-            {
-                var service = new YoutubeService();
-                var output = await service.GetEmbeddedResults(query, 5, "channel");
-                await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: output);
-            }
+            if (!BotServices.CheckUserInput(query)) return;
+            var service = new YoutubeService();
+            var results = await service.GetEmbeddedResults(query, 5, "channel");
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results);
         }
 
         #endregion COMMAND_CHANNEL
@@ -37,19 +32,15 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_PLAYLIST
 
         [Command("playlist")]
-        [Aliases("list")]
+        [Aliases("playlists", "list")]
         [Description("Retrieve a list of YouTube playlists given a query")]
         public async Task YouTubePlaylist(CommandContext ctx,
             [Description("Playlist to find on YouTube")] [RemainingText] string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, "Playlist search query is required!", EmbedType.Warning);
-            else
-            {
-                var service = new YoutubeService();
-                var output = await service.GetEmbeddedResults(query, 5, "playlist");
-                await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: output);
-            }
+            if (!BotServices.CheckUserInput(query)) return;
+            var service = new YoutubeService();
+            var results = await service.GetEmbeddedResults(query, 5, "playlist");
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results);
         }
 
         #endregion COMMAND_PLAYLIST
@@ -62,14 +53,10 @@ namespace FlawBOT.Modules.Search
         public async Task YouTubeVideo(CommandContext ctx,
             [Description("First result video to find on YouTube")] [RemainingText] string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-                await ctx.RespondAsync("https://www.youtube.com/watch?v=rFA_auWj0rQ");
-            else
-            {
-                var service = new YoutubeService();
-                var output = await service.GetFirstVideoResultAsync(query);
-                await ctx.RespondAsync(output);
-            }
+            if (!BotServices.CheckUserInput(query)) return;
+            var service = new YoutubeService();
+            var results = await service.GetFirstVideoResultAsync(query);
+            await ctx.RespondAsync(results);
         }
 
         #endregion COMMAND_SEARCH
@@ -77,19 +64,15 @@ namespace FlawBOT.Modules.Search
         #region COMMAND_VIDEO
 
         [Command("video")]
-        [Aliases("vid")]
+        [Aliases("videos", "vid")]
         [Description("Retrieve a list of YouTube videos given a query")]
         public async Task YouTubeSearch(CommandContext ctx,
             [Description("Video to find on YouTube")] [RemainingText] string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-                await BotServices.SendEmbedAsync(ctx, "Video search query is required!", EmbedType.Warning);
-            else
-            {
-                var service = new YoutubeService();
-                var output = await service.GetEmbeddedResults(query, 5, "video");
-                await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: output);
-            }
+            if (!BotServices.CheckUserInput(query)) return;
+            var service = new YoutubeService();
+            var results = await service.GetEmbeddedResults(query, 5, "video");
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results);
         }
 
         #endregion COMMAND_VIDEO

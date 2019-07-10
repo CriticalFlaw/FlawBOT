@@ -1,28 +1,26 @@
 ﻿using DSharpPlus.Entities;
+using FlawBOT.Common;
 using FlawBOT.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Search
 {
-    public class SimpsonsService
+    public class SimpsonsService : HttpHandler
     {
-        private static readonly HttpClient http = new HttpClient();
-
         public static async Task<DiscordEmbedBuilder> GetSimpsonsDataAsync(string site)
         {
-            var result = await http.GetStringAsync($"https://{site}.com/api/random");
+            var result = await _http.GetStringAsync($"https://{site}.com/api/random");
             var results = JsonConvert.DeserializeObject<SimpsonsData>(result);
             return EmbedSimpsonsEpisode(results, site);
         }
 
         public static async Task<string> GetSimpsonsGifAsync(string site)
         {
-            var result = await http.GetStringAsync($"https://{site}.com/api/random");
+            var result = await _http.GetStringAsync($"https://{site}.com/api/random");
             var content = JsonConvert.DeserializeObject<SimpsonsData>(result);
-            var frames_result = await http.GetStringAsync($"https://{site}.com/api/frames/{content.Episode.Key}/{content.Frame.Timestamp}/3000/4000");
+            var frames_result = await _http.GetStringAsync($"https://{site}.com/api/frames/{content.Episode.Key}/{content.Frame.Timestamp}/3000/4000");
             var frames = JsonConvert.DeserializeObject<List<Frame>>(frames_result);
             var start = frames[0].Timestamp;
             var end = frames[frames.Count - 1].Timestamp;

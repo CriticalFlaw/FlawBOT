@@ -38,7 +38,7 @@ namespace FlawBOT.Modules.Misc
                 foreach (var react in pollOptions)
                     await message.CreateReactionAsync(react);
                 var pollResult = await interactivity.CollectReactionsAsync(message, duration);
-                var results = pollResult.Reactions.Where(xkvp => pollOptions.Contains(xkvp.Key)).Select(xkvp => $"{xkvp.Key} wins the poll with **{xkvp.Value}** votes");
+                var results = pollResult.Where(x => pollOptions.Contains(x.Emoji)).Select(x => $"{x.Emoji} wins the poll with **{x.Total}** votes");
                 await ctx.RespondAsync(string.Join("\n", results));
             }
         }

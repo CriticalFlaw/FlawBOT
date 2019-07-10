@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Games
 {
-    public class PokemonService
+    public class PokemonService : HttpHandler
     {
-        private static readonly string base_url = "http://api.pokemontcg.io/v1/cards?name=";
-        private static readonly string poke_url = "https://pokeapi.co/api/v2/pokemon/?limit=100";
-        private static readonly HttpClient http = new HttpClient();
-
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query)
         {
-            var results = await http.GetStringAsync(base_url + query.Trim());
+            if (SharedData.PokemonList.Count <= 0) await UpdatePokemonListAsync().ConfigureAwait(false);
+            query = (string.IsNullOrWhiteSpace(query)) ? GetRandomPokemonAsync() : query;
+            var results = await _http.GetStringAsync("https://api.pokemontcg.io/v1/cards?name=" + query.Trim());
             return JsonConvert.DeserializeObject<PokemonCards>(results);
         }
 
@@ -25,13 +23,24 @@ namespace FlawBOT.Services.Games
             return SharedData.PokemonList[random.Next(0, SharedData.PokemonList.Count)];
         }
 
-        public static async Task UpdatePokemonList()
+        public static async Task<bool> UpdatePokemonListAsync()
         {
-            var results = await http.GetStringAsync(poke_url);
-            SharedData.PokemonList.Clear();
-            var list = JsonConvert.DeserializeObject<PokemonData>(results);
-            foreach (var pokemon in list.results)
-                SharedData.PokemonList.Add(pokemon.name);
+            try
+            {
+                var client = new HttpClient();
+                var list = await client.GetStringAsync("https://pokeapi.co/api/v2/pokemon/?limit=100");
+                var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
+                SharedData.PokemonList.Clear();
+                foreach (var pokemon in results)
+                    if (!string.IsNullOrWhiteSpace(pokemon.Name))
+                        SharedData.PokemonList.Add(pokemon.Name);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error update Pokemon list. " + ex.Message);
+                return false;
+            }
         }
     }
 }
