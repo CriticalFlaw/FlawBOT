@@ -1,6 +1,8 @@
 ﻿using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
@@ -8,7 +10,7 @@ namespace FlawBOT.Framework.Services
     public class SpeedrunService : HttpHandler
     {
         /// <summary>
-        /// Search for a game speedrun data
+        /// Retrieve game speedrun data
         /// </summary>
         /// <param name="query">Name of the game</param>
         public static async Task<SpeedrunGame> GetSpeedrunGameAsync(string query)
@@ -25,15 +27,21 @@ namespace FlawBOT.Framework.Services
         }
 
         /// <summary>
-        /// Search for a game's platform
+        /// Retrieve the speedrun game's platforms, genres, developers or publishers.
         /// </summary>
-        /// <param name="query">Name of the platform</param>
-        public static async Task<SpeedrunPlatform> GetGamePlatformAsync(string query)
+        /// <param name="queryList">Developer IDs</param>
+        public static async Task<string> GetSpeedrunExtraAsync(List<object> queryList, SpeedrunExtras search)
         {
             try
             {
-                var results = await _http.GetStringAsync("https://www.speedrun.com/api/v1/platforms/" + query);
-                return JsonConvert.DeserializeObject<SpeedrunPlatform>(results);
+                var results = new StringBuilder();
+                foreach (var query in queryList)
+                {
+                    var output = await _http.GetStringAsync("https://www.speedrun.com/api/v1/" + search.ToString().ToLowerInvariant() + "/" + query);
+                    var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output).Data.Name;
+                    results.Append(name + "\n");
+                }
+                return results.ToString();
             }
             catch
             {

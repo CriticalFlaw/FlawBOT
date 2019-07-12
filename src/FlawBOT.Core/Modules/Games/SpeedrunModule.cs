@@ -4,10 +4,9 @@ using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Games
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SpeedrunModule : BaseCommandModule
@@ -26,25 +25,17 @@ namespace FlawBOT.Modules.Games
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.Names.International + $" ({results.Abbreviation})")
-                    .AddField("Release Year", (results.ReleaseDate != null) ? results.ReleaseDate.ToString() : "UNKNOWN", true)
-                    .AddField("Show Milliseconds", (results.RuleSet.ShowMilliseconds) ? "YES" : "NO", true)
-                    .AddField("Requires Verification", (results.RuleSet.RequiresVerification) ? "YES" : "NO", true)
-                    .AddField("Requires Video", (results.RuleSet.RequiresVideo) ? "YES" : "NO", true)
-                    .AddField("Emulators Allowed", (results.RuleSet.EmulatorsAllowed) ? "YES" : "NO", true)
-                    .WithFooter($"ID: {results.ID}")
+                    .WithTitle(results.Names.International)
+                    .AddField("Release Date", results.ReleaseDate.ToString() ?? "Unknown", true)
+                    .AddField("Emulators Allowed?", (results.RuleSet.EmulatorsAllowed) ? "Yes" : "No", true)
+                    .AddField("Developers", SpeedrunService.GetSpeedrunExtraAsync(results.Developers.Take(3).ToList(), SpeedrunExtras.Developers).Result ?? "Unknown", true)
+                    .AddField("Publishers", SpeedrunService.GetSpeedrunExtraAsync(results.Publishers.Take(3).ToList(), SpeedrunExtras.Publishers).Result ?? "Unknown", true)
+                    .AddField("Genres", SpeedrunService.GetSpeedrunExtraAsync(results.Genres.Take(3).ToList(), SpeedrunExtras.Genres).Result ?? "Unknown", true)
+                    .AddField("Platforms", SpeedrunService.GetSpeedrunExtraAsync(results.Platforms.Take(3).ToList(), SpeedrunExtras.Platforms).Result ?? "Unknown", true)
+                    .WithFooter($"ID: {results.ID} - Abbreviation: {results.Abbreviation}")
+                    .WithThumbnailUrl(results.Assets.CoverLarge.URL ?? results.Assets.Icon.URL)
                     .WithUrl(results.WebLink)
-                    .WithColor(DiscordColor.Magenta);
-
-                if (results.Assets.CoverLarge.URL != null)
-                    output.WithThumbnailUrl(results.Assets.CoverLarge.URL);
-
-                var platforms = new StringBuilder();
-                foreach (var platform in results.Platforms.Take(3))
-                    platforms.Append(SpeedrunService.GetGamePlatformAsync(platform).Result.Data.Name + "\n");
-                if (platforms.Length > 0)
-                    output.AddField("Platforms", platforms.ToString(), true);   // TODO: Convert to text
-
+                    .WithColor(new DiscordColor("#0F7A4D"));
                 await ctx.RespondAsync(embed: output.Build());
             }
         }
