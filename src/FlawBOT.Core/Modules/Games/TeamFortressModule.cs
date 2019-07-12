@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Games
+namespace FlawBOT.Modules
 {
     [Group("tf2")]
     [Description("Commands related to Team Fortress 2")]
@@ -20,7 +20,8 @@ namespace FlawBOT.Modules.Games
     {
         #region COMMAND_SCHEMA
 
-        [Command("item"), Hidden]
+        [Command("item")]
+        [Aliases("schema")]
         [Description("Retrieve an item from the latest TF2 item schema")]
         public async Task TF2Item(CommandContext ctx,
             [Description("Item to find in the TF2 schema")] [RemainingText] string query = "The Scattergun")
@@ -33,35 +34,25 @@ namespace FlawBOT.Modules.Games
                 var textInfo = new CultureInfo("en-US", false).TextInfo;
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(item.ItemName)
-                    .WithThumbnailUrl(item.ImageUrl)
+                    .WithDescription((!string.IsNullOrWhiteSpace(item.Description)) ? item.Description : "")
+                    .AddField("Giftable", (item.Capabilities.Giftable) ? "Yes" : "No")
+                    .AddField("Nameable", (item.Capabilities.Renamable) ? "Yes" : "No")
+                    .AddField("Item Slot:", (!string.IsNullOrWhiteSpace(item.ItemSlot)) ? textInfo.ToTitleCase(item.ItemSlot) : "Unknown", true)
+                    .WithThumbnailUrl(item.ImageURL)
                     .WithUrl("https://wiki.teamfortress.com/wiki/" + item.ItemName.Replace(' ', '_'))
+                    .WithFooter("ID: " + item.DefIndex)
                     .WithColor(new DiscordColor("#E7B53B"));
-                if (!string.IsNullOrWhiteSpace(item.ItemDescription))
-                    output.WithDescription(item.ItemDescription);
-                if (!string.IsNullOrWhiteSpace(item.ItemSlot))
-                    output.AddField("Item Slot:", textInfo.ToTitleCase(item.ItemSlot), true);
-                if (!string.IsNullOrWhiteSpace(item.ModelPlayer))
-                    await ctx.RespondAsync(embed: output.Build());
+
+                var userClasses = new StringBuilder();
+                foreach (var className in item.UsedByClasses)
+                    userClasses.Append(className + "\n");
+                output.AddField("Classes:", userClasses.ToString() ?? "Unknown", true);
+
+                await ctx.RespondAsync(embed: output.Build());
             }
         }
 
         #endregion COMMAND_SCHEMA
-
-        #region COMMAND_CONNECT
-
-        [Command("connect")]
-        [Description("Format TF2 connection information into a clickable link")]
-        public async Task SteamServerLink(CommandContext ctx,
-            [Description("Connection string")] [RemainingText] string link)
-        {
-            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
-            if (regex.Success)
-                await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
-            else
-                await BotServices.SendEmbedAsync(ctx, "Invalid connection info, follow the format: 123.345.56.789:000; password hello", EmbedType.Warning);
-        }
-
-        #endregion COMMAND_CONNECT
 
         #region COMMAND_MAP
 
@@ -150,10 +141,10 @@ namespace FlawBOT.Modules.Games
                         .AddField("Current Map", server.MapName ?? "Unknown", true)
                         .AddField("Next Map", server.NextMap ?? "Unknown", true)
                         .AddField("Provider", server.Provider ?? "Unknown", true)
-                        .AddField("Roll the Dice", server.HasRTD ? "YES" : "NO", true)
-                        //.AddField("Random Crits", server.has_randomcrits.ToString() ?? "Unknown", true)
-                        .AddField("Respawn Timer", server.HasNoSpawnTimer ? "YES" : "NO", true)
-                        .AddField("All Talk", server.HasAllTalk ? "YES" : "NO", true)
+                        .AddField("Roll the Dice>", server.HasRTD ? "Yes" : "No", true)
+                        .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
+                        .AddField("Respawn Timer", server.HasNoSpawnTimer ? "Yes" : "No", true)
+                        .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
                         .WithThumbnailUrl("https://teamwork.tf" + server.MapThumbnail)
                         .WithFooter("Type next in the next 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
@@ -169,123 +160,51 @@ namespace FlawBOT.Modules.Games
 
         #endregion COMMAND_SERVERS
 
-        #region BACKPACK.TF
-
-        [Command("price_history"), Hidden]
-        [Description("Retrieve price history for the specified item")]
-        public async Task BackpackPriceHistory(CommandContext ctx,
-            [RemainingText] string itemName)
-        {
-            var results = TeamFortressService.GetPriceHistory(itemName).Response;
-            if (results.Success > 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(itemName)
-                    .WithColor(DiscordColor.Chartreuse);
-
-                var histories = new StringBuilder();
-                foreach (var history in results.History.Take(5))
-                    histories.Append(history + "\n");
-                if (histories.Length > 0)
-                    output.AddField("History", histories.ToString(), true);
-
-                await ctx.RespondAsync(embed: output.Build());
-            }
-        }
-
-        [Command("item_prices"), Hidden]
-        [Description("Retrieve item prices for the specified API key. A request may be sent once every 60 seconds")]
-        public async Task BackpackItemPrices(CommandContext ctx)
-        {
-            var results = TeamFortressService.GetItemPrices().Response;
-            if (results.Success > 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
-            else
-            {
-                // Return results
-            }
-        }
-
-        [Command("special_items"), Hidden]
-        [Description("Retrieve special items for the specified API key")]
-        public async Task BackpackSpecialItems(CommandContext ctx)
-        {
-            var results = TeamFortressService.GetSpecialItems().Response;
-            if (results.Success > 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
-            else
-            {
-                // Return results
-            }
-        }
+        #region COMMAND_CLASSIFIEDS
 
         [Command("classifieds_all"), Hidden]
         [Description("Retrieve all currently open classifieds that are on backpack.tf")]
         public async Task BackpackClassifieds(CommandContext ctx)
         {
             var results = TeamFortressService.GetClassifieds();
-            if (results == null)
+            if (results.Total > 0)
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                // Return results
+                var output = new DiscordEmbedBuilder()
+                    .WithFooter("These are the classifieds retrieved from Backpack.TF")
+                    .WithColor(new DiscordColor("#E7B53B"));
+                if (results.Sell.Total > 0)
+                    foreach (var result in results.Sell.Listings.Take(5))
+                        output.AddField(result.Intent.ToString(), result.Item.Name);
+                if (results.Buy.Total > 0)
+                    foreach (var result in results.Buy.Listings.Take(5))
+                        output.AddField(result.Intent.ToString(), result.Item.Name);
+                await ctx.RespondAsync(embed: output.Build());
             }
         }
 
         [Command("classifieds_my"), Hidden]
         [Description("Retrieve the currently opened user's classifieds from backpack.tf")]
-        public async Task BackpackOwnClassifieds(CommandContext ctx)
+        public async Task BackpackOwnClassifieds(CommandContext ctx,
+            [Description("User whose classifieds to find on Backpack.TF")] [RemainingText] string query)
         {
-            var results = TeamFortressService.GetOwnClassifieds();
-            if (results == null)
+            if (!BotServices.CheckUserInput(query)) return;
+            var steamId = SteamService.GetSteamUserProfileAsync(query).Result.SteamID.ToString();
+            var results = TeamFortressService.GetOwnClassifieds(steamId);
+            if (results.Items.Count == 0)
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                // Return results
+                var output = new DiscordEmbedBuilder()
+                    .WithFooter($"These are the classifieds by {query} retrieved from Backpack.TF")
+                    .WithColor(new DiscordColor("#E7B53B"));
+                foreach (var result in results.Items.Take(5))
+                    output.AddField(result.Name, result.MarketplacePrice.ToString());
+                await ctx.RespondAsync(embed: output.Build());
             }
         }
 
-        [Command("inventory_user"), Hidden]
-        [Description("Retrieve the currently opened user's classifieds from backpack.tf")]
-        public async Task BackpackUserInventory(CommandContext ctx, string steamID)
-        {
-            var results = TeamFortressService.GetUserInventory(steamID);
-            if (results.Success > 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
-            else
-            {
-                // Return results
-            }
-        }
-
-        [Command("inventory_my"), Hidden]
-        [Description("Retrieve the currently opened user's classifieds from backpack.tf")]
-        public async Task BackpackOwnInventory(CommandContext ctx)
-        {
-            var results = TeamFortressService.GetOwnInventory();
-            if (results.Success > 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
-            else
-            {
-                // Return results
-            }
-        }
-
-        [Command("inventory_item"), Hidden]
-        [Description("Retrieve an item in the user's inventory and returns its Asset and Description models")]
-        public async Task BackpackItemFromInventory(CommandContext ctx, string itemName)
-        {
-            var results = TeamFortressService.GetItemFromInventory(itemName);
-            if (results == null)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
-            else
-            {
-                // Return results
-            }
-        }
-
-        #endregion BACKPACK.TF
+        #endregion COMMAND_CLASSIFIEDS
     }
 }

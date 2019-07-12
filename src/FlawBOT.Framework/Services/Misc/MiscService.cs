@@ -44,28 +44,23 @@ namespace FlawBOT.Framework.Services
 
     public class CatService : HttpHandler
     {
-        private static readonly string fact_url = "https://catfact.ninja/fact";
-        private static readonly string photo_url = "http://aws.random.cat/meow";
-
         public static async Task<string> GetCatFactAsync()
         {
-            return await _http.GetStringAsync(fact_url);
+            return await _http.GetStringAsync("https://catfact.ninja/fact");
         }
 
         public static async Task<string> GetCatPhotoAsync()
         {
-            var results = await _http.GetStringAsync(photo_url).ConfigureAwait(false);
+            var results = await _http.GetStringAsync("http://aws.random.cat/meow").ConfigureAwait(false);
             return JObject.Parse(results)["file"].ToString();
         }
     }
 
     public class DogService : HttpHandler
     {
-        private static readonly string base_url = "https://dog.ceo/api/breeds/image/random";
-
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await _http.GetStringAsync(base_url);
+            var results = await _http.GetStringAsync("https://dog.ceo/api/breeds/image/random");
             return JsonConvert.DeserializeObject<DogData>(results);
         }
     }

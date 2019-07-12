@@ -4,13 +4,12 @@ using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Steam.Models.SteamCommunity;
-using SteamWebAPI2.Interfaces;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Group("steam")]
     [Description("Commands finding Steam games and users")]
@@ -28,25 +27,18 @@ namespace FlawBOT.Modules.Search
             while (check == false)
                 try
                 {
-                    var store = new SteamStore();
-                    var appId = SteamService.GetSteamAppAsync(query);
-                    var app = await store.GetStoreAppDetailsAsync(appId);
+                    var app = SteamService.GetSteamAppAsync(query).Result;
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(app.Name)
+                        .WithDescription((Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : app.DetailedDescription.Substring(0, 500) + "...", "<[^>]*>", "")) ?? "Unknown")
+                        .AddField("Developers", app.Developers[0] ?? "Unknown", true)
+                        .AddField("Publisher", app.Publishers[0] ?? "Unknown", true)
+                        .AddField("Release Date", app.ReleaseDate.Date ?? "Unknown", true)
+                        .AddField("Metacritic", app.Metacritic.Score.ToString() ?? "Unknown", true)
                         .WithThumbnailUrl(app.HeaderImage)
                         .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId.ToString())
                         .WithFooter("App ID: " + app.SteamAppId.ToString())
                         .WithColor(new DiscordColor("#1B2838"));
-                    if (!string.IsNullOrWhiteSpace(app.DetailedDescription))
-                        output.WithDescription(Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : app.DetailedDescription.Substring(0, 500) + "...", "<[^>]*>", ""));
-                    if (!string.IsNullOrWhiteSpace(app.Developers[0]))
-                        output.AddField("Developers", app.Developers[0], true);
-                    if (!string.IsNullOrWhiteSpace(app.Publishers[0]))
-                        output.AddField("Publisher", app.Publishers[0], true);
-                    if (!string.IsNullOrWhiteSpace(app.ReleaseDate.Date))
-                        output.AddField("Release Date", app.ReleaseDate.Date, true);
-                    if (app.Metacritic != null)
-                        output.AddField("Metacritic", app.Metacritic.Score.ToString(), true);
                     await ctx.RespondAsync(embed: output.Build());
                     check = true;
                 }
@@ -102,5 +94,21 @@ namespace FlawBOT.Modules.Search
         }
 
         #endregion COMMAND_USER
+
+        #region COMMAND_CONNECT
+
+        [Command("connect")]
+        [Description("Format a game connection string into a clickable link")]
+        public async Task SteamServerLink(CommandContext ctx,
+            [Description("Connection string")] [RemainingText] string link)
+        {
+            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
+            if (regex.Success)
+                await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
+            else
+                await BotServices.SendEmbedAsync(ctx, "Invalid connection info, follow the format: 123.345.56.789:000; password hello", EmbedType.Warning);
+        }
+
+        #endregion COMMAND_CONNECT
     }
 }

@@ -69,7 +69,7 @@ namespace FlawBOT.Framework.Services
         public static async Task<MemoryStream> CheckImageInput(CommandContext ctx, string input)
         {
             var stream = new MemoryStream();
-            if (!Uri.TryCreate(input, UriKind.Absolute, out var uriResult) && (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
+            if (!Uri.TryCreate(input, UriKind.Absolute, out _) && (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
                 await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning).ConfigureAwait(false);
             else
             {

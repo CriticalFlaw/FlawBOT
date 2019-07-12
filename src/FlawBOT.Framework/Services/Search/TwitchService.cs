@@ -10,11 +10,9 @@ namespace FlawBOT.Framework.Services
 {
     public class TwitchService : HttpHandler
     {
-        private static readonly string base_url = "https://api.twitch.tv/kraken/streams/";
-
         public static async Task<TwitchData> GetTwitchDataAsync(string query)
         {
-            var results = await _http.GetStringAsync(base_url + query + "?client_id=" + TokenHandler.Tokens.TwitchToken);
+            var results = await _http.GetStringAsync("https://api.twitch.tv/kraken/streams/" + query + "?client_id=" + TokenHandler.Tokens.TwitchToken);
             return JsonConvert.DeserializeObject<TwitchData>(results);
         }
 

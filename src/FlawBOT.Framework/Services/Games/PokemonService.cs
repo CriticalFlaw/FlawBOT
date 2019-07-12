@@ -1,9 +1,10 @@
 ﻿using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
+using PokemonTcgSdk;
+using PokemonTcgSdk.Models;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
@@ -14,10 +15,14 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query)
         {
-            if (PokemonList.Count <= 0) await UpdatePokemonListAsync().ConfigureAwait(false);
             query = (string.IsNullOrWhiteSpace(query)) ? GetRandomPokemonAsync() : query;
             var results = await _http.GetStringAsync("https://api.pokemontcg.io/v1/cards?name=" + query.Trim());
             return JsonConvert.DeserializeObject<PokemonCards>(results);
+        }
+
+        public static PokemonCard GetExactPokemonAsync(string cardID)
+        {
+            return PokemonTcgSdk.Card.Find<Pokemon>(cardID).Card;
         }
 
         public static string GetRandomPokemonAsync()
@@ -30,8 +35,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var client = new HttpClient();
-                var list = await client.GetStringAsync("https://pokeapi.co/api/v2/pokemon/?limit=100");
+                var list = await _http.GetStringAsync("https://pokeapi.co/api/v2/pokemon/?limit=100");
                 var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
                 foreach (var pokemon in results)

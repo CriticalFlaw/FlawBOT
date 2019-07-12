@@ -9,11 +9,7 @@ using FlawBOT.Common;
 using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using FlawBOT.Modules.Bot;
-using FlawBOT.Modules.Games;
-using FlawBOT.Modules.Misc;
-using FlawBOT.Modules.Search;
-using FlawBOT.Modules.Server;
+using FlawBOT.Modules;
 using System;
 using System.IO;
 using System.Net;
@@ -75,14 +71,11 @@ namespace FlawBOT
             {
                 PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
                 EnableDms = false, // Set the boolean for responding to direct messages
-                //EnableDefaultHelp = false,
                 EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
                 CaseSensitive = false,
-                //DefaultHelpChecks = new List<CheckBaseAttribute>()
             });
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
-
             Commands.SetHelpFormatter<HelpFormatter>();
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<OwnerModule>();
@@ -111,22 +104,22 @@ namespace FlawBOT
             // Start the uptime counter
             Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
             SharedData.ProcessStarted = DateTime.Now;
-            await SteamService.UpdateSteamListAsync().ConfigureAwait(false); // Update the Steam App list
-            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false); // Update the Pokemon list
-            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false); // Update the Pokemon list
+            await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }
 
         private static Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, SharedData.Name, SharedData.Name + $", version: " + SharedData.Version, DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, SharedData.Name, SharedData.Name + ", version: " + SharedData.Version, DateTime.Now);
             return Task.CompletedTask;
         }
 
         private static Task Client_ClientError(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"Exception occured: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, "Exception occured: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
             return Task.CompletedTask;
         }
 

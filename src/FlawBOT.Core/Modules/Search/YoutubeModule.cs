@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Group("youtube")]
     [Aliases("yt")]

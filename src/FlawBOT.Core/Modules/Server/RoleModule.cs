@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Server
+namespace FlawBOT.Modules
 {
     [Group("roles")]
     [Aliases("role", "rl")]

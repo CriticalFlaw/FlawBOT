@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FlawBOT.Core": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

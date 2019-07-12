@@ -2,13 +2,14 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class GoogleModule : BaseCommandModule
@@ -30,7 +31,7 @@ namespace FlawBOT.Modules.Search
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":clock1: Time in " + results.Results[0].FormattedAddress)
                     .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.timeZoneName)
-                    .WithColor(DiscordColor.Cyan);
+                    .WithColor(SharedData.DefaultColor);
                 await ctx.RespondAsync(embed: output.Build());
             }
         }
@@ -58,7 +59,7 @@ namespace FlawBOT.Modules.Search
                     .AddField("Humidity", $"{results.Main.Humidity}%", true)
                     .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
                     .WithUrl("https://openweathermap.org/city/" + results.ID)
-                    .WithColor(DiscordColor.Cyan);
+                    .WithColor(SharedData.DefaultColor);
                 await ctx.RespondAsync(embed: output.Build());
             }
         }

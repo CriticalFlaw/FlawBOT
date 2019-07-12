@@ -5,7 +5,7 @@ using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Games
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SmashModule : BaseCommandModule
@@ -13,8 +13,8 @@ namespace FlawBOT.Modules.Games
         #region COMMAND_SMASH
 
         [Command("smash")]
-        [Aliases("smashbros")]
-        [Description("Retrieve Smash Ultimate character information")]
+        [Aliases("smashbros", "sb", "sbu")]
+        [Description("Retrieve Smash Bros. Ultimate character information")]
         public async Task GetCharacter(CommandContext ctx,
             [Description("Name of the Smash character")] [RemainingText] string query)
         {

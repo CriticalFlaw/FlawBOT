@@ -4,12 +4,11 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using PokemonTcgSdk;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Games
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class PokemonModule : BaseCommandModule
@@ -29,22 +28,21 @@ namespace FlawBOT.Modules.Games
             {
                 foreach (var value in results.Cards)
                 {
-                    var card = PokemonTcgSdk.Card.Find<Pokemon>(value.ID).Card;
+                    var card = PokemonService.GetExactPokemonAsync(value.ID);
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(card.Name + $" (PokeDex ID: {card.NationalPokedexNumber})")
                         .AddField("Health Points", card.Hp ?? "Unknown", true)
                         .AddField("Artist", card.Artist ?? "Unknown", true)
                         .AddField("Rarity", card.Rarity ?? "Unknown", true)
                         .AddField("Series", card.Series ?? "Unknown", true)
-                        .WithImageUrl((!string.IsNullOrWhiteSpace(card.ImageUrlHiRes)) ? card.ImageUrlHiRes : card.ImageUrl)
+                        .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
                         .WithColor(DiscordColor.Gold)
                         .WithFooter("Type next in the next 10 seconds for the next card");
 
                     var types = new StringBuilder();
                     foreach (var type in card.Types)
                         types.Append(type);
-                    if (types.Length != 0)
-                        output.AddField("Type(s)", types.ToString(), true);
+                    output.AddField("Type(s)", types.ToString() ?? "Unknown", true);
                     await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));

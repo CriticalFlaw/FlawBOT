@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Server
+namespace FlawBOT.Modules
 {
     [Group("server")]
     [Aliases("guild")]

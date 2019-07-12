@@ -9,7 +9,7 @@ using FlawBOT.Framework.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Bot
+namespace FlawBOT.Modules
 {
     [Group("bot")]
     [Description("Basic commands for interacting with FlawBOT")]
@@ -29,9 +29,9 @@ namespace FlawBOT.Modules.Bot
                 .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime", $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .AddField(":link: Links", $"[Commands]({SharedData.GitHubLink}wiki) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})", true)
-                .WithFooter($"Thank you for using {SharedData.Name} (v{SharedData.Version})")
+                .WithFooter("Thank you for using " + SharedData.Name + $"(v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
-                .WithColor(DiscordColor.Aquamarine);
+                .WithColor(SharedData.DefaultColor);
             await ctx.RespondAsync(embed: output.Build());
         }
 
@@ -95,7 +95,7 @@ namespace FlawBOT.Modules.Bot
                         .AddField("Server", ctx.Guild.Name + $" (ID: {ctx.Guild.Id})")
                         .AddField("Owner", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator)
                         .AddField("Confirm", $"[Click here to add this issue to GitHub]({SharedData.GitHubLink}/issues/new)")
-                        .WithColor(DiscordColor.Turquoise);
+                        .WithColor(SharedData.DefaultColor);
                     await dm.SendMessageAsync(embed: output.Build());
                     await BotServices.SendEmbedAsync(ctx, "Thank You! Your report has been submitted.", EmbedType.Good);
                 }

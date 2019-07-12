@@ -11,8 +11,8 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("data")]
         public List<Datum> Data { get; set; }
 
-        [JsonProperty("pagination")]
         [JsonIgnore]
+        [JsonProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 
@@ -21,8 +21,8 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("international")]
         public string International { get; set; }
 
-        [JsonProperty("japanese")]
         [JsonIgnore]
+        [JsonProperty("japanese")]
         public string Japanese { get; set; }
 
         [JsonProperty("twitch")]
@@ -40,20 +40,16 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("require-video")]
         public bool RequiresVideo { get; set; }
 
-        [JsonProperty("run-times")]
         [JsonIgnore]
+        [JsonProperty("run-times")]
         public List<string> RunTimes { get; set; }
 
-        [JsonProperty("default-time")]
         [JsonIgnore]
+        [JsonProperty("default-time")]
         public string DefaultTime { get; set; }
 
         [JsonProperty("emulators-allowed")]
         public bool EmulatorsAllowed { get; set; }
-    }
-
-    public class Moderators
-    {
     }
 
     public class Logo
@@ -196,21 +192,17 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("icon")]
         public Icon Icon { get; set; }
 
-        [JsonProperty("trophy-1st")]
         [JsonIgnore]
+        [JsonProperty("trophy-1st")]
         public Trophy1st Trophy1st { get; set; }
 
-        [JsonProperty("trophy-2nd")]
         [JsonIgnore]
+        [JsonProperty("trophy-2nd")]
         public Trophy2nd Trophy2nd { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("trophy-3rd")]
-        [JsonIgnore]
         public Trophy3rd Trophy3rd { get; set; }
-
-        [JsonProperty("trophy-4th")]
-        [JsonIgnore]
-        public object Trophy4th { get; set; }
 
         [JsonProperty("background")]
         public Background Background { get; set; }
@@ -249,7 +241,7 @@ namespace FlawBOT.Framework.Models
         public List<object> GameTypes { get; set; }
 
         [JsonProperty("platforms")]
-        public List<string> Platforms { get; set; }
+        public List<object> Platforms { get; set; }
 
         [JsonProperty("regions")]
         public List<string> Regions { get; set; }
@@ -266,12 +258,8 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("publishers")]
         public List<object> Publishers { get; set; }
 
-        [JsonProperty("moderators")]
-        [JsonIgnore]
-        public Moderators Moderators { get; set; }
-
         [JsonProperty("created")]
-        public DateTime Created { get; set; }
+        public DateTime? Created { get; set; }
 
         [JsonProperty("assets")]
         public Assets Assets { get; set; }
@@ -300,26 +288,26 @@ namespace FlawBOT.Framework.Models
 
     public class Pagination
     {
-        [JsonProperty("offset")]
         [JsonIgnore]
+        [JsonProperty("offset")]
         public int Offset { get; set; }
 
-        [JsonProperty("max")]
         [JsonIgnore]
+        [JsonProperty("max")]
         public int Max { get; set; }
 
-        [JsonProperty("size")]
         [JsonIgnore]
+        [JsonProperty("size")]
         public int Size { get; set; }
 
-        [JsonProperty("links")]
         [JsonIgnore]
+        [JsonProperty("links")]
         public List<Link2> Links { get; set; }
     }
 
     #endregion MODEL_GAME
 
-    #region MODEL_PLATFORM
+    #region MODEL_OTHER
 
     public class PlatformLinks
     {
@@ -330,7 +318,7 @@ namespace FlawBOT.Framework.Models
         public string URL { get; set; }
     }
 
-    public class PlatformData
+    public class Data
     {
         [JsonProperty("id")]
         public string ID { get; set; }
@@ -339,17 +327,25 @@ namespace FlawBOT.Framework.Models
         public string Name { get; set; }
 
         [JsonProperty("released")]
-        public int Released { get; set; }
+        public int? Released { get; set; }
 
         [JsonProperty("links")]
         public List<PlatformLinks> Links { get; set; }
     }
 
-    public class SpeedrunPlatform
+    public class SpeedrunExtra
     {
         [JsonProperty("data")]
-        public PlatformData Data { get; set; }
+        public Data Data { get; set; }
     }
 
-    #endregion MODEL_PLATFORM
+    #endregion MODEL_OTHER
+
+    public enum SpeedrunExtras
+    {
+        Platforms,
+        Genres,
+        Developers,
+        Publishers
+    }
 }

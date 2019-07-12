@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Net.Models;
+using FlawBOT.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Server
+namespace FlawBOT.Modules
 {
     [Group("channel")]
     [Aliases("chn", "ch", "c")]
@@ -108,7 +109,7 @@ namespace FlawBOT.Modules.Server
                     .AddField("NSFW", channel.IsNSFW ? "YES" : "NO", true)
                     .WithThumbnailUrl(ctx.Guild.IconUrl)
                     .WithFooter("Created on " + channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
-                    .WithColor(DiscordColor.Aquamarine);
+                    .WithColor(SharedData.DefaultColor);
                 if (channel.Type == ChannelType.Voice)
                 {
                     output.AddField("Bitrate", channel.Bitrate.ToString(), true);

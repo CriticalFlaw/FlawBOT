@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Server
+namespace FlawBOT.Modules
 {
     [Group("user")]
     [Aliases("users", "u", "usr")]

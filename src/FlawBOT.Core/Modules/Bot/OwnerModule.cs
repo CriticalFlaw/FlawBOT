@@ -7,7 +7,7 @@ using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Bot
+namespace FlawBOT.Modules
 {
     [Group("sudo"), Hidden]
     [Description("Owner commands for controlling FlawBOT")]

@@ -25,6 +25,6 @@ namespace MiscModule
             Assert.IsTrue(DogService.GetDogPhotoAsync().Result.Status == "success");
         }
 
-        // TODO: Add Coin-Flip, Color, Dice Roll
+        // TODO: Put tests here...
     }
 }

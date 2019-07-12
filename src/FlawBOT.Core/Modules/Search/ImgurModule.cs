@@ -4,7 +4,7 @@ using FlawBOT.Framework.Services;
 using Imgur.API.Models.Impl;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class ImgurModule : BaseCommandModule

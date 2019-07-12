@@ -4,15 +4,11 @@ using DSharpPlus.Entities;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SimpsonsModule : BaseCommandModule
     {
-        private readonly string simpsons_site = "frinkiac";
-        private readonly string futurama_site = "morbotron";
-        private readonly string rickmorty_site = "masterofallscience";
-
         #region COMMAND_SIMPSONS
 
         [Command("simpsons")]
@@ -20,7 +16,7 @@ namespace FlawBOT.Modules.Search
         [Description("Retrieve a random Simpsons screenshot and episode")]
         public async Task Simpsons(CommandContext ctx)
         {
-            var results = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
+            var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Frinkiac);
             await ctx.RespondAsync(embed: results.Build());
         }
 
@@ -34,12 +30,12 @@ namespace FlawBOT.Modules.Search
         public async Task SimpsonsGIF(CommandContext ctx,
             [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
-            var output = await SimpsonsService.GetSimpsonsGifAsync(simpsons_site);
+            var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.Frinkiac);
             if (string.IsNullOrWhiteSpace(input))
                 await ctx.RespondAsync(output);
             else // Include episode information if any kind of parameter is inputted
             {
-                var results = await SimpsonsService.GetSimpsonsDataAsync(simpsons_site);
+                var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Frinkiac);
                 results.WithFooter("Note: First time gifs take a few minutes to properly generate");
                 await ctx.RespondAsync(output, embed: results.Build());
             }
@@ -54,7 +50,7 @@ namespace FlawBOT.Modules.Search
         [Description("Retrieve a random Futurama screenshot and episode")]
         public async Task Futurama(CommandContext ctx)
         {
-            var results = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
+            var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Morbotron);
             results.WithColor(new DiscordColor("#69E398"));
             await ctx.RespondAsync(embed: results.Build());
         }
@@ -69,12 +65,12 @@ namespace FlawBOT.Modules.Search
         public async Task FuturamaGIF(CommandContext ctx,
             [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
-            var output = await SimpsonsService.GetSimpsonsGifAsync(futurama_site);
+            var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.Morbotron);
             if (string.IsNullOrWhiteSpace(input))
                 await ctx.RespondAsync(output);
             else // Include episode information if any kind of parameter is inputted
             {
-                var results = await SimpsonsService.GetSimpsonsDataAsync(futurama_site);
+                var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Morbotron);
                 results.WithFooter("Note: First time gifs take a few minutes to properly generate");
                 results.WithColor(new DiscordColor("#69E398"));
                 await ctx.RespondAsync(output, embed: results.Build());
@@ -90,7 +86,7 @@ namespace FlawBOT.Modules.Search
         [Description("Retrieve a random Rick and Morty screenshot and episode")]
         public async Task RickMorty(CommandContext ctx)
         {
-            var results = await SimpsonsService.GetSimpsonsDataAsync(rickmorty_site);
+            var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience);
             results.WithColor(new DiscordColor("#ABD5EC"));
             await ctx.RespondAsync(embed: results.Build());
         }
@@ -105,12 +101,12 @@ namespace FlawBOT.Modules.Search
         public async Task RickMortyGif(CommandContext ctx,
             [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
-            var output = await SimpsonsService.GetSimpsonsGifAsync(rickmorty_site);
+            var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.MasterOfAllScience);
             if (string.IsNullOrWhiteSpace(input))
                 await ctx.RespondAsync(output);
             else // Include episode information if any kind of parameter is inputted
             {
-                var results = await SimpsonsService.GetSimpsonsDataAsync(rickmorty_site);
+                var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience);
                 results.WithFooter("Note: First time gifs take a few minutes to properly generate");
                 results.WithColor(new DiscordColor("#ABD5EC"));
                 await ctx.RespondAsync(output, embed: results.Build());

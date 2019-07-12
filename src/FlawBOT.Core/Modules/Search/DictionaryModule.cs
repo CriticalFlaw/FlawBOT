@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class DictionaryModule : BaseCommandModule
@@ -33,13 +33,12 @@ namespace FlawBOT.Modules.Search
                     var output = new DiscordEmbedBuilder()
                         .WithTitle("Urban Dictionary definition for " + Formatter.Bold(query) + (!string.IsNullOrWhiteSpace(definition.Author) ? $" by {definition.Author}" : ""))
                         .WithDescription(definition.Definition.Length < 500 ? definition.Definition : definition.Definition.Take(500) + "...")
+                        .AddField("Example", definition.Example ?? "None")
+                        .AddField(":thumbsup:", definition.ThumbsUp.ToString(), true)
+                        .AddField(":thumbsdown:", definition.ThumbsDown.ToString(), true)
                         .WithUrl(definition.Permalink)
                         .WithFooter("Type next in the next 10 seconds the next definition")
                         .WithColor(new DiscordColor("#1F2439"));
-                    if (!string.IsNullOrWhiteSpace(definition.Example))
-                        output.AddField("Example", definition.Example);
-                    output.AddField(":thumbsup:", definition.ThumbsUp.ToString(), true);
-                    output.AddField(":thumbsdown:", definition.ThumbsDown.ToString(), true);
                     var message = await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));

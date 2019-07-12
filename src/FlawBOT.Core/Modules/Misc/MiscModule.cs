@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Newtonsoft.Json.Linq;
@@ -9,7 +10,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Misc
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class MiscModule : BaseCommandModule
@@ -58,7 +59,6 @@ namespace FlawBOT.Modules.Misc
             var results = CatService.GetCatPhotoAsync().Result;
             if (string.IsNullOrWhiteSpace(results))
                 await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning);
-
             var output = new DiscordEmbedBuilder()
                 .WithTitle(":cat: Meow!")
                 .WithImageUrl(results)
@@ -78,7 +78,7 @@ namespace FlawBOT.Modules.Misc
             var random = new Random();
             var output = new DiscordEmbedBuilder()
                 .WithDescription(ctx.User.Mention + " flipped " + Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
-                .WithColor(DiscordColor.Black);
+                .WithColor(SharedData.DefaultColor);
             return ctx.RespondAsync(embed: output.Build());
         }
 
@@ -93,7 +93,9 @@ namespace FlawBOT.Modules.Misc
             [Description("HEX color code to process")] DiscordColor color)
         {
             var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
-            if (regex.Success)
+            if (!regex.Success)
+                await BotServices.SendEmbedAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B", EmbedType.Warning);
+            else
             {
                 var output = new DiscordEmbedBuilder()
                     .AddField("HEX:", $"{color.Value:X}", true)
@@ -102,8 +104,6 @@ namespace FlawBOT.Modules.Misc
                     .WithColor(color);
                 await ctx.RespondAsync(embed: output.Build());
             }
-            else
-                await BotServices.SendEmbedAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B", EmbedType.Warning);
         }
 
         #endregion COMMAND_COLOR
@@ -118,7 +118,7 @@ namespace FlawBOT.Modules.Misc
             var random = new Random();
             var output = new DiscordEmbedBuilder()
                 .WithDescription(ctx.User.Mention + " rolled a " + Formatter.Bold(random.Next(1, 7).ToString()))
-                .WithColor(DiscordColor.Black);
+                .WithColor(SharedData.DefaultColor);
             return ctx.RespondAsync(embed: output.Build());
         }
 

@@ -9,14 +9,14 @@ namespace FlawBOT.Framework.Services
 {
     public class SimpsonsService : HttpHandler
     {
-        public static async Task<DiscordEmbedBuilder> GetSimpsonsDataAsync(string site)
+        public static async Task<DiscordEmbedBuilder> GetSimpsonsDataAsync(SiteRoot site)
         {
-            var result = await _http.GetStringAsync($"https://{site}.com/api/random");
-            var results = JsonConvert.DeserializeObject<SimpsonsData>(result);
+            var output = await _http.GetStringAsync($"https://{site}.com/api/random");
+            var results = JsonConvert.DeserializeObject<SimpsonsData>(output);
             return EmbedSimpsonsEpisode(results, site);
         }
 
-        public static async Task<string> GetSimpsonsGifAsync(string site)
+        public static async Task<string> GetSimpsonsGifAsync(SiteRoot site)
         {
             var result = await _http.GetStringAsync($"https://{site}.com/api/random");
             var content = JsonConvert.DeserializeObject<SimpsonsData>(result);
@@ -27,7 +27,7 @@ namespace FlawBOT.Framework.Services
             return $"https://{site}.com/gif/{content.Episode.Key}/{start}/{end}.gif";
         }
 
-        public static DiscordEmbedBuilder EmbedSimpsonsEpisode(SimpsonsData data, string site)
+        public static DiscordEmbedBuilder EmbedSimpsonsEpisode(SimpsonsData data, SiteRoot site)
         {
             var output = new DiscordEmbedBuilder()
                 .WithTitle(data.Episode.Title)
@@ -39,6 +39,13 @@ namespace FlawBOT.Framework.Services
                 .WithColor(new DiscordColor("#FFBB22"))
                 .WithUrl(data.Episode.WikiLink);
             return output;
+        }
+
+        public enum SiteRoot
+        {
+            Frinkiac,
+            Morbotron,
+            MasterOfAllScience
         }
     }
 }

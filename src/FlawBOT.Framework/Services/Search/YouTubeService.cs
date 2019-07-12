@@ -25,8 +25,7 @@ namespace FlawBOT.Framework.Services
         public async Task<string> GetFirstVideoResultAsync(string query)
         {
             var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
-            if (results == null || results.Count == 0)
-                return ":warning: No results found!";
+            if (results == null || results.Count == 0) return ":warning: No results found!";
             return "https://www.youtube.com/watch?v=" + results.First().Id.VideoId;
         }
 
@@ -39,8 +38,7 @@ namespace FlawBOT.Framework.Services
                     Description = ":warning: No results found!",
                     Color = DiscordColor.Red
                 };
-            if (results.Count > 25)
-                results = results.Take(25).ToList();
+            results = (results.Count > 25) ? results.Take(25).ToList() : results;
             var output = new DiscordEmbedBuilder { Color = DiscordColor.Red };
             foreach (var result in results)
                 switch (result.Id.Kind)

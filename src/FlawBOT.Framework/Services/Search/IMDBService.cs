@@ -8,8 +8,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<OMDbSharp.Objects.Item> GetMovieDataAsync(string query)
         {
-            var client = new OMDbClient(TokenHandler.Tokens.OMDBToken, true);
-            return await client.GetItemByTitle(query.Replace("&", "%26"));
+            return await new OMDbClient(TokenHandler.Tokens.OMDBToken, true).GetItemByTitle(query.Replace("&", "%26"));
         }
     }
 }

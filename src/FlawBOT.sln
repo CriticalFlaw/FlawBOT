@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlawBOT.Core", "FlawBOT.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlawBOT.Test", "FlawBOT.Test\FlawBOT.Test.csproj", "{7E946A49-2539-45FA-A5C3-DC3411CBC399}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlawBOT.Framework", "FlawBOT.Framework\FlawBOT.Framework.csproj", "{50C43200-471A-4813-B796-9858D388776C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlawBOT.Framework", "FlawBOT.Framework\FlawBOT.Framework.csproj", "{B4C5837A-C766-4E51-A619-BA151CEF6D79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E946A49-2539-45FA-A5C3-DC3411CBC399}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50C43200-471A-4813-B796-9858D388776C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50C43200-471A-4813-B796-9858D388776C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50C43200-471A-4813-B796-9858D388776C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50C43200-471A-4813-B796-9858D388776C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4C5837A-C766-4E51-A619-BA151CEF6D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4C5837A-C766-4E51-A619-BA151CEF6D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4C5837A-C766-4E51-A619-BA151CEF6D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4C5837A-C766-4E51-A619-BA151CEF6D79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

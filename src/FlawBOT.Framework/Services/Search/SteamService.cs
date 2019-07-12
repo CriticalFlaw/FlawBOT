@@ -2,6 +2,7 @@
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
 using Steam.Models.SteamCommunity;
+using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
 using System;
@@ -15,12 +16,13 @@ namespace FlawBOT.Framework.Services
     {
         public static Dictionary<uint, string> SteamAppList { get; set; } = new Dictionary<uint, string>();
 
-        public static uint GetSteamAppAsync(string query)
+        public static async Task<StoreAppDetailsDataModel> GetSteamAppAsync(string query)
         {
+            var store = new SteamStore();
             var random = new Random();
             var game = SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;
-            var results = (game >= 0) ? game : SteamAppList.Keys.ToArray()[random.Next(0, SteamAppList.Keys.Count - 1)];
-            return results;
+            var appId = (game >= 0) ? game : SteamAppList.Keys.ToArray()[random.Next(0, SteamAppList.Keys.Count - 1)];
+            return await store.GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
         }
 
         public static async Task<SteamData> GetSteamAppsListAsync()

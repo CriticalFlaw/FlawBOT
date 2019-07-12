@@ -1,8 +1,4 @@
 ﻿using BackpackTfApi;
-using BackpackTfApi.Economy.PriceHistory.Models;
-using BackpackTfApi.Economy.Prices.Models;
-using BackpackTfApi.Economy.SpecialItems;
-using BackpackTfApi.SteamUser.UserInventory.Models;
 using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
@@ -19,8 +15,26 @@ namespace FlawBOT.Framework.Services
 
         public static SchemaItem GetSchemaItemAsync(string query)
         {
-            var results = ItemSchema.FirstOrDefault(n => n.Value.Name.Contains(query)).Value;
-            return results;
+            return ItemSchema.FirstOrDefault(n => n.Value.ItemName.Contains(query)).Value;
+        }
+
+        public static async Task<bool> UpdateTF2SchemaAsync()
+        {
+            try
+            {
+                var schema = await _http.GetStringAsync("https://www.trade.tf/api/schema_440.json?key=" + TokenHandler.Tokens.BackpackSchema);
+                var results = JsonConvert.DeserializeObject<TFItemSchema>(schema);
+                ItemSchema.Clear();
+                foreach (var item in results.Results.Items)
+                    if (!string.IsNullOrWhiteSpace(item.ItemName))
+                        ItemSchema.Add(Convert.ToUInt32(item.DefIndex), item);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating TF2 item schema. " + ex.Message);
+                return false;
+            }
         }
 
         #region TEAMWORK.TF
@@ -77,107 +91,21 @@ namespace FlawBOT.Framework.Services
         #region BACKPACK.TF
 
         /// <summary>
-        /// Returns price history for the specified item.
-        /// </summary>
-        /// <param name="itemName"></param>
-        public static PriceHistoryData GetPriceHistory(string itemName)
-        {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetPriceHistory(itemName, 1);
-            return results;
-        }
-
-        /// <summary>
-        /// Fetches item prices for the specified API key. A request may be sent once every 60 seconds.
-        /// </summary>
-        public static PricesData GetItemPrices()
-        {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetItemPrices();
-            return results;
-        }
-
-        /// <summary>
-        /// Gets special items for the specified API key.
-        /// </summary>
-        public static SpecialItemsData GetSpecialItems()
-        {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetSpecialItems();
-            return results;
-        }
-
-        /// <summary>
         /// Fetches all currently open classifieds that are on backpack.tf
         /// </summary>
         public static BackpackTfApi.UserToken.Classifieds.ClassifiedsSearch.Models.Response GetClassifieds()
         {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetClassifieds();
-            return results;
+            return new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess).GetClassifieds();
         }
 
         /// <summary>
         /// Fetches the currently opened user's classifieds from backpack.tf
         /// </summary>
-        public static BackpackTfApi.UserToken.Classifieds.UserListings.Models.Response GetOwnClassifieds()
+        public static BackpackTfApi.UserToken.Classifieds.UserListings.Models.Response GetOwnClassifieds(string steamId)
         {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetOwnClassifieds();
-            return results;
-        }
-
-        /// <summary>
-        /// Fetches a user's inventory.
-        /// </summary>
-        /// <param name="steamID"></param>
-        public static BackpackTfApi.SteamUser.UserInventory.Models.Response GetUserInventory(string steamID)
-        {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetUserInventory(steamID);
-            return results;
-        }
-
-        /// <summary>
-        /// Fetches the current user's inventory.
-        /// </summary>
-        public static BackpackTfApi.SteamUser.UserInventory.Models.Response GetOwnInventory()
-        {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetOwnInventory();
-            return results;
-        }
-
-        /// <summary>
-        /// Searches for an item in the user's inventory and returns its Asset and Description models.
-        /// </summary>
-        /// <param name="itemName"></param>
-        public static InventoryItem GetItemFromInventory(string itemName)
-        {
-            var bpUser = new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess);
-            var results = bpUser.GetItemFromInventory(itemName);
-            return results;
+            return new BackpackTfUser(steamId, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess).GetOwnClassifieds();
         }
 
         #endregion BACKPACK.TF
-
-        public static async Task<bool> UpdateTF2SchemaAsync()
-        {
-            try
-            {
-                var schema = await _http.GetStringAsync("https://api.steampowered.com/IEconItems_440/GetSchemaItems/v0001/?key=" + TokenHandler.Tokens.SteamToken);
-                var results = JsonConvert.DeserializeObject<TF2ItemSchema>(schema);
-                ItemSchema.Clear();
-                foreach (var item in results.Result.Items)
-                    if (!string.IsNullOrWhiteSpace(item.Name))
-                        ItemSchema.Add(Convert.ToUInt32(item.DefIndex), item);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error updating TF2 item schema. " + ex.Message);
-                return false;
-            }
-        }
     }
 }

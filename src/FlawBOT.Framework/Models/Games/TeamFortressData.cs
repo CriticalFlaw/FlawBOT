@@ -132,229 +132,305 @@ namespace FlawBOT.Framework.Models
 
     #endregion TEAMWORK_MAPS
 
-    #region ITEM_SCHEMA
+    #region SCHEMA
 
-    public class Capabilities
+    public class TFItemSchema
     {
-        [JsonProperty("nameable")]
-        public bool Nameable { get; set; }
-
-        [JsonProperty("can_gift_wrap")]
-        public bool CanGiftWrap { get; set; }
-
-        [JsonProperty("can_craft_mark")]
-        public bool CanCraft { get; set; }
-
-        [JsonProperty("can_be_restored")]
-        public bool CanBeRestored { get; set; }
-
-        [JsonProperty("strange_parts")]
-        public bool StrangeParts { get; set; }
-
-        [JsonProperty("can_card_upgrade")]
-        public bool CanCardUpgrade { get; set; }
-
-        [JsonProperty("can_strangify")]
-        public bool CanStrangify { get; set; }
-
-        [JsonProperty("can_killstreakify")]
-        public bool CanKillstreakify { get; set; }
-
-        [JsonProperty("can_consume")]
-        public bool CanConsume { get; set; }
-
-        [JsonProperty("can_collect")]
-        public bool? CanCollect { get; set; }
-
-        [JsonProperty("paintable")]
-        public bool? Paintable { get; set; }
-
-        [JsonProperty("can_craft_if_purchased")]
-        public bool? CanCraftIfPurchased { get; set; }
-
-        [JsonProperty("can_craft_count")]
-        public bool? CanCraftCount { get; set; }
-
-        [JsonProperty("can_unusualify")]
-        public bool? CanUnusualify { get; set; }
-
-        [JsonProperty("usable_gc")]
-        public bool? UsableGC { get; set; }
-
-        [JsonProperty("usable")]
-        public bool? Usable { get; set; }
-
-        [JsonProperty("can_customize_texture")]
-        public bool? CanCustomizeTexture { get; set; }
-
-        [JsonProperty("usable_out_of_game")]
-        public bool? UsableOutOfGame { get; set; }
-
-        [JsonProperty("can_spell_page")]
-        public bool? CanSpellPage { get; set; }
-
-        [JsonProperty("duck_upgradable")]
-        public bool? DuckUpgradable { get; set; }
+        [JsonProperty("result")]
+        public Result Results { get; set; }
     }
 
-    public class AdditionalHiddenBodygroups
+    public class Result
     {
-        [JsonProperty("hat")]
-        public int Hat { get; set; }
+        [JsonProperty("originNames")]
+        public List<ItemOrigin> OriginNames { get; set; }
 
-        [JsonProperty("headphones")]
-        public int Headphones { get; set; }
+        [JsonProperty("attribute_controlled_attached_particles")]
+        public List<UnusualEffect> UnusualEffect { get; set; }
 
-        [JsonProperty("head")]
-        public int? Head { get; set; }
+        [JsonProperty("qualities")]
+        public QualityId QualityId { get; set; }
+
+        [JsonProperty("qualityNames")]
+        public QualityName QualityName { get; set; }
+
+        [JsonProperty("attributes")]
+        public List<Attributes> Attributes { get; set; }
+
+        [JsonProperty("items")]
+        public List<SchemaItem> Items { get; set; }
     }
 
-    public class Style
+    public class ItemOrigin
     {
+        [JsonProperty("origin")]
+        public int Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+
+    public class UnusualEffect
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+
+    public class QualityId
+    {
+        [JsonProperty("Unique")]
+        public string Unique { get; set; }
+
+        [JsonProperty("selfmade")]
+        public string SelfMade { get; set; }
+
+        [JsonProperty("collectors")]
+        public string Collectors { get; set; }
+
+        [JsonProperty("Normal")]
+        public string Normal { get; set; }
+
+        [JsonProperty("vintage")]
+        public string Vintage { get; set; }
+
+        [JsonProperty("completed")]
+        public string Completed { get; set; }
+
+        [JsonProperty("customized")]
+        public string Customized { get; set; }
+
+        [JsonProperty("rarity1")]
+        public string Rarity1 { get; set; }
+
+        [JsonProperty("rarity2")]
+        public string Rarity2 { get; set; }
+
+        [JsonProperty("rarity3")]
+        public string Rarity3 { get; set; }
+
+        [JsonProperty("rarity4")]
+        public string Rarity4 { get; set; }
+
+        [JsonProperty("paintkitweapon")]
+        public string PaintKit { get; set; }
+
+        [JsonProperty("strange")]
+        public string Strange { get; set; }
+
+        [JsonProperty("haunted")]
+        public string Haunted { get; set; }
+
+        [JsonProperty("community")]
+        public string Community { get; set; }
+
+        [JsonProperty("developer")]
+        public string Developer { get; set; }
+    }
+
+    public class QualityName
+    {
+        [JsonProperty("Unique")]
+        public string Unique { get; set; }
+
+        [JsonProperty("selfmade")]
+        public string SelfMade { get; set; }
+
+        [JsonProperty("collectors")]
+        public string Collectors { get; set; }
+
+        [JsonProperty("Normal")]
+        public string Normal { get; set; }
+
+        [JsonProperty("vintage")]
+        public string Vintage { get; set; }
+
+        [JsonProperty("completed")]
+        public string Completed { get; set; }
+
+        [JsonProperty("customized")]
+        public string Customized { get; set; }
+
+        [JsonProperty("rarity1")]
+        public string Rarity1 { get; set; }
+
+        [JsonProperty("rarity2")]
+        public string Rarity2 { get; set; }
+
+        [JsonProperty("rarity3")]
+        public string Rarity3 { get; set; }
+
+        [JsonProperty("rarity4")]
+        public string Rarity4 { get; set; }
+
+        [JsonProperty("paintkitweapon")]
+        public string PaintKit { get; set; }
+
+        [JsonProperty("strange")]
+        public string Strange { get; set; }
+
+        [JsonProperty("haunted")]
+        public string Haunted { get; set; }
+
+        [JsonProperty("community")]
+        public string Community { get; set; }
+
+        [JsonProperty("developer")]
+        public string Developer { get; set; }
+    }
+
+    public class Attributes
+    {
+        [JsonProperty("defindex")]
+        public int Id { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("additional_hidden_bodygroups")]
-        public AdditionalHiddenBodygroups HiddenBodyGroups { get; set; }
+        [JsonProperty("description_string")]
+        public string Description { get; set; }
+
+        [JsonProperty("effect_type")]
+        public string EffectType { get; set; }
+
+        [JsonProperty("hidden")]
+        public bool Hidden { get; set; }
     }
 
-    public class Attribute
+    public class Level
     {
+        [JsonProperty("level")]
+        public int Id { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("@class")]
-        public string Class { get; set; }
-
-        [JsonProperty("value")]
-        public double Value { get; set; }
+        [JsonProperty("required_score")]
+        public int ReqScore { get; set; }
     }
 
-    public class PerClassLoadoutSlots
-    {
-        [JsonProperty("Soldier")]
-        public string Soldier { get; set; }
+    #endregion SCHEMA
 
-        [JsonProperty("Heavy")]
-        public string Heavy { get; set; }
-
-        [JsonProperty("Pyro")]
-        public string Pyro { get; set; }
-
-        [JsonProperty("Engineer")]
-        public string Engineer { get; set; }
-
-        [JsonProperty("Demoman")]
-        public string Demoman { get; set; }
-    }
-
-    public class Tool
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-    }
+    #region ITEM
 
     public class SchemaItem
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
         [JsonProperty("defindex")]
         public int DefIndex { get; set; }
-
-        [JsonProperty("item_class")]
-        public string ItemClass { get; set; }
-
-        [JsonProperty("item_type_name")]
-        public string ItemTypeName { get; set; }
-
-        [JsonProperty("item_name")]
-        public string ItemName { get; set; }
-
-        [JsonProperty("proper_name")]
-        public bool ProperName { get; set; }
-
-        [JsonProperty("item_slot")]
-        public string ItemSlot { get; set; }
-
-        [JsonProperty("model_player")]
-        public string ModelPlayer { get; set; }
-
-        [JsonProperty("item_quality")]
-        public int ItemQuality { get; set; }
-
-        [JsonProperty("image_inventory")]
-        public string ImageInventory { get; set; }
-
-        [JsonProperty("min_ilevel")]
-        public int MinILevel { get; set; }
-
-        [JsonProperty("max_ilevel")]
-        public int MaxILevel { get; set; }
-
-        [JsonProperty("image_url")]
-        public string ImageUrl { get; set; }
-
-        [JsonProperty("image_url_large")]
-        public string ImageUrlLarge { get; set; }
-
-        [JsonProperty("craft_class")]
-        public string CraftClass { get; set; }
-
-        [JsonProperty("craft_material_type")]
-        public string CraftMaterialType { get; set; }
-
-        [JsonProperty("capabilities")]
-        public Capabilities Capabilities { get; set; }
 
         [JsonProperty("used_by_classes")]
         public List<object> UsedByClasses { get; set; }
 
+        [JsonProperty("name")]
+        public string ItemName { get; set; }
+
+        [JsonProperty("item_name")]
+        public string ItemName2 { get; set; }
+
         [JsonProperty("item_description")]
-        public string ItemDescription { get; set; }
+        public string Description { get; set; }
+
+        [JsonProperty("image_inventory")]
+        public string ItemImagePath { get; set; }
+
+        [JsonProperty("item_type_name")]
+        public string ItemType { get; set; }
+
+        [JsonProperty("item_slot")]
+        public string ItemSlot { get; set; }
+
+        [JsonProperty("capabilities")]
+        public Capabilities Capabilities { get; set; }
+
+        [JsonProperty("image_url")]
+        public string ImageURL { get; set; }
+
+        [JsonProperty("image_url_large")]
+        public string ImageURL_Large { get; set; }
+
+        [JsonProperty("item_quality")]
+        public int QualityId { get; set; }
 
         [JsonProperty("styles")]
         public List<Style> Styles { get; set; }
 
         [JsonProperty("attributes")]
-        public List<Attribute> Attributes { get; set; }
-
-        [JsonProperty("drop_type")]
-        public string DropType { get; set; }
+        public List<ItemAttribute> Attributes { get; set; }
 
         [JsonProperty("item_set")]
         public string ItemSet { get; set; }
 
         [JsonProperty("holiday_restriction")]
         public string HolidayRestriction { get; set; }
-
-        [JsonProperty("per_class_loadout_slots")]
-        public PerClassLoadoutSlots PerClassLoadoutSlot { get; set; }
-
-        [JsonProperty("tool")]
-        public Tool Tool { get; set; }
     }
 
-    public class Result
+    public class Capabilities
     {
-        [JsonProperty("status")]
-        public int Status { get; set; }
+        [JsonProperty("can_craft_mark")]
+        public bool Craftable { get; set; }
 
-        [JsonProperty("items_game_url")]
-        public string ItemsGameUrl { get; set; }
+        [JsonProperty("can_card_upgrade")]
+        public bool Upgradable { get; set; }
 
-        [JsonProperty("items")]
-        public List<SchemaItem> Items { get; set; }
+        [JsonProperty("can_be_restored")]
+        public bool Restorable { get; set; }
 
-        [JsonProperty("next")]
-        public int Next { get; set; }
+        [JsonProperty("nameable")]
+        public bool Renamable { get; set; }
+
+        [JsonProperty("strange_parts")]
+        public bool TakesStrangeParts { get; set; }
+
+        [JsonProperty("can_killstreakify")]
+        public bool Killstreakable { get; set; }
+
+        [JsonProperty("can_consume")]
+        public bool Consumeable { get; set; }
+
+        [JsonProperty("can_strangify")]
+        public bool Strangifyable { get; set; }
+
+        [JsonProperty("can_gift_wrap")]
+        public bool Giftable { get; set; }
+
+        [JsonProperty("can_collect")]
+        public bool? Collectable { get; set; }
+
+        [JsonProperty("can_craft_if_purchased")]
+        public bool? CraftableIfPurchased { get; set; }
+
+        [JsonProperty("paintable")]
+        public bool? Paintable { get; set; }
+
+        [JsonProperty("can_unusualify")]
+        public bool? Unusualifyable { get; set; }
+
+        [JsonProperty("can_craft_count")]
+        public bool? CraftCounted { get; set; }
+
+        [JsonProperty("can_customize_texture")]
+        public bool? CustomizeTexture { get; set; }
     }
 
-    public class TF2ItemSchema
+    public class Style
     {
-        [JsonProperty("result")]
-        public Result Result { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 
-    #endregion ITEM_SCHEMA
+    public class ItemAttribute
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("value")]
+        public double value { get; set; }
+
+        [JsonProperty("@class")]
+        public string Class { get; set; }
+    }
+
+    #endregion ITEM
 }

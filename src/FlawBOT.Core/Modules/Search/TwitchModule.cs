@@ -5,7 +5,7 @@ using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class TwitchModule : BaseCommandModule
@@ -25,11 +25,10 @@ namespace FlawBOT.Modules.Search
             else
             {
                 var stream = results.Stream;
-                stream.Game = (string.IsNullOrWhiteSpace(stream.Game)) ? "Nothing" : stream.Game;
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(stream.Channel.Name + " is now live on Twitch!")
                     .WithDescription(stream.Channel.Status)
-                    .AddField("Now Playing", stream.Game)
+                    .AddField("Now Playing", (stream.Game) ?? "Nothing")
                     .AddField("Start Time", stream.CreatedAt.ToString(), true)
                     .AddField("Viewers", $"{stream.Viewers:#,##0}", true)
                     .WithThumbnailUrl(stream.Channel.Logo)

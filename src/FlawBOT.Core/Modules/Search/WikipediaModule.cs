@@ -4,7 +4,7 @@ using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class WikipediaModule : BaseCommandModule
