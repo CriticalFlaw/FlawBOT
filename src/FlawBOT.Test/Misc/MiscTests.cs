@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services;
+﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 using System.Net.Http;
 

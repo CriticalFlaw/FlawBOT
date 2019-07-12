@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Search;
+﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
 namespace SearchModule

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FlawBOT\FlawBOT.csproj" />
+    <ProjectReference Include="..\FlawBOT.Framework\FlawBOT.Framework.csproj" />
   </ItemGroup>
 
 </Project>
