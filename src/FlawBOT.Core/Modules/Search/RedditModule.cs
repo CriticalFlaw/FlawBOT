@@ -6,7 +6,7 @@ using FlawBOT.Framework.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class RedditModule : BaseCommandModule

@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -12,6 +13,7 @@ using FlawBOT.Framework.Services;
 using FlawBOT.Modules;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -133,6 +135,47 @@ namespace FlawBOT
         {
             switch (e.Exception)
             {
+                case ChecksFailedException cfe:
+                    switch (cfe.FailedChecks.First())
+                    {
+                        case CooldownAttribute _:
+                            return;
+
+                        default:
+                            await BotServices.SendEmbedAsync(e.Context, $"Command **{e.Command.QualifiedName}** could not be executed.", EmbedType.Error);
+                            foreach (var check in cfe.FailedChecks)
+                            {
+                                switch (check)
+                                {
+                                    case RequirePermissionsAttribute perms:
+                                        await BotServices.SendEmbedAsync(e.Context, $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!", EmbedType.Error);
+                                        break;
+
+                                    case RequireUserPermissionsAttribute uperms:
+                                        await BotServices.SendEmbedAsync(e.Context, $"- You do not have sufficient permissions ({uperms.Permissions.ToPermissionString()})!", EmbedType.Error);
+                                        break;
+
+                                    case RequireBotPermissionsAttribute bperms:
+                                        await BotServices.SendEmbedAsync(e.Context, $"- I do not have sufficient permissions ({bperms.Permissions.ToPermissionString()})!", EmbedType.Error);
+                                        break;
+
+                                    case RequireOwnerAttribute _:
+                                        await BotServices.SendEmbedAsync(e.Context, $"- This command is reserved only for the bot owner.", EmbedType.Error);
+                                        break;
+
+                                    case RequirePrefixesAttribute pa:
+                                        await BotServices.SendEmbedAsync(e.Context, $"- This command can only be invoked with the following prefixes: {string.Join(" ", pa.Prefixes)}.", EmbedType.Error);
+                                        break;
+
+                                    default:
+                                        await BotServices.SendEmbedAsync(e.Context, "Unknown check triggered. Please notify the developer using the command *.bot report*", EmbedType.Error);
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+                    break;
+
                 case CommandNotFoundException _:
                     //await BotServices.SendEmbedAsync(e.Context, "This command does not exist!", EmbedType.Error);
                     break;

@@ -22,9 +22,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00613" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00613" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00613" />
+    <None Remove="config.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00621" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00621" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00621" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,12 +45,6 @@
     <Reference Include="PokemonTcgSdk">
       <HintPath>..\FlawBOT.Framework\Resources\PokemonTcgSdk.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

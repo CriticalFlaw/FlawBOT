@@ -30,6 +30,7 @@ namespace FlawBOT.Modules
             }
             else
             {
+                // TODO: Set the activity type
                 var game = new DiscordActivity(activity);
                 await ctx.Client.UpdateStatusAsync(activity: game);
                 await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to " + Formatter.Bold("Playing " + game.Name), EmbedType.Good);

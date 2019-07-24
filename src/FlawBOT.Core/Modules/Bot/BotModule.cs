@@ -45,7 +45,7 @@ namespace FlawBOT.Modules
         public async Task LeaveAsync(CommandContext ctx)
         {
             await BotServices.SendEmbedAsync(ctx, $"Are you sure you want {SharedData.Name} to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
             if (interactivity.Result == null)
                 await BotServices.SendEmbedAsync(ctx, "Request timed out...");
             else
@@ -81,7 +81,7 @@ namespace FlawBOT.Modules
                 await ctx.RespondAsync("Please provide more information on the issue (50 characters minimum).");
             else
             {
-                await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be cancelled.");
+                await BotServices.SendEmbedAsync(ctx, "The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be cancelled.");
                 var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
                 if (interactivity.Result == null)
                     await BotServices.SendEmbedAsync(ctx, "Request timed out...");
@@ -112,8 +112,7 @@ namespace FlawBOT.Modules
         public Task Say(CommandContext ctx,
             [Description("Message for the bot to repeat")] [RemainingText] string message)
         {
-            message = (string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message;
-            return ctx.RespondAsync(message);
+            return ctx.RespondAsync((string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message);
         }
 
         #endregion COMMAND_SAY
