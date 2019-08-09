@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace SearchModule
 {
+    [TestFixture]
     internal class TwitchTests
     {
         [Test]

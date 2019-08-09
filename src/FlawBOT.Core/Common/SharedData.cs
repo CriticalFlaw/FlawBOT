@@ -1,6 +1,6 @@
-﻿using DSharpPlus.Entities;
-using System;
+﻿using System;
 using System.Reflection;
+using DSharpPlus.Entities;
 
 namespace FlawBOT.Common
 {

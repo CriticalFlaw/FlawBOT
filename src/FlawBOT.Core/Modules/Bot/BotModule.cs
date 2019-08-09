@@ -1,4 +1,6 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -6,8 +8,6 @@ using DSharpPlus.Interactivity;
 using FlawBOT.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -29,7 +29,7 @@ namespace FlawBOT.Modules
                 .WithDescription("A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime", $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .AddField(":link: Links", $"[Commands]({SharedData.GitHubLink}wiki) **|** [Invite]({SharedData.InviteLink}) **|** [GitHub]({SharedData.GitHubLink})", true)
-                .WithFooter("Thank you for using " + SharedData.Name + $"(v{SharedData.Version})")
+                .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
                 .WithColor(SharedData.DefaultColor);
             await ctx.RespondAsync(embed: output.Build());
@@ -124,7 +124,8 @@ namespace FlawBOT.Modules
         public async Task Uptime(CommandContext ctx)
         {
             var uptime = DateTime.Now - SharedData.ProcessStarted;
-            await BotServices.SendEmbedAsync(ctx, ":clock1: " + SharedData.Name + $" has been online for {(int)uptime.TotalDays:00} days ({uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00})");
+            var days = (uptime.Days > 0) ? $"({uptime.Days:00} days)" : null;
+            await BotServices.SendEmbedAsync(ctx, ":clock1: " + SharedData.Name + $" has been online for {uptime.Hours:00}:{uptime.Minutes:00} {days}");
         }
 
         #endregion COMMAND_UPTIME

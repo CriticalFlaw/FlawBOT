@@ -1,8 +1,9 @@
-﻿using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
@@ -10,7 +11,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<DictionaryData> GetDictionaryForTermAsync(string query)
         {
-            var results = await _http.GetStringAsync("http://api.urbandictionary.com/v0/define?term=" + WebUtility.UrlEncode(query.Trim()));
+            var results = await _http.GetStringAsync(Resources.API_Dictionary + "?term=" + WebUtility.UrlEncode(query.Trim()));
             return JsonConvert.DeserializeObject<DictionaryData>(results);
         }
     }

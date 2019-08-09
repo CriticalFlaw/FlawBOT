@@ -28,6 +28,9 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("twitch")]
         public string TwitchToken { get; private set; }
 
+        [JsonProperty("nasa")]
+        public string NASAToken { get; private set; }
+
         [JsonProperty("teamworktf")]
         public string TeamworkToken { get; private set; }
 

@@ -1,8 +1,8 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using FlawBOT.Framework.Services;
 using Imgur.API.Models.Impl;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {

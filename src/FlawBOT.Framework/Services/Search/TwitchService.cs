@@ -1,8 +1,9 @@
-﻿using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using Newtonsoft.Json;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix.Models.Games;
 
@@ -12,7 +13,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<TwitchData> GetTwitchDataAsync(string query)
         {
-            var results = await _http.GetStringAsync("https://api.twitch.tv/kraken/streams/" + query + "?client_id=" + TokenHandler.Tokens.TwitchToken);
+            var results = await _http.GetStringAsync(Resources.API_Twitch + query + "?client_id=" + TokenHandler.Tokens.TwitchToken);
             return JsonConvert.DeserializeObject<TwitchData>(results);
         }
 

@@ -1,13 +1,13 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
-using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
@@ -83,7 +83,7 @@ namespace FlawBOT.Framework.Services
             return stream;
         }
 
-        public void UpdateTokenList()
+        public void LoadBotConfiguration()
         {
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
             TokenHandler.Tokens = JsonConvert.DeserializeObject<TokenData>(json);

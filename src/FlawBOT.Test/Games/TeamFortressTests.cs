@@ -1,22 +1,15 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
-using System.Text.RegularExpressions;
 
 namespace GamesModule
 {
+    [TestFixture]
     internal class TeamFortressTests
     {
         [Test]
         public void LoadItemSchema()
         {
-            Assert.IsTrue(TeamFortressService.UpdateTF2SchemaAsync().Result);
-        }
-
-        [Test]
-        public void GetConnectLink()
-        {
-            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match("192.168.22.11");
-            Assert.IsTrue(regex.Success);
+            Assert.IsTrue(TeamFortressService.LoadTF2SchemaAsync().Result);
         }
 
         [Test]

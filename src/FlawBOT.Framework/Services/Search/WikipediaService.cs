@@ -1,8 +1,9 @@
-﻿using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
@@ -10,7 +11,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<WikipediaData.WikipediaQuery.WikipediaPage> GetWikipediaDataAsync(string query)
         {
-            var results = await _http.GetStringAsync("https://en.wikipedia.org//w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles=" + Uri.EscapeDataString(query));
+            var results = await _http.GetStringAsync(Resources.API_Wikipedia + "&titles=" + Uri.EscapeDataString(query));
             return JsonConvert.DeserializeObject<WikipediaData>(results).Query.Pages[0];
         }
     }

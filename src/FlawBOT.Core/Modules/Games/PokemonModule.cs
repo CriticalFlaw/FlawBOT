@@ -1,12 +1,12 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -31,6 +31,7 @@ namespace FlawBOT.Modules
                     var card = PokemonService.GetExactPokemonAsync(value.ID);
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(card.Name + $" (PokeDex ID: {card.NationalPokedexNumber})")
+                        .AddField("Subtype", card.SubType ?? "Unknown", true)
                         .AddField("Health Points", card.Hp ?? "Unknown", true)
                         .AddField("Artist", card.Artist ?? "Unknown", true)
                         .AddField("Rarity", card.Rarity ?? "Unknown", true)

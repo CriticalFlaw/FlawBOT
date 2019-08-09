@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace GamesModule
 {
+    [TestFixture]
     internal class SpeedrunTests
     {
         [Test]

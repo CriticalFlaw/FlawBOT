@@ -1,9 +1,9 @@
-﻿using DSharpPlus.Entities;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DSharpPlus.Entities;
 using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {

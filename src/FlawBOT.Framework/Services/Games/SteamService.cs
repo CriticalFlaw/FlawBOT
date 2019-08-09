@@ -1,14 +1,15 @@
-﻿using FlawBOT.Framework.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using Steam.Models.SteamCommunity;
 using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
@@ -27,7 +28,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<SteamData> GetSteamAppsListAsync()
         {
-            var result = await _http.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
+            var result = await _http.GetStringAsync(Resources.API_SteamGames);
             return JsonConvert.DeserializeObject<SteamData>(result);
         }
 

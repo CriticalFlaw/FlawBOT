@@ -1,12 +1,12 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Steam.Models.SteamCommunity;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
 namespace FlawBOT.Modules

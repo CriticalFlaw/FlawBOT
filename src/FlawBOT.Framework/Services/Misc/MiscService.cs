@@ -1,11 +1,12 @@
-﻿using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FlawBOT.Framework.Services
 {
@@ -46,12 +47,12 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<string> GetCatFactAsync()
         {
-            return await _http.GetStringAsync("https://catfact.ninja/fact");
+            return await _http.GetStringAsync(Resources.API_CatFacts);
         }
 
         public static async Task<string> GetCatPhotoAsync()
         {
-            var results = await _http.GetStringAsync("http://aws.random.cat/meow").ConfigureAwait(false);
+            var results = await _http.GetStringAsync(Resources.API_CatPhoto).ConfigureAwait(false);
             return JObject.Parse(results)["file"].ToString();
         }
     }
@@ -60,7 +61,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await _http.GetStringAsync("https://dog.ceo/api/breeds/image/random");
+            var results = await _http.GetStringAsync(Resources.API_DogPhoto);
             return JsonConvert.DeserializeObject<DogData>(results);
         }
     }

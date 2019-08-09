@@ -1,15 +1,15 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
-using FlawBOT.Framework.Models;
-using FlawBOT.Framework.Services;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Services;
 
 namespace FlawBOT.Modules
 {
@@ -35,8 +35,8 @@ namespace FlawBOT.Modules
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(item.ItemName)
                     .WithDescription((!string.IsNullOrWhiteSpace(item.Description)) ? item.Description : "")
-                    .AddField("Giftable", (item.Capabilities.Giftable) ? "Yes" : "No")
-                    .AddField("Nameable", (item.Capabilities.Renamable) ? "Yes" : "No")
+                    .AddField("Giftable", (item.Capabilities.Giftable) ? "Yes" : "No", true)
+                    .AddField("Nameable", (item.Capabilities.Renamable) ? "Yes" : "No", true)
                     .AddField("Item Slot:", (!string.IsNullOrWhiteSpace(item.ItemSlot)) ? textInfo.ToTitleCase(item.ItemSlot) : "Unknown", true)
                     .WithThumbnailUrl(item.ImageURL)
                     .WithUrl("https://wiki.teamfortress.com/wiki/" + item.ItemName.Replace(' ', '_'))
@@ -68,7 +68,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
             else
             {
-                Double.TryParse(results.AvgPlayers, out var avg_players);
+                double.TryParse(results.AvgPlayers, out var avg_players);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.MapName)
                     .AddField("Official", results.OfficialMap ? "YES" : "NO", true)

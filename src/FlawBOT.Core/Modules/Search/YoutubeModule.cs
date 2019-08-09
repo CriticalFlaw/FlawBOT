@@ -1,8 +1,8 @@
-﻿using DSharpPlus;
+﻿using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using FlawBOT.Framework.Services;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {

@@ -1,8 +1,10 @@
-﻿using FlawBOT.Framework.Services;
+﻿using System.Text.RegularExpressions;
+using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace SearchModule
+namespace GamesModule
 {
+    [TestFixture]
     internal class SteamTests
     {
         [Test]
@@ -16,6 +18,13 @@ namespace SearchModule
         {
             Assert.NotNull(SteamService.GetSteamUserProfileAsync("criticalflaw"));
             Assert.NotNull(SteamService.GetSteamUserSummaryAsync("criticalflaw"));
+        }
+
+        [Test]
+        public void GetConnectLink()
+        {
+            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match("192.168.22.11");
+            Assert.IsTrue(regex.Success);
         }
     }
 }

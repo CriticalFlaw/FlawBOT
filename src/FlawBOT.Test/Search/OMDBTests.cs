@@ -3,12 +3,13 @@ using NUnit.Framework;
 
 namespace SearchModule
 {
+    [TestFixture]
     internal class OMDBTests
     {
         [Test]
         public void GetMovieData()
         {
-            Assert.Null(OMDBService.GetMovieDataAsync("Office+Space").Result);
+            Assert.IsNotNull(OMDBService.GetMovieDataAsync("office+space").Result);
         }
     }
 }

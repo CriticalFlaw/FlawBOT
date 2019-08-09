@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace GamesModule
 {
+    [TestFixture]
     internal class SmashTests
     {
         [Test]
@@ -66,7 +67,6 @@ namespace GamesModule
         }
 
         [Test]
-        [Ignore("Character data currently unavailable")]
         public void DarkPit()
         {
             Assert.IsNotNull(SmashService.GetSmashCharacterAsync("Dark Pit").Result);
@@ -197,7 +197,6 @@ namespace GamesModule
         }
 
         [Test]
-        [Ignore("Character data currently unavailable")]
         public void KingKRool()
         {
             Assert.IsNotNull(SmashService.GetSmashCharacterAsync("King K.Rool").Result);
@@ -272,7 +271,6 @@ namespace GamesModule
         }
 
         [Test]
-        [Ignore("Character data currently unavailable")]
         public void MetaKnight()
         {
             Assert.IsNotNull(SmashService.GetSmashCharacterAsync("Meta Knight").Result);
@@ -384,7 +382,6 @@ namespace GamesModule
         }
 
         [Test]
-        [Ignore("Character data currently unavailable")]
         public void ROB()
         {
             Assert.IsNotNull(SmashService.GetSmashCharacterAsync("R.O.B.").Result);
@@ -398,7 +395,6 @@ namespace GamesModule
         }
 
         [Test]
-        [Ignore("Character data currently unavailable")]
         public void RosalinaLuma()
         {
             Assert.IsNotNull(SmashService.GetSmashCharacterAsync("Rosalina & Luma").Result);
