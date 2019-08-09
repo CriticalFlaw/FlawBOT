@@ -1,11 +1,12 @@
-﻿using BackpackTfApi;
-using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackpackTfApi;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
@@ -15,14 +16,14 @@ namespace FlawBOT.Framework.Services
 
         public static SchemaItem GetSchemaItemAsync(string query)
         {
-            return ItemSchema.FirstOrDefault(n => n.Value.ItemName.Contains(query)).Value;
+            return ItemSchema.FirstOrDefault(n => n.Value.ItemName.ToLowerInvariant().Contains(query.ToLowerInvariant())).Value;
         }
 
-        public static async Task<bool> UpdateTF2SchemaAsync()
+        public static async Task<bool> LoadTF2SchemaAsync()
         {
             try
             {
-                var schema = await _http.GetStringAsync("https://www.trade.tf/api/schema_440.json?key=" + TokenHandler.Tokens.BackpackSchema);
+                var schema = await _http.GetStringAsync(Resources.API_TradeTF + "?key=" + TokenHandler.Tokens.BackpackSchema);
                 var results = JsonConvert.DeserializeObject<TFItemSchema>(schema);
                 ItemSchema.Clear();
                 foreach (var item in results.Results.Items)
@@ -41,19 +42,19 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<List<TeamworkNews>> GetNewsOverviewAsync()
         {
-            var results = await _http.GetStringAsync("https://teamwork.tf/api/v1/news?key=" + TokenHandler.Tokens.TeamworkToken);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "news?key=" + TokenHandler.Tokens.TeamworkToken);
             return JsonConvert.DeserializeObject<List<TeamworkNews>>(results);
         }
 
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
         {
-            var results = await _http.GetStringAsync("https://teamwork.tf/api/v1/quickplay/" + query + "/servers?key=" + TokenHandler.Tokens.TeamworkToken);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "quickplay/" + query + "/servers?key=" + TokenHandler.Tokens.TeamworkToken);
             return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
         }
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
-            var results = await _http.GetStringAsync("https://teamwork.tf/api/v1/map-stats/map/" + query + "?key=" + TokenHandler.Tokens.TeamworkToken);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + query + "?key=" + TokenHandler.Tokens.TeamworkToken);
             return JsonConvert.DeserializeObject<TeamworkMap>(results);
         }
 

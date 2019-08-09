@@ -1,11 +1,13 @@
-﻿using FlawBOT.Framework.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using PokemonTcgSdk;
 using PokemonTcgSdk.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
@@ -16,7 +18,7 @@ namespace FlawBOT.Framework.Services
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query)
         {
             query = (string.IsNullOrWhiteSpace(query)) ? GetRandomPokemonAsync() : query;
-            var results = await _http.GetStringAsync("https://api.pokemontcg.io/v1/cards?name=" + query.Trim());
+            var results = await _http.GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim());
             return JsonConvert.DeserializeObject<PokemonCards>(results);
         }
 
@@ -35,12 +37,13 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var list = await _http.GetStringAsync("https://pokeapi.co/api/v2/pokemon/?limit=100");
+                var list = await _http.GetStringAsync(Resources.API_Pokemon + "?limit=800");
                 var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
                 foreach (var pokemon in results)
                     if (!string.IsNullOrWhiteSpace(pokemon.Name))
                         PokemonList.Add(pokemon.Name);
+                PokemonList = PokemonList.Distinct().ToList();
                 return true;
             }
             catch (Exception ex)

@@ -1,4 +1,10 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
@@ -11,12 +17,6 @@ using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using FlawBOT.Modules;
-using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FlawBOT
 {
@@ -48,7 +48,7 @@ namespace FlawBOT
         public async Task RunBotAsync()
         {
             var service = new BotServices();
-            service.UpdateTokenList();
+            service.LoadBotConfiguration();
 
             Client = new DiscordClient(new DiscordConfiguration
             {
@@ -82,15 +82,17 @@ namespace FlawBOT
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<OwnerModule>();
             Commands.RegisterCommands<PokemonModule>();
-            Commands.RegisterCommands<SmashModule>();
             Commands.RegisterCommands<SpeedrunModule>();
+            Commands.RegisterCommands<SmashModule>();
             Commands.RegisterCommands<TeamFortressModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
             Commands.RegisterCommands<PollModule>();
+            Commands.RegisterCommands<AmiiboModule>();
             Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<ImgurModule>();
+            Commands.RegisterCommands<NASAModule>();
             Commands.RegisterCommands<OMDBModule>();
             Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<SimpsonsModule>();
@@ -107,7 +109,7 @@ namespace FlawBOT
             Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
             SharedData.ProcessStarted = DateTime.Now;
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await TeamFortressService.LoadTF2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await Client.ConnectAsync(); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Models
 {
@@ -323,10 +323,10 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("used_by_classes")]
         public List<object> UsedByClasses { get; set; }
 
-        [JsonProperty("name")]
+        [JsonProperty("item_name")]
         public string ItemName { get; set; }
 
-        [JsonProperty("item_name")]
+        [JsonProperty("name")]
         public string ItemName2 { get; set; }
 
         [JsonProperty("item_description")]

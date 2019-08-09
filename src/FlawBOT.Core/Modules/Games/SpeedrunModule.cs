@@ -1,10 +1,10 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -28,10 +28,10 @@ namespace FlawBOT.Modules
                     .WithTitle(results.Names.International)
                     .AddField("Release Date", results.ReleaseDate.ToString() ?? "Unknown", true)
                     .AddField("Emulators Allowed?", (results.RuleSet.EmulatorsAllowed) ? "Yes" : "No", true)
-                    .AddField("Developers", SpeedrunService.GetSpeedrunExtraAsync(results.Developers.Take(3).ToList(), SpeedrunExtras.Developers).Result ?? "Unknown", true)
-                    .AddField("Publishers", SpeedrunService.GetSpeedrunExtraAsync(results.Publishers.Take(3).ToList(), SpeedrunExtras.Publishers).Result ?? "Unknown", true)
-                    .AddField("Genres", SpeedrunService.GetSpeedrunExtraAsync(results.Genres.Take(3).ToList(), SpeedrunExtras.Genres).Result ?? "Unknown", true)
-                    .AddField("Platforms", SpeedrunService.GetSpeedrunExtraAsync(results.Platforms.Take(3).ToList(), SpeedrunExtras.Platforms).Result ?? "Unknown", true)
+                    .AddField("Developers", (results.Developers.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(results.Developers.Take(3).ToList(), SpeedrunExtras.Developers).Result : "Unknown", true)
+                    .AddField("Publishers", (results.Publishers.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(results.Publishers.Take(3).ToList(), SpeedrunExtras.Publishers).Result : "Unknown", true)
+                    .AddField("Genres", (results.Genres.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(results.Genres.Take(3).ToList(), SpeedrunExtras.Genres).Result : "Unknown", true)
+                    .AddField("Platforms", (results.Platforms.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(results.Platforms.Take(3).ToList(), SpeedrunExtras.Platforms).Result : "Unknown", true)
                     .WithFooter($"ID: {results.ID} - Abbreviation: {results.Abbreviation}")
                     .WithThumbnailUrl(results.Assets.CoverLarge.URL ?? results.Assets.Icon.URL)
                     .WithUrl(results.WebLink)
