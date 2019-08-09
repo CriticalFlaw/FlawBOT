@@ -79,13 +79,12 @@ namespace FlawBOT.Modules
                     .WithImageUrl(results.Thumbnail)
                     .WithUrl("https://wiki.teamfortress.com/wiki/" + results.MapName)
                     .WithColor(new DiscordColor("#E7B53B"));
-                if (results.RelatedMaps.Count > 0) output.AddField("Related Map", results.RelatedMaps[0]);
 
                 var related_maps = new StringBuilder();
                 foreach (var map in results.RelatedMaps.Take(5))
                     related_maps.Append(map + "\n");
                 if (related_maps.Length > 0)
-                    output.AddField("Related map(s)", related_maps.ToString(), true);
+                    output.AddField("Related Map(s)", related_maps.ToString(), true);
 
                 await ctx.RespondAsync(embed: output.Build());
             }

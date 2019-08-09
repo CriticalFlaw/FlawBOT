@@ -1,9 +1,11 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -26,10 +28,21 @@ namespace FlawBOT.Modules
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.DisplayName)
-                    .WithDescription($"[Attributes]({results.Related.Ultimate.Attributes}) **|** [Movements]({results.Related.Ultimate.Movements}) **|** [Moves]({results.Related.Ultimate.Moves})")
                     .WithThumbnailUrl(results.ThumbnailUrl)
                     .WithColor(new DiscordColor(results.ColorTheme))
                     .WithUrl(results.FullUrl);
+
+                var attributes = await SmashService.GetCharacterAttributesAsync(results.OwnerId);
+                var attributesProcessed = new List<string>();
+                foreach (var attribute in attributes)
+                {
+                    if (attributesProcessed.Contains(attribute.Name)) continue;
+                    var values = new StringBuilder();
+                    foreach (var value in attribute.Attributes)
+                        values.Append(value.Name + ": " + value.Value + "\n");
+                    output.AddField(attribute.Name, values.ToString() ?? "Unknown", true);
+                    attributesProcessed.Add(attribute.Name);
+                }
                 await ctx.RespondAsync(embed: output.Build());
             }
         }

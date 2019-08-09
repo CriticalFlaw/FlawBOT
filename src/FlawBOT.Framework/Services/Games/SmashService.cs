@@ -1,7 +1,10 @@
-﻿using FlawBOT.Framework.Common;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
@@ -11,8 +14,22 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http.GetStringAsync("https://test-khapi.frannsoft.com/api/characters/name/" + query + "?game=ultimate");
+                var results = await _http.GetStringAsync(Resources.API_SmashBros + "name/" + query.ToLowerInvariant() + "?game=ultimate");
                 return JsonConvert.DeserializeObject<SmashCharacter>(results);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static async Task<List<SmashCharacterAttributes>> GetCharacterAttributesAsync(int characterID)
+        {
+            try
+            {
+                var output = await _http.GetStringAsync(Resources.API_SmashBros + characterID + "/characterattributes?game=ultimate");
+                var attributes = JsonConvert.DeserializeObject<List<SmashCharacterAttributes>>(output);
+                return attributes.Distinct().ToList();
             }
             catch
             {
