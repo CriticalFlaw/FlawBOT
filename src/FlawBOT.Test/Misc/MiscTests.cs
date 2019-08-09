@@ -1,13 +1,14 @@
-﻿using FlawBOT.Services;
+﻿using System.Net.Http;
+using FlawBOT.Framework.Services;
 using NUnit.Framework;
-using System.Net.Http;
 
 namespace MiscModule
 {
+    [TestFixture]
     internal class MiscTests
     {
         [Test]
-        public void Get8BallAnswer()
+        public void GetAnswer()
         {
             Assert.IsNotEmpty(EightBallService.GetAnswer());
         }
@@ -25,6 +26,6 @@ namespace MiscModule
             Assert.IsTrue(DogService.GetDogPhotoAsync().Result.Status == "success");
         }
 
-        // TODO: Add Coin-Flip, Color, Dice Roll
+        // TODO: Put tests here...
     }
 }
