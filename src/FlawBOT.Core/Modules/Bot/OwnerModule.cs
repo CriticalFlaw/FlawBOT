@@ -1,11 +1,11 @@
-﻿using DSharpPlus;
+﻿using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -109,11 +109,35 @@ namespace FlawBOT.Modules
         {
             var message = await ctx.RespondAsync("Starting update...");
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await TeamFortressService.LoadTF2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await message.ModifyAsync("Starting update...done!");
         }
 
         #endregion COMMAND_UPDATE
+
+        #region COMMAND_USERNAME
+
+        [RequireOwner]
+        [Command("username"), Hidden]
+        [Aliases("setusername", "name", "setname", "nickname")]
+        [Description("Set FlawBOT's username")]
+        public async Task SetBotUsername(CommandContext ctx,
+            [Description("New bot username")] [RemainingText] string name)
+        {
+            var oldUsername = ctx.Client.CurrentUser.Username;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                await ctx.Client.UpdateCurrentUserAsync(username: SharedData.Name);
+                await BotServices.SendEmbedAsync(ctx, oldUsername + " username has been changed to " + SharedData.Name);
+            }
+            else
+            {
+                await ctx.Client.UpdateCurrentUserAsync(username: name);
+                await BotServices.SendEmbedAsync(ctx, oldUsername + " username has been changed to " + ctx.Client.CurrentUser.Username, EmbedType.Good);
+            }
+        }
+
+        #endregion COMMAND_USERNAME
     }
 }
