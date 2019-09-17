@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
@@ -42,6 +43,18 @@ namespace FlawBOT.Framework.Services
             var results = JsonConvert.DeserializeObject<TimeData>(result);
             if (results.status == "OK") return results;
             return null;
+        }
+
+        public static async Task<IPLocationData> GetIPLocationAsync(IPAddress query)
+        {
+            var result = await _http.GetStringAsync(Resources.API_IPLocation + query.ToString()).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<IPLocationData>(result);
+        }
+
+        public static async Task<NewsData> GetNewsDataAsync(string query = "")
+        {
+            var results = await _http.GetStringAsync(Resources.API_News + "?q=" + query + "&apiKey=" + TokenHandler.Tokens.NewsToken);
+            return JsonConvert.DeserializeObject<NewsData>(results);
         }
 
         public static double CelsiusToFahrenheit(double cel)

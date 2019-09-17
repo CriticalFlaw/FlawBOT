@@ -51,6 +51,15 @@ namespace FlawBOT.Framework.Models
 
         [JsonProperty("reddit_refresh")]
         public string RedditRefreshToken { get; private set; }
+
+        [JsonProperty("news")]
+        public string NewsToken { get; private set; }
+
+        [JsonProperty("goodreads_key")]
+        public string GoodReadsKey { get; private set; }
+
+        [JsonProperty("goodreads_secret")]
+        public string GoodReadsSecret { get; private set; }
     }
 
     public enum EmbedType

@@ -133,11 +133,29 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://ip-api.com/json/.
+        /// </summary>
+        internal static string API_IPLocation {
+            get {
+                return ResourceManager.GetString("API_IPLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://api.nasa.gov/planetary/apod.
         /// </summary>
         internal static string API_NASA {
             get {
                 return ResourceManager.GetString("API_NASA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://newsapi.org/v2/everything?sources=google-news.
+        /// </summary>
+        internal static string API_News {
+            get {
+                return ResourceManager.GetString("API_News", resourceCulture);
             }
         }
         

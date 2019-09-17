@@ -141,8 +141,14 @@
   <data name="API_Google_Weather" xml:space="preserve">
     <value>http://api.openweathermap.org/data/2.5/weather</value>
   </data>
+  <data name="API_IPLocation" xml:space="preserve">
+    <value>http://ip-api.com/json/</value>
+  </data>
   <data name="API_NASA" xml:space="preserve">
     <value>https://api.nasa.gov/planetary/apod</value>
+  </data>
+  <data name="API_News" xml:space="preserve">
+    <value>https://newsapi.org/v2/everything?sources=google-news</value>
   </data>
   <data name="API_Pokemon" xml:space="preserve">
     <value>https://pokeapi.co/api/v2/pokemon/</value>

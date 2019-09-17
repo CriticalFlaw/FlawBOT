@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -6,6 +7,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Newtonsoft.Json.Linq;
@@ -24,7 +26,7 @@ namespace FlawBOT.Modules
             [Description("Question to ask the 8-Ball")] [RemainingText] string question = "")
         {
             if (string.IsNullOrWhiteSpace(question))
-                return BotServices.SendEmbedAsync(ctx, ":8ball: The almighty 8 ball requests a question", EmbedType.Warning);
+                return BotServices.SendEmbedAsync(ctx, Resources.ERR_8BALL_QUESTION, EmbedType.Warning);
             var output = new DiscordEmbedBuilder()
                 .WithDescription(":8ball: " + ctx.User.Mention + " " + EightBallService.GetAnswer())
                 .WithColor(DiscordColor.Black);
@@ -94,7 +96,7 @@ namespace FlawBOT.Modules
         {
             var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
             if (!regex.Success)
-                await BotServices.SendEmbedAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_COLOR_INVALID, EmbedType.Warning);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -133,7 +135,7 @@ namespace FlawBOT.Modules
         {
             var results = DogService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
-                await BotServices.SendEmbedAsync(ctx, "Unable to retrieve a pupper photo :(", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_DOG_PHOTO, EmbedType.Warning);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -161,6 +163,23 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_HELLO
+
+        #region COMMAND_IP
+
+        [Command("ip")]
+        [Description("Retrieve the IP address location")]
+        public async Task IPLocation(CommandContext ctx,
+            [Description("IP Address")] [RemainingText] IPAddress address)
+        {
+            if (address == null) return;
+            var results = GoogleService.GetIPLocationAsync(address).Result;
+            if (results.Status != "success")
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning);
+            else
+                await BotServices.SendEmbedAsync(ctx, results.City, EmbedType.Default);
+        }
+
+        #endregion COMMAND_IP
 
         #region COMMAND_TTS
 

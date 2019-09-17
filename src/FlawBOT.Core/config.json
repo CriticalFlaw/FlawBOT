@@ -14,5 +14,8 @@
   "backpacktf_schema": null,
   "reddit_appid": null,
   "reddit_access": null,
-  "reddit_refresh": null
+  "reddit_refresh": null,
+  "news": null,
+  "goodreads_key": null,
+  "goodreads_secret": null
 }
