@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
@@ -26,6 +27,10 @@ namespace MiscModule
             Assert.IsTrue(DogService.GetDogPhotoAsync().Result.Status == "success");
         }
 
-        // TODO: Put tests here...
+        [Test]
+        public void GetIPLocation()
+        {
+            Assert.IsTrue(GoogleService.GetIPLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Status == "success");
+        }
     }
 }
