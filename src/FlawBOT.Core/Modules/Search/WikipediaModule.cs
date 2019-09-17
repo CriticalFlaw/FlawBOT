@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -20,7 +21,7 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = WikipediaService.GetWikipediaDataAsync(query).Result;
             if (results.Missing)
-                await BotServices.SendEmbedAsync(ctx, "Wikipedia page not found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, EmbedType.Missing);
             else
                 await ctx.Channel.SendMessageAsync(results.FullUrl).ConfigureAwait(false);
         }

@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -19,7 +20,7 @@ namespace FlawBOT.Modules
         {
             var results = await NASAService.GetNASAImage();
             if (results == null)
-                await BotServices.SendEmbedAsync(ctx, "Unable to reach NASA API", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_NASA_API, EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()

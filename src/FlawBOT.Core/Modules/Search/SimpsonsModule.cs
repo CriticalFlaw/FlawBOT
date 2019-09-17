@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Services;
 
 namespace FlawBOT.Modules
@@ -36,7 +37,7 @@ namespace FlawBOT.Modules
             else // Include episode information if any kind of parameter is inputted
             {
                 var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Frinkiac);
-                results.WithFooter("Note: First time gifs take a few minutes to properly generate");
+                results.WithFooter(Resources.SIMPSONS_GIF_WARNING);
                 await ctx.RespondAsync(output, embed: results.Build());
             }
         }
@@ -71,7 +72,7 @@ namespace FlawBOT.Modules
             else // Include episode information if any kind of parameter is inputted
             {
                 var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Morbotron);
-                results.WithFooter("Note: First time gifs take a few minutes to properly generate");
+                results.WithFooter(Resources.SIMPSONS_GIF_WARNING);
                 results.WithColor(new DiscordColor("#69E398"));
                 await ctx.RespondAsync(output, embed: results.Build());
             }
@@ -107,7 +108,7 @@ namespace FlawBOT.Modules
             else // Include episode information if any kind of parameter is inputted
             {
                 var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience);
-                results.WithFooter("Note: First time gifs take a few minutes to properly generate");
+                results.WithFooter(Resources.SIMPSONS_GIF_WARNING);
                 results.WithColor(new DiscordColor("#ABD5EC"));
                 await ctx.RespondAsync(output, embed: results.Build());
             }

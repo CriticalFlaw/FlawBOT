@@ -8,6 +8,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -54,7 +55,7 @@ namespace FlawBOT.Modules
             [Description("New role name")] [RemainingText] string role = "")
         {
             if (string.IsNullOrWhiteSpace(role))
-                await BotServices.SendEmbedAsync(ctx, "Role name cannot be blank!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NAME, EmbedType.Warning);
             else
             {
                 await ctx.Guild.CreateRoleAsync(role);
@@ -74,7 +75,7 @@ namespace FlawBOT.Modules
             [Description("Server role to delete")] [RemainingText] DiscordRole role = null)
         {
             if (role == null)
-                await BotServices.SendEmbedAsync(ctx, "Please provide an existing server role!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning);
             else
             {
                 await role.DeleteAsync();
@@ -93,7 +94,7 @@ namespace FlawBOT.Modules
             [Description("Server role information to retrieve")] [RemainingText] DiscordRole role = null)
         {
             if (role == null)
-                await BotServices.SendEmbedAsync(ctx, "Please provide an existing server role!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -119,7 +120,7 @@ namespace FlawBOT.Modules
             [Description("Server role")] [RemainingText] DiscordRole role = null)
         {
             if (role == null)
-                await BotServices.SendEmbedAsync(ctx, "Please provide an existing server role!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning);
             else
             {
                 var userCount = 0;
@@ -195,9 +196,9 @@ namespace FlawBOT.Modules
             [Description("Server user to get revoked")] DiscordMember member)
         {
             if (member.Roles.Count() == 0)
-                await BotServices.SendEmbedAsync(ctx, "This user doesn't have any roles", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NONE, EmbedType.Warning);
             else if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
-                await BotServices.SendEmbedAsync(ctx, "You are unauthorised to remove roles from this user!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NOT_ALLOWED, EmbedType.Warning);
             else
             {
                 await member.ReplaceRolesAsync(Enumerable.Empty<DiscordRole>()).ConfigureAwait(false);

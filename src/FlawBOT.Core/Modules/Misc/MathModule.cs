@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -55,7 +56,7 @@ namespace FlawBOT.Modules
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, "Error calculating math equation, make sure your values are integers and the operation is valid!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_MATH_EQUATION, EmbedType.Warning);
             }
         }
 

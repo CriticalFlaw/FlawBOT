@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Steam.Models.SteamCommunity;
@@ -61,7 +62,7 @@ namespace FlawBOT.Modules
             var profile = SteamService.GetSteamUserProfileAsync(query).Result;
             var summary = SteamService.GetSteamUserSummaryAsync(query).Result;
             if (profile == null && summary == null)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder().WithTitle(summary.Data.Nickname);
@@ -106,7 +107,7 @@ namespace FlawBOT.Modules
             if (regex.Success)
                 await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
             else
-                await BotServices.SendEmbedAsync(ctx, "Invalid connection info, follow the format: 123.345.56.789:000; password hello", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_STEAM_CONNECT_FORMAT, EmbedType.Warning);
         }
 
         #endregion COMMAND_CONNECT

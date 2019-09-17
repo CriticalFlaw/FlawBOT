@@ -5,6 +5,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -23,7 +24,7 @@ namespace FlawBOT.Modules
         {
             var results = await PokemonService.GetPokemonCardsAsync(query);
             if (results.Cards.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, "Pokemon not found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 foreach (var value in results.Cards)
@@ -38,7 +39,7 @@ namespace FlawBOT.Modules
                         .AddField("Series", card.Series ?? "Unknown", true)
                         .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
                         .WithColor(DiscordColor.Gold)
-                        .WithFooter("Type next in the next 10 seconds for the next card");
+                        .WithFooter("Type 'next' within 10 seconds for the next card");
 
                     var types = new StringBuilder();
                     foreach (var type in card.Types)

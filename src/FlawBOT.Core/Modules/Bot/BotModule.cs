@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Common;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -47,7 +48,7 @@ namespace FlawBOT.Modules
             await BotServices.SendEmbedAsync(ctx, $"Are you sure you want {SharedData.Name} to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
             if (interactivity.Result == null)
-                await BotServices.SendEmbedAsync(ctx, "Request timed out...");
+                await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT);
             else
             {
                 await BotServices.SendEmbedAsync(ctx, "Thank you for using " + SharedData.Name);
@@ -78,13 +79,13 @@ namespace FlawBOT.Modules
             [Description("Detailed description of the issue")] [RemainingText] string report)
         {
             if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
-                await ctx.RespondAsync("Please provide more information on the issue (50 characters minimum).");
+                await ctx.RespondAsync(Resources.ERR_REPORT_CHAR_LENGTH);
             else
             {
-                await BotServices.SendEmbedAsync(ctx, "The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be cancelled.");
+                await BotServices.SendEmbedAsync(ctx, "The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be canceled.");
                 var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
                 if (interactivity.Result == null)
-                    await BotServices.SendEmbedAsync(ctx, "Request timed out...");
+                    await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT);
                 else
                 {
                     var dm = await ctx.Member.CreateDmChannelAsync();

@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -23,7 +24,7 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = await AmiiboService.GetAmiiboFigurineAsync(query);
             if (results == null)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 foreach (var amiibo in results.Amiibo)
@@ -37,7 +38,7 @@ namespace FlawBOT.Modules
                         .AddField(":flag_eu: Release:", amiibo.ReleaseDate.European, true)
                         .AddField(":flag_au: Release:", amiibo.ReleaseDate.Australian, true)
                         .WithImageUrl(amiibo.Image)
-                        .WithFooter("Type next in the next 10 seconds the next amiibo")
+                        .WithFooter("Type 'next' within 10 seconds for the next amiibo")
                         .WithColor(new DiscordColor("#E70009"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 

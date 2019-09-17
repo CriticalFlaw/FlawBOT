@@ -8,6 +8,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -28,7 +29,7 @@ namespace FlawBOT.Modules
         {
             var item = TeamFortressService.GetSchemaItemAsync(query);
             if (item == null)
-                await BotServices.SendEmbedAsync(ctx, "Item not found in the schema!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 var textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -38,7 +39,7 @@ namespace FlawBOT.Modules
                     .AddField("Giftable", (item.Capabilities.Giftable) ? "Yes" : "No", true)
                     .AddField("Nameable", (item.Capabilities.Renamable) ? "Yes" : "No", true)
                     .AddField("Item Slot:", (!string.IsNullOrWhiteSpace(item.ItemSlot)) ? textInfo.ToTitleCase(item.ItemSlot) : "Unknown", true)
-                    .WithThumbnailUrl(item.ImageURL)
+                    .WithImageUrl(item.ImageURL)
                     .WithUrl("https://wiki.teamfortress.com/wiki/" + item.ItemName.Replace(' ', '_'))
                     .WithFooter("ID: " + item.DefIndex)
                     .WithColor(new DiscordColor("#E7B53B"));
@@ -46,7 +47,7 @@ namespace FlawBOT.Modules
                 var userClasses = new StringBuilder();
                 foreach (var className in item.UsedByClasses)
                     userClasses.Append(className + "\n");
-                output.AddField("Classes:", userClasses.ToString() ?? "Unknown", true);
+                output.AddField("Worn by:", userClasses.ToString() ?? "Unknown", true);
 
                 await ctx.RespondAsync(embed: output.Build());
             }
@@ -65,13 +66,15 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant());
             if (results.MapName == null)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 double.TryParse(results.AvgPlayers, out var avg_players);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.MapName)
                     .AddField("Official", results.OfficialMap ? "YES" : "NO", true)
+                    .AddField("Game Mode", results.GameModes.First() ?? "Unknown", true)
+                    .AddField("First Seen", results.FirstSeen.ToString() ?? "Unknown", true)
                     .AddField("Avg. Players", Math.Round(avg_players, 2).ToString() ?? "Unknown", true)
                     .AddField("Highest Player Count", results.HighestPlayerCount.ToString() ?? "Unknown", true)
                     .AddField("Highest Server Count", results.HighestServerCount.ToString() ?? "Unknown", true)
@@ -100,15 +103,27 @@ namespace FlawBOT.Modules
         {
             var results = await TeamFortressService.GetNewsOverviewAsync();
             if (results == null || results.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
-                var output = new DiscordEmbedBuilder()
-                    .WithFooter("These are the latest news articles retrieved from teamwork.tf")
-                    .WithColor(new DiscordColor("#E7B53B"));
-                foreach (var result in results.Take(5))
-                    output.AddField(result.Title, result.Link);
-                await ctx.RespondAsync(embed: output.Build());
+                while (results.Count > 0)
+                {
+                    var output = new DiscordEmbedBuilder()
+                        .WithFooter("These are the latest news articles retrieved from teamwork.tf\nType next in the next 10 seconds for more news articles.")
+                        .WithColor(new DiscordColor("#E7B53B"));
+
+                    foreach (var result in results.Take(5))
+                    {
+                        output.AddField(result.Title, result.Link);
+                        results.Remove(result);
+                    }
+                    var message = await ctx.RespondAsync(embed: output.Build());
+
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    if (interactivity.Result == null) break;
+                    await BotServices.RemoveMessage(interactivity.Result);
+                    await BotServices.RemoveMessage(message);
+                }
             }
         }
 
@@ -118,18 +133,20 @@ namespace FlawBOT.Modules
 
         [Command("server")]
         [Aliases("servers")]
-        [Description("Retrieve a list of servers with given gamemode")]
+        [Description("Retrieve a list of servers with given game-mode")]
         public async Task TF2Servers(CommandContext ctx,
-            [Description("Name of the gamemode, like payload")] [RemainingText] string query)
+            [Description("Name of the game-mode, like payload")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
             query = TeamFortressService.NormalizedGameMode(query);
             var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-'));
             if (results.Count <= 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
-                foreach (var server in results.Where(n => n.MapName.Contains(query)))
+                var random = new Random();
+                results = results.OrderBy(x => random.Next()).ToList();
+                foreach (var server in results.Where(n => n.GameModes.Contains(query)))
                 {
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(server.Name)
@@ -144,8 +161,8 @@ namespace FlawBOT.Modules
                         .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
                         .AddField("Respawn Timer", server.HasNoSpawnTimer ? "Yes" : "No", true)
                         .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
-                        .WithThumbnailUrl("https://teamwork.tf" + server.MapThumbnail)
-                        .WithFooter("Type next in the next 10 seconds for the next server")
+                        .WithImageUrl("https://teamwork.tf" + server.MapThumbnail)
+                        .WithFooter("Type 'next' within 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 
@@ -167,7 +184,7 @@ namespace FlawBOT.Modules
         {
             var results = TeamFortressService.GetClassifieds();
             if (results.Total > 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -192,7 +209,7 @@ namespace FlawBOT.Modules
             var steamId = SteamService.GetSteamUserProfileAsync(query).Result.SteamID.ToString();
             var results = TeamFortressService.GetOwnClassifieds(steamId);
             if (results.Items.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 var output = new DiscordEmbedBuilder()

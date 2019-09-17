@@ -53,6 +53,18 @@ namespace FlawBOT.Framework.Services
             return (string.IsNullOrWhiteSpace(input)) ? false : true;
         }
 
+        public static bool CheckChannelName(string input)
+        {
+            return (string.IsNullOrWhiteSpace(input) || input.Length > 100) ? false : true;
+        }
+
+        public static int LimitToRange(int value, int min = 1, int max = 100)
+        {
+            if (value <= min) { return min; }
+            if (value >= max) { return max; }
+            return value;
+        }
+
         public static async Task<bool> RemoveMessage(DiscordMessage message)
         {
             try

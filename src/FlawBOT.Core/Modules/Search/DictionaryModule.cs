@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 
@@ -25,7 +26,7 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = await DictionaryService.GetDictionaryForTermAsync(query);
             if (results.ResultType == "no_results")
-                await BotServices.SendEmbedAsync(ctx, "No results found!", EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 foreach (var definition in results.List)
@@ -37,7 +38,7 @@ namespace FlawBOT.Modules
                         .AddField(":thumbsup:", definition.ThumbsUp.ToString(), true)
                         .AddField(":thumbsdown:", definition.ThumbsDown.ToString(), true)
                         .WithUrl(definition.Permalink)
-                        .WithFooter("Type next in the next 10 seconds the next definition")
+                        .WithFooter("Type 'next' within 10 seconds for the next definition")
                         .WithColor(new DiscordColor("#1F2439"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 

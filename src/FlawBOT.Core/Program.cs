@@ -37,7 +37,7 @@ namespace FlawBOT
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nException occured: {e.GetType()} :\n{e.Message}");
+                Console.WriteLine($"\nException occurred: {e.GetType()} :\n{e.Message}");
                 if (!(e.InnerException is null))
                     Console.WriteLine($"Inner exception: {e.InnerException.GetType()} :\n{e.InnerException.Message}");
                 Console.ReadKey();
@@ -65,7 +65,7 @@ namespace FlawBOT
             Client.DebugLogger.LogMessageReceived += Client_LogMessageHandler;
             Client.UseInteractivity(new InteractivityConfiguration
             {
-                PaginationBehaviour = PaginationBehaviour.Ignore, // Default pagination behaviour to just ignore the reactions
+                PaginationBehaviour = PaginationBehaviour.Ignore, // Default pagination behavior to just ignore the reactions
                 Timeout = TimeSpan.FromMinutes(2) // Default pagination timeout to 2 minutes
             });
 
@@ -123,7 +123,7 @@ namespace FlawBOT
 
         private static Task Client_ClientError(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, "Exception occured: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, "Exception occurred: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
             return Task.CompletedTask;
         }
 
@@ -183,7 +183,7 @@ namespace FlawBOT
                     break;
 
                 case NullReferenceException _:
-                    //await BotServices.SendEmbedAsync(e.Context, "Data not found!", EmbedType.Missing);
+                    //await BotServices.SendEmbedAsync(e.Context, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
                     break;
 
                 case ArgumentNullException _:
@@ -204,7 +204,7 @@ namespace FlawBOT
                     if (e.Exception.Message.Contains("Given emote was not found"))
                         await BotServices.SendEmbedAsync(e.Context, "Suggested emote was not found!", EmbedType.Error);
                     if (e.Exception.Message.Contains("Unauthorized: 403"))
-                        await BotServices.SendEmbedAsync(e.Context, "Unsufficient Permissions", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Insufficient Permissions", EmbedType.Error);
                     else
                         e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now); // DEBUG ONLY
                     break;

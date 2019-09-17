@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using FlawBOT.Core.Properties;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Imgur.API.Models.Impl;
 
@@ -28,7 +30,7 @@ namespace FlawBOT.Modules
                     break;
 
                 default:
-                    await ctx.RespondAsync(":mag: No results found!");
+                    await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
                     break;
             }
         }
