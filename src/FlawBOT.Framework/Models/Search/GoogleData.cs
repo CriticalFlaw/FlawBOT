@@ -134,7 +134,7 @@ namespace FlawBOT.Framework.Models
 
     public class NewsData
     {
-        [JsonProperty("@status")]
+        [JsonProperty("status")]
         public string Status { get; set; }
 
         [JsonProperty("totalResults")]
@@ -173,10 +173,10 @@ namespace FlawBOT.Framework.Models
 
     public class Source
     {
-        [JsonProperty("@id")]
+        [JsonProperty("id")]
         public string ID { get; set; }
 
-        [JsonProperty("@name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
     }
 

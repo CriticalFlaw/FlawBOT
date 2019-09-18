@@ -11,7 +11,6 @@
     <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00624" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00624" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00624" />
-    <PackageReference Include="Goodreads" Version="1.0.1" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.41.1.1699" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />

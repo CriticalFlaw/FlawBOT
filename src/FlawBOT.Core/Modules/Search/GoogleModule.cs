@@ -83,14 +83,13 @@ namespace FlawBOT.Modules
                 foreach (var article in results.Articles)
                 {
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(article.Title + " (Powered by News API)")
-                        .WithAuthor(article.Author ?? "Unknown")
+                        .WithTitle(article.Title)
                         .WithTimestamp(article.PublishDate)
                         .WithDescription(article.Description.Length < 500 ? article.Description : article.Description.Take(500) + "...")
                         .WithUrl(article.Url)
                         .WithImageUrl(article.UrlImage)
-                        .WithFooter("Type 'next' within 10 seconds for the next article")
-                        .WithColor(SharedData.DefaultColor);
+                        .WithFooter("Type 'next' within 10 seconds for the next article. Powered by News API")
+                        .WithColor(new DiscordColor("#253B80"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));

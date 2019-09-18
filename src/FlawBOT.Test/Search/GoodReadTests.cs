@@ -9,8 +9,8 @@ namespace FlawBOT.Test.Search
         [Test]
         public void GetBookData()
         {
-            Assert.IsTrue(!string.IsNullOrWhiteSpace(GoodReadService.GetBookDataAsync("Ender's Game").Result.Title));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(GoodReadService.GetBookDataAsync("Bender's Game").Result.Title));
+            Assert.IsTrue(GoodReadService.GetBookDataAsync("Ender's Game").Result.Books.Count > 0);
+            Assert.IsFalse(GoodReadService.GetBookDataAsync("Bender's Game").Result.Books.Count > 0);
         }
     }
 }

@@ -169,14 +169,23 @@ namespace FlawBOT.Modules
         [Command("ip")]
         [Description("Retrieve the IP address location")]
         public async Task IPLocation(CommandContext ctx,
-            [Description("IP Address")] [RemainingText] IPAddress address)
+            [Description("IP Address")] string address)
         {
-            if (address == null) return;
-            var results = GoogleService.GetIPLocationAsync(address).Result;
+            if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out IPAddress ip)) return;
+            var results = GoogleService.GetIPLocationAsync(ip).Result;
             if (results.Status != "success")
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning);
             else
-                await BotServices.SendEmbedAsync(ctx, results.City, EmbedType.Default);
+            {
+                var output = new DiscordEmbedBuilder()
+                    .AddField("Location", $"{results.City}, {results.Region}, {results.Country}", true)
+                    .AddField("ISP", results.ISP, true)
+                    .AddField("Longitude", results.Longitude.ToString(), true)
+                    .AddField("Latitude", results.Latitude.ToString(), true)
+                    .WithFooter($"IP: {results.Query}")
+                    .WithColor(new DiscordColor("#4d2f63"));
+                await ctx.RespondAsync(embed: output.Build());
+            }
         }
 
         #endregion COMMAND_IP

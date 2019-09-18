@@ -1,20 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using FlawBOT.Framework.Services.Search;
 
-namespace FlawBOT.Core.Modules.Search
+namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class GoodReadModule : BaseCommandModule
     {
-        #region COMMAND_OMDB
+        #region COMMAND_BOOKS
 
         [Command("book")]
         [Aliases("goodreads", "books")]
@@ -24,30 +26,31 @@ namespace FlawBOT.Core.Modules.Search
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = GoodReadService.GetBookDataAsync(query).Result;
-            if (string.IsNullOrWhiteSpace(results.Title))
+            if (results.Books.Count > 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.Title + $" ({results.Pages} pages)")
-                    .WithDescription(results.Description.Length < 500 ? results.Description : results.Description.Take(500) + "...")
-                    .AddField("Publish Date", results.PublicationDate.ToString() ?? "Unknown", true)
-                    .AddField("Ratings", $"Average {results.AverageRating} ({results.RatingsCount} total ratings)", true)
-                    .AddField("Publisher", results.Publisher, true)
-                    .WithImageUrl(results.ImageUrl ?? results.SmallImageUrl)
-                    .WithUrl(results.Url)
-                    .WithFooter("ISBN: " + results.Isbn)
-                    .WithColor(new DiscordColor("#372213"));
+                foreach (var book in results.Books)
+                {
+                    // TODO: Add page count, publication, ISBN, URLs
+                    var output = new DiscordEmbedBuilder()
+                        .WithTitle(book.Work.Title)
+                        .AddField("Author", book.Work.Author.Name ?? "Unknown", true)
+                        .AddField("Publication Year", book.PublicationYear.Text ?? "Unknown", true)
+                        .AddField("Ratings", $"Average {book.RatingAverage} ({book.RatingCount} total ratings)", true)
+                        .WithImageUrl(book.Work.ImageUrl ?? book.Work.ImageUrlSmall)
+                        .WithFooter("Type 'next' within 10 seconds for the next book.")
+                        .WithColor(new DiscordColor("#372213"));
+                    var message = await ctx.RespondAsync(embed: output.Build());
 
-                var values = new StringBuilder();
-                foreach (var author in results.Authors)
-                    values.Append(author.Name + "\n");
-                output.AddField("Author(s)", values.ToString() ?? "Unknown", true);
-
-                await ctx.RespondAsync(embed: output.Build());
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    if (interactivity.Result == null) break;
+                    await BotServices.RemoveMessage(interactivity.Result);
+                    await BotServices.RemoveMessage(message);
+                }
             }
         }
 
-        #endregion COMMAND_OMDB
+        #endregion COMMAND_BOOKS
     }
 }

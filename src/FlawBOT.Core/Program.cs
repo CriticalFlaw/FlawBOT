@@ -90,6 +90,7 @@ namespace FlawBOT
             Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<AmiiboModule>();
             Commands.RegisterCommands<DictionaryModule>();
+            Commands.RegisterCommands<GoodReadModule>();
             Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<NASAModule>();

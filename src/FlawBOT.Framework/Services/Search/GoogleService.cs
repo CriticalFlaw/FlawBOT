@@ -53,7 +53,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<NewsData> GetNewsDataAsync(string query = "")
         {
-            var results = await _http.GetStringAsync(Resources.API_News + "?q=" + query + "&apiKey=" + TokenHandler.Tokens.NewsToken);
+            var results = await _http.GetStringAsync(Resources.API_News + "&q=" + query + "&apiKey=" + TokenHandler.Tokens.NewsToken);
             return JsonConvert.DeserializeObject<NewsData>(results);
         }
 

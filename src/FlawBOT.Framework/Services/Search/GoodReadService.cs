@@ -1,17 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
 using Goodreads;
+using Goodreads.Http;
 using Goodreads.Models.Response;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services.Search
 {
     public class GoodReadService : HttpHandler
     {
-        public static async Task<Book> GetBookDataAsync(string query)
+        public static async Task<GoodReadsResponse> GetBookDataAsync(string query)
         {
-            var client = GoodreadsClient.Create(TokenHandler.Tokens.GoodReadsKey, TokenHandler.Tokens.GoodReadsSecret);
-            var results = await client.Books.GetByTitle(query);
-            return results;
+            var _serializer = new XmlSerializer(typeof(GoodReadsResponse));
+            var results = await _http.GetStreamAsync(Resources.API_GoodReads + "?key=" + TokenHandler.Tokens.GoodReadsKey + "&q=" + WebUtility.UrlEncode(query));
+            return (GoodReadsResponse)_serializer.Deserialize(results);
         }
     }
 }
