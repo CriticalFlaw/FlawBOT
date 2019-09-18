@@ -3,19 +3,18 @@
   "discord": null,
   "google": null,
   "steam": null,
-  "steam64": null,
   "imgur": null,
   "omdb": null,
   "twitch": null,
   "nasa": null,
   "teamworktf": null,
+  "news": null,
+  "goodreads": null,
   "backpacktf": null,
   "backpacktf_secret": null,
   "backpacktf_schema": null,
+  "steam64": null,
   "reddit_appid": null,
   "reddit_access": null,
-  "reddit_refresh": null,
-  "news": null,
-  "goodreads_key": null,
-  "goodreads_secret": null
+  "reddit_refresh": null
 }

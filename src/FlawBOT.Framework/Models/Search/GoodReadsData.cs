@@ -1,21 +1,26 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using System.Collections.Generic;
 
 namespace FlawBOT.Framework.Models
 {
-    [XmlRoot(ElementName = "results")]
-    public class GoodReadsResponse
+    [XmlRoot(ElementName = "GoodreadsResponse")]
+    public class GoodreadsResponse
     {
-        [XmlElement(ElementName = "work")]
-        public List<Book> Books { get; set; }
+        [XmlElement("search")]
+        public GoodreadsSearchInfo Search { get; set; }
+    }
+
+    public class GoodreadsSearchInfo
+    {
+        [XmlArray("results"), XmlArrayItem("work")]
+        public List<Work> Results { get; set; }
     }
 
     [XmlRoot(ElementName = "work")]
-    public class Book
+    public class Work
     {
         [XmlElement(ElementName = "best_book")]
-        public Work Work { get; set; }
+        public Book Book { get; set; }
 
         [XmlElement(ElementName = "original_publication_day")]
         public PublicationDay PublicationDay { get; set; }
@@ -34,7 +39,7 @@ namespace FlawBOT.Framework.Models
     }
 
     [XmlRoot(ElementName = "best_book")]
-    public class Work
+    public class Book
     {
         [XmlElement(ElementName = "title")]
         public string Title { get; set; }
@@ -82,8 +87,5 @@ namespace FlawBOT.Framework.Models
     {
         [XmlText]
         public string Text { get; set; }
-
-        [XmlAttribute(AttributeName = "type")]
-        public string Type { get; set; }
     }
 }

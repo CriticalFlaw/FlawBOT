@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -25,20 +23,20 @@ namespace FlawBOT.Modules
             [Description("Book title to find on GoodReads")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = GoodReadService.GetBookDataAsync(query).Result;
-            if (results.Books.Count > 0)
+            var results = GoodReadService.GetBookDataAsync(query).Result.Search;
+            if (results.Results.Count <= 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
-                foreach (var book in results.Books)
+                foreach (var book in results.Results)
                 {
                     // TODO: Add page count, publication, ISBN, URLs
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(book.Work.Title)
-                        .AddField("Author", book.Work.Author.Name ?? "Unknown", true)
+                        .WithTitle(book.Book.Title)
+                        .AddField("Author", book.Book.Author.Name ?? "Unknown", true)
                         .AddField("Publication Year", book.PublicationYear.Text ?? "Unknown", true)
-                        .AddField("Ratings", $"Average {book.RatingAverage} ({book.RatingCount} total ratings)", true)
-                        .WithImageUrl(book.Work.ImageUrl ?? book.Work.ImageUrlSmall)
+                        .AddField("Ratings", $"Average {book.RatingAverage} ({book.RatingCount.Text} total ratings)", true)
+                        .WithImageUrl(book.Book.ImageUrl ?? book.Book.ImageUrlSmall)
                         .WithFooter("Type 'next' within 10 seconds for the next book.")
                         .WithColor(new DiscordColor("#372213"));
                     var message = await ctx.RespondAsync(embed: output.Build());

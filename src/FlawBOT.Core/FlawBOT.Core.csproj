@@ -6,11 +6,11 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>FlawBOT.Program</StartupObject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
     <Win32Resource />
     <LangVersion>7.2</LangVersion>
-    <AssemblyVersion>2.2.0</AssemblyVersion>
-    <FileVersion>2.2.0</FileVersion>
+    <AssemblyVersion>2.3.0</AssemblyVersion>
+    <FileVersion>2.3.0</FileVersion>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <AssemblyName>FlawBOT.Core</AssemblyName>
     <RootNamespace>FlawBOT.Core</RootNamespace>
