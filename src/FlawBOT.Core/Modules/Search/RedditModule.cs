@@ -14,29 +14,7 @@ namespace FlawBOT.Modules
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class RedditModule : BaseCommandModule
     {
-        [Command("subreddit")]
-        [Aliases("sub")]
-        [Description("Retrieve a subreddit from Reddit")]
-        public async Task Subreddit(CommandContext ctx,
-            [Description("Subreddit to find on Reddit")] [RemainingText] string query)
-        {
-            if (!BotServices.CheckUserInput(query)) return;
-            var results = RedditService.GetSubredditAsync(query);
-            if (string.IsNullOrWhiteSpace(results.Id))
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_SUBREDDIT, EmbedType.Missing);
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.Title)
-                    .WithDescription(results.Description.Length < 500 ? results.Description : results.Description.Take(500) + "...")
-                    .AddField("Subscribers", string.Format("{0:n0}", results.Subscribers), true)
-                    .AddField("Created", results.Created.ToString(), true)
-                    .WithThumbnailUrl(results.BannerImg)
-                    .WithUrl("https://www.reddit.com//" + results.URL)
-                    .WithColor(new DiscordColor("#FF4500"));
-                await ctx.RespondAsync(embed: output.Build());
-            }
-        }
+        #region COMMAND_POST
 
         [Command("hot")]
         [Description("Get newest hot posts for a subreddit.")]
@@ -69,5 +47,7 @@ namespace FlawBOT.Modules
                 await ctx.RespondAsync(embed: output.Build());
             }
         }
+
+        #endregion COMMAND_POST
     }
 }

@@ -7,12 +7,6 @@ namespace SearchModule
     internal class RedditTests
     {
         [Test]
-        public void GetSubredditData()
-        {
-            Assert.NotNull(RedditService.GetSubredditAsync("AskReddit"));
-        }
-
-        [Test]
         public void GetHotSubredditPost()
         {
             Assert.NotNull(RedditService.GetSubredditPost("AskReddit", RedditCategory.Hot));

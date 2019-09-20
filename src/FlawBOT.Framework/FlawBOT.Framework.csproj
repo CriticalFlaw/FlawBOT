@@ -2,13 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AssemblyVersion>2.3.0.0</AssemblyVersion>
-    <Version>2.3.0</Version>
-    <FileVersion>2.3.0.0</FileVersion>
+    <AssemblyVersion>2.3.1.0</AssemblyVersion>
+    <Version>2.3.1</Version>
+    <FileVersion>2.3.1.0</FileVersion>
+    <Authors>CriticalFlaw</Authors>
+    <Company>CriticalFlaw</Company>
+    <Product>FlawBOT</Product>
+    <Description>Multipurpose Discord bot written in C# using DSharpPlus. Application Framework.</Description>
+    <PackageProjectUrl>https://discordbots.org/bot/339833029013012483</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CriticalFlaw/FlawBOT</RepositoryUrl>
+    <NeutralLanguage>en-CA</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BackpackTfApi" Version="1.0.3" />
     <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00624" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00624" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00624" />
@@ -17,7 +23,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />
     <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
-    <PackageReference Include="Reddit" Version="1.2.0" />
     <PackageReference Include="SteamWebAPI2" Version="4.0.8" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.5.0" />
     <PackageReference Include="TwitchLib.Api" Version="3.0.0" />

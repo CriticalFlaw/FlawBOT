@@ -9,6 +9,30 @@ namespace FlawBOT.Framework.Models
         public Stream Stream { get; set; }
     }
 
+    public class Stream
+    {
+        [JsonProperty("game")]
+        public string Game { get; set; }
+
+        [JsonProperty("viewers")]
+        public int Viewers { get; set; }
+
+        [JsonProperty("average_fps")]
+        public double AverageFPS { get; set; }
+
+        [JsonProperty("delay")]
+        public int Delay { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonProperty("stream_type")]
+        public string StreamType { get; set; }
+
+        [JsonProperty("channel")]
+        public Channel Channel { get; set; }
+    }
+
     public class Channel
     {
         [JsonProperty("mature")]
@@ -81,60 +105,6 @@ namespace FlawBOT.Framework.Models
         public Links Links { get; set; }
     }
 
-    public class Stream
-    {
-        [JsonProperty("_id")]
-        public long Id { get; set; }
-
-        [JsonProperty("game")]
-        public string Game { get; set; }
-
-        [JsonProperty("viewers")]
-        public int Viewers { get; set; }
-
-        [JsonProperty("video_height")]
-        public int VideoHeight { get; set; }
-
-        [JsonProperty("average_fps")]
-        public double AverageFPS { get; set; }
-
-        [JsonProperty("delay")]
-        public int Delay { get; set; }
-
-        [JsonProperty("created_at")]
-        public DateTime CreatedAt { get; set; }
-
-        [JsonProperty("is_playlist")]
-        public bool IsPlayList { get; set; }
-
-        [JsonProperty("stream_type")]
-        public string StreamType { get; set; }
-
-        [JsonProperty("preview")]
-        public Preview Preview { get; set; }
-
-        [JsonProperty("channel")]
-        public Channel Channel { get; set; }
-
-        [JsonProperty("_links")]
-        public Links2 Links { get; set; }
-    }
-
-    public class Preview
-    {
-        [JsonProperty("small")]
-        public string Small { get; set; }
-
-        [JsonProperty("medium")]
-        public string Medium { get; set; }
-
-        [JsonProperty("large")]
-        public string Large { get; set; }
-
-        [JsonProperty("template")]
-        public string Template { get; set; }
-    }
-
     public class Links
     {
         [JsonProperty("self")]
@@ -166,20 +136,5 @@ namespace FlawBOT.Framework.Models
 
         [JsonProperty("videos")]
         public string Videos { get; set; }
-    }
-
-    public class Links2
-    {
-        [JsonProperty("self")]
-        public string Self { get; set; }
-    }
-
-    public class Links3
-    {
-        [JsonProperty("self")]
-        public string Self { get; set; }
-
-        [JsonProperty("channel")]
-        public string Channel { get; set; }
     }
 }

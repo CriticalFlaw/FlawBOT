@@ -13,7 +13,6 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using FlawBOT.Common;
-using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using FlawBOT.Modules;
@@ -90,7 +89,7 @@ namespace FlawBOT
             Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<AmiiboModule>();
             Commands.RegisterCommands<DictionaryModule>();
-            Commands.RegisterCommands<GoodReadModule>();
+            Commands.RegisterCommands<GoodReadsModule>();
             Commands.RegisterCommands<GoogleModule>();
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<NASAModule>();

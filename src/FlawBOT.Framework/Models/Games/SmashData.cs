@@ -38,12 +38,6 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("OwnerId")]
-        public int OwnerId { get; set; }
-
-        [JsonProperty("Owner")]
-        public string Owner { get; set; }
-
         [JsonProperty("Values")]
         public List<Attribute> Attributes { get; set; }
     }
@@ -55,11 +49,5 @@ namespace FlawBOT.Framework.Models
 
         [JsonProperty("Value")]
         public string Value { get; set; }
-
-        [JsonProperty("Owner")]
-        public string Owner { get; set; }
-
-        [JsonProperty("OwnerId")]
-        public int OwnerId { get; set; }
     }
 }

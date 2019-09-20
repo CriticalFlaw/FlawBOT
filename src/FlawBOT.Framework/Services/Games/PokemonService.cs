@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
@@ -37,7 +36,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var list = await _http.GetStringAsync(Resources.API_Pokemon + "?limit=800");
+                var list = await _http.GetStringAsync(Resources.API_Pokemon);
                 var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
                 foreach (var pokemon in results)

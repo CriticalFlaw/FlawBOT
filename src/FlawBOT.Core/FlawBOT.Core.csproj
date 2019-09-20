@@ -6,14 +6,23 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>FlawBOT.Program</StartupObject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.3.0</Version>
+    <Version>2.3.1</Version>
     <Win32Resource />
     <LangVersion>7.2</LangVersion>
-    <AssemblyVersion>2.3.0</AssemblyVersion>
-    <FileVersion>2.3.0</FileVersion>
+    <AssemblyVersion>2.3.1.0</AssemblyVersion>
+    <FileVersion>2.3.1.0</FileVersion>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <AssemblyName>FlawBOT.Core</AssemblyName>
     <RootNamespace>FlawBOT.Core</RootNamespace>
+    <PackageTags />
+    <Description>Multipurpose Discord bot written in C# using DSharpPlus. Application Core.</Description>
+    <PackageProjectUrl>https://discordbots.org/bot/339833029013012483</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CriticalFlaw/FlawBOT</RepositoryUrl>
+    <RepositoryType />
+    <Company>CriticalFlaw</Company>
+    <Product>FlawBOT</Product>
+    <Authors>CriticalFlaw</Authors>
+    <NeutralLanguage>en-CA</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

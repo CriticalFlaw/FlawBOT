@@ -1,13 +1,12 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 
 namespace FlawBOT.Framework.Services.Search
 {
-    public class GoodReadService : HttpHandler
+    public class GoodReadsService : HttpHandler
     {
         public static async Task<GoodreadsResponse> GetBookDataAsync(string query)
         {

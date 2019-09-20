@@ -31,32 +31,14 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("teamworktf")]
         public string TeamworkToken { get; private set; }
 
+        [JsonProperty("tradetf")]
+        public string TFSchemaToken { get; private set; }
+
         [JsonProperty("news")]
         public string NewsToken { get; private set; }
 
         [JsonProperty("goodreads")]
         public string GoodReadsToken { get; private set; }
-
-        [JsonProperty("backpacktf")]
-        public string BackpackToken { get; private set; }
-
-        [JsonProperty("backpacktf_secret")]
-        public string BackpackAccess { get; private set; }
-
-        [JsonProperty("backpacktf_schema")]
-        public string BackpackSchema { get; private set; }
-
-        [JsonProperty("steam64")]
-        public string SteamID { get; private set; }
-
-        [JsonProperty("reddit_appid")]
-        public string RedditAppToken { get; private set; }
-
-        [JsonProperty("reddit_access")]
-        public string RedditAccessToken { get; private set; }
-
-        [JsonProperty("reddit_refresh")]
-        public string RedditRefreshToken { get; private set; }
     }
 
     public enum EmbedType

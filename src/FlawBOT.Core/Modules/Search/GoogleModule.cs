@@ -40,38 +40,10 @@ namespace FlawBOT.Modules
 
         #endregion COMMAND_TIME
 
-        #region COMMAND_WEATHER
-
-        [Command("weather")]
-        [Description("Retrieve the weather for specified location")]
-        public async Task Weather(CommandContext ctx,
-            [Description("Location to retrieve weather data from")] [RemainingText] string query)
-        {
-            if (!BotServices.CheckUserInput(query)) return;
-            var results = await GoogleService.GetWeatherDataAsync(query);
-            if (results.COD == 404)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Missing);
-            else
-            {
-                Func<double, double> format = GoogleService.CelsiusToFahrenheit;
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
-                    .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
-                    .AddField("Conditions", string.Join(", ", results.Weather.Select(w => w.Main)), true)
-                    .AddField("Humidity", $"{results.Main.Humidity}%", true)
-                    .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
-                    .WithUrl("https://openweathermap.org/city/" + results.ID)
-                    .WithColor(SharedData.DefaultColor);
-                await ctx.RespondAsync(embed: output.Build());
-            }
-        }
-
-        #endregion COMMAND_WEATHER
-
         #region COMMAND_NEWS
 
         [Command("news")]
-        [Description("Retrieve the latest news from Google")]
+        [Description("Retrieve the latest news articles from NewsAPI.org")]
         public async Task News(CommandContext ctx,
             [Description("Article topic to find on Google News")] [RemainingText] string query)
         {
@@ -101,5 +73,33 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_NEWS
+
+        #region COMMAND_WEATHER
+
+        [Command("weather")]
+        [Description("Retrieve the weather for specified location")]
+        public async Task Weather(CommandContext ctx,
+            [Description("Location to retrieve weather data from")] [RemainingText] string query)
+        {
+            if (!BotServices.CheckUserInput(query)) return;
+            var results = await GoogleService.GetWeatherDataAsync(query);
+            if (results.COD == 404)
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Missing);
+            else
+            {
+                Func<double, double> format = GoogleService.CelsiusToFahrenheit;
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
+                    .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
+                    .AddField("Conditions", string.Join(", ", results.Weather.Select(w => w.Main)), true)
+                    .AddField("Humidity", $"{results.Main.Humidity}%", true)
+                    .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
+                    .WithUrl("https://openweathermap.org/city/" + results.ID)
+                    .WithColor(SharedData.DefaultColor);
+                await ctx.RespondAsync(embed: output.Build());
+            }
+        }
+
+        #endregion COMMAND_WEATHER
     }
 }

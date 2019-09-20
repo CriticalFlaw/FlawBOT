@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
 

@@ -12,6 +12,9 @@ namespace FlawBOT.Framework.Models
 
     public class GoodreadsSearchInfo
     {
+        [XmlElement("total-results")]
+        public int ResultCount { get; set; }
+
         [XmlArray("results"), XmlArrayItem("work")]
         public List<Work> Results { get; set; }
     }

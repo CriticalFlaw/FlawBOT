@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
 

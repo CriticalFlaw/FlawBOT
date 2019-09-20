@@ -12,19 +12,19 @@ using FlawBOT.Framework.Services.Search;
 namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class GoodReadModule : BaseCommandModule
+    public class GoodReadsModule : BaseCommandModule
     {
         #region COMMAND_BOOKS
 
         [Command("book")]
         [Aliases("goodreads", "books")]
-        [Description("Retrieve a book from GoodReads")]
+        [Description("Retrieve book information from GoodReads")]
         public async Task Books(CommandContext ctx,
             [Description("Book title to find on GoodReads")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = GoodReadService.GetBookDataAsync(query).Result.Search;
-            if (results.Results.Count <= 0)
+            var results = GoodReadsService.GetBookDataAsync(query).Result.Search;
+            if (results.ResultCount > 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackpackTfApi;
-using FlawBOT.Framework.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
@@ -23,7 +21,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var schema = await _http.GetStringAsync(Resources.API_TradeTF + "?key=" + TokenHandler.Tokens.BackpackSchema);
+                var schema = await _http.GetStringAsync(Resources.API_TradeTF + "?key=" + TokenHandler.Tokens.TFSchemaToken);
                 var results = JsonConvert.DeserializeObject<TFItemSchema>(schema);
                 ItemSchema.Clear();
                 foreach (var item in results.Results.Items)
@@ -96,26 +94,6 @@ namespace FlawBOT.Framework.Services
         }
 
         #endregion TEAMWORK.TF
-
-        #region BACKPACK.TF
-
-        /// <summary>
-        /// Fetches all currently open classifieds that are on backpack.tf
-        /// </summary>
-        public static BackpackTfApi.UserToken.Classifieds.ClassifiedsSearch.Models.Response GetClassifieds()
-        {
-            return new BackpackTfUser(TokenHandler.Tokens.SteamID, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess).GetClassifieds();
-        }
-
-        /// <summary>
-        /// Fetches the currently opened user's classifieds from backpack.tf
-        /// </summary>
-        public static BackpackTfApi.UserToken.Classifieds.UserListings.Models.Response GetOwnClassifieds(string steamId)
-        {
-            return new BackpackTfUser(steamId, TokenHandler.Tokens.BackpackToken, TokenHandler.Tokens.BackpackAccess).GetOwnClassifieds();
-        }
-
-        #endregion BACKPACK.TF
 
         private static readonly List<string> mapList = new List<string>
         {

@@ -154,7 +154,7 @@
     <value>https://newsapi.org/v2/everything?sources=google-news</value>
   </data>
   <data name="API_Pokemon" xml:space="preserve">
-    <value>https://pokeapi.co/api/v2/pokemon/</value>
+    <value>https://pokeapi.co/api/v2/pokemon/?limit=800</value>
   </data>
   <data name="API_PokemonTCG" xml:space="preserve">
     <value>https://api.pokemontcg.io/v1/cards</value>

@@ -25,8 +25,5 @@ namespace FlawBOT.Framework.Models
     {
         [JsonProperty("name")]
         public string Name { get; set; }
-
-        [JsonProperty("url")]
-        public string URL { get; set; }
     }
 }

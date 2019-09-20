@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using FlawBOT.Framework.Common;
+using FlawBOT.Framework.Models;
 using OMDbSharp;
 
 namespace FlawBOT.Framework.Services

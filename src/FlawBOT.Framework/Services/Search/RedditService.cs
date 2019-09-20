@@ -3,21 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
-using FlawBOT.Framework.Common;
-using Reddit;
-using Reddit.Controllers;
 
 namespace FlawBOT.Framework.Services
 {
     public static class RedditService
     {
-        public static Subreddit GetSubredditAsync(string query)
-        {
-            var client = new RedditAPI(appId: TokenHandler.Tokens.RedditAppToken, refreshToken: TokenHandler.Tokens.RedditAccessToken, accessToken: TokenHandler.Tokens.RedditRefreshToken);
-            var results = client.Subreddit(query).About();
-            return results;
-        }
-
         public static IReadOnlyList<SyndicationItem> GetSubredditPost(string query, RedditCategory category)
         {
             try

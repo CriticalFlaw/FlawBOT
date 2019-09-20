@@ -169,7 +169,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://pokeapi.co/api/v2/pokemon/.
+        ///   Looks up a localized string similar to https://pokeapi.co/api/v2/pokemon/?limit=800.
         /// </summary>
         internal static string API_Pokemon {
             get {

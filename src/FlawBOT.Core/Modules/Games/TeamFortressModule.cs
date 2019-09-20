@@ -175,52 +175,5 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_SERVERS
-
-        #region COMMAND_CLASSIFIEDS
-
-        [Command("classifieds_all"), Hidden]
-        [Description("Retrieve all currently open classifieds that are on backpack.tf")]
-        public async Task BackpackClassifieds(CommandContext ctx)
-        {
-            var results = TeamFortressService.GetClassifieds();
-            if (results.Total > 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithFooter("These are the classifieds retrieved from Backpack.TF")
-                    .WithColor(new DiscordColor("#E7B53B"));
-                if (results.Sell.Total > 0)
-                    foreach (var result in results.Sell.Listings.Take(5))
-                        output.AddField(result.Intent.ToString(), result.Item.Name);
-                if (results.Buy.Total > 0)
-                    foreach (var result in results.Buy.Listings.Take(5))
-                        output.AddField(result.Intent.ToString(), result.Item.Name);
-                await ctx.RespondAsync(embed: output.Build());
-            }
-        }
-
-        [Command("classifieds_my"), Hidden]
-        [Description("Retrieve the currently opened user's classifieds from backpack.tf")]
-        public async Task BackpackOwnClassifieds(CommandContext ctx,
-            [Description("User whose classifieds to find on Backpack.TF")] [RemainingText] string query)
-        {
-            if (!BotServices.CheckUserInput(query)) return;
-            var steamId = SteamService.GetSteamUserProfileAsync(query).Result.SteamID.ToString();
-            var results = TeamFortressService.GetOwnClassifieds(steamId);
-            if (results.Items.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithFooter($"These are the classifieds by {query} retrieved from Backpack.TF")
-                    .WithColor(new DiscordColor("#E7B53B"));
-                foreach (var result in results.Items.Take(5))
-                    output.AddField(result.Name, result.MarketplacePrice.ToString());
-                await ctx.RespondAsync(embed: output.Build());
-            }
-        }
-
-        #endregion COMMAND_CLASSIFIEDS
     }
 }

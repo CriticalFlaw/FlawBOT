@@ -167,7 +167,8 @@ namespace FlawBOT.Modules
         #region COMMAND_IP
 
         [Command("ip")]
-        [Description("Retrieve the IP address location")]
+        [Aliases("ipstack")]
+        [Description("Retrieve IP address geolocation information")]
         public async Task IPLocation(CommandContext ctx,
             [Description("IP Address")] string address)
         {

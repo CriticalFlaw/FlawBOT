@@ -14,14 +14,8 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("amiiboSeries")]
         public string AmiiboSeries { get; set; }
 
-        [JsonProperty("character")]
-        public string Character { get; set; }
-
         [JsonProperty("gameSeries")]
         public string GameSeries { get; set; }
-
-        [JsonProperty("head")]
-        public string Head { get; set; }
 
         [JsonProperty("image")]
         public string Image { get; set; }
@@ -31,12 +25,6 @@ namespace FlawBOT.Framework.Models
 
         [JsonProperty("release")]
         public Release ReleaseDate { get; set; }
-
-        [JsonProperty("tail")]
-        public string Tail { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
     }
 
     public class Release
