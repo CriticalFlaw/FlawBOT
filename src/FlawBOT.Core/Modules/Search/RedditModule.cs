@@ -41,9 +41,10 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
+                    .WithTitle($"{results.Count} {category} posts from r/{query}")
                     .WithColor(new DiscordColor("#FF4500"));
                 foreach (var result in results)
-                    output.AddField(result.Title.Text.Substring(0, 255), result.Links.First().Uri.ToString());
+                    output.AddField((result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "..."), result.Links.First().Uri.ToString());
                 await ctx.RespondAsync(embed: output.Build());
             }
         }
