@@ -1,11 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using FlawBOT.Core.Properties;
-using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -35,18 +32,8 @@ namespace FlawBOT.Modules
         private async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = RedditService.GetSubredditPost(query, category);
-            if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_REDDIT, EmbedType.Missing);
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle($"{results.Count} {category} posts from r/{query}")
-                    .WithColor(new DiscordColor("#FF4500"));
-                foreach (var result in results)
-                    output.AddField((result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "..."), result.Links.First().Uri.ToString());
-                await ctx.RespondAsync(embed: output.Build());
-            }
+            var results = RedditService.GetEmbeddedResults(query, category);
+            await ctx.RespondAsync("Search results for r/" + Formatter.Bold(query), embed: results);
         }
 
         #endregion COMMAND_POST
