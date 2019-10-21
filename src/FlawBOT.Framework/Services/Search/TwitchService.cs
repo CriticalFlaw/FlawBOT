@@ -2,9 +2,10 @@
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TwitchLib.Api;
-using TwitchLib.Api.Helix.Models.Games;
+using TwitchLib.Api.Helix.Models.Users;
 
 namespace FlawBOT.Framework.Services
 {
@@ -12,16 +13,22 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<TwitchData> GetTwitchDataAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_Twitch + query + "?client_id=" + TokenHandler.Tokens.TwitchToken);
-            return JsonConvert.DeserializeObject<TwitchData>(results);
+            using (var request = new HttpRequestMessage(new HttpMethod("GET"), Resources.API_Twitch + "users?login=" + query))
+            {
+                request.Headers.TryAddWithoutValidation("Client-ID", TokenHandler.Tokens.TwitchToken);
+                var response = await _http.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                var results = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TwitchData>(results);
+            }
         }
 
-        public static async Task<GetGamesResponse> GetTwitchGameAsync(string query)
+        public static async Task<GetUsersResponse> GetTwitchUserAsync(string query)
         {
             var client = new TwitchAPI();
             client.Settings.ClientId = TokenHandler.Tokens.TwitchToken;
-            var games = new List<string> { query };
-            return await client.Helix.Games.GetGamesAsync(gameIds: games);
+            var users = new List<string> { query };
+            return await client.Helix.Users.GetUsersAsync(logins: users);
         }
     }
 }

@@ -1,12 +1,43 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace FlawBOT.Framework.Models
 {
     public class TwitchData
     {
-        [JsonProperty("stream")]
-        public Stream Stream { get; set; }
+        [JsonProperty("users")]
+        public List<User> Users { get; set; }
+
+        //[JsonProperty("stream")]
+        //public Stream Stream { get; set; }
+    }
+
+    public class User
+    {
+        [JsonProperty("_id")]
+        public string ID { get; set; }
+
+        [JsonProperty("bio")]
+        public string Bio { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTime CreationDate { get; set; }
+
+        [JsonProperty("display_name")]
+        public string DisplayName { get; set; }
+
+        [JsonProperty("logo")]
+        public string Logo { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("type")]
+        public string UserType { get; set; }
+
+        [JsonProperty("updated_at")]
+        public DateTime UpdateDate { get; set; }
     }
 
     public class Stream

@@ -21,19 +21,22 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TwitchService.GetTwitchDataAsync(query);
-            if (results.Stream is null)
+            if (results.Users is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_TWITCH, EmbedType.Missing);
             else
             {
-                var stream = results.Stream;
+                var stream = results.Users[0];
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(stream.Channel.Name + " is now live on Twitch!")
-                    .WithDescription(stream.Channel.Status)
-                    .AddField("Now Playing", (stream.Game) ?? "Nothing")
-                    .AddField("Start Time", stream.CreatedAt.ToString(), true)
-                    .AddField("Viewers", $"{stream.Viewers:#,##0}", true)
-                    .WithThumbnailUrl(stream.Channel.Logo)
-                    .WithUrl(stream.Channel.Url)
+                    .WithTitle(stream.DisplayName + " is now live on Twitch!")
+                    .WithDescription(stream.Bio)
+                    .WithThumbnailUrl(stream.Logo)
+                    //.WithTitle(stream.Channel.Name + " is now live on Twitch!")
+                    //.WithDescription(stream.Channel.Status)
+                    //.AddField("Now Playing", (stream.Game) ?? "Nothing")
+                    //.AddField("Start Time", stream.CreatedAt.ToString(), true)
+                    //.AddField("Viewers", $"{stream.Viewers:#,##0}", true)
+                    //.WithThumbnailUrl(stream.Channel.Logo)
+                    //.WithUrl(stream.Channel.Url)
                     .WithColor(new DiscordColor("#6441A5"));
                 await ctx.RespondAsync(embed: output.Build());
             }
