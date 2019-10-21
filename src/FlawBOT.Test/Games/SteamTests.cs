@@ -1,6 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using FlawBOT.Framework.Services;
+﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
+using System.Text.RegularExpressions;
 
 namespace GamesModule
 {

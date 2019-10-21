@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -11,6 +7,10 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -156,7 +156,7 @@ namespace FlawBOT.Modules
         public async Task Greet(CommandContext ctx,
             [Description("User to say hello to")] [RemainingText] DiscordMember member)
         {
-            if (member == null)
+            if (member is null)
                 await ctx.RespondAsync($":wave: Hello, " + ctx.User.Mention);
             else
                 await ctx.RespondAsync($":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name + ". Enjoy your stay!");

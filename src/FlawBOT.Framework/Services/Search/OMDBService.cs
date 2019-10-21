@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using FlawBOT.Framework.Models;
+﻿using FlawBOT.Framework.Models;
 using OMDbSharp;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {

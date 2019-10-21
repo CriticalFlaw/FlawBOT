@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FlawBOT.Framework.Models;
+﻿using FlawBOT.Framework.Models;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Enums;
 using Imgur.API.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {

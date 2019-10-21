@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using FlawBOT.Framework.Services;
+﻿using FlawBOT.Framework.Services;
 using Imgur.API.Enums;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace SearchModule
 {

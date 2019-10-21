@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
@@ -8,6 +6,8 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using FlawBOT.Framework.Services.Search;
+using System;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = GoodReadsService.GetBookDataAsync(query).Result.Search;
-            if (results.ResultCount > 0)
+            if (results.ResultCount <= 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
@@ -42,9 +42,8 @@ namespace FlawBOT.Modules
                     var message = await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
-                    if (interactivity.Result == null) break;
+                    if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result);
-                    await BotServices.RemoveMessage(message);
                 }
             }
         }

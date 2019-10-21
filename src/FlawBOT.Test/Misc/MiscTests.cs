@@ -1,7 +1,7 @@
-﻿using System.Net;
-using System.Net.Http;
-using FlawBOT.Framework.Services;
+﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
+using System.Net;
+using System.Net.Http;
 
 namespace MiscModule
 {

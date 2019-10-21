@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -23,7 +23,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await AmiiboService.GetAmiiboFigurineAsync(query);
-            if (results == null)
+            if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
@@ -38,12 +38,13 @@ namespace FlawBOT.Modules
                         .AddField(":flag_eu: Release:", amiibo.ReleaseDate.European, true)
                         .AddField(":flag_au: Release:", amiibo.ReleaseDate.Australian, true)
                         .WithImageUrl(amiibo.Image)
-                        .WithFooter("Type 'next' within 10 seconds for the next amiibo")
+                        .WithFooter((results.Amiibo.Count > 1) ? "Type 'next' within 10 seconds for the next amiibo" : "This is the only amiibo of this name")
                         .WithColor(new DiscordColor("#E70009"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 
+                    if (results.Amiibo.Count == 1) continue;
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
-                    if (interactivity.Result == null) break;
+                    if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result);
                     await BotServices.RemoveMessage(message);
                 }

@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -21,7 +21,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result.Data.FirstOrDefault();
-            if (results == null)
+            if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
@@ -34,7 +34,7 @@ namespace FlawBOT.Modules
                     .AddField("Genres", (results.Genres.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(results.Genres.Take(3).ToList(), SpeedrunExtras.Genres).Result : "Unknown", true)
                     .AddField("Platforms", (results.Platforms.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(results.Platforms.Take(3).ToList(), SpeedrunExtras.Platforms).Result : "Unknown", true)
                     .WithFooter($"ID: {results.ID} - Abbreviation: {results.Abbreviation}")
-                    .WithThumbnailUrl(results.Assets.CoverLarge.URL ?? results.Assets.Icon.URL)
+                    .WithImageUrl(results.Assets.CoverLarge.URL ?? results.Assets.Icon.URL)
                     .WithUrl(results.WebLink)
                     .WithColor(new DiscordColor("#0F7A4D"));
                 await ctx.RespondAsync(embed: output.Build());

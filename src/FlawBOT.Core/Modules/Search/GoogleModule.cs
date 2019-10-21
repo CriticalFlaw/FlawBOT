@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -10,6 +7,9 @@ using FlawBOT.Common;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -52,20 +52,21 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
-                foreach (var article in results.Articles)
+                while (results.Articles.Count > 0)
                 {
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(article.Title)
-                        .WithTimestamp(article.PublishDate)
-                        .WithDescription(article.Description.Length < 500 ? article.Description : article.Description.Take(500) + "...")
-                        .WithUrl(article.Url)
-                        .WithImageUrl(article.UrlImage)
-                        .WithFooter("Type 'next' within 10 seconds for the next article. Powered by News API")
+                        .WithFooter("Type 'next' within 10 seconds for the next article.")
                         .WithColor(new DiscordColor("#253B80"));
-                    var message = await ctx.RespondAsync(embed: output.Build());
+
+                    foreach (var result in results.Articles.Take(5))
+                    {
+                        output.AddField(result.Title, result.Url);
+                        results.Articles.Remove(result);
+                    }
+                    var message = await ctx.RespondAsync("Latest Google News articles from News API", embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
-                    if (interactivity.Result == null) break;
+                    if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result);
                     await BotServices.RemoveMessage(message);
                 }

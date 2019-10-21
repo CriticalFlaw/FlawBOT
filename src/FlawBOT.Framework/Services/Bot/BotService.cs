@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using FlawBOT.Framework.Models;
+using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -9,6 +7,8 @@ using FlawBOT.Common;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -47,7 +47,7 @@ namespace FlawBOT.Modules
         {
             await BotServices.SendEmbedAsync(ctx, $"Are you sure you want {SharedData.Name} to leave this server?\nRespond with **yes** to proceed or wait 10 seconds to cancel this operation.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity.Result == null)
+            if (interactivity.Result is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT);
             else
             {
@@ -84,7 +84,7 @@ namespace FlawBOT.Modules
             {
                 await BotServices.SendEmbedAsync(ctx, "The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.\nRespond with **yes** in the next 10 seconds to proceed, otherwise the operation will be canceled.");
                 var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-                if (interactivity.Result == null)
+                if (interactivity.Result is null)
                     await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT);
                 else
                 {

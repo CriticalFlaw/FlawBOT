@@ -1,14 +1,14 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System;
+using System.Globalization;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -106,7 +106,7 @@ namespace FlawBOT.Modules
             }
             var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.");
             var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
-            if (interactivity.Result == null) return;
+            if (interactivity.Result is null) return;
             await BotServices.RemoveMessage(interactivity.Result);
             await BotServices.RemoveMessage(prompt);
             await ctx.Guild.PruneAsync(days);
@@ -153,7 +153,7 @@ namespace FlawBOT.Modules
                 .WithColor(DiscordColor.Red);
             if (!string.IsNullOrWhiteSpace(reason)) output.AddField("Warning message:", reason);
             var dm = await member.CreateDmChannelAsync().ConfigureAwait(false);
-            if (dm == null)
+            if (dm is null)
                 await BotServices.SendEmbedAsync(ctx, "Unable to direct message this user", EmbedType.Warning);
             else
             {

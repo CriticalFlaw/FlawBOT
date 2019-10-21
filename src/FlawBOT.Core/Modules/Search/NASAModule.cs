@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -19,7 +19,7 @@ namespace FlawBOT.Modules
         public async Task NASA(CommandContext ctx)
         {
             var results = await NASAService.GetNASAImage();
-            if (results == null)
+            if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_NASA_API, EmbedType.Missing);
             else
             {
@@ -27,7 +27,7 @@ namespace FlawBOT.Modules
                     .WithTitle(results.Title)
                     .WithDescription(results.Description)
                     .WithImageUrl(results.ImageHD ?? results.ImageSD)
-                    .WithFooter(results.Copyright + " - " + results.Date)
+                    .WithFooter(results.Date + " " + (results.Copyright ?? ""))
                     .WithColor(new DiscordColor("#0B3D91"));
                 await ctx.RespondAsync(embed: output.Build());
             }

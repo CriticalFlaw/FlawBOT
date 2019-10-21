@@ -1,16 +1,16 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -28,7 +28,7 @@ namespace FlawBOT.Modules
             [Description("Item to find in the TF2 schema")] [RemainingText] string query = "The Scattergun")
         {
             var item = TeamFortressService.GetSchemaItemAsync(query);
-            if (item == null)
+            if (item is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant());
-            if (results.MapName == null)
+            if (results.MapName is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
@@ -102,14 +102,14 @@ namespace FlawBOT.Modules
         public async Task TF2News(CommandContext ctx)
         {
             var results = await TeamFortressService.GetNewsOverviewAsync();
-            if (results == null || results.Count == 0)
+            if (results is null || results.Count == 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
                 while (results.Count > 0)
                 {
                     var output = new DiscordEmbedBuilder()
-                        .WithFooter("These are the latest news articles retrieved from teamwork.tf\nType next in the next 10 seconds for more news articles.")
+                        .WithFooter("Type next in the next 10 seconds for more news articles.")
                         .WithColor(new DiscordColor("#E7B53B"));
 
                     foreach (var result in results.Take(5))
@@ -117,10 +117,10 @@ namespace FlawBOT.Modules
                         output.AddField(result.Title, result.Link);
                         results.Remove(result);
                     }
-                    var message = await ctx.RespondAsync(embed: output.Build());
+                    var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
-                    if (interactivity.Result == null) break;
+                    if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result);
                     await BotServices.RemoveMessage(message);
                 }
@@ -151,23 +151,21 @@ namespace FlawBOT.Modules
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(server.Name)
                         .WithDescription("steam://connect/" + server.IP + ":" + server.Port)
-                        .AddField("Secure", server.ValveSecure ? "YES" : "NO", true)
-                        //.AddField("Password", server.has_password ? "YES" : "NO", true)
+                        .AddField("Provider", server.Provider ?? "Unknown", true)
                         .AddField("Max Players", (server.PlayerCount.ToString() ?? "Unknown") + "/" + (server.PlayerMax.ToString() ?? "Unknown"), true)
                         .AddField("Current Map", server.MapName ?? "Unknown", true)
                         .AddField("Next Map", server.NextMap ?? "Unknown", true)
-                        .AddField("Provider", server.Provider ?? "Unknown", true)
-                        .AddField("Roll the Dice>", server.HasRTD ? "Yes" : "No", true)
-                        .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
-                        .AddField("Respawn Timer", server.HasNoSpawnTimer ? "Yes" : "No", true)
-                        .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
+                        .AddField("Passworded?", (server.HasPassword == true) ? "Yes" : "No", true)
+                        .AddField("Roll the Dice?", server.HasRTD ? "Yes" : "No", true)
+                        .AddField("Random Crits?", server.HasRandomCrits == true ? "Yes" : "No", true)
+                        .AddField("All Talk?", server.HasAllTalk ? "Yes" : "No", true)
                         .WithImageUrl("https://teamwork.tf" + server.MapThumbnail)
                         .WithFooter("Type 'next' within 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
                     var message = await ctx.RespondAsync(embed: output.Build());
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
-                    if (interactivity.Result == null) break;
+                    if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result);
                     await BotServices.RemoveMessage(message);
                 }

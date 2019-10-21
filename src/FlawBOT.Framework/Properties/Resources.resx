@@ -175,7 +175,7 @@
     <value>https://www.trade.tf/api/schema_440.json</value>
   </data>
   <data name="API_Twitch" xml:space="preserve">
-    <value>https://api.twitch.tv/kraken/streams/</value>
+    <value>https://api.twitch.tv/helix/streams/</value>
   </data>
   <data name="API_Wikipedia" xml:space="preserve">
     <value>https://en.wikipedia.org//w/api.php?action=query&amp;format=json&amp;prop=info&amp;redirects=1&amp;formatversion=2&amp;inprop=url</value>

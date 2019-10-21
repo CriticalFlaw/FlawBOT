@@ -1,8 +1,8 @@
-﻿using System.Net;
+﻿using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
+using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using FlawBOT.Framework.Models;
-using FlawBOT.Framework.Properties;
 
 namespace FlawBOT.Framework.Services.Search
 {

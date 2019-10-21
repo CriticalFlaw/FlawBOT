@@ -61,7 +61,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :8ball: The almighty 8 ball requests a question.
+        ///   Looks up a localized string similar to :8ball: The almighty 8 ball requests a question..
         /// </summary>
         internal static string ERR_8BALL_QUESTION {
             get {
@@ -70,7 +70,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel with the same name already exists.
+        ///   Looks up a localized string similar to Channel with the same name already exists..
         /// </summary>
         internal static string ERR_CHANNEL_EXISTS {
             get {
@@ -88,7 +88,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel topic must be less than 1024 characters long.
+        ///   Looks up a localized string similar to Channel topic must be less than 1024 characters long..
         /// </summary>
         internal static string ERR_CHANNEL_TOPIC {
             get {
@@ -97,7 +97,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid color code. Please enter a HEX color code like #E7B53B.
+        ///   Looks up a localized string similar to Invalid color code. Please enter a HEX color code like #E7B53B..
         /// </summary>
         internal static string ERR_COLOR_INVALID {
             get {
@@ -106,11 +106,47 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to retrieve a pupper photo :(.
+        ///   Looks up a localized string similar to Unable to retrieve a dog photo..
         /// </summary>
         internal static string ERR_DOG_PHOTO {
             get {
                 return ResourceManager.GetString("ERR_DOG_PHOTO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to create the server emoji. Either the HTTP request failed or Discord prevented the operation from completing..
+        /// </summary>
+        internal static string ERR_EMOJI_ADD {
+            get {
+                return ResourceManager.GetString("ERR_EMOJI_ADD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please provide a URL pointing to an emoji image or attach an image..
+        /// </summary>
+        internal static string ERR_EMOJI_IMAGE {
+            get {
+                return ResourceManager.GetString("ERR_EMOJI_IMAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server emoji name is invalid..
+        /// </summary>
+        internal static string ERR_EMOJI_NAME {
+            get {
+                return ResourceManager.GetString("ERR_EMOJI_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to create the server emoji. Either the image size was too large..
+        /// </summary>
+        internal static string ERR_EMOJI_SIZE {
+            get {
+                return ResourceManager.GetString("ERR_EMOJI_SIZE", resourceCulture);
             }
         }
         
@@ -124,7 +160,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to reach the NASA API.
+        ///   Looks up a localized string similar to Unable to reach the NASA API..
         /// </summary>
         internal static string ERR_NASA_API {
             get {
@@ -133,7 +169,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid number of minutes, try **.poll 3 What is the fifth digit of Pi?**.
+        ///   Looks up a localized string similar to Invalid number of minutes, try **.poll 3 Should I order pizza tonight?**.
         /// </summary>
         internal static string ERR_POLL_MINUTES {
             get {
@@ -142,7 +178,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You need to provide a poll question.
+        ///   Looks up a localized string similar to You need to provide a poll question..
         /// </summary>
         internal static string ERR_POLL_QUESTION {
             get {
@@ -160,7 +196,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please provide an existing server role.
+        ///   Looks up a localized string similar to Please provide an existing server role..
         /// </summary>
         internal static string ERR_ROLE_EXISTING {
             get {
@@ -178,7 +214,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This user doesn&apos;t have any roles.
+        ///   Looks up a localized string similar to This user doesn&apos;t have any roles..
         /// </summary>
         internal static string ERR_ROLE_NONE {
             get {
@@ -187,7 +223,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are unauthorised to remove roles from this user.
+        ///   Looks up a localized string similar to You are unauthorised to remove roles from this user..
         /// </summary>
         internal static string ERR_ROLE_NOT_ALLOWED {
             get {
@@ -201,6 +237,15 @@ namespace FlawBOT.Core.Properties {
         internal static string ERR_STEAM_CONNECT_FORMAT {
             get {
                 return ResourceManager.GetString("ERR_STEAM_CONNECT_FORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emoji not found in the server list..
+        /// </summary>
+        internal static string NOT_FOUND_EMOJI {
+            get {
+                return ResourceManager.GetString("NOT_FOUND_EMOJI", resourceCulture);
             }
         }
         
@@ -232,7 +277,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Smash character not found or not yet available!\nSee the available characters here: http://kuroganehammer.com/Ultimate.
+        ///   Looks up a localized string similar to Smash character not found or not yet available! See the available characters here: http://kuroganehammer.com/Ultimate.
         /// </summary>
         internal static string NOT_FOUND_SMASH {
             get {
@@ -250,7 +295,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch channel not found or it&apos;s offline.
+        ///   Looks up a localized string similar to Twitch channel not found or it&apos;s offline..
         /// </summary>
         internal static string NOT_FOUND_TWITCH {
             get {
@@ -259,7 +304,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wikipedia page not found.
+        ///   Looks up a localized string similar to Wikipedia page not found..
         /// </summary>
         internal static string NOT_FOUND_WIKIPEDIA {
             get {
@@ -277,7 +322,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note: First time gifs take a few minutes to properly generate.
+        ///   Looks up a localized string similar to Note: First time gifs take a few minutes to properly generate..
         /// </summary>
         internal static string SIMPSONS_GIF_WARNING {
             get {

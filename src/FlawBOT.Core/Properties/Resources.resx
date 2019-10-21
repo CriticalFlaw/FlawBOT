@@ -118,52 +118,67 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ERR_8BALL_QUESTION" xml:space="preserve">
-    <value>:8ball: The almighty 8 ball requests a question</value>
+    <value>:8ball: The almighty 8 ball requests a question.</value>
   </data>
   <data name="ERR_CHANNEL_EXISTS" xml:space="preserve">
-    <value>Channel with the same name already exists</value>
+    <value>Channel with the same name already exists.</value>
   </data>
   <data name="ERR_CHANNEL_NAME" xml:space="preserve">
     <value>The name cannot be blank or over 100 characters.</value>
   </data>
   <data name="ERR_CHANNEL_TOPIC" xml:space="preserve">
-    <value>Channel topic must be less than 1024 characters long</value>
+    <value>Channel topic must be less than 1024 characters long.</value>
   </data>
   <data name="ERR_COLOR_INVALID" xml:space="preserve">
-    <value>Invalid color code. Please enter a HEX color code like #E7B53B</value>
+    <value>Invalid color code. Please enter a HEX color code like #E7B53B.</value>
   </data>
   <data name="ERR_DOG_PHOTO" xml:space="preserve">
-    <value>Unable to retrieve a pupper photo :(</value>
+    <value>Unable to retrieve a dog photo.</value>
+  </data>
+  <data name="ERR_EMOJI_ADD" xml:space="preserve">
+    <value>Unable to create the server emoji. Either the HTTP request failed or Discord prevented the operation from completing.</value>
+  </data>
+  <data name="ERR_EMOJI_IMAGE" xml:space="preserve">
+    <value>Please provide a URL pointing to an emoji image or attach an image.</value>
+  </data>
+  <data name="ERR_EMOJI_NAME" xml:space="preserve">
+    <value>Server emoji name is invalid.</value>
+  </data>
+  <data name="ERR_EMOJI_SIZE" xml:space="preserve">
+    <value>Unable to create the server emoji. Either the image size was too large.</value>
   </data>
   <data name="ERR_MATH_EQUATION" xml:space="preserve">
     <value>Error calculating math equation, make sure your values are integers and the operation is valid!</value>
   </data>
   <data name="ERR_NASA_API" xml:space="preserve">
-    <value>Unable to reach the NASA API</value>
+    <value>Unable to reach the NASA API.</value>
   </data>
   <data name="ERR_POLL_MINUTES" xml:space="preserve">
-    <value>Invalid number of minutes, try **.poll 3 What is the fifth digit of Pi?**</value>
+    <value>Invalid number of minutes, try **.poll 3 Should I order pizza tonight?**</value>
   </data>
   <data name="ERR_POLL_QUESTION" xml:space="preserve">
-    <value>You need to provide a poll question</value>
+    <value>You need to provide a poll question.</value>
   </data>
   <data name="ERR_REPORT_CHAR_LENGTH" xml:space="preserve">
     <value>Please provide more information on the issue (50 characters minimum).</value>
   </data>
   <data name="ERR_ROLE_EXISTING" xml:space="preserve">
-    <value>Please provide an existing server role</value>
+    <value>Please provide an existing server role.</value>
   </data>
   <data name="ERR_ROLE_NAME" xml:space="preserve">
     <value>Role name cannot be blank.</value>
   </data>
   <data name="ERR_ROLE_NONE" xml:space="preserve">
-    <value>This user doesn't have any roles</value>
+    <value>This user doesn't have any roles.</value>
   </data>
   <data name="ERR_ROLE_NOT_ALLOWED" xml:space="preserve">
-    <value>You are unauthorised to remove roles from this user</value>
+    <value>You are unauthorised to remove roles from this user.</value>
   </data>
   <data name="ERR_STEAM_CONNECT_FORMAT" xml:space="preserve">
     <value>Invalid connection info, follow the format: 123.345.56.789:000; password hello</value>
+  </data>
+  <data name="NOT_FOUND_EMOJI" xml:space="preserve">
+    <value>Emoji not found in the server list.</value>
   </data>
   <data name="NOT_FOUND_GENERIC" xml:space="preserve">
     <value>No results found!</value>
@@ -175,21 +190,21 @@
     <value>Reddit post not found!</value>
   </data>
   <data name="NOT_FOUND_SMASH" xml:space="preserve">
-    <value>Smash character not found or not yet available!\nSee the available characters here: http://kuroganehammer.com/Ultimate</value>
+    <value>Smash character not found or not yet available! See the available characters here: http://kuroganehammer.com/Ultimate</value>
   </data>
   <data name="NOT_FOUND_SUBREDDIT" xml:space="preserve">
     <value>Subreddit not found!</value>
   </data>
   <data name="NOT_FOUND_TWITCH" xml:space="preserve">
-    <value>Twitch channel not found or it's offline</value>
+    <value>Twitch channel not found or it's offline.</value>
   </data>
   <data name="NOT_FOUND_WIKIPEDIA" xml:space="preserve">
-    <value>Wikipedia page not found</value>
+    <value>Wikipedia page not found.</value>
   </data>
   <data name="REQUEST_TIMEOUT" xml:space="preserve">
     <value>Request timed out...</value>
   </data>
   <data name="SIMPSONS_GIF_WARNING" xml:space="preserve">
-    <value>Note: First time gifs take a few minutes to properly generate</value>
+    <value>Note: First time gifs take a few minutes to properly generate.</value>
   </data>
 </root>

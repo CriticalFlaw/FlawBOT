@@ -1,16 +1,16 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -74,7 +74,7 @@ namespace FlawBOT.Modules
         public async Task DeleteRole(CommandContext ctx,
             [Description("Server role to delete")] [RemainingText] DiscordRole role = null)
         {
-            if (role == null)
+            if (role is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning);
             else
             {
@@ -93,16 +93,16 @@ namespace FlawBOT.Modules
         public async Task GetRole(CommandContext ctx,
             [Description("Server role information to retrieve")] [RemainingText] DiscordRole role = null)
         {
-            if (role == null)
+            if (role is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning);
             else
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(role.Name + $" (ID: {role.Id})")
                     .WithDescription($"Created on {role.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
-                    .AddField("Permissions", role.Permissions.ToPermissionString())
                     .AddField("Hoisted", role.IsHoisted ? "YES" : "NO", true)
                     .AddField("Mentionable", role.IsMentionable ? "YES" : "NO", true)
+                    .AddField("Permissions", role.Permissions.ToPermissionString())
                     .WithThumbnailUrl(ctx.Guild.IconUrl)
                     .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
                     .WithColor(role.Color);
@@ -119,7 +119,7 @@ namespace FlawBOT.Modules
         public async Task UsersInRole(CommandContext ctx,
             [Description("Server role")] [RemainingText] DiscordRole role = null)
         {
-            if (role == null)
+            if (role is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning);
             else
             {
@@ -153,7 +153,7 @@ namespace FlawBOT.Modules
         public async Task MentionRole(CommandContext ctx,
             [Description("Server role to toggle")] [RemainingText] DiscordRole role)
         {
-            if (role == null) return;
+            if (role is null) return;
             if (role.IsMentionable)
             {
                 await role.ModifyAsync(mentionable: false);
@@ -234,7 +234,7 @@ namespace FlawBOT.Modules
         public async Task SidebarRole(CommandContext ctx,
             [Description("Server role to toggle")] [RemainingText] DiscordRole role)
         {
-            if (role == null) return;
+            if (role is null) return;
 
             if (role.IsHoisted)
             {

@@ -1,13 +1,13 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Steam.Models.SteamCommunity;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
 namespace FlawBOT.Modules
@@ -61,7 +61,7 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var profile = SteamService.GetSteamUserProfileAsync(query).Result;
             var summary = SteamService.GetSteamUserSummaryAsync(query).Result;
-            if (profile == null && summary == null)
+            if (profile is null && summary is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
             else
             {
