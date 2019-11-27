@@ -8,6 +8,7 @@ using SteamWebAPI2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
@@ -15,6 +16,7 @@ namespace FlawBOT.Framework.Services
     public class SteamService : HttpHandler
     {
         public static Dictionary<uint, string> SteamAppList { get; set; } = new Dictionary<uint, string>();
+        public static SteamWebInterfaceFactory SteamInterface;
 
         public static async Task<StoreAppDetailsDataModel> GetSteamAppAsync(string query)
         {
@@ -33,7 +35,8 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<SteamCommunityProfileModel> GetSteamUserProfileAsync(string query)
         {
-            var steam = new SteamUser(TokenHandler.Tokens.SteamToken);
+            SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+            var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
             SteamCommunityProfileModel profile;
             try
             {
@@ -49,7 +52,8 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<ISteamWebResponse<PlayerSummaryModel>> GetSteamUserSummaryAsync(string query)
         {
-            var steam = new SteamUser(TokenHandler.Tokens.SteamToken);
+            SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+            var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
             ISteamWebResponse<PlayerSummaryModel> summary;
             try
             {
@@ -67,8 +71,9 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var client = new SteamApps(TokenHandler.Tokens.SteamToken);
-                var games = (await client.GetAppListAsync()).Data;
+                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var steam = SteamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient());
+                var games = (await steam.GetAppListAsync()).Data;
                 SteamAppList.Clear();
                 foreach (var game in games)
                     if (!string.IsNullOrWhiteSpace(game.Name))
