@@ -56,8 +56,7 @@ namespace FlawBOT.Common
                         }
                         ab.AppendLine();
                     }
-                    string args = ab.ToString();
-                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", string.IsNullOrWhiteSpace(args) ? "No arguments." : args);
+                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", string.IsNullOrWhiteSpace(ab.ToString()) ? "No arguments." : ab.ToString());
                 }
             }
 

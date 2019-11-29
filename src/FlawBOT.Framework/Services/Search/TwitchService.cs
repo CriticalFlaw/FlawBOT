@@ -13,14 +13,12 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<TwitchData> GetTwitchDataAsync(string query)
         {
-            using (var request = new HttpRequestMessage(new HttpMethod("GET"), Resources.API_Twitch + "users?login=" + query))
-            {
-                request.Headers.TryAddWithoutValidation("Client-ID", TokenHandler.Tokens.TwitchToken);
-                var response = await _http.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-                var results = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<TwitchData>(results);
-            }
+            using var request = new HttpRequestMessage(new HttpMethod("GET"), Resources.API_Twitch + "streams?user_login=" + query);
+            request.Headers.TryAddWithoutValidation("Client-ID", TokenHandler.Tokens.TwitchToken);
+            var response = await _http.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var results = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TwitchData>(results);
         }
 
         public static async Task<GetUsersResponse> GetTwitchUserAsync(string query)

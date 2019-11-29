@@ -41,7 +41,7 @@ namespace FlawBOT
                     Console.WriteLine($"Inner exception: {e.InnerException.GetType()} :\n{e.InnerException.Message}");
                 Console.ReadKey();
             }
-            Console.WriteLine("\nPowering off...");
+            Console.WriteLine("\nShutting down...");
         }
 
         public async Task RunBotAsync()
@@ -78,8 +78,6 @@ namespace FlawBOT
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.SetHelpFormatter<HelpFormatter>();
-            Commands.RegisterCommands<BotModule>();
-            Commands.RegisterCommands<OwnerModule>();
             Commands.RegisterCommands<PokemonModule>();
             Commands.RegisterCommands<SpeedrunModule>();
             Commands.RegisterCommands<SmashModule>();
@@ -100,6 +98,7 @@ namespace FlawBOT
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
+            Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<ChannelModule>();
             Commands.RegisterCommands<EmojiModule>();
             Commands.RegisterCommands<RoleModule>();
@@ -118,13 +117,13 @@ namespace FlawBOT
 
         private static Task Client_Ready(ReadyEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Info, SharedData.Name, SharedData.Name + ", version: " + SharedData.Version, DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Info, SharedData.Name, $"{SharedData.Name}, version: {SharedData.Version}", DateTime.Now);
             return Task.CompletedTask;
         }
 
         private static Task Client_ClientError(ClientErrorEventArgs e)
         {
-            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, "Exception occurred: " + e.Exception.GetType() + ": " + e.Exception.Message, DateTime.Now);
+            e.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"Exception occurred: {e.Exception.GetType()}: {e.Exception.Message}", DateTime.Now);
             return Task.CompletedTask;
         }
 

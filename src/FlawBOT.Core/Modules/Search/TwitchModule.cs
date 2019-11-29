@@ -21,22 +21,18 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TwitchService.GetTwitchDataAsync(query);
-            if (results.Users is null)
+            if (results.Stream.Count == 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_TWITCH, EmbedType.Missing);
             else
             {
-                var stream = results.Users[0];
+                var stream = results.Stream[0];
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(stream.DisplayName + " is now live on Twitch!")
-                    .WithDescription(stream.Bio)
-                    .WithThumbnailUrl(stream.Logo)
-                    //.WithTitle(stream.Channel.Name + " is now live on Twitch!")
-                    //.WithDescription(stream.Channel.Status)
-                    //.AddField("Now Playing", (stream.Game) ?? "Nothing")
-                    //.AddField("Start Time", stream.CreatedAt.ToString(), true)
-                    //.AddField("Viewers", $"{stream.Viewers:#,##0}", true)
-                    //.WithThumbnailUrl(stream.Channel.Logo)
-                    //.WithUrl(stream.Channel.Url)
+                    .WithTitle(stream.UserName + " is " + (stream.Type != "live" ? "offline" : "live on Twitch!"))
+                    .WithDescription(stream.Title)
+                    .AddField("View Count:", stream.ViewCount.ToString(), true)
+                    .AddField("Start Time:", stream.StartTime, true)
+                    .WithImageUrl(stream.ThumbnailUrl.Replace("{width}", "500").Replace("{height}","300"))
+                    .WithUrl("https://www.twitch.tv/" + stream.UserName)
                     .WithColor(new DiscordColor("#6441A5"));
                 await ctx.RespondAsync(embed: output.Build());
             }
