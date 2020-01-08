@@ -77,10 +77,10 @@ namespace FlawBOT
             });
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
-            Commands.SetHelpFormatter<HelpFormatter>();
             Commands.RegisterCommands<PokemonModule>();
-            Commands.RegisterCommands<SpeedrunModule>();
             Commands.RegisterCommands<SmashModule>();
+            Commands.RegisterCommands<SpeedrunModule>();
+            Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TeamFortressModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
@@ -94,7 +94,6 @@ namespace FlawBOT
             Commands.RegisterCommands<OMDBModule>();
             Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<SimpsonsModule>();
-            Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<WikipediaModule>();
             Commands.RegisterCommands<YouTubeModule>();
@@ -104,6 +103,7 @@ namespace FlawBOT
             Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
             Commands.RegisterCommands<UserModule>();
+            Commands.SetHelpFormatter<HelpFormatter>();
 
             // Start the uptime counter
             Console.Title = SharedData.Name + " (" + SharedData.Version + ")";

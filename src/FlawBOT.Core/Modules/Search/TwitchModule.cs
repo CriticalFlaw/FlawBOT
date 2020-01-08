@@ -31,7 +31,7 @@ namespace FlawBOT.Modules
                     .WithDescription(stream.Title)
                     .AddField("View Count:", stream.ViewCount.ToString(), true)
                     .AddField("Start Time:", stream.StartTime, true)
-                    .WithImageUrl(stream.ThumbnailUrl.Replace("{width}", "500").Replace("{height}","300"))
+                    .WithImageUrl(stream.ThumbnailUrl.Replace("{width}", "500").Replace("{height}", "300"))
                     .WithUrl("https://www.twitch.tv/" + stream.UserName)
                     .WithColor(new DiscordColor("#6441A5"));
                 await ctx.RespondAsync(embed: output.Build());
