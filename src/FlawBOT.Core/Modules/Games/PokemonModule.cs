@@ -22,9 +22,9 @@ namespace FlawBOT.Modules
         public async Task Pokemon(CommandContext ctx,
             [Description("Name of the pokemon")] [RemainingText] string query)
         {
-            var results = await PokemonService.GetPokemonCardsAsync(query);
+            var results = await PokemonService.GetPokemonCardsAsync(query).ConfigureAwait(false);
             if (results.Cards.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 foreach (var value in results.Cards)
@@ -45,11 +45,11 @@ namespace FlawBOT.Modules
                     foreach (var type in card.Types)
                         types.Append(type);
                     output.AddField("Type(s)", types.ToString() ?? "Unknown", true);
-                    await ctx.RespondAsync(embed: output.Build());
+                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
-                    await BotServices.RemoveMessage(interactivity.Result);
+                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }
             }
         }

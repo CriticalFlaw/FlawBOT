@@ -16,7 +16,7 @@ namespace FlawBOT.Framework.Services
             var random = new Random();
             var imgur = new ImgurClient(TokenHandler.Tokens.ImgurToken);
             var endpoint = new GalleryEndpoint(imgur);
-            var gallery = string.IsNullOrWhiteSpace(query) ? (await endpoint.GetRandomGalleryAsync()).ToList() : (await endpoint.SearchGalleryAsync(query, order, time)).ToList();
+            var gallery = string.IsNullOrWhiteSpace(query) ? (await endpoint.GetRandomGalleryAsync().ConfigureAwait(false)).ToList() : (await endpoint.SearchGalleryAsync(query, order, time).ConfigureAwait(false)).ToList();
             return gallery.Any() ? gallery[random.Next(0, gallery.Count)] : null;
         }
     }

@@ -22,9 +22,9 @@ namespace FlawBOT.Modules
             [Description("Name of the Smash character")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await SmashService.GetSmashCharacterAsync(query);
+            var results = await SmashService.GetSmashCharacterAsync(query).ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_SMASH, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_SMASH, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -33,7 +33,7 @@ namespace FlawBOT.Modules
                     .WithColor(new DiscordColor(results.ColorTheme))
                     .WithUrl(results.FullUrl);
 
-                var attributes = await SmashService.GetCharacterAttributesAsync(results.OwnerId);
+                var attributes = await SmashService.GetCharacterAttributesAsync(results.OwnerId).ConfigureAwait(false);
                 var attributesProcessed = new List<string>();
                 foreach (var attribute in attributes)
                 {
@@ -44,7 +44,7 @@ namespace FlawBOT.Modules
                     output.AddField(attribute.Name, values.ToString() ?? "Unknown", true);
                     attributesProcessed.Add(attribute.Name);
                 }
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 

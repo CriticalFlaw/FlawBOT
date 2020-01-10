@@ -20,9 +20,9 @@ namespace FlawBOT.Modules
             [Description("Channel to find on Twitch")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await TwitchService.GetTwitchDataAsync(query);
+            var results = await TwitchService.GetTwitchDataAsync(query).ConfigureAwait(false);
             if (results.Stream.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_TWITCH, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_TWITCH, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var stream = results.Stream[0];
@@ -34,7 +34,7 @@ namespace FlawBOT.Modules
                     .WithImageUrl(stream.ThumbnailUrl.Replace("{width}", "500").Replace("{height}", "300"))
                     .WithUrl("https://www.twitch.tv/" + stream.UserName)
                     .WithColor(new DiscordColor("#6441A5"));
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 

@@ -18,9 +18,9 @@ namespace FlawBOT.Modules
         [Description("Retrieve NASA's Astronomy Picture of the Day")]
         public async Task NASA(CommandContext ctx)
         {
-            var results = await NASAService.GetNASAImage();
+            var results = await NASAService.GetNASAImage().ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_NASA_API, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_NASA_API, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -29,7 +29,7 @@ namespace FlawBOT.Modules
                     .WithImageUrl(results.ImageHD ?? results.ImageSD)
                     .WithFooter(results.Date + " " + (results.Copyright ?? ""))
                     .WithColor(new DiscordColor("#0B3D91"));
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 

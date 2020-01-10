@@ -40,7 +40,7 @@ namespace FlawBOT.Modules
                         .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId.ToString())
                         .WithFooter("App ID: " + app.SteamAppId.ToString())
                         .WithColor(new DiscordColor("#1B2838"));
-                    await ctx.RespondAsync(embed: output.Build());
+                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
                     check = true;
                 }
                 catch
@@ -62,12 +62,12 @@ namespace FlawBOT.Modules
             var profile = SteamService.GetSteamUserProfileAsync(query).Result;
             var summary = SteamService.GetSteamUserSummaryAsync(query).Result;
             if (profile is null && summary is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder().WithTitle(summary.Data.Nickname);
                 if (summary.Data.ProfileVisibility != ProfileVisibility.Public)
-                    await BotServices.SendEmbedAsync(ctx, "This profile is private...", EmbedType.Warning);
+                    await BotServices.SendEmbedAsync(ctx, "This profile is private...", EmbedType.Warning).ConfigureAwait(false);
                 else
                 {
                     output.WithThumbnailUrl(profile.AvatarFull.ToString());
@@ -90,7 +90,7 @@ namespace FlawBOT.Modules
                         output.WithImageUrl(profile.InGameInfo.GameLogoSmall);
                     }
                 }
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 
@@ -105,9 +105,9 @@ namespace FlawBOT.Modules
         {
             var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
             if (regex.Success)
-                await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"));
+                await ctx.RespondAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}")).ConfigureAwait(false);
             else
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_STEAM_CONNECT_FORMAT, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_STEAM_CONNECT_FORMAT, EmbedType.Warning).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CONNECT

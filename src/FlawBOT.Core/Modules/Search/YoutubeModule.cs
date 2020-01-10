@@ -22,8 +22,8 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var service = new YoutubeService();
-            var results = await service.GetEmbeddedResults(query, 5, "channel");
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results);
+            var results = await service.GetEmbeddedResults(query, 5, "channel").ConfigureAwait(false);
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CHANNEL
@@ -38,8 +38,8 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var service = new YoutubeService();
-            var results = await service.GetEmbeddedResults(query, 5, "playlist");
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results);
+            var results = await service.GetEmbeddedResults(query, 5, "playlist").ConfigureAwait(false);
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results).ConfigureAwait(false);
         }
 
         #endregion COMMAND_PLAYLIST
@@ -54,8 +54,8 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var service = new YoutubeService();
-            var results = await service.GetFirstVideoResultAsync(query);
-            await ctx.RespondAsync(results);
+            var results = await service.GetFirstVideoResultAsync(query).ConfigureAwait(false);
+            await ctx.RespondAsync(results).ConfigureAwait(false);
         }
 
         #endregion COMMAND_SEARCH
@@ -70,8 +70,8 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var service = new YoutubeService();
-            var results = await service.GetEmbeddedResults(query, 5, "video");
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results);
+            var results = await service.GetEmbeddedResults(query, 5, "video").ConfigureAwait(false);
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query), embed: results).ConfigureAwait(false);
         }
 
         #endregion COMMAND_VIDEO

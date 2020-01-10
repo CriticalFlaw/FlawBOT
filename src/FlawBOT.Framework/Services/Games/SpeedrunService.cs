@@ -18,7 +18,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http.GetStringAsync(Resources.API_Speedrun + "games?name=" + Uri.EscapeUriString(query.Trim()) + "&max=1");
+                var results = await _http.GetStringAsync(Resources.API_Speedrun + "games?name=" + Uri.EscapeUriString(query.Trim()) + "&max=1").ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<SpeedrunGame>(results);
             }
             catch
@@ -38,7 +38,7 @@ namespace FlawBOT.Framework.Services
                 var results = new StringBuilder();
                 foreach (var query in queryList)
                 {
-                    var output = await _http.GetStringAsync(Resources.API_Speedrun + search.ToString().ToLowerInvariant() + "/" + query);
+                    var output = await _http.GetStringAsync(Resources.API_Speedrun + search.ToString().ToLowerInvariant() + "/" + query).ConfigureAwait(false);
                     var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output).Data.Name;
                     results.Append(name + "\n");
                 }

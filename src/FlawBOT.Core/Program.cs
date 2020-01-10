@@ -111,7 +111,7 @@ namespace FlawBOT
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
             await TeamFortressService.LoadTF2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
-            await Client.ConnectAsync(); // Connect and log into Discord
+            await Client.ConnectAsync().ConfigureAwait(false); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
         }
 
@@ -144,33 +144,33 @@ namespace FlawBOT
                             return;
 
                         default:
-                            await BotServices.SendEmbedAsync(e.Context, $"Command **{e.Command.QualifiedName}** could not be executed.", EmbedType.Error);
+                            await BotServices.SendEmbedAsync(e.Context, $"Command **{e.Command.QualifiedName}** could not be executed.", EmbedType.Error).ConfigureAwait(false);
                             foreach (var check in cfe.FailedChecks)
                             {
                                 switch (check)
                                 {
                                     case RequirePermissionsAttribute perms:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!", EmbedType.Error);
+                                        await BotServices.SendEmbedAsync(e.Context, $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!", EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequireUserPermissionsAttribute uperms:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- You do not have sufficient permissions ({uperms.Permissions.ToPermissionString()})!", EmbedType.Error);
+                                        await BotServices.SendEmbedAsync(e.Context, $"- You do not have sufficient permissions ({uperms.Permissions.ToPermissionString()})!", EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequireBotPermissionsAttribute bperms:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- I do not have sufficient permissions ({bperms.Permissions.ToPermissionString()})!", EmbedType.Error);
+                                        await BotServices.SendEmbedAsync(e.Context, $"- I do not have sufficient permissions ({bperms.Permissions.ToPermissionString()})!", EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequireOwnerAttribute _:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- This command is reserved only for the bot owner.", EmbedType.Error);
+                                        await BotServices.SendEmbedAsync(e.Context, $"- This command is reserved only for the bot owner.", EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequirePrefixesAttribute pa:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- This command can only be invoked with the following prefixes: {string.Join(" ", pa.Prefixes)}.", EmbedType.Error);
+                                        await BotServices.SendEmbedAsync(e.Context, $"- This command can only be invoked with the following prefixes: {string.Join(" ", pa.Prefixes)}.", EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     default:
-                                        await BotServices.SendEmbedAsync(e.Context, "Unknown check triggered. Please notify the developer using the command *.bot report*", EmbedType.Error);
+                                        await BotServices.SendEmbedAsync(e.Context, "Unknown check triggered. Please notify the developer using the command *.bot report*", EmbedType.Error).ConfigureAwait(false);
                                         break;
                                 }
                             }
@@ -187,24 +187,24 @@ namespace FlawBOT
                     break;
 
                 case ArgumentNullException _:
-                    await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error);
+                    await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error).ConfigureAwait(false);
                     break;
 
                 case ArgumentException _:
                     if (e.Exception.Message.Contains("Not enough arguments supplied to the command"))
-                        await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error).ConfigureAwait(false);
                     break;
 
                 case InvalidDataException _:
                     if (e.Exception.Message.Contains("The data within the stream was not valid image data"))
-                        await BotServices.SendEmbedAsync(e.Context, "Provided URL is not an image type!", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Provided URL is not an image type!", EmbedType.Error).ConfigureAwait(false);
                     break;
 
                 default:
                     if (e.Exception.Message.Contains("Given emote was not found"))
-                        await BotServices.SendEmbedAsync(e.Context, "Suggested emote was not found!", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Suggested emote was not found!", EmbedType.Error).ConfigureAwait(false);
                     if (e.Exception.Message.Contains("Unauthorized: 403"))
-                        await BotServices.SendEmbedAsync(e.Context, "Insufficient Permissions", EmbedType.Error);
+                        await BotServices.SendEmbedAsync(e.Context, "Insufficient Permissions", EmbedType.Error).ConfigureAwait(false);
                     else
                         e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now); // DEBUG ONLY
                     break;

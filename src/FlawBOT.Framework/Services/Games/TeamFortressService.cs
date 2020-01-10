@@ -21,7 +21,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var schema = await _http.GetStringAsync(Resources.API_TradeTF + "?key=" + TokenHandler.Tokens.TFSchemaToken);
+                var schema = await _http.GetStringAsync(Resources.API_TradeTF + "?key=" + TokenHandler.Tokens.TFSchemaToken).ConfigureAwait(false);
                 var results = JsonConvert.DeserializeObject<TFItemSchema>(schema);
                 ItemSchema.Clear();
                 foreach (var item in results.Results.Items)
@@ -40,19 +40,19 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<List<TeamworkNews>> GetNewsOverviewAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "news?key=" + TokenHandler.Tokens.TeamworkToken);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "news?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<List<TeamworkNews>>(results);
         }
 
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "quickplay/" + query + "/servers?key=" + TokenHandler.Tokens.TeamworkToken);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "quickplay/" + query + "/servers?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
         }
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + NormalizedMapName(query) + "?key=" + TokenHandler.Tokens.TeamworkToken);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + NormalizedMapName(query) + "?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<TeamworkMap>(results);
         }
 

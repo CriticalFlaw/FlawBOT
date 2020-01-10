@@ -52,11 +52,11 @@ namespace FlawBOT.Modules
                 var output = new DiscordEmbedBuilder()
                     .WithTitle($":1234: The result is {result:#,##0.00}")
                     .WithColor(DiscordColor.CornflowerBlue);
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_MATH_EQUATION, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_MATH_EQUATION, EmbedType.Warning).ConfigureAwait(false);
             }
         }
 
@@ -73,7 +73,7 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder()
                 .WithTitle($":1234: The sum is {args.Sum():#,##0}")
                 .WithColor(DiscordColor.CornflowerBlue);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_SUM

@@ -46,7 +46,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<string> GetCatFactAsync()
         {
-            return await _http.GetStringAsync(Resources.API_CatFacts);
+            return await _http.GetStringAsync(Resources.API_CatFacts).ConfigureAwait(false);
         }
 
         public static async Task<string> GetCatPhotoAsync()
@@ -60,7 +60,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_DogPhoto);
+            var results = await _http.GetStringAsync(Resources.API_DogPhoto).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DogData>(results);
         }
     }

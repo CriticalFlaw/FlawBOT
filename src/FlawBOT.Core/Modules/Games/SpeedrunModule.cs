@@ -22,7 +22,7 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result.Data.FirstOrDefault();
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -37,7 +37,7 @@ namespace FlawBOT.Modules
                     .WithImageUrl(results.Assets.CoverLarge.URL ?? results.Assets.Icon.URL)
                     .WithUrl(results.WebLink)
                     .WithColor(new DiscordColor("#0F7A4D"));
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 

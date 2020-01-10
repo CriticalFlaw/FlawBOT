@@ -30,12 +30,12 @@ namespace FlawBOT.Modules
             try
             {
                 var stream = BotServices.CheckImageInput(ctx, query).Result;
-                await ctx.Guild.ModifyAsync(chn => chn.Icon = stream);
-                await BotServices.SendEmbedAsync(ctx, ctx.Guild.Name + " server avatar has been updated!", EmbedType.Good);
+                await ctx.Guild.ModifyAsync(chn => chn.Icon = stream).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, ctx.Guild.Name + " server avatar has been updated!", EmbedType.Good).ConfigureAwait(false);
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, ctx.Guild.Name + " server avatar has not been updated!", EmbedType.Error);
+                await BotServices.SendEmbedAsync(ctx, ctx.Guild.Name + " server avatar has not been updated!", EmbedType.Error).ConfigureAwait(false);
             }
         }
 
@@ -72,7 +72,7 @@ namespace FlawBOT.Modules
             foreach (var emoji in ctx.Guild.Emojis)
                 emojis.Append(emoji.Value.Name);
             if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_INFO
@@ -83,7 +83,7 @@ namespace FlawBOT.Modules
         [Description("Retrieve an instant invite link to the server")]
         public async Task InviteAsync(CommandContext ctx)
         {
-            await ctx.RespondAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ":https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code);
+            await ctx.RespondAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ":https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code).ConfigureAwait(false);
         }
 
         #endregion COMMAND_INVITE
@@ -97,19 +97,19 @@ namespace FlawBOT.Modules
             [Description("Number of days the user had to be inactive to get pruned")] [RemainingText] int days = 7)
         {
             if (days < 1 || days > 30)
-                await BotServices.SendEmbedAsync(ctx, "Number of days must be between 1 and 30", EmbedType.Warning);
-            int count = await ctx.Guild.GetPruneCountAsync(days);
+                await BotServices.SendEmbedAsync(ctx, "Number of days must be between 1 and 30", EmbedType.Warning).ConfigureAwait(false);
+            int count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
             if (count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, "No inactive members found to prune", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "No inactive members found to prune", EmbedType.Warning).ConfigureAwait(false);
                 return;
             }
-            var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.");
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+            var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
             if (interactivity.Result is null) return;
-            await BotServices.RemoveMessage(interactivity.Result);
-            await BotServices.RemoveMessage(prompt);
-            await ctx.Guild.PruneAsync(days);
+            await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+            await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
+            await ctx.Guild.PruneAsync(days).ConfigureAwait(false);
         }
 
         #endregion COMMAND_PRUNE
@@ -124,11 +124,11 @@ namespace FlawBOT.Modules
             [Description("New server name")] [RemainingText] string name = "")
         {
             if (string.IsNullOrWhiteSpace(name) || (name.Length > 100))
-                await BotServices.SendEmbedAsync(ctx, "Server name cannot be blank or over 100 characters!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Server name cannot be blank or over 100 characters!", EmbedType.Warning).ConfigureAwait(false);
             else
             {
-                await ctx.Guild.ModifyAsync(srv => srv.Name = name);
-                await BotServices.SendEmbedAsync(ctx, "Server name has been changed to " + Formatter.Bold(name), EmbedType.Good);
+                await ctx.Guild.ModifyAsync(srv => srv.Name = name).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Server name has been changed to " + Formatter.Bold(name), EmbedType.Good).ConfigureAwait(false);
             }
         }
 
@@ -154,7 +154,7 @@ namespace FlawBOT.Modules
             if (!string.IsNullOrWhiteSpace(reason)) output.AddField("Warning message:", reason);
             var dm = await member.CreateDmChannelAsync().ConfigureAwait(false);
             if (dm is null)
-                await BotServices.SendEmbedAsync(ctx, "Unable to direct message this user", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Unable to direct message this user", EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 await dm.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);

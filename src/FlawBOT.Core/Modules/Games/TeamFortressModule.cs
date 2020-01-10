@@ -29,7 +29,7 @@ namespace FlawBOT.Modules
         {
             var item = TeamFortressService.GetSchemaItemAsync(query);
             if (item is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -49,7 +49,7 @@ namespace FlawBOT.Modules
                     userClasses.Append(className + "\n");
                 output.AddField("Worn by:", userClasses.ToString() ?? "Unknown", true);
 
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 
@@ -64,9 +64,9 @@ namespace FlawBOT.Modules
             [Description("Normalized map name, like pl_upward")] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant());
+            var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
             if (results.MapName is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 double.TryParse(results.AvgPlayers, out var avg_players);
@@ -89,7 +89,7 @@ namespace FlawBOT.Modules
                 if (related_maps.Length > 0)
                     output.AddField("Related Map(s)", related_maps.ToString(), true);
 
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 
@@ -101,9 +101,9 @@ namespace FlawBOT.Modules
         [Description("Retrieve the latest news article from teamwork.tf")]
         public async Task TF2News(CommandContext ctx)
         {
-            var results = await TeamFortressService.GetNewsOverviewAsync();
+            var results = await TeamFortressService.GetNewsOverviewAsync().ConfigureAwait(false);
             if (results is null || results.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 while (results.Count > 0)
@@ -117,12 +117,12 @@ namespace FlawBOT.Modules
                         output.AddField(result.Title, result.Link);
                         results.Remove(result);
                     }
-                    var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build());
+                    var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
-                    await BotServices.RemoveMessage(interactivity.Result);
-                    await BotServices.RemoveMessage(message);
+                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
             }
         }
@@ -139,9 +139,9 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             query = TeamFortressService.NormalizedGameMode(query);
-            var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-'));
+            var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-')).ConfigureAwait(false);
             if (results.Count <= 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var random = new Random();
@@ -162,12 +162,12 @@ namespace FlawBOT.Modules
                         .WithImageUrl("https://teamwork.tf" + server.MapThumbnail)
                         .WithFooter("Type 'next' within 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
-                    var message = await ctx.RespondAsync(embed: output.Build());
+                    var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
-                    await BotServices.RemoveMessage(interactivity.Result);
-                    await BotServices.RemoveMessage(message);
+                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
             }
         }

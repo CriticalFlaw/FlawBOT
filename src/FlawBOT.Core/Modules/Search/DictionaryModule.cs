@@ -24,9 +24,9 @@ namespace FlawBOT.Modules
             [Description("Query to pass to Urban Dictionary")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await DictionaryService.GetDictionaryForTermAsync(query);
+            var results = await DictionaryService.GetDictionaryForTermAsync(query).ConfigureAwait(false);
             if (results.ResultType == "no_results")
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 foreach (var definition in results.List)
@@ -40,12 +40,12 @@ namespace FlawBOT.Modules
                         .WithUrl(definition.Permalink)
                         .WithFooter("Type 'next' within 10 seconds for the next definition")
                         .WithColor(new DiscordColor("#1F2439"));
-                    var message = await ctx.RespondAsync(embed: output.Build());
+                    var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10));
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
-                    await BotServices.RemoveMessage(interactivity.Result);
-                    await BotServices.RemoveMessage(message);
+                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
             }
         }

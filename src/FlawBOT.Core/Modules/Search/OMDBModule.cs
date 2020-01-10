@@ -23,7 +23,7 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = OMDBService.GetMovieDataAsync(query.Replace(" ", "+")).Result;
             if (results.Response == "False")
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -42,7 +42,7 @@ namespace FlawBOT.Modules
                     .AddField("Actors", results.Actors, true)
                     .WithColor(DiscordColor.Goldenrod);
                 if (results.Poster != "N/A") output.WithImageUrl(results.Poster);
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 

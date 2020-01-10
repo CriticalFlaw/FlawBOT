@@ -29,7 +29,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<SteamData> GetSteamAppsListAsync()
         {
-            var result = await _http.GetStringAsync(Resources.API_SteamGames);
+            var result = await _http.GetStringAsync(Resources.API_SteamGames).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<SteamData>(result);
         }
 
@@ -40,7 +40,7 @@ namespace FlawBOT.Framework.Services
             SteamCommunityProfileModel profile;
             try
             {
-                var decode = await steam.ResolveVanityUrlAsync(query);
+                var decode = await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
                 profile = await steam.GetCommunityProfileAsync(decode.Data).ConfigureAwait(false);
             }
             catch
@@ -57,7 +57,7 @@ namespace FlawBOT.Framework.Services
             ISteamWebResponse<PlayerSummaryModel> summary;
             try
             {
-                var decode = await steam.ResolveVanityUrlAsync(query);
+                var decode = await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
                 summary = await steam.GetPlayerSummaryAsync(decode.Data).ConfigureAwait(false);
             }
             catch
@@ -73,7 +73,7 @@ namespace FlawBOT.Framework.Services
             {
                 SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
                 var steam = SteamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient());
-                var games = (await steam.GetAppListAsync()).Data;
+                var games = (await steam.GetAppListAsync().ConfigureAwait(false)).Data;
                 SteamAppList.Clear();
                 foreach (var game in games)
                     if (!string.IsNullOrWhiteSpace(game.Name))

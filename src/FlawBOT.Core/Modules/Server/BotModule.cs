@@ -33,7 +33,7 @@ namespace FlawBOT.Modules
                 .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
                 .WithColor(SharedData.DefaultColor);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_INFO
@@ -45,15 +45,15 @@ namespace FlawBOT.Modules
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task LeaveAsync(CommandContext ctx)
         {
-            await ctx.RespondAsync($"Are you sure you want {SharedData.Name} to leave this server?");
-            var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.");
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+            await ctx.RespondAsync($"Are you sure you want {SharedData.Name} to leave this server?").ConfigureAwait(false);
+            var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.").ConfigureAwait(false);
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
             if (interactivity.Result is null)
-                await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT);
+                await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
             else
             {
-                await BotServices.SendEmbedAsync(ctx, "Thank you for using " + SharedData.Name);
-                await ctx.Guild.LeaveAsync();
+                await BotServices.SendEmbedAsync(ctx, "Thank you for using " + SharedData.Name).ConfigureAwait(false);
+                await ctx.Guild.LeaveAsync().ConfigureAwait(false);
             }
         }
 
@@ -66,7 +66,7 @@ namespace FlawBOT.Modules
         [Description("Ping the FlawBOT client")]
         public async Task Ping(CommandContext ctx)
         {
-            await ctx.RespondAsync($":ping_pong: Pong! Ping: **{ctx.Client.Ping}**ms");
+            await ctx.RespondAsync($":ping_pong: Pong! Ping: **{ctx.Client.Ping}**ms").ConfigureAwait(false);
         }
 
         #endregion COMMAND_PING
@@ -80,17 +80,17 @@ namespace FlawBOT.Modules
             [Description("Detailed description of the issue")] [RemainingText] string report)
         {
             if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
-                await ctx.RespondAsync(Resources.ERR_REPORT_CHAR_LENGTH);
+                await ctx.RespondAsync(Resources.ERR_REPORT_CHAR_LENGTH).ConfigureAwait(false);
             else
             {
-                await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.");
-                var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.");
-                var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+                await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.").ConfigureAwait(false);
+                var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.").ConfigureAwait(false);
+                var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                 if (interactivity.Result is null)
-                    await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT);
+                    await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
                 else
                 {
-                    var dm = await ctx.Member.CreateDmChannelAsync();
+                    var dm = await ctx.Member.CreateDmChannelAsync().ConfigureAwait(false);
                     var output = new DiscordEmbedBuilder()
                         .WithAuthor(ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, iconUrl: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
                         .AddField("Issue", report)
@@ -99,8 +99,8 @@ namespace FlawBOT.Modules
                         .AddField("Owner", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator)
                         .AddField("Confirm", $"[Click here to add this issue to GitHub]({SharedData.GitHubLink}/issues/new)")
                         .WithColor(SharedData.DefaultColor);
-                    await dm.SendMessageAsync(embed: output.Build());
-                    await BotServices.SendEmbedAsync(ctx, "Thank You! Your report has been submitted.", EmbedType.Good);
+                    await dm.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, "Thank You! Your report has been submitted.", EmbedType.Good).ConfigureAwait(false);
                 }
             }
         }
@@ -128,7 +128,7 @@ namespace FlawBOT.Modules
         {
             var uptime = DateTime.Now - SharedData.ProcessStarted;
             var days = (uptime.Days > 0) ? $"({uptime.Days:00} days)" : null;
-            await BotServices.SendEmbedAsync(ctx, $":clock1: {SharedData.Name} has been online for {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds} {days}");
+            await BotServices.SendEmbedAsync(ctx, $":clock1: {SharedData.Name} has been online for {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds} {days}").ConfigureAwait(false);
         }
 
         #endregion COMMAND_UPTIME
@@ -146,15 +146,15 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(activity))
             {
-                await ctx.Client.UpdateStatusAsync(activity: null);
-                await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to Normal");
+                await ctx.Client.UpdateStatusAsync(activity: null).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to Normal").ConfigureAwait(false);
             }
             else
             {
                 // TODO: Set the activity type
                 var game = new DiscordActivity(activity);
-                await ctx.Client.UpdateStatusAsync(activity: game);
-                await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to Playing " + game.Name, EmbedType.Good);
+                await ctx.Client.UpdateStatusAsync(activity: game).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to Playing " + game.Name, EmbedType.Good).ConfigureAwait(false);
             }
         }
 
@@ -171,8 +171,8 @@ namespace FlawBOT.Modules
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;
             if (stream.Length <= 0) return;
-            await ctx.Client.UpdateCurrentUserAsync(avatar: stream);
-            await BotServices.SendEmbedAsync(ctx, SharedData.Name + " avatar has been updated!", EmbedType.Good);
+            await ctx.Client.UpdateCurrentUserAsync(avatar: stream).ConfigureAwait(false);
+            await BotServices.SendEmbedAsync(ctx, SharedData.Name + " avatar has been updated!", EmbedType.Good).ConfigureAwait(false);
         }
 
         #endregion COMMAND_AVATAR
@@ -191,29 +191,29 @@ namespace FlawBOT.Modules
             {
                 case "OFF":
                 case "OFFLINE":
-                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Offline);
-                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Offline");
+                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Offline).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Offline").ConfigureAwait(false);
                     break;
 
                 case "INVISIBLE":
-                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Invisible);
-                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Invisible");
+                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Invisible).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Invisible").ConfigureAwait(false);
                     break;
 
                 case "IDLE":
-                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Idle);
-                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Idle");
+                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Idle).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Idle").ConfigureAwait(false);
                     break;
 
                 case "DND":
                 case "DO NOT DISTURB":
-                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb);
-                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Do Not Disturb");
+                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.DoNotDisturb).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Do Not Disturb").ConfigureAwait(false);
                     break;
 
                 default:
-                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Online);
-                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Online");
+                    await ctx.Client.UpdateStatusAsync(userStatus: UserStatus.Online).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, SharedData.Name + " status has been changed to Online").ConfigureAwait(false);
                     break;
             }
         }
@@ -228,11 +228,11 @@ namespace FlawBOT.Modules
         [Description("Update FlawBOT libraries")]
         public async Task Update(CommandContext ctx)
         {
-            var message = await ctx.RespondAsync("Starting update...");
+            var message = await ctx.RespondAsync("Starting update...").ConfigureAwait(false);
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
             await TeamFortressService.LoadTF2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
-            await message.ModifyAsync("Starting update...done!");
+            await message.ModifyAsync("Starting update...done!").ConfigureAwait(false);
         }
 
         #endregion COMMAND_UPDATE
@@ -249,13 +249,13 @@ namespace FlawBOT.Modules
             var oldUsername = ctx.Client.CurrentUser.Username;
             if (string.IsNullOrWhiteSpace(name))
             {
-                await ctx.Client.UpdateCurrentUserAsync(username: SharedData.Name);
-                await BotServices.SendEmbedAsync(ctx, oldUsername + " username has been changed to " + SharedData.Name);
+                await ctx.Client.UpdateCurrentUserAsync(username: SharedData.Name).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, oldUsername + " username has been changed to " + SharedData.Name).ConfigureAwait(false);
             }
             else
             {
-                await ctx.Client.UpdateCurrentUserAsync(username: name);
-                await BotServices.SendEmbedAsync(ctx, oldUsername + " username has been changed to " + ctx.Client.CurrentUser.Username, EmbedType.Good);
+                await ctx.Client.UpdateCurrentUserAsync(username: name).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, oldUsername + " username has been changed to " + ctx.Client.CurrentUser.Username, EmbedType.Good).ConfigureAwait(false);
             }
         }
 

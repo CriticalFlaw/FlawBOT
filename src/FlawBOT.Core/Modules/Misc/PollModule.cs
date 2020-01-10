@@ -24,9 +24,9 @@ namespace FlawBOT.Modules
             [Description("Question to be polled")] [RemainingText] string question)
         {
             if (!int.TryParse(time, out var minutes))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_POLL_MINUTES, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_POLL_MINUTES, EmbedType.Warning).ConfigureAwait(false);
             else if (!BotServices.CheckUserInput(question))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_POLL_QUESTION, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_POLL_QUESTION, EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 var interactivity = ctx.Client.GetInteractivity();
@@ -35,12 +35,12 @@ namespace FlawBOT.Modules
                 pollOptions.Add(DiscordEmoji.FromName(ctx.Client, ":thumbsdown:"));
                 var duration = new TimeSpan(0, 0, minutes, 0, 0);
                 var output = new DiscordEmbedBuilder().WithDescription(ctx.User.Mention + ": " + question);
-                var message = await ctx.RespondAsync(embed: output.Build());
+                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
                 foreach (var react in pollOptions)
-                    await message.CreateReactionAsync(react);
-                var pollResult = await interactivity.CollectReactionsAsync(message, duration);
+                    await message.CreateReactionAsync(react).ConfigureAwait(false);
+                var pollResult = await interactivity.CollectReactionsAsync(message, duration).ConfigureAwait(false);
                 var results = pollResult.Where(x => pollOptions.Contains(x.Emoji)).Select(x => $"{x.Emoji} wins the poll with **{x.Total}** votes");
-                await ctx.RespondAsync(string.Join("\n", results));
+                await ctx.RespondAsync(string.Join("\n", results)).ConfigureAwait(false);
             }
         }
 

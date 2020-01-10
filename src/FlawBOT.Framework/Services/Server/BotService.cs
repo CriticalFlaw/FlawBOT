@@ -44,7 +44,7 @@ namespace FlawBOT.Framework.Services
             var output = new DiscordEmbedBuilder()
                 .WithTitle(prefix + message)
                 .WithColor(color);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         public static bool CheckUserInput(string input)
@@ -68,7 +68,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                await message.DeleteAsync();
+                await message.DeleteAsync().ConfigureAwait(false);
                 return true;
             }
             catch

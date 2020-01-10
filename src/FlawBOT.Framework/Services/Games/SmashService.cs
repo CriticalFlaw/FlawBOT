@@ -13,7 +13,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http.GetStringAsync(Resources.API_SmashBros + "name/" + query.ToLowerInvariant() + "?game=ultimate");
+                var results = await _http.GetStringAsync(Resources.API_SmashBros + "name/" + query.ToLowerInvariant() + "?game=ultimate").ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<SmashCharacter>(results);
             }
             catch
@@ -26,7 +26,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var output = await _http.GetStringAsync(Resources.API_SmashBros + characterID + "/characterattributes?game=ultimate");
+                var output = await _http.GetStringAsync(Resources.API_SmashBros + characterID + "/characterattributes?game=ultimate").ConfigureAwait(false);
                 var attributes = JsonConvert.DeserializeObject<List<SmashCharacterAttributes>>(output);
                 return attributes.Distinct().ToList();
             }
