@@ -33,15 +33,16 @@ namespace FlawBOT.Modules
                     // TODO: Add page count, publication, ISBN, URLs
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(book.Book.Title)
+                        .AddField("Publication Year", GoodReadsService.GetPublicationDate(book).Result, true)
                         .AddField("Author", book.Book.Author.Name ?? "Unknown", true)
-                        .AddField("Publication Year", book.PublicationYear.Text ?? "Unknown", true)
-                        .AddField("Ratings", $"Average {book.RatingAverage} ({book.RatingCount.Text} total ratings)", true)
-                        .WithImageUrl(book.Book.ImageUrl ?? book.Book.ImageUrlSmall)
+                        .AddField("Avg. Rating", book.RatingAverage ?? "Unknown")
+                        .AddField("Total Ratings", book.RatingCount.Text ?? "Unknown")
+                        .WithThumbnailUrl(book.Book.ImageUrl ?? book.Book.ImageUrlSmall)
                         .WithFooter("Type 'next' within 10 seconds for the next book.")
                         .WithColor(new DiscordColor("#372213"));
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }

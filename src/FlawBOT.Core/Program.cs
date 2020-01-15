@@ -78,7 +78,6 @@ namespace FlawBOT
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.RegisterCommands<PokemonModule>();
-            Commands.RegisterCommands<SmashModule>();
             Commands.RegisterCommands<SpeedrunModule>();
             Commands.RegisterCommands<SteamModule>();
             Commands.RegisterCommands<TeamFortressModule>();

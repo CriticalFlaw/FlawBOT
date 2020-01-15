@@ -17,7 +17,7 @@ namespace FlawBOT.Modules
         #region COMMAND_POKEMON
 
         [Command("pokemon")]
-        [Aliases("poke")]
+        [Aliases("poke", "pk")]
         [Description("Retrieve a Pokemon card")]
         public async Task Pokemon(CommandContext ctx,
             [Description("Name of the pokemon")] [RemainingText] string query)
@@ -31,8 +31,8 @@ namespace FlawBOT.Modules
                 {
                     var card = PokemonService.GetExactPokemonAsync(value.ID);
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(card.Name + $" (PokeDex ID: {card.NationalPokedexNumber})")
-                        .AddField("Subtype", card.SubType ?? "Unknown", true)
+                        .WithTitle(card.Name)
+                        .AddField("ID", card.NationalPokedexNumber.ToString() ?? "Unknown", true)
                         .AddField("Health Points", card.Hp ?? "Unknown", true)
                         .AddField("Artist", card.Artist ?? "Unknown", true)
                         .AddField("Rarity", card.Rarity ?? "Unknown", true)
@@ -44,10 +44,10 @@ namespace FlawBOT.Modules
                     var types = new StringBuilder();
                     foreach (var type in card.Types)
                         types.Append(type);
-                    output.AddField("Type(s)", types.ToString() ?? "Unknown", true);
+                    output.AddField("Types", types.ToString() ?? "Unknown", true);
                     await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }

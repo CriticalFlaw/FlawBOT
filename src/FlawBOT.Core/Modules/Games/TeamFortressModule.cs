@@ -113,13 +113,10 @@ namespace FlawBOT.Modules
                         .WithColor(new DiscordColor("#E7B53B"));
 
                     foreach (var result in results.Take(5))
-                    {
                         output.AddField(result.Title, result.Link);
-                        results.Remove(result);
-                    }
                     var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                     await BotServices.RemoveMessage(message).ConfigureAwait(false);
@@ -145,26 +142,26 @@ namespace FlawBOT.Modules
             else
             {
                 var random = new Random();
-                results = results.OrderBy(x => random.Next()).ToList();
+                results = results.OrderBy(_ => random.Next()).ToList();
                 foreach (var server in results.Where(n => n.GameModes.Contains(query)))
                 {
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(server.Name)
                         .WithDescription("steam://connect/" + server.IP + ":" + server.Port)
                         .AddField("Provider", server.Provider ?? "Unknown", true)
-                        .AddField("Max Players", (server.PlayerCount.ToString() ?? "Unknown") + "/" + (server.PlayerMax.ToString() ?? "Unknown"), true)
+                        .AddField("Player Count", (server.PlayerCount.ToString() ?? "Unknown") + "/" + (server.PlayerMax.ToString() ?? "Unknown"), true)
+                        .AddField("Password Lock", (server.HasPassword == true) ? "Yes" : "No", true)
                         .AddField("Current Map", server.MapName ?? "Unknown", true)
                         .AddField("Next Map", server.NextMap ?? "Unknown", true)
-                        .AddField("Passworded?", (server.HasPassword == true) ? "Yes" : "No", true)
-                        .AddField("Roll the Dice?", server.HasRTD ? "Yes" : "No", true)
-                        .AddField("Random Crits?", server.HasRandomCrits == true ? "Yes" : "No", true)
-                        .AddField("All Talk?", server.HasAllTalk ? "Yes" : "No", true)
+                        .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
+                        .AddField("Instant Respawn", server.HasNoSpawnTimer ? "Yes" : "No")
+                        .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
                         .WithImageUrl("https://teamwork.tf" + server.MapThumbnail)
                         .WithFooter("Type 'next' within 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                     await BotServices.RemoveMessage(message).ConfigureAwait(false);

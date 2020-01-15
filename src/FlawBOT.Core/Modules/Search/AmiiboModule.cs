@@ -43,7 +43,7 @@ namespace FlawBOT.Modules
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
                     if (results.Amiibo.Count == 1) continue;
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                     await BotServices.RemoveMessage(message).ConfigureAwait(false);

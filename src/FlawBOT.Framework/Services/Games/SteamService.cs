@@ -22,7 +22,7 @@ namespace FlawBOT.Framework.Services
         {
             var store = new SteamStore();
             var random = new Random();
-            var game = SteamAppList.FirstOrDefault(n => n.Value.ToUpperInvariant() == query.ToUpperInvariant()).Key;
+            var game = SteamAppList.FirstOrDefault(n => string.Equals(n.Value, query, StringComparison.InvariantCultureIgnoreCase)).Key;
             var appId = (game >= 0) ? game : SteamAppList.Keys.ToArray()[random.Next(0, SteamAppList.Keys.Count - 1)];
             return await store.GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
         }

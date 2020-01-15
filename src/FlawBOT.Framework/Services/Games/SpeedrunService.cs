@@ -3,6 +3,7 @@ using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +37,7 @@ namespace FlawBOT.Framework.Services
             try
             {
                 var results = new StringBuilder();
-                foreach (var query in queryList)
+                foreach (var query in queryList.Take(3))
                 {
                     var output = await _http.GetStringAsync(Resources.API_Speedrun + search.ToString().ToLowerInvariant() + "/" + query).ConfigureAwait(false);
                     var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output).Data.Name;

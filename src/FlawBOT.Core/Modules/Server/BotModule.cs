@@ -47,7 +47,7 @@ namespace FlawBOT.Modules
         {
             await ctx.RespondAsync($"Are you sure you want {SharedData.Name} to leave this server?").ConfigureAwait(false);
             var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.").ConfigureAwait(false);
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && string.Equals(m.Content, "yes", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
             if (interactivity.Result is null)
                 await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
             else
@@ -85,7 +85,7 @@ namespace FlawBOT.Modules
             {
                 await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.").ConfigureAwait(false);
                 var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.").ConfigureAwait(false);
-                var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && string.Equals(m.Content, "yes", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                 if (interactivity.Result is null)
                     await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
                 else
@@ -112,10 +112,11 @@ namespace FlawBOT.Modules
         [Command("say"), Hidden]
         [Aliases("echo")]
         [Description("Make FlawBOT repeat a message")]
-        public Task Say(CommandContext ctx,
+        public async Task Say(CommandContext ctx,
             [Description("Message for the bot to repeat")] [RemainingText] string message)
         {
-            return ctx.RespondAsync((string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message);
+            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+            await ctx.RespondAsync((string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message).ConfigureAwait(false);
         }
 
         #endregion COMMAND_SAY
