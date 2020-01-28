@@ -6,6 +6,7 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,29 +28,32 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
-                foreach (var value in results.Cards)
+                foreach (var dex in results.Cards)
                 {
-                    var card = PokemonService.GetExactPokemonAsync(value.ID);
+                    var card = PokemonService.GetExactPokemonAsync(dex.ID);
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(card.Name)
-                        .AddField("ID", card.NationalPokedexNumber.ToString() ?? "Unknown", true)
-                        .AddField("Health Points", card.Hp ?? "Unknown", true)
-                        .AddField("Artist", card.Artist ?? "Unknown", true)
-                        .AddField("Rarity", card.Rarity ?? "Unknown", true)
+                        .WithDescription("Pokédex ID: " + card.NationalPokedexNumber.ToString() ?? "Unknown")
                         .AddField("Series", card.Series ?? "Unknown", true)
+                        .AddField("Rarity", card.Rarity ?? "Unknown", true)
+                        .AddField("HP", card.Hp ?? "Unknown", true)
                         .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
-                        .WithColor(DiscordColor.Gold)
-                        .WithFooter("Type 'next' within 10 seconds for the next card");
+                        .WithFooter(!card.Equals(results.Cards.Last()) ? "Type 'next' within 10 seconds for the next pokemon" : "This is the last found pokemon on the list.")
+                        .WithColor(DiscordColor.Gold);
 
-                    var types = new StringBuilder();
+                    var values = new StringBuilder();
                     foreach (var type in card.Types)
-                        types.Append(type);
-                    output.AddField("Types", types.ToString() ?? "Unknown", true);
+                        values.Append(type);
+                    output.AddField("Types", values.ToString() ?? "Unknown", true);
+                    foreach (var weakness in card.Weaknesses)
+                        values.Append(weakness.Value);
+                    output.AddField("Weaknesses", values.ToString() ?? "Unknown", true);
                     await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
-                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+                    if (!card.Equals(results.Cards.Last()))
+                        await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }
             }
         }

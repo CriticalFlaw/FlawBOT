@@ -31,7 +31,7 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":clock1: Time in " + results.Results[0].FormattedAddress)
+                    .WithTitle(":clock1: Current time in " + results.Results[0].FormattedAddress)
                     .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.timeZoneName)
                     .WithColor(SharedData.DefaultColor);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
@@ -92,7 +92,7 @@ namespace FlawBOT.Modules
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
                     .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
-                    .AddField("Conditions", string.Join(", ", results.Weather.Select(w => w.Main)), true)
+                    //.AddField("Conditions", string.Join(", ", results.Weather.Select(w => w.Main)), true)
                     .AddField("Humidity", $"{results.Main.Humidity}%", true)
                     .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
                     .WithUrl("https://openweathermap.org/city/" + results.ID)

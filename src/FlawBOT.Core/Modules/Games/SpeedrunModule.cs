@@ -15,6 +15,7 @@ namespace FlawBOT.Modules
         #region COMMAND_SPEEDRUN
 
         [Command("speedrun")]
+        [Aliases("game")]
         [Description("Search Speedrun.com for a given game")]
         public async Task Speedrun(CommandContext ctx,
             [Description("Game to search on Speedrun.com")] [RemainingText] string query)
@@ -30,8 +31,8 @@ namespace FlawBOT.Modules
                     .AddField("Release Date", game.ReleaseDate ?? "Unknown", true)
                     .AddField("Developers", (game.Developers.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(game.Developers, SpeedrunExtras.Developers).Result : "Unknown", true)
                     .AddField("Publishers", (game.Publishers.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result : "Unknown", true)
-                    .AddField("Genres", (game.Genres.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(game.Genres, SpeedrunExtras.Genres).Result : "Unknown", true)
                     .AddField("Platforms", (game.Platforms.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result : "Unknown", true)
+                    .AddField("Genres", (game.Genres.Count > 0) ? SpeedrunService.GetSpeedrunExtraAsync(game.Genres, SpeedrunExtras.Genres).Result : "Unknown", true)
                     .WithFooter($"ID: {game.ID} - Abbreviation: {game.Abbreviation}")
                     .WithThumbnailUrl(game.Assets.CoverLarge.URL ?? game.Assets.Icon.URL)
                     .WithUrl(game.WebLink)

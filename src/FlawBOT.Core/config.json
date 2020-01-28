@@ -1,14 +1,14 @@
 {
   "prefix": ".",
-  "discord": null,
-  "google": null,
-  "steam": null,
-  "imgur": null,
-  "omdb": null,
-  "twitch": null,
-  "nasa": null,
-  "teamworktf": null,
-  "tradetf": null,
-  "news": null,
-  "goodreads": null
+  "discord": "MzM5ODMzMDI5MDEzMDEyNDgz.DWe6DQ.4RB9ffo_OVOnWICVOwLz8EIwN5w",
+  "google": "AIzaSyCH6WwRqp9496h6g7Gw_gjZOR0WIosNcyQ",
+  "steam": "CB6352D987CBA5DC58CC09AB615E4EC8",
+  "imgur": "b1ab1068009d2c6",
+  "omdb": "76c8889f",
+  "twitch": "ylc3xvh9mbtemvfp2xdw6s5zqtxyb2",
+  "nasa": "4beX5VQWJ2S9vVLFpO22iQaDuDAFejO4oWFgnGUL",
+  "teamworktf": "CAYpIqrbaw4WgZcmBd61htfiePyoVzHJ",
+  "tradetf": "4e0227274ac55f7c104f726acd11c23f",
+  "news": "b7c080f4bf6a4e939cfd6068fae01b4d",
+  "goodreads": "R0H6pO6epFQuCalNc5ROQ"
 }

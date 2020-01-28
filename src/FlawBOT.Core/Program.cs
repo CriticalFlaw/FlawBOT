@@ -54,7 +54,7 @@ namespace FlawBOT
                 Token = TokenHandler.Tokens.DiscordToken,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                LogLevel = LogLevel.Info,
+                LogLevel = LogLevel.Debug,
                 UseInternalLogHandler = false,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250

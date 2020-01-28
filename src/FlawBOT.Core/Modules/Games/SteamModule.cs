@@ -26,36 +26,33 @@ namespace FlawBOT.Modules
         public async Task SteamGame(CommandContext ctx,
             [Description("Game to find on Steam")] [RemainingText] string query = "Team Fortress 2")
         {
-            var check = false;
-            while (check == false)
-                try
-                {
-                    var app = SteamService.GetSteamAppAsync(query).Result;
-                    var output = new DiscordEmbedBuilder()
-                        .WithTitle(app.Name)
-                        .WithDescription((Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : app.DetailedDescription.Substring(0, 250) + "...", "<[^>]*>", "")) ?? "Unknown")
-                        .AddField("Release Date", app.ReleaseDate.Date ?? "Unknown", true)
-                        .AddField("Developers", app.Developers[0] ?? "Unknown", true)
-                        .AddField("Publisher", app.Publishers[0] ?? "Unknown", true)
-                        .AddField("Price", app.PriceOverview.FinalFormatted ?? "Unknown", true)
-                        .AddField("Metacritic", app.Metacritic.Score.ToString() ?? "Unknown", true)
-                        .WithThumbnailUrl(app.HeaderImage)
-                        .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId.ToString())
-                        .WithFooter("App ID: " + app.SteamAppId.ToString())
-                        .WithColor(new DiscordColor("#1B2838"));
+            try
+            {
+                var app = SteamService.GetSteamAppAsync(query).Result;
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(app.Name)
+                    .WithDescription((Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : app.DetailedDescription.Substring(0, 250) + "...", "<[^>]*>", "")) ?? "Unknown")
+                    .AddField("Release Date", app.ReleaseDate.Date ?? "Unknown", true)
+                    .AddField("Developers", app.Developers[0] ?? "Unknown", true)
+                    .AddField("Publisher", app.Publishers[0] ?? "Unknown", true)
+                    .AddField("Price", app.PriceOverview.FinalFormatted ?? "Unknown", true)
+                    .AddField("Metacritic", app.Metacritic.Score.ToString() ?? "Unknown", true)
+                    .WithThumbnailUrl(app.HeaderImage)
+                    .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId.ToString())
+                    .WithFooter("App ID: " + app.SteamAppId.ToString())
+                    .WithColor(new DiscordColor("#1B2838"));
 
-                    var genres = new StringBuilder();
-                    foreach (var genre in app.Genres.Take(3))
-                        genres.Append(genre).Append('\n');
-                    output.AddField("Types", genres.ToString() ?? "Unknown", true);
+                var genres = new StringBuilder();
+                foreach (var genre in app.Genres.Take(3))
+                    genres.Append(genre).Append('\n');
+                output.AddField("Types", genres.ToString() ?? "Unknown", true);
 
-                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
-                    check = true;
-                }
-                catch
-                {
-                    check = false;
-                }
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            }
+            catch
+            {
+                await ctx.RespondAsync("Unable to retrieve game information from the Steam API.").ConfigureAwait(false);
+            }
         }
 
         #endregion COMMAND_GAME

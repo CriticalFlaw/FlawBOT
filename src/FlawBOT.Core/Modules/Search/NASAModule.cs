@@ -25,9 +25,8 @@ namespace FlawBOT.Modules
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.Title)
-                    .WithDescription(results.Description)
                     .WithImageUrl(results.ImageHD ?? results.ImageSD)
-                    .WithFooter(results.Date + " " + (results.Copyright ?? ""))
+                    .WithFooter(results.Description)
                     .WithColor(new DiscordColor("#0B3D91"));
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }

@@ -134,6 +134,20 @@ namespace FlawBOT.Modules
 
         #endregion COMMAND_INFO
 
+        #region COMMAND_JOIN
+
+        [Command("join")]
+        [Aliases("j")]
+        [Description("Be placed into a specified voice channel")]
+        public async Task JoinVoiceChannel(CommandContext ctx,
+            [Description("Name of voice channel to join")] [RemainingText] DiscordChannel channel = null)
+        {
+            if (channel.Type == ChannelType.Voice)
+                await ctx.Member.PlaceInAsync(channel).ConfigureAwait(false);
+        }
+
+        #endregion COMMAND_JOIN
+
         #region CHANNEL_PURGE
 
         [Command("purge")]

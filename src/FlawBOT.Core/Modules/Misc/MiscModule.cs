@@ -25,10 +25,8 @@ namespace FlawBOT.Modules
         public Task EightBall(CommandContext ctx,
             [Description("Question to ask the 8-Ball")] [RemainingText] string question = "")
         {
-            if (string.IsNullOrWhiteSpace(question))
-                return BotServices.SendEmbedAsync(ctx, Resources.ERR_8BALL_QUESTION, EmbedType.Warning);
             var output = new DiscordEmbedBuilder()
-                .WithDescription(":8ball: " + ctx.User.Mention + " " + EightBallService.GetAnswer())
+                .WithDescription(":8ball: " + EightBallService.GetAnswer() + "(" + ctx.User.Mention + ")")
                 .WithColor(DiscordColor.Black);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -44,7 +42,7 @@ namespace FlawBOT.Modules
         {
             var results = CatService.GetCatFactAsync().Result;
             var output = new DiscordEmbedBuilder()
-                .WithTitle($":cat: {JObject.Parse(results)["fact"]}")
+                .WithDescription($":cat: {JObject.Parse(results)["fact"]}")
                 .WithColor(DiscordColor.Orange);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
@@ -62,7 +60,6 @@ namespace FlawBOT.Modules
             if (string.IsNullOrWhiteSpace(results))
                 await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
-                .WithTitle(":cat: Meow!")
                 .WithImageUrl(results)
                 .WithColor(DiscordColor.Orange);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
@@ -79,7 +76,7 @@ namespace FlawBOT.Modules
         {
             var random = new Random();
             var output = new DiscordEmbedBuilder()
-                .WithDescription(ctx.User.Mention + " flipped " + Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
+                .WithDescription(ctx.User.Username + " flipped a coin and got " + Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
                 .WithColor(SharedData.DefaultColor);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -113,13 +110,13 @@ namespace FlawBOT.Modules
         #region COMMAND_DICEROLL
 
         [Command("diceroll")]
-        [Aliases("dice", "roll", "rolldice")]
+        [Aliases("dice", "roll", "rolldice", "die")]
         [Description("Roll a six-sided die")]
         public Task RollDice(CommandContext ctx)
         {
             var random = new Random();
             var output = new DiscordEmbedBuilder()
-                .WithDescription(ctx.User.Mention + " rolled a " + Formatter.Bold(random.Next(1, 7).ToString()))
+                .WithDescription(ctx.User.Username + " rolled a die and got " + Formatter.Bold(random.Next(1, 7).ToString()))
                 .WithColor(SharedData.DefaultColor);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -139,7 +136,6 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":dog: Woof!")
                     .WithImageUrl(results.Message)
                     .WithColor(DiscordColor.Brown);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);

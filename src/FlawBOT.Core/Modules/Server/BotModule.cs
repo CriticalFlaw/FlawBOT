@@ -116,7 +116,7 @@ namespace FlawBOT.Modules
             [Description("Message for the bot to repeat")] [RemainingText] string message)
         {
             await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await ctx.RespondAsync((string.IsNullOrWhiteSpace(message)) ? ":thinking:" : message).ConfigureAwait(false);
+            await ctx.RespondAsync(message ?? ":thinking:").ConfigureAwait(false);
         }
 
         #endregion COMMAND_SAY
@@ -187,7 +187,7 @@ namespace FlawBOT.Modules
         public async Task SetBotStatus(CommandContext ctx,
             [Description("Activity Status. Online, Idle, DND or Offline")] [RemainingText] string status)
         {
-            status = (string.IsNullOrWhiteSpace(status)) ? "ONLINE" : status;
+            status = status ?? "ONLINE";
             switch (status.Trim().ToUpperInvariant())
             {
                 case "OFF":

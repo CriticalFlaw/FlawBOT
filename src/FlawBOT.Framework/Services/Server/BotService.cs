@@ -42,8 +42,16 @@ namespace FlawBOT.Framework.Services
                     break;
             }
             var output = new DiscordEmbedBuilder()
-                .WithTitle(prefix + message)
+                .WithDescription(prefix + message)
                 .WithColor(color);
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+        }
+
+        public static async Task SendUserStateChangeAsync(CommandContext ctx, UserStateChange state, DiscordMember user, string reason)
+        {
+            var output = new DiscordEmbedBuilder()
+                .WithDescription($"{state}: {user.DisplayName}#{user.Discriminator}\nIdentifier: {user.Id}\nReason: {reason}\nIssued by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}")
+                .WithColor(DiscordColor.Green);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 

@@ -16,7 +16,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query)
         {
-            query = (string.IsNullOrWhiteSpace(query)) ? GetRandomPokemonAsync() : query;
+            query = query ?? GetRandomPokemonAsync();
             var results = await _http.GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim()).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<PokemonCards>(results);
         }

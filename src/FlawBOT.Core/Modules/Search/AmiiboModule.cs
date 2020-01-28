@@ -6,6 +6,7 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
@@ -38,7 +39,7 @@ namespace FlawBOT.Modules
                         .AddField(":flag_eu: Release:", amiibo.ReleaseDate.European, true)
                         .AddField(":flag_au: Release:", amiibo.ReleaseDate.Australian, true)
                         .WithImageUrl(amiibo.Image)
-                        .WithFooter((results.Amiibo.Count > 1) ? "Type 'next' within 10 seconds for the next amiibo" : "This is the only amiibo of this name")
+                        .WithFooter(!amiibo.Equals(results.Amiibo.Last()) ? "Type 'next' within 10 seconds for the next amiibo" : "This is the last found amiibo on the list.")
                         .WithColor(new DiscordColor("#E70009"));
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
@@ -46,7 +47,8 @@ namespace FlawBOT.Modules
                     var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
+                    if (!amiibo.Equals(results.Amiibo.Last()))
+                        await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
             }
         }

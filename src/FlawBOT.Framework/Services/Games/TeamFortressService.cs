@@ -52,7 +52,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + NormalizedMapName(query) + "?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
+            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + query + "?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<TeamworkMap>(results);
         }
 

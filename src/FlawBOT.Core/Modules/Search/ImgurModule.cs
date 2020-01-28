@@ -14,6 +14,7 @@ namespace FlawBOT.Modules
         #region COMMAND_IMGUR
 
         [Command("imgur")]
+        [Aliases("image")]
         [Description("Retrieve an imager from Imgur")]
         public async Task Imgur(CommandContext ctx,
             [Description("Search query to pass to Imgur")] [RemainingText] string query)

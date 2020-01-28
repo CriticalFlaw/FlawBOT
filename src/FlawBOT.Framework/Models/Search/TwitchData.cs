@@ -12,7 +12,7 @@ namespace FlawBOT.Framework.Models
     public class Stream
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public string ID { get; set; }
 
         [JsonProperty("user_id")]
         public int UserID { get; set; }

@@ -31,9 +31,9 @@ namespace FlawBOT.Framework.Services
             var output = new DiscordEmbedBuilder()
                 .WithTitle(data.Episode.Title)
                 .AddField("Season/Episode", data.Episode.Key, true)
-                .AddField("Air Date", data.Episode.OriginalAirDate, true)
                 .AddField("Writer", data.Episode.Writer, true)
                 .AddField("Director", data.Episode.Director, true)
+                .WithFooter("Original Air Date: " + data.Episode.OriginalAirDate)
                 .WithImageUrl($"https://{site}.com/img/{data.Frame.Episode}/{data.Frame.Timestamp}.jpg")
                 .WithColor(new DiscordColor("#FFBB22"))
                 .WithUrl(data.Episode.WikiLink);

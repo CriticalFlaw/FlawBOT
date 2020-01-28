@@ -28,7 +28,7 @@ namespace FlawBOT.Common
             if (!string.IsNullOrWhiteSpace(name))
             {
                 output.WithTitle(name);
-                desc = string.IsNullOrWhiteSpace(description) ? "No description provided." : description;
+                desc = description ?? "No description provided.";
             }
             output.WithDescription(desc);
             return new CommandHelpMessage(embed: output);
@@ -48,7 +48,7 @@ namespace FlawBOT.Common
                     {
                         ab.Append(Formatter.InlineCode($"[{CommandsNext.GetUserFriendlyTypeName(arg.Type)}]"));
                         ab.Append(" ");
-                        ab.Append(string.IsNullOrWhiteSpace(arg.Description) ? "No description provided." : arg.Description);
+                        ab.Append(arg.Description ?? "No description provided.");
                         if (arg.IsOptional)
                         {
                             ab.Append(" (def: ").Append(Formatter.InlineCode(arg.DefaultValue is null ? "None" : arg.DefaultValue.ToString())).Append(")");
@@ -56,7 +56,7 @@ namespace FlawBOT.Common
                         }
                         ab.AppendLine();
                     }
-                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", string.IsNullOrWhiteSpace(ab.ToString()) ? "No arguments." : ab.ToString());
+                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", ab.ToString() ?? "No arguments.");
                 }
             }
 

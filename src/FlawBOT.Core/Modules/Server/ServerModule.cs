@@ -7,6 +7,7 @@ using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,7 +51,8 @@ namespace FlawBOT.Modules
         {
             var output = new DiscordEmbedBuilder()
                 .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", iconUrl: string.IsNullOrEmpty(ctx.Guild.Owner.AvatarHash) ? null : ctx.Guild.Owner.AvatarUrl)
-                .WithTitle(ctx.Guild.Name + $" (ID: {ctx.Guild.Id.ToString()})")
+                .WithTitle(ctx.Guild.Name)
+                .WithDescription("ID: " + ctx.Guild.Id.ToString())
                 .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Member Count", ctx.Guild.MemberCount.ToString(), true)
                 .AddField("Region", ctx.Guild.VoiceRegion.Name.ToUpperInvariant(), true)
@@ -70,7 +72,7 @@ namespace FlawBOT.Modules
 
             var emojis = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis)
-                emojis.Append(emoji.Value.Name);
+                emojis.Append(emoji.Value.Name + (!emoji.Equals(ctx.Guild.Emojis.Last()) ? ", " : string.Empty));
             if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
@@ -101,7 +103,7 @@ namespace FlawBOT.Modules
             int count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
             if (count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, "No inactive members found to prune", EmbedType.Warning).ConfigureAwait(false);
+                await ctx.RespondAsync("No inactive members found to prune").ConfigureAwait(false);
                 return;
             }
             var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);

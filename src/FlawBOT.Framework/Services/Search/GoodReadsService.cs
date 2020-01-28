@@ -26,7 +26,7 @@ namespace FlawBOT.Framework.Services.Search
             {
                 var results = new StringBuilder();
                 // TODO: Add the day and month
-                results.Append(book.PublicationYear.Text);
+                results.Append($"{book.PublicationMonth.Text ?? "01"}-{book.PublicationDay.Text ?? "01"}-{book.PublicationYear.Text}");
                 return results.ToString();
             }
             catch

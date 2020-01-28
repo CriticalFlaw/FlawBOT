@@ -41,7 +41,7 @@ namespace FlawBOT.Framework.Services
                 {
                     var output = await _http.GetStringAsync(Resources.API_Speedrun + search.ToString().ToLowerInvariant() + "/" + query).ConfigureAwait(false);
                     var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output).Data.Name;
-                    results.Append(name + "\n");
+                    results.Append(name + (query.Equals(queryList.Take(3).Last()) ? string.Empty : ", "));
                 }
                 return results.ToString();
             }
