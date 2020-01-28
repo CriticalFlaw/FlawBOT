@@ -25,10 +25,8 @@ namespace FlawBOT.Modules
         public Task EightBall(CommandContext ctx,
             [Description("Question to ask the 8-Ball")] [RemainingText] string question = "")
         {
-            if (string.IsNullOrWhiteSpace(question))
-                return BotServices.SendEmbedAsync(ctx, Resources.ERR_8BALL_QUESTION, EmbedType.Warning);
             var output = new DiscordEmbedBuilder()
-                .WithDescription(":8ball: " + ctx.User.Mention + " " + EightBallService.GetAnswer())
+                .WithDescription(":8ball: " + EightBallService.GetAnswer() + "(" + ctx.User.Mention + ")")
                 .WithColor(DiscordColor.Black);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -44,9 +42,9 @@ namespace FlawBOT.Modules
         {
             var results = CatService.GetCatFactAsync().Result;
             var output = new DiscordEmbedBuilder()
-                .WithTitle($":cat: {JObject.Parse(results)["fact"]}")
+                .WithDescription($":cat: {JObject.Parse(results)["fact"]}")
                 .WithColor(DiscordColor.Orange);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CATFACT
@@ -60,12 +58,11 @@ namespace FlawBOT.Modules
         {
             var results = CatService.GetCatPhotoAsync().Result;
             if (string.IsNullOrWhiteSpace(results))
-                await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
-                .WithTitle(":cat: Meow!")
                 .WithImageUrl(results)
                 .WithColor(DiscordColor.Orange);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CATPIC
@@ -79,7 +76,7 @@ namespace FlawBOT.Modules
         {
             var random = new Random();
             var output = new DiscordEmbedBuilder()
-                .WithDescription(ctx.User.Mention + " flipped " + Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
+                .WithDescription(ctx.User.Username + " flipped a coin and got " + Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
                 .WithColor(SharedData.DefaultColor);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -96,7 +93,7 @@ namespace FlawBOT.Modules
         {
             var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
             if (!regex.Success)
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_COLOR_INVALID, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_COLOR_INVALID, EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -104,7 +101,7 @@ namespace FlawBOT.Modules
                     .AddField("RGB:", $"{color.R} {color.G} {color.B}", true)
                     .AddField("Decimal:", color.Value.ToString(), true)
                     .WithColor(color);
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 
@@ -113,13 +110,13 @@ namespace FlawBOT.Modules
         #region COMMAND_DICEROLL
 
         [Command("diceroll")]
-        [Aliases("dice", "roll", "rolldice")]
+        [Aliases("dice", "roll", "rolldice", "die")]
         [Description("Roll a six-sided die")]
         public Task RollDice(CommandContext ctx)
         {
             var random = new Random();
             var output = new DiscordEmbedBuilder()
-                .WithDescription(ctx.User.Mention + " rolled a " + Formatter.Bold(random.Next(1, 7).ToString()))
+                .WithDescription(ctx.User.Username + " rolled a die and got " + Formatter.Bold(random.Next(1, 7).ToString()))
                 .WithColor(SharedData.DefaultColor);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -135,14 +132,13 @@ namespace FlawBOT.Modules
         {
             var results = DogService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_DOG_PHOTO, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_DOG_PHOTO, EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(":dog: Woof!")
                     .WithImageUrl(results.Message)
                     .WithColor(DiscordColor.Brown);
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 
@@ -157,9 +153,9 @@ namespace FlawBOT.Modules
             [Description("User to say hello to")] [RemainingText] DiscordMember member)
         {
             if (member is null)
-                await ctx.RespondAsync($":wave: Hello, " + ctx.User.Mention);
+                await ctx.RespondAsync($":wave: Hello, " + ctx.User.Mention).ConfigureAwait(false);
             else
-                await ctx.RespondAsync($":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name + ". Enjoy your stay!");
+                await ctx.RespondAsync($":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name + ". Enjoy your stay!").ConfigureAwait(false);
         }
 
         #endregion COMMAND_HELLO
@@ -175,7 +171,7 @@ namespace FlawBOT.Modules
             if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out IPAddress ip)) return;
             var results = GoogleService.GetIPLocationAsync(ip).Result;
             if (results.Status != "success")
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -185,7 +181,7 @@ namespace FlawBOT.Modules
                     .AddField("Latitude", results.Latitude.ToString(), true)
                     .WithFooter($"IP: {results.Query}")
                     .WithColor(new DiscordColor("#4d2f63"));
-                await ctx.RespondAsync(embed: output.Build());
+                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
 

@@ -61,15 +61,6 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :8ball: The almighty 8 ball requests a question..
-        /// </summary>
-        internal static string ERR_8BALL_QUESTION {
-            get {
-                return ResourceManager.GetString("ERR_8BALL_QUESTION", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Channel with the same name already exists..
         /// </summary>
         internal static string ERR_CHANNEL_EXISTS {
@@ -106,7 +97,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to retrieve a dog photo..
+        ///   Looks up a localized string similar to Unable to reach the Dog.CEO API..
         /// </summary>
         internal static string ERR_DOG_PHOTO {
             get {
@@ -169,16 +160,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid number of minutes, try **.poll 3 Should I order pizza tonight?**.
-        /// </summary>
-        internal static string ERR_POLL_MINUTES {
-            get {
-                return ResourceManager.GetString("ERR_POLL_MINUTES", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You need to provide a poll question..
+        ///   Looks up a localized string similar to Please provide a poll question..
         /// </summary>
         internal static string ERR_POLL_QUESTION {
             get {
@@ -250,7 +232,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No results found!.
+        ///   Looks up a localized string similar to No results found..
         /// </summary>
         internal static string NOT_FOUND_GENERIC {
             get {
@@ -259,7 +241,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Location not found!.
+        ///   Looks up a localized string similar to Location not found..
         /// </summary>
         internal static string NOT_FOUND_LOCATION {
             get {
@@ -268,7 +250,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reddit post not found!.
+        ///   Looks up a localized string similar to Reddit post not found..
         /// </summary>
         internal static string NOT_FOUND_REDDIT {
             get {
@@ -277,16 +259,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Smash character not found or not yet available! See the available characters here: http://kuroganehammer.com/Ultimate.
-        /// </summary>
-        internal static string NOT_FOUND_SMASH {
-            get {
-                return ResourceManager.GetString("NOT_FOUND_SMASH", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Subreddit not found!.
+        ///   Looks up a localized string similar to Subreddit not found..
         /// </summary>
         internal static string NOT_FOUND_SUBREDDIT {
             get {
@@ -295,7 +268,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch channel not found or it&apos;s offline..
+        ///   Looks up a localized string similar to Twitch channel is offline or was not found..
         /// </summary>
         internal static string NOT_FOUND_TWITCH {
             get {

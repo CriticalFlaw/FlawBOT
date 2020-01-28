@@ -11,12 +11,11 @@
     <LangVersion>7.2</LangVersion>
     <AssemblyVersion>2.4.0.0</AssemblyVersion>
     <FileVersion>2.4.0.0</FileVersion>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <AssemblyName>FlawBOT.Core</AssemblyName>
     <RootNamespace>FlawBOT.Core</RootNamespace>
     <PackageTags />
     <Description>Multipurpose Discord bot written in C# using DSharpPlus. Application Core.</Description>
-    <PackageProjectUrl>https://discordbots.org/bot/339833029013012483</PackageProjectUrl>
+    <PackageProjectUrl>https://top.gg/bot/339833029013012483</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CriticalFlaw/FlawBOT</RepositoryUrl>
     <RepositoryType />
     <Company>CriticalFlaw</Company>
@@ -41,9 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00625" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00625" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00625" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00656" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00656" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00656" />
   </ItemGroup>
 
   <ItemGroup>

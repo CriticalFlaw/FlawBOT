@@ -49,4 +49,15 @@ namespace FlawBOT.Framework.Models
         Missing,
         Error
     }
+
+    public enum UserStateChange
+    {
+        Ban,
+        Deafen,
+        Kick,
+        Mute,
+        Unban,
+        Undeafen,
+        Unmute
+    }
 }
