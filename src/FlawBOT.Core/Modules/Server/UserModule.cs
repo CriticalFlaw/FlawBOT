@@ -20,18 +20,17 @@ namespace FlawBOT.Modules
         #region COMMAND_AVATAR
 
         [Command("avatar")]
-        [Aliases("getavatar")]
-        [Description("Retrieve server user's avatar")]
+        [Aliases("getavatar", "image", "pfp")]
+        [Description("Retrieve server user's profile picture")]
         public async Task GetAvatar(CommandContext ctx,
-            [Description("Server user whose avatar to retrieve")] [RemainingText] DiscordMember member)
+            [Description("Server user whose profile picture to retrieve")] [RemainingText] DiscordMember member)
         {
             member = member ?? ctx.Member;
             var output = new DiscordEmbedBuilder()
-                .WithDescription(member.Mention + "'s avatar...")
                 .WithImageUrl(member.AvatarUrl)
-                .WithUrl("https://images.google.com/searchbyimage?image_url=" + member.AvatarUrl)
+                .WithUrl("https://images.google.com/searchbyimage?image_url=" + member.AvatarUrl)   // UNUSED
                 .WithColor(DiscordColor.Lilac);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_AVATAR
@@ -46,13 +45,12 @@ namespace FlawBOT.Modules
             [Description("Reason for the ban")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
-                await BotServices.SendEmbedAsync(ctx, "You cannot ban yourself!", EmbedType.Warning);
+                await ctx.RespondAsync("You cannot ban yourself.").ConfigureAwait(false);
             else
             {
-                var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
-                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await ctx.Guild.BanMemberAsync(member, 7, ustr + ": " + rstr);
-                await BotServices.SendEmbedAsync(ctx, $"Banned: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nBanned by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
+                await ctx.Guild.BanMemberAsync(member, 7, reason).ConfigureAwait(false);
+                await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+                await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Ban, member, reason ?? "No reason provided.");
             }
         }
 
@@ -61,6 +59,7 @@ namespace FlawBOT.Modules
         #region COMMAND_DEAFEN
 
         [Command("deafen")]
+        [Aliases("deaf")]
         [Description("Deafen server user")]
         [RequirePermissions(Permissions.DeafenMembers)]
         public async Task Deafen(CommandContext ctx,
@@ -68,12 +67,12 @@ namespace FlawBOT.Modules
             [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
             if (member.IsDeafened)
-                await BotServices.SendEmbedAsync(ctx, $"{member.DisplayName}#{member.Discriminator} is already **deafened**!", EmbedType.Warning);
+                await ctx.RespondAsync($"{member.DisplayName}#{member.Discriminator} is already **deafened**.").ConfigureAwait(false);
             else
             {
-                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await member.SetDeafAsync(true, rstr);
-                await BotServices.SendEmbedAsync(ctx, $"Deafened: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nDeafened by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
+                await member.SetDeafAsync(true, reason).ConfigureAwait(false);
+                await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+                await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Deafen, member, reason ?? "No reason provided.");
             }
         }
 
@@ -93,12 +92,12 @@ namespace FlawBOT.Modules
             var perms = permsobj.ToPermissionString();
             var output = new DiscordEmbedBuilder()
                 .WithTitle($"@{member.Username}#{member.Discriminator}")
-                .WithDescription("Nickname: ")
-                .AddField("ID", member.Id.ToString(), true)
+                .WithDescription("ID: " + member.Id.ToString())
                 .AddField("Registered on", member.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Joined on", member.JoinedAt.DateTime.ToString(CultureInfo.InvariantCulture), true)
-                .AddField("Muted?", member.IsMuted ? "YES" : "NO", true)
-                .AddField("Deafened?", member.IsDeafened ? "YES" : "NO", true)
+                .AddField("Nickname", member.Nickname ?? "None", true)
+                .AddField("Muted?", member.IsMuted ? "Yes" : "No", true)
+                .AddField("Deafened?", member.IsDeafened ? "Yes" : "No", true)
                 .WithThumbnailUrl(member.AvatarUrl)
                 .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
                 .WithColor(member.Color);
@@ -106,21 +105,15 @@ namespace FlawBOT.Modules
                 output.Title += " __[BOT]__ ";
             if (member.IsOwner)
                 output.Title += " __[OWNER]__ ";
-            output.AddField("Verified?", member.Verified == true ? "YES" : "NO", true);
-            output.AddField("Secured?", member.MfaEnabled == true ? "YES" : "NO", true);
-            if (!string.IsNullOrWhiteSpace(member.Nickname))
-                output.Description += member.Nickname;
+            output.AddField("Verified?", member.Verified == true ? "Yes" : "No", true);
             foreach (var role in member.Roles)
                 roles.Append($"[`{role.Name}`] ");
-            if (roles.Length == 0)
-                roles.Append("*None*");
-            output.AddField("Roles", roles.ToString(), true);
+            if (roles.Length > 0)
+                output.AddField("Roles", roles.ToString(), true);
             if (((permsobj & Permissions.Administrator) | (permsobj & Permissions.AccessChannels)) == 0)
                 perms = $"**This user cannot see this channel!**\n{perms}";
-            if (string.IsNullOrWhiteSpace(perms))
-                perms = "*None*";
-            output.AddField("Permissions", perms);
-            await ctx.RespondAsync(embed: output.Build());
+            output.AddField("Permissions", perms ?? "*None*");
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_INFO
@@ -128,6 +121,7 @@ namespace FlawBOT.Modules
         #region COMMAND_KICK
 
         [Command("kick")]
+        [Aliases("remove")]
         [Description("Kick server user")]
         [RequirePermissions(Permissions.KickMembers)]
         public async Task Kick(CommandContext ctx,
@@ -135,13 +129,12 @@ namespace FlawBOT.Modules
             [Description("Reason for the kick")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
-                await BotServices.SendEmbedAsync(ctx, "You cannot kick yourself!", EmbedType.Warning);
+                await ctx.RespondAsync("You cannot kick yourself.").ConfigureAwait(false);
             else
             {
-                var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
-                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await member.RemoveAsync($"{ustr}: {rstr}");
-                await BotServices.SendEmbedAsync(ctx, $"Kicked: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nKicked by {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
+                await member.RemoveAsync(reason).ConfigureAwait(false);
+                await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+                await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Kick, member, reason ?? "No reason provided.");
             }
         }
 
@@ -150,6 +143,7 @@ namespace FlawBOT.Modules
         #region COMMAND_MUTE
 
         [Command("mute")]
+        [Aliases("silence")]
         [Description("Mute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
         public async Task Mute(CommandContext ctx,
@@ -157,13 +151,12 @@ namespace FlawBOT.Modules
             [Description("Reason for the mute")] [RemainingText] string reason = null)
         {
             if (member.IsMuted)
-                await BotServices.SendEmbedAsync(ctx, $"{member.DisplayName}#{member.Discriminator} is already **muted**!", EmbedType.Warning);
+                await ctx.RespondAsync($"{member.DisplayName}#{member.Discriminator} is already **muted**.").ConfigureAwait(false);
             else
             {
-                var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} ({ctx.User.Id})";
-                var rstr = string.IsNullOrWhiteSpace(reason) ? "No reason provided" : $": {reason}";
-                await member.SetMuteAsync(true, $"{ustr}: {rstr}");
-                await BotServices.SendEmbedAsync(ctx, $"Muted: {member.DisplayName}#{member.Discriminator} (ID:{member.Id})\nReason: {rstr}\nMuted by {ctx.Member.DisplayName}#{ctx.Member.Discriminator}", EmbedType.Good);
+                await member.SetMuteAsync(true, reason).ConfigureAwait(false);
+                await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+                await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Mute, member, reason ?? "No reason provided.");
             }
         }
 
@@ -172,7 +165,7 @@ namespace FlawBOT.Modules
         #region COMMAND_NICKNAME
 
         [Command("nickname")]
-        [Aliases("setnick")]
+        [Aliases("setnick", "nick")]
         [Description("Set server user's nickname")]
         [RequireUserPermissions(Permissions.ChangeNickname)]
         public async Task SetUserName(CommandContext ctx,
@@ -181,9 +174,9 @@ namespace FlawBOT.Modules
         {
             member = member ?? ctx.Member;
             var nickname = member.DisplayName;
-            await member.ModifyAsync(usr => usr.Nickname = name);
-            if (!string.IsNullOrWhiteSpace(name))
-                await BotServices.SendEmbedAsync(ctx, $"{nickname}'s nickname has been changed to **{name}**", EmbedType.Good);
+            await member.ModifyAsync(usr => usr.Nickname = name).ConfigureAwait(false);
+            var response = (!string.IsNullOrWhiteSpace(name)) ? $"{nickname}'s nickname has been changed to **{name}**" : $"{nickname}'s nickname has been reset.";
+            await BotServices.SendEmbedAsync(ctx, response, EmbedType.Good).ConfigureAwait(false);
         }
 
         #endregion COMMAND_NICKNAME
@@ -206,7 +199,7 @@ namespace FlawBOT.Modules
                 .WithTitle($"Permissions for {member.Username} in #{channel.Name}:")
                 .WithDescription(perms)
                 .WithColor(DiscordColor.Turquoise);
-            await ctx.RespondAsync(embed: output.Build());
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_PERMS
@@ -217,11 +210,13 @@ namespace FlawBOT.Modules
         [Description("Unban server user")]
         [RequirePermissions(Permissions.BanMembers)]
         public async Task Remove(CommandContext ctx,
-            [Description("Discord user ID to unban from the server")] ulong userID)
+            [Description("Discord user ID to unban from the server")] ulong userID,
+            [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
             var member = await ctx.Client.GetUserAsync(userID).ConfigureAwait(false);
-            await ctx.Guild.UnbanMemberAsync(member).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx, $"Unbanned {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await ctx.Guild.UnbanMemberAsync(member, reason ?? "No reason provided.").ConfigureAwait(false);
+            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+            await ctx.RespondAsync($"Unbanned Discord User #{member} from the server.").ConfigureAwait(false);
         }
 
         #endregion COMMAND_UNBAN
@@ -229,13 +224,16 @@ namespace FlawBOT.Modules
         #region COMMAND_UNDEAFEN
 
         [Command("undeafen")]
+        [Aliases("undeaf")]
         [Description("Undeafen server user")]
         [RequirePermissions(Permissions.DeafenMembers)]
         public async Task Undeafen(CommandContext ctx,
-            [Description("Server user to undeafen")] [RemainingText] DiscordMember member)
+            [Description("Server user to undeafen")] [RemainingText] DiscordMember member,
+            [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
-            await member.SetDeafAsync(false);
-            await BotServices.SendEmbedAsync(ctx, $"Undeafened {member.DisplayName}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await member.SetDeafAsync(false, reason).ConfigureAwait(false);
+            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Undeafen, member, reason ?? "No reason provided");
         }
 
         #endregion COMMAND_UNDEAFEN
@@ -246,13 +244,27 @@ namespace FlawBOT.Modules
         [Description("Unmute server user")]
         [RequirePermissions(Permissions.MuteMembers)]
         public async Task Unmute(CommandContext ctx,
-            [Description("Server user to unmute")] [RemainingText] DiscordMember member)
+            [Description("Server user to unmute")] [RemainingText] DiscordMember member,
+            [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
-            var ustr = $"{ctx.User.Username}#{ctx.User.Discriminator} (ID: {ctx.User.Id})";
-            await member.SetMuteAsync(false, ustr);
-            await BotServices.SendEmbedAsync(ctx, $"Unmuted {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await member.SetMuteAsync(false, reason).ConfigureAwait(false);
+            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
+            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Unmute, member, reason ?? "No reason provided");
         }
 
         #endregion COMMAND_UNMUTE
     }
 }
+
+- Code cleanup and improvements.
+- Updated NuGet packages.
+- Updated Twitch and Steam command API services.
+- Reorganized the command modules.
+- Removed the Smash Bros. command.
+- Updated outputs for pokemon, speedrun, steam user, tf2 schema, tf2 server, poll
+- Fixed twitch command not returning results if the follower count is outside the integer range.
+- Fixed the tf2 item schema command not returning higher quality images when available.
+- Certain commands will now remove user messages that called the command.
+- The poll command is now preset to run for three minutes.
+- Fixed an issue where last paginated item would be removed if it was the last one on the list when the user calls for the next list item.
+- Fixed various text grammar and wording inconsistencies.

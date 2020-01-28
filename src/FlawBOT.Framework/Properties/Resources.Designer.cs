@@ -232,7 +232,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://api.twitch.tv/helix/streams/.
+        ///   Looks up a localized string similar to https://api.twitch.tv/helix/.
         /// </summary>
         internal static string API_Twitch {
             get {

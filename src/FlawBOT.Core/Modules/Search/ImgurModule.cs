@@ -14,6 +14,7 @@ namespace FlawBOT.Modules
         #region COMMAND_IMGUR
 
         [Command("imgur")]
+        [Aliases("image")]
         [Description("Retrieve an imager from Imgur")]
         public async Task Imgur(CommandContext ctx,
             [Description("Search query to pass to Imgur")] [RemainingText] string query)
@@ -22,15 +23,15 @@ namespace FlawBOT.Modules
             switch (results)
             {
                 case GalleryAlbum _:
-                    await ctx.RespondAsync(((GalleryAlbum)results).Link);
+                    await ctx.RespondAsync(((GalleryAlbum)results).Link).ConfigureAwait(false);
                     break;
 
                 case GalleryImage _:
-                    await ctx.RespondAsync(((GalleryImage)results).Link);
+                    await ctx.RespondAsync(((GalleryImage)results).Link).ConfigureAwait(false);
                     break;
 
                 default:
-                    await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing);
+                    await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
                     break;
             }
         }

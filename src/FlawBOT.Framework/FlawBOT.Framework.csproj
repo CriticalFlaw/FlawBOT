@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AssemblyVersion>2.4.1.0</AssemblyVersion>
+    <AssemblyVersion>2.4.0.0</AssemblyVersion>
     <Version>2.4.0</Version>
     <FileVersion>2.4.0.0</FileVersion>
     <Authors>CriticalFlaw</Authors>
@@ -15,17 +15,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00625" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00625" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00625" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.41.1.1699" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00656" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00656" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00656" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.43.0.1834" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />
     <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
-    <PackageReference Include="SteamWebAPI2" Version="4.0.8" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="4.6.0" />
-    <PackageReference Include="TwitchLib.Api" Version="3.0.0" />
+    <PackageReference Include="SteamWebAPI2" Version="4.0.14" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
+    <PackageReference Include="TwitchLib.Api" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>

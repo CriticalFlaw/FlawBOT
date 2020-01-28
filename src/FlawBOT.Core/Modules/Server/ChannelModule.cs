@@ -32,11 +32,11 @@ namespace FlawBOT.Modules
             [Description("New category name")] [RemainingText] string name)
         {
             if (!BotServices.CheckChannelName(name))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 var category = await ctx.Guild.CreateChannelCategoryAsync(name.Trim()).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, "Successfully created category " + Formatter.Bold(category.Name), EmbedType.Good);
+                await BotServices.SendEmbedAsync(ctx, "Successfully created category " + Formatter.Bold(category.Name), EmbedType.Good).ConfigureAwait(false);
             }
         }
 
@@ -53,7 +53,7 @@ namespace FlawBOT.Modules
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx, Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name, EmbedType.Good);
+            await BotServices.SendEmbedAsync(ctx, Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name, EmbedType.Good).ConfigureAwait(false);
         }
 
         #endregion CHANNEL_CLEAN
@@ -70,16 +70,16 @@ namespace FlawBOT.Modules
             // Set the current channel for deletion if one isn't provided by the user
             channel = channel ?? ctx.Channel;
 
-            var prompt = await ctx.RespondAsync("You're about to delete the " + Formatter.Bold(channel.ToString()) + "\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.");
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10));
+            var prompt = await ctx.RespondAsync("You're about to delete the " + Formatter.Bold(channel.ToString()) + "\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.").ConfigureAwait(false);
+            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
             if (interactivity.Result is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT);
+                await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
             else
             {
-                await BotServices.RemoveMessage(interactivity.Result);
-                await BotServices.RemoveMessage(prompt);
-                await BotServices.SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(channel.Name), EmbedType.Good);
-                await channel.DeleteAsync();
+                await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+                await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(channel.Name), EmbedType.Good).ConfigureAwait(false);
+                await channel.DeleteAsync().ConfigureAwait(false);
             }
         }
 
@@ -105,8 +105,8 @@ namespace FlawBOT.Modules
                 .WithTitle(channel.Name + $" (ID: {channel.Id})")
                 .WithDescription("Channel topic: " + Formatter.Italic(channel.Topic) ?? "")
                 .AddField("Type", channel.Type.ToString(), true)
-                .AddField("Private", channel.IsPrivate ? "YES" : "NO", true)
-                .AddField("NSFW", channel.IsNSFW ? "YES" : "NO", true)
+                .AddField("Private", channel.IsPrivate ? "Yes" : "No", true)
+                .AddField("NSFW", channel.IsNSFW ? "Yes" : "No", true)
                 .WithThumbnailUrl(ctx.Guild.IconUrl)
                 .WithFooter("Created on " + channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
                 .WithColor(SharedData.DefaultColor);
@@ -134,6 +134,20 @@ namespace FlawBOT.Modules
 
         #endregion COMMAND_INFO
 
+        #region COMMAND_JOIN
+
+        [Command("join")]
+        [Aliases("j")]
+        [Description("Be placed into a specified voice channel")]
+        public async Task JoinVoiceChannel(CommandContext ctx,
+            [Description("Name of voice channel to join")] [RemainingText] DiscordChannel channel = null)
+        {
+            if (channel.Type == ChannelType.Voice)
+                await ctx.Member.PlaceInAsync(channel).ConfigureAwait(false);
+        }
+
+        #endregion COMMAND_JOIN
+
         #region CHANNEL_PURGE
 
         [Command("purge")]
@@ -144,8 +158,8 @@ namespace FlawBOT.Modules
             [Description("Number of messages to purge")] [RemainingText] int limit = 0)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
-            await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == member.Id));
-            await BotServices.SendEmbedAsync(ctx, $"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good);
+            await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == member.Id)).ConfigureAwait(false);
+            await BotServices.SendEmbedAsync(ctx, $"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})", EmbedType.Good).ConfigureAwait(false);
         }
 
         #endregion CHANNEL_PURGE
@@ -161,12 +175,12 @@ namespace FlawBOT.Modules
             [Description("New channel name")] [RemainingText] string name)
         {
             if (!BotServices.CheckChannelName(name))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning).ConfigureAwait(false);
             else
             {
                 var old_name = channel.Name;
-                await channel.ModifyAsync(new Action<ChannelEditModel>(m => m.Name = name.Trim().Replace(" ", "-")));
-                await BotServices.SendEmbedAsync(ctx, $"Successfully renamed the channel " + Formatter.Bold(old_name) + " to " + Formatter.Bold(name), EmbedType.Good);
+                await channel.ModifyAsync(new Action<ChannelEditModel>(m => m.Name = name.Trim().Replace(" ", "-"))).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, $"Successfully renamed the channel " + Formatter.Bold(old_name) + " to " + Formatter.Bold(name), EmbedType.Good).ConfigureAwait(false);
             }
         }
 
@@ -182,13 +196,13 @@ namespace FlawBOT.Modules
             [Description("New text channel name")] [RemainingText] string name = "")
         {
             if (!BotServices.CheckChannelName(name))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning).ConfigureAwait(false);
             else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, true) == 0))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning).ConfigureAwait(false);
             else
             {
-                var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-"));
-                await BotServices.SendEmbedAsync(ctx, "Successfully created the text channel " + Formatter.Bold(channel.Name), EmbedType.Good);
+                var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-")).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Successfully created the text channel " + Formatter.Bold(channel.Name), EmbedType.Good).ConfigureAwait(false);
             }
         }
 
@@ -204,12 +218,12 @@ namespace FlawBOT.Modules
             [Description("New channel topic")] [RemainingText] string topic = "")
         {
             if (topic.Length > 1024)
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_TOPIC, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_TOPIC, EmbedType.Warning).ConfigureAwait(false);
             else
             {
-                await ctx.Channel.ModifyAsync(chn => chn.Topic = topic);
+                await ctx.Channel.ModifyAsync(chn => chn.Topic = topic).ConfigureAwait(false);
                 if (!string.IsNullOrWhiteSpace(topic))
-                    await BotServices.SendEmbedAsync(ctx, "Successfully changed the channel topic to " + Formatter.Bold(topic), EmbedType.Good);
+                    await BotServices.SendEmbedAsync(ctx, "Successfully changed the channel topic to " + Formatter.Bold(topic), EmbedType.Good).ConfigureAwait(false);
             }
         }
 
@@ -225,13 +239,13 @@ namespace FlawBOT.Modules
             [Description("New voice channel name")] [RemainingText] string name = "")
         {
             if (!BotServices.CheckChannelName(name))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning).ConfigureAwait(false);
             else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, true) == 0))
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning).ConfigureAwait(false);
             else
             {
-                var channel = await ctx.Guild.CreateVoiceChannelAsync(name: name.Trim().Replace(" ", "-"));
-                await BotServices.SendEmbedAsync(ctx, "Successfully created the voice channel " + Formatter.Bold(channel.Name), EmbedType.Good);
+                var channel = await ctx.Guild.CreateVoiceChannelAsync(name: name.Trim().Replace(" ", "-")).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Successfully created the voice channel " + Formatter.Bold(channel.Name), EmbedType.Good).ConfigureAwait(false);
             }
         }
 

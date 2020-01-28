@@ -33,7 +33,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = RedditService.GetEmbeddedResults(query, category);
-            await ctx.RespondAsync("Search results for r/" + Formatter.Bold(query), embed: results);
+            await ctx.RespondAsync("Search results for r/" + Formatter.Bold(query), embed: results).ConfigureAwait(false);
         }
 
         #endregion COMMAND_POST
