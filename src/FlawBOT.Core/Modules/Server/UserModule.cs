@@ -255,16 +255,3 @@ namespace FlawBOT.Modules
         #endregion COMMAND_UNMUTE
     }
 }
-
-- Code cleanup and improvements.
-- Updated NuGet packages.
-- Updated Twitch and Steam command API services.
-- Reorganized the command modules.
-- Removed the Smash Bros. command.
-- Updated outputs for pokemon, speedrun, steam user, tf2 schema, tf2 server, poll
-- Fixed twitch command not returning results if the follower count is outside the integer range.
-- Fixed the tf2 item schema command not returning higher quality images when available.
-- Certain commands will now remove user messages that called the command.
-- The poll command is now preset to run for three minutes.
-- Fixed an issue where last paginated item would be removed if it was the last one on the list when the user calls for the next list item.
-- Fixed various text grammar and wording inconsistencies.
