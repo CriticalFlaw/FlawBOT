@@ -1,32 +1,38 @@
 ﻿using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
+using SteamWebAPI2.Interfaces;
+using SteamWebAPI2.Models.GameEconomy;
+using SteamWebAPI2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
     public class TeamFortressService : HttpHandler
     {
-        public static Dictionary<uint, SchemaItem> ItemSchema { get; set; } = new Dictionary<uint, SchemaItem>();
+        public static List<SchemaItem> ItemSchemaList { get; set; } = new List<SchemaItem>();
+        public static SteamWebInterfaceFactory SteamInterface;
 
-        public static SchemaItem GetSchemaItemAsync(string query)
+        public static SchemaItem GetSchemaItem(string query)
         {
-            return ItemSchema.FirstOrDefault(n => n.Value.ItemName.ToLowerInvariant().Contains(query.ToLowerInvariant())).Value;
+            return ItemSchemaList.FirstOrDefault(n => n.ItemName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public static async Task<bool> LoadTF2SchemaAsync()
+        public static async Task<bool> UpdateTF2SchemaAsync()
         {
             try
             {
-                var schema = await _http.GetStringAsync(Resources.API_TradeTF + "?key=" + TokenHandler.Tokens.TFSchemaToken).ConfigureAwait(false);
-                var results = JsonConvert.DeserializeObject<TFItemSchema>(schema);
-                ItemSchema.Clear();
-                foreach (var item in results.Results.Items)
-                    if (!string.IsNullOrWhiteSpace(item.ItemName))
-                        ItemSchema.Add(Convert.ToUInt32(item.DefIndex), item);
+                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var steam = SteamInterface.CreateSteamWebInterface<EconItems>(new HttpClient(), EconItemsAppId.TeamFortress2);
+                var games = await steam.GetSchemaItemsForTF2Async().ConfigureAwait(false);
+                ItemSchemaList.Clear();
+                foreach (var game in games.Data.Result.Items)
+                    if (!string.IsNullOrWhiteSpace(game.Name))
+                        ItemSchemaList.Add(game);
                 return true;
             }
             catch (Exception ex)
@@ -46,14 +52,29 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<List<TeamworkServer>> GetServersAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "quickplay/" + query + "/servers?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
+            try
+            {
+                var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "quickplay/" + query + "/servers?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<List<TeamworkServer>>(results);
+            }
+            catch
+            {
+                return new List<TeamworkServer>();
+            }
         }
 
         public static async Task<TeamworkMap> GetMapStatsAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + query + "?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<TeamworkMap>(results);
+            try
+            {
+                query = NormalizedMapName(query).FirstOrDefault();
+                var results = await _http.GetStringAsync(Resources.API_TeamworkTF + "map-stats/map/" + query + "?key=" + TokenHandler.Tokens.TeamworkToken).ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<TeamworkMap>(results);
+            }
+            catch
+            {
+                return new TeamworkMap();
+            }
         }
 
         public static string NormalizedGameMode(string input)
@@ -87,13 +108,11 @@ namespace FlawBOT.Framework.Services
             }
         }
 
-        public static string NormalizedMapName(string input)
+        public static List<string> NormalizedMapName(string query)
         {
-            input = input.ToLowerInvariant().Split('_')[1];
-            return mapList.Where(x => x.Contains(input)).Take(1).ToString();
+            query = (query.Contains('_')) ? query.ToLowerInvariant().Split('_')[1] : query;
+            return mapList.Where(x => x.Contains(query)).ToList();
         }
-
-        #endregion TEAMWORK.TF
 
         private static readonly List<string> mapList = new List<string>
         {
@@ -212,5 +231,7 @@ namespace FlawBOT.Framework.Services
             "tr_dustbowl",
             "tr_target"
         };
+
+        #endregion TEAMWORK.TF
     }
 }
