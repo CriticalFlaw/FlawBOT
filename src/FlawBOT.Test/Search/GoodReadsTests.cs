@@ -1,16 +1,16 @@
 ﻿using FlawBOT.Framework.Services.Search;
 using NUnit.Framework;
 
-namespace FlawBOT.Test.Search
+namespace SearchModule
 {
     [TestFixture]
     internal class GoodReadsTests
     {
-        [Test]
+        [Test, Ignore("API requires key.")]
         public void GetBookData()
         {
-            Assert.IsTrue(GoodReadsService.GetBookDataAsync("Ender's Game").Result.Search.ResultCount > 0);
-            Assert.IsFalse(GoodReadsService.GetBookDataAsync("Bender's Game").Result.Search.ResultCount > 0);
+            Assert.Greater(GoodReadsService.GetBookDataAsync("Ender's Game").Result.Search.ResultCount, 0);
+            Assert.AreEqual(GoodReadsService.GetBookDataAsync("Bender's Game").Result.Search.ResultCount, 0);
         }
     }
 }

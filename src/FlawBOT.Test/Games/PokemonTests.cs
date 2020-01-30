@@ -7,15 +7,17 @@ namespace GamesModule
     internal class PokemonTests
     {
         [Test]
-        public void LoadPokemonList()
+        public void GetPokemonCards()
         {
-            Assert.IsTrue(PokemonService.UpdatePokemonListAsync().Result);
+            Assert.Greater(PokemonService.GetPokemonCardsAsync().Result.Cards.Count, 0);
+            Assert.Greater(PokemonService.GetPokemonCardsAsync("pikachu").Result.Cards.Count, 0);
+            Assert.AreEqual(PokemonService.GetPokemonCardsAsync("rikachu").Result.Cards.Count, 0);
         }
 
         [Test]
-        public void GetRandomPokemon()
+        public void UpdatePokemonList()
         {
-            Assert.IsNotNull(PokemonService.GetPokemonCardsAsync("").Result);
+            Assert.IsTrue(PokemonService.UpdatePokemonListAsync().Result);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace SearchModule
         [Test]
         public void GetStreamData()
         {
-            Assert.NotNull(TwitchService.GetTwitchDataAsync("rifftrax"));
+            Assert.IsNotNull(TwitchService.GetTwitchDataAsync("rifftrax"));
         }
     }
 }

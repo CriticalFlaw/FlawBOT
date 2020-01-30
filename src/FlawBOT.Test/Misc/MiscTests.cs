@@ -1,7 +1,6 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 using System.Net;
-using System.Net.Http;
 
 namespace MiscModule
 {
@@ -9,16 +8,9 @@ namespace MiscModule
     internal class MiscTests
     {
         [Test]
-        public void GetAnswer()
-        {
-            Assert.IsNotEmpty(EightBallService.GetAnswer());
-        }
-
-        [Test]
         public void GetCatFact()
         {
-            var http = new HttpClient();
-            Assert.IsNotNull(http.GetStringAsync("https://catfact.ninja/fact"));
+            Assert.IsNotNull(CatService.GetCatFactAsync().Result);
         }
 
         [Test]
@@ -31,6 +23,12 @@ namespace MiscModule
         public void GetIPLocation()
         {
             Assert.IsTrue(GoogleService.GetIPLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Status == "success");
+        }
+
+        [Test]
+        public void GetRandomAnswer()
+        {
+            Assert.IsNotNull(EightBallService.GetRandomAnswer());
         }
     }
 }

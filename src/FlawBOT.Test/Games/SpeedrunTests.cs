@@ -9,7 +9,8 @@ namespace GamesModule
         [Test]
         public void GetSpeedrunGame()
         {
-            Assert.IsNotNull(SpeedrunService.GetSpeedrunGameAsync("Wind Waker"));
+            Assert.Greater(SpeedrunService.GetSpeedrunGameAsync("Wind Waker").Result.Data.Count, 0);
+            Assert.AreEqual(SpeedrunService.GetSpeedrunGameAsync("Wind Wanker").Result.Data.Count, 0);
         }
     }
 }

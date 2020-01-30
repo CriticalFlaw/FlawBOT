@@ -6,7 +6,7 @@ namespace SearchModule
     [TestFixture]
     internal class OMDBTests
     {
-        [Test]
+        [Test, Ignore("API requires key.")]
         public void GetMovieData()
         {
             Assert.IsNotNull(OMDBService.GetMovieDataAsync("office+space").Result);

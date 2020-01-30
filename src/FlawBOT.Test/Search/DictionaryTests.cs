@@ -9,7 +9,8 @@ namespace SearchModule
         [Test]
         public void GetDictionaryDefinition()
         {
-            Assert.IsFalse(DictionaryService.GetDictionaryForTermAsync("computer").Result.ResultType == "no_results");
+            Assert.Greater(DictionaryService.GetDictionaryDefinitionAsync("computer").Result.List.Count, 0);
+            Assert.AreEqual(DictionaryService.GetDictionaryDefinitionAsync("kompuuter").Result.List.Count, 0);
         }
     }
 }

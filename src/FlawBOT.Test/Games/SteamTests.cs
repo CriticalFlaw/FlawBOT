@@ -8,23 +8,25 @@ namespace GamesModule
     internal class SteamTests
     {
         [Test]
-        public void LoadAppList()
-        {
-            Assert.IsTrue(SteamService.UpdateSteamListAsync().Result);
-        }
-
-        [Test]
-        public void GetUserData()
-        {
-            Assert.NotNull(SteamService.GetSteamUserProfileAsync("criticalflaw"));
-            Assert.NotNull(SteamService.GetSteamUserSummaryAsync("criticalflaw"));
-        }
-
-        [Test]
-        public void GetConnectLink()
+        public void GenerateConnectionLink()
         {
             var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match("192.168.22.11");
             Assert.IsTrue(regex.Success);
+        }
+
+        [Test, Ignore("API requires key.")]
+        public void GetSteamProfile()
+        {
+            Assert.IsNotNull(SteamService.GetSteamProfileAsync("criticalflaw").Result);
+            Assert.IsNotNull(SteamService.GetSteamSummaryAsync("criticalflaw").Result);
+            Assert.IsNull(SteamService.GetSteamProfileAsync("99999999999999999").Result);
+            Assert.IsNull(SteamService.GetSteamSummaryAsync("99999999999999999").Result);
+        }
+
+        [Test, Ignore("API requires key.")]
+        public void UpdateSteamList()
+        {
+            Assert.IsTrue(SteamService.UpdateSteamListAsync().Result);
         }
     }
 }

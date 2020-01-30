@@ -7,21 +7,14 @@ namespace SearchModule
     internal class RedditTests
     {
         [Test]
-        public void GetHotSubredditPost()
+        public void GetEmbeddedResults()
         {
-            Assert.NotNull(RedditService.GetEmbeddedResults("AskReddit", RedditCategory.Hot));
-        }
-
-        [Test]
-        public void GetNewSubredditPost()
-        {
-            Assert.NotNull(RedditService.GetEmbeddedResults("AskReddit", RedditCategory.New));
-        }
-
-        [Test]
-        public void GetTopSubredditPost()
-        {
-            Assert.NotNull(RedditService.GetEmbeddedResults("AskReddit", RedditCategory.Top));
+            Assert.IsNotNull(RedditService.GetEmbeddedResults("AskReddit", RedditCategory.Hot));
+            Assert.IsNotNull(RedditService.GetEmbeddedResults("AskReddit", RedditCategory.New));
+            Assert.IsNotNull(RedditService.GetEmbeddedResults("AskReddit", RedditCategory.Top));
+            Assert.IsTrue(RedditService.GetEmbeddedResults("AskDinosaurs", RedditCategory.Hot).Description.Contains(":warning:"));
+            Assert.IsTrue(RedditService.GetEmbeddedResults("AskDinosaurs", RedditCategory.New).Description.Contains(":warning:"));
+            Assert.IsTrue(RedditService.GetEmbeddedResults("AskDinosaurs", RedditCategory.Top).Description.Contains(":warning:"));
         }
     }
 }

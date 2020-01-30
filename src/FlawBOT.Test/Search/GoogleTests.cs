@@ -6,21 +6,21 @@ namespace SearchModule
     [TestFixture]
     internal class GoogleTests
     {
-        [Test]
+        [Test, Ignore("API requires key.")]
         public void GetTimeData()
         {
             Assert.IsTrue(GoogleService.GetTimeDataAsync("Ottawa").Result.status == "OK");
-            Assert.IsTrue(GoogleService.GetTimeDataAsync("Ottura").Result.status != "OK");
+            Assert.IsFalse(GoogleService.GetTimeDataAsync("Ottura").Result.status == "OK");
         }
 
-        [Test]
+        [Test, Ignore("API requires key.")]
         public void GetWeatherData()
         {
-            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottawa").Result.COD != 404);
-            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottura").Result.COD == 404);
+            Assert.IsTrue(GoogleService.GetWeatherDataAsync("Ottawa").Result.COD == 404);
+            Assert.IsFalse(GoogleService.GetWeatherDataAsync("Ottura").Result.COD == 404);
         }
 
-        [Test]
+        [Test, Ignore("API requires key.")]
         public void GetNewsData()
         {
             Assert.IsTrue(GoogleService.GetNewsDataAsync().Result.Status == "ok");

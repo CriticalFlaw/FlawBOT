@@ -1,15 +1,15 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace FlawBOT.Test.Search
+namespace SearchModule
 {
     [TestFixture]
     internal class NASATests
     {
-        [Test]
+        [Test, Ignore("API requires key.")]
         public void GetNASAData()
         {
-            Assert.IsNotNull(NASAService.GetNASAImage().Result);
+            Assert.IsNotNull(NASAService.GetNASAImageAsync().Result);
         }
     }
 }

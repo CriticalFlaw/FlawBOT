@@ -8,7 +8,7 @@ namespace SearchModule
     [TestFixture]
     internal class ImgurTests
     {
-        [Test]
+        [Test, Ignore("API requires key.")]
         public async Task GetImgurGalleryData()
         {
             var results = await ImgurService.GetImgurGalleryAsync("cats", GallerySortOrder.Top, TimeWindow.All).ConfigureAwait(false);

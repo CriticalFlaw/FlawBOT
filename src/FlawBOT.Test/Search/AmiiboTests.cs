@@ -1,15 +1,16 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace GamesModule
+namespace SearchModule
 {
     [TestFixture]
     internal class AmiiboTests
     {
         [Test]
-        public void AmiiboTest()
+        public void GetAmiiboData()
         {
-            Assert.IsNotNull(AmiiboService.GetAmiiboFigurineAsync("Luigi").Result);
+            Assert.IsNotNull(AmiiboService.GetAmiiboDataAsync("Donkey Kong").Result);
+            Assert.IsNull(AmiiboService.GetAmiiboDataAsync("Konkey Dong").Result);
         }
     }
 }
