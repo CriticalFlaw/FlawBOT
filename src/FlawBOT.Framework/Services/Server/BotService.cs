@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
 using System;
@@ -14,7 +15,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task SendEmbedAsync(CommandContext ctx, string message, EmbedType type = EmbedType.Default)
         {
-            var prefix = "";
+            var prefix = string.Empty;
             DiscordColor color;
             switch (type)
             {
@@ -63,6 +64,11 @@ namespace FlawBOT.Framework.Services
         public static bool CheckChannelName(string input)
         {
             return (string.IsNullOrWhiteSpace(input) || input.Length > 100) ? false : true;
+        }
+
+        public static async Task<InteractivityResult<DiscordMessage>> GetUserInteractivity(CommandContext ctx, string keyword, int seconds)
+        {
+            return await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, keyword, StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(seconds)).ConfigureAwait(false);
         }
 
         public static int LimitToRange(int value, int min = 1, int max = 100)
