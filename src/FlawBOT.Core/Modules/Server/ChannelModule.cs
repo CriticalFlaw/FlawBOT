@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
 using DSharpPlus.Net.Models;
 using FlawBOT.Common;
 using FlawBOT.Core.Properties;
@@ -71,9 +70,9 @@ namespace FlawBOT.Modules
             channel = channel ?? ctx.Channel;
 
             var prompt = await ctx.RespondAsync("You're about to delete the " + Formatter.Bold(channel.ToString()) + "\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.").ConfigureAwait(false);
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+            var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
             if (interactivity.Result is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
+                await ctx.RespondAsync(Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
             else
             {
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
@@ -102,8 +101,9 @@ namespace FlawBOT.Modules
 
             // Create the base embed message
             var output = new DiscordEmbedBuilder()
-                .WithTitle(channel.Name + $" (ID: {channel.Id})")
-                .WithDescription("Channel topic: " + Formatter.Italic(channel.Topic) ?? "")
+                .WithTitle(channel.Name)
+                .WithDescription("ID: " + channel.Id)
+                .AddField("Topic", channel.Topic ?? string.Empty)
                 .AddField("Type", channel.Type.ToString(), true)
                 .AddField("Private", channel.IsPrivate ? "Yes" : "No", true)
                 .AddField("NSFW", channel.IsNSFW ? "Yes" : "No", true)
@@ -125,9 +125,6 @@ namespace FlawBOT.Modules
                         channels.Append($"[`{chn.Name}`]");
                     output.AddField("Channels", (channels.Length > 0) ? channels.ToString() : "None", true);
                     break;
-
-                default:
-                    break;
             }
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -140,9 +137,10 @@ namespace FlawBOT.Modules
         [Aliases("j")]
         [Description("Be placed into a specified voice channel")]
         public async Task JoinVoiceChannel(CommandContext ctx,
-            [Description("Name of voice channel to join")] [RemainingText] DiscordChannel channel = null)
+            [Description("Name of voice channel to join")] [RemainingText] string channelName)
         {
-            if (channel.Type == ChannelType.Voice)
+            var channel = ctx.Guild.Channels.FirstOrDefault(x => x.Value.Name == channelName && x.Value.Type == ChannelType.Voice).Value;
+            if (channel != null)
                 await ctx.Member.PlaceInAsync(channel).ConfigureAwait(false);
         }
 

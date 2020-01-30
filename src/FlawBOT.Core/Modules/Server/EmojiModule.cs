@@ -123,11 +123,12 @@ namespace FlawBOT.Modules
         {
             var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
-                .AddField("Name", emoji.Name, true)
+                .WithTitle(emoji.Name)
+                .WithDescription("Created By" + ((emoji.User is null) ? "<unknown>" : emoji.User.Username))
                 .AddField("Server", emoji.Guild.Name, true)
-                .AddField("Created By", (emoji.User is null) ? "<unknown>" : emoji.User.Username, true)
                 .AddField("Creation Date", emoji.CreationTimestamp.ToString(), true)
                 .WithColor(DiscordColor.PhthaloBlue)
+                .WithUrl(emoji.Url)
                 .WithThumbnailUrl(emoji.Url);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
@@ -137,17 +138,18 @@ namespace FlawBOT.Modules
         #region COMMAND_LIST
 
         [Command("list")]
-        [Aliases("print", "l", "ls")]
+        [Aliases("print", "l", "ls", "all")]
         [Description("Retrieve list of server emojis.")]
         public async Task GetEmojiList(CommandContext ctx)
         {
             var emojiList = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis.Values.OrderBy(e => e.Name))
-                emojiList.Append(emoji.Name).Append(", ");
+                emojiList.Append(emoji.Name).Append(!emoji.Equals(ctx.Guild.Emojis.Last()) ? ", " : string.Empty);
 
             var output = new DiscordEmbedBuilder()
                 .WithTitle("Emojis available for " + ctx.Guild.Name)
                 .WithDescription(emojiList.ToString())
+                .WithThumbnailUrl(ctx.Guild.IconUrl)
                 .WithColor(DiscordColor.PhthaloBlue);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }

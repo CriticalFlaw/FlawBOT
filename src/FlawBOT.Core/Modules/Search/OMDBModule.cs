@@ -38,8 +38,8 @@ namespace FlawBOT.Modules
                     .AddField("Production", results.Production, true)
                     .AddField("IMDB Rating", results.IMDbRating, true)
                     .AddField("Metacritic", results.Metascore, true)
-                    .AddField("Director", results.Director, true)
-                    .AddField("Actors", results.Actors, true)
+                    .AddField("Directors", results.Director)
+                    .AddField("Actors", results.Actors)
                     .WithColor(DiscordColor.Goldenrod);
                 if (results.Poster != "N/A") output.WithImageUrl(results.Poster);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);

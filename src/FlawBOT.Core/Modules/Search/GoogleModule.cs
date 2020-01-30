@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
 using FlawBOT.Common;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
@@ -55,7 +54,7 @@ namespace FlawBOT.Modules
                 while (results.Articles.Count > 0)
                 {
                     var output = new DiscordEmbedBuilder()
-                        .WithFooter("Type 'next' within 10 seconds for the next article.")
+                        .WithFooter("Type 'next' within 10 seconds for the next five articles.")
                         .WithColor(new DiscordColor("#253B80"));
 
                     foreach (var result in results.Articles.Take(5))
@@ -65,7 +64,8 @@ namespace FlawBOT.Modules
                     }
                     var message = await ctx.RespondAsync("Latest Google News articles from News API", embed: output.Build()).ConfigureAwait(false);
 
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "next", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    if (results.Articles.Count == 5) continue;
+                    var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                     await BotServices.RemoveMessage(message).ConfigureAwait(false);
@@ -92,7 +92,6 @@ namespace FlawBOT.Modules
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
                     .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
-                    //.AddField("Conditions", string.Join(", ", results.Weather.Select(w => w.Main)), true)
                     .AddField("Humidity", $"{results.Main.Humidity}%", true)
                     .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
                     .WithUrl("https://openweathermap.org/city/" + results.ID)

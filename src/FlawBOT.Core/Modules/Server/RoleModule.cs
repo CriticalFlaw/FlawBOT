@@ -98,8 +98,9 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(role.Name + $" (ID: {role.Id})")
-                    .WithDescription($"Created on {role.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture)}")
+                    .WithTitle(role.Name)
+                    .WithDescription("ID: " + role.Id.ToString())
+                    .AddField("Creation Date", role.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                     .AddField("Hoisted", role.IsHoisted ? "Yes" : "No", true)
                     .AddField("Mentionable", role.IsMentionable ? "Yes" : "No", true)
                     .AddField("Permissions", role.Permissions.ToPermissionString())

@@ -25,14 +25,14 @@ namespace FlawBOT.Framework.Services
         public async Task<string> GetFirstVideoResultAsync(string query)
         {
             var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
-            if (results == null || results.Count == 0) return ":warning: No results found!";
-            return "https://www.youtube.com/watch?v=" + results.First().Id.VideoId;
+            if (results is null || results.Count == 0) return ":warning: No results found!";
+            return "https://www.youtube.com/watch?v=" + results[0].Id.VideoId;
         }
 
         public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, string type = null)
         {
             var results = await GetResultsAsync(query, amount, type).ConfigureAwait(false);
-            if (results == null || results.Count == 0)
+            if (results is null || results.Count == 0)
                 return new DiscordEmbedBuilder
                 {
                     Description = ":warning: No results found!",

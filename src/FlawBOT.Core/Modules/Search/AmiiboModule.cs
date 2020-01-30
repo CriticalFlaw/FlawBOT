@@ -1,11 +1,9 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +21,7 @@ namespace FlawBOT.Modules
             [Description("Name of the Amiibo figurine")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await AmiiboService.GetAmiiboFigurineAsync(query).ConfigureAwait(false);
+            var results = await AmiiboService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
@@ -44,7 +42,7 @@ namespace FlawBOT.Modules
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
                     if (results.Amiibo.Count == 1) continue;
-                    var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, "next", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                     if (!amiibo.Equals(results.Amiibo.Last()))

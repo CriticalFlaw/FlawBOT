@@ -31,9 +31,6 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("teamworktf")]
         public string TeamworkToken { get; private set; }
 
-        [JsonProperty("tradetf")]
-        public string TFSchemaToken { get; private set; }
-
         [JsonProperty("news")]
         public string NewsToken { get; private set; }
 

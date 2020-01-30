@@ -12,7 +12,6 @@ using FlawBOT.Framework.Services;
 using FlawBOT.Modules;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,7 +53,7 @@ namespace FlawBOT
                 Token = TokenHandler.Tokens.DiscordToken,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                LogLevel = LogLevel.Debug,
+                LogLevel = LogLevel.Info,
                 UseInternalLogHandler = false,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250
@@ -108,7 +107,7 @@ namespace FlawBOT
             Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
             SharedData.ProcessStarted = DateTime.Now;
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
-            await TeamFortressService.LoadTF2SchemaAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await Client.ConnectAsync().ConfigureAwait(false); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
@@ -137,7 +136,7 @@ namespace FlawBOT
             switch (e.Exception)
             {
                 case ChecksFailedException cfe:
-                    switch (cfe.FailedChecks.First())
+                    switch (cfe.FailedChecks[0])
                     {
                         case CooldownAttribute _:
                             return;
@@ -250,11 +249,6 @@ namespace FlawBOT
 
                     case LogLevel.Debug:
                         ccfg = ConsoleColor.Magenta;
-                        break;
-
-                    default:
-                        ccfg = ConsoleColor.Gray;
-                        ccbg = ConsoleColor.Black;
                         break;
                 }
                 Console.ForegroundColor = ccfg;

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
-    public class OMDBService
+    public static class OMDBService
     {
         public static async Task<OMDbSharp.Objects.Item> GetMovieDataAsync(string query)
         {

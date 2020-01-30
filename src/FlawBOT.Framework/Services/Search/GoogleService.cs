@@ -14,7 +14,7 @@ namespace FlawBOT.Framework.Services
             try
             {
                 var results = GetLocationGeoData(query.Replace(" ", "")).Result;
-                if (results == null) return null;
+                if (results is null) return null;
                 var latitude = results.Results[0].Geometry.Location.Latitude;
                 var longitude = results.Results[0].Geometry.Location.Longitude;
                 var currentSeconds = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
@@ -40,8 +40,7 @@ namespace FlawBOT.Framework.Services
             _http.DefaultRequestHeaders.Clear();
             var result = await _http.GetStringAsync(Resources.API_Google_Geo + "?address=" + query + "&key=" + TokenHandler.Tokens.GoogleToken).ConfigureAwait(false);
             var results = JsonConvert.DeserializeObject<TimeData>(result);
-            if (results.status == "OK") return results;
-            return null;
+            return (results.status == "OK") ? results : null;
         }
 
         public static async Task<IPLocationData> GetIPLocationAsync(IPAddress query)
@@ -58,7 +57,7 @@ namespace FlawBOT.Framework.Services
 
         public static double CelsiusToFahrenheit(double cel)
         {
-            return cel * 1.8f + 32;
+            return (cel * 1.8f) + 32;
         }
     }
 }

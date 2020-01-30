@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
 using FlawBOT.Common;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
@@ -20,7 +19,7 @@ namespace FlawBOT.Modules
         #region COMMAND_INFO
 
         [Command("info")]
-        [Aliases("i")]
+        [Aliases("i", "about")]
         [Description("Retrieve FlawBOT information")]
         public async Task BotInfo(CommandContext ctx)
         {
@@ -47,7 +46,7 @@ namespace FlawBOT.Modules
         {
             await ctx.RespondAsync($"Are you sure you want {SharedData.Name} to leave this server?").ConfigureAwait(false);
             var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.").ConfigureAwait(false);
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && string.Equals(m.Content, "yes", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+            var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
             if (interactivity.Result is null)
                 await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
             else
@@ -85,7 +84,7 @@ namespace FlawBOT.Modules
             {
                 await ctx.RespondAsync("The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.").ConfigureAwait(false);
                 var message = await ctx.RespondAsync("Respond with **yes** to proceed or wait 10 seconds to cancel this operation.").ConfigureAwait(false);
-                var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Author.Id == ctx.User.Id && string.Equals(m.Content, "yes", StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
                 if (interactivity.Result is null)
                     await message.ModifyAsync("~~" + message.Content + "~~ " + Resources.REQUEST_TIMEOUT).ConfigureAwait(false);
                 else
@@ -121,9 +120,26 @@ namespace FlawBOT.Modules
 
         #endregion COMMAND_SAY
 
+        #region COMMAND_TTS
+
+        [Command("tts")]
+        [Aliases("talk")]
+        [Description("Sends a text-to-speech message")]
+        [RequirePermissions(Permissions.SendTtsMessages)]
+        public Task SayTTS(CommandContext ctx,
+            [Description("Text to convert to speech")] [RemainingText] string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return ctx.RespondAsync("I need something to say...");
+            return ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(text)), isTTS: true);
+        }
+
+        #endregion COMMAND_TTS
+
         #region COMMAND_UPTIME
 
         [Command("uptime")]
+        [Aliases("time")]
         [Description("Retrieve the FlawBOT uptime")]
         public async Task Uptime(CommandContext ctx)
         {
@@ -165,7 +181,7 @@ namespace FlawBOT.Modules
 
         [RequireOwner]
         [Command("avatar"), Hidden]
-        [Aliases("setavatar")]
+        [Aliases("setavatar", "pfp", "photo")]
         [Description("Set FlawBOT's avatar")]
         public async Task SetBotAvatar(CommandContext ctx,
             [Description("Image URL. Must be in jpg, png or img format.")] string query)
@@ -182,7 +198,7 @@ namespace FlawBOT.Modules
 
         [RequireOwner]
         [Command("status"), Hidden]
-        [Aliases("setstatus")]
+        [Aliases("setstatus", "state")]
         [Description("Set FlawBOT's status")]
         public async Task SetBotStatus(CommandContext ctx,
             [Description("Activity Status. Online, Idle, DND or Offline")] [RemainingText] string status)
@@ -231,7 +247,7 @@ namespace FlawBOT.Modules
         {
             var message = await ctx.RespondAsync("Starting update...").ConfigureAwait(false);
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
-            await TeamFortressService.LoadTF2SchemaAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await message.ModifyAsync("Starting update...done!").ConfigureAwait(false);
         }
@@ -242,7 +258,7 @@ namespace FlawBOT.Modules
 
         [RequireOwner]
         [Command("username"), Hidden]
-        [Aliases("setusername", "name", "setname", "nickname")]
+        [Aliases("setusername", "name", "setname", "nickname", "nick")]
         [Description("Set FlawBOT's username")]
         public async Task SetBotUsername(CommandContext ctx,
             [Description("New bot username")] [RemainingText] string name)

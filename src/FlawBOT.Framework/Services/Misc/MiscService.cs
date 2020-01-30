@@ -4,17 +4,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
-    public class EightBallService
+    public static class EightBallService
     {
-        public static string GetAnswer()
+        public static string GetRandomAnswer()
         {
             var random = new Random();
-            return Answers.ElementAt(random.Next(Answers.Count()));
+            return Answers[random.Next(Answers.Length)];
         }
 
         private static ImmutableArray<string> Answers = new[]

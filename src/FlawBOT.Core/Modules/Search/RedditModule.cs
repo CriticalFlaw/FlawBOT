@@ -1,5 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using FlawBOT.Framework.Services;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = RedditService.GetEmbeddedResults(query, category);
-            await ctx.RespondAsync("Search results for r/" + Formatter.Bold(query), embed: results).ConfigureAwait(false);
+            await ctx.RespondAsync("Search results for r/" + query, embed: results).ConfigureAwait(false);
         }
 
         #endregion COMMAND_POST

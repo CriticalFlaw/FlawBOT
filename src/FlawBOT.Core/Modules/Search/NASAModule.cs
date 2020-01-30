@@ -18,7 +18,7 @@ namespace FlawBOT.Modules
         [Description("Retrieve NASA's Astronomy Picture of the Day")]
         public async Task NASA(CommandContext ctx)
         {
-            var results = await NASAService.GetNASAImage().ConfigureAwait(false);
+            var results = await NASAService.GetNASAImageAsync().ConfigureAwait(false);
             if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_NASA_API, EmbedType.Missing).ConfigureAwait(false);
             else

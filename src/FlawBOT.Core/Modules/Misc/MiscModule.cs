@@ -20,13 +20,14 @@ namespace FlawBOT.Modules
         #region COMMAND_8BALL
 
         [Command("ask")]
-        [Aliases("8b", "8ball")]
+        [Aliases("8b", "8ball", "ball")]
         [Description("Ask an 8-ball a question")]
         public Task EightBall(CommandContext ctx,
             [Description("Question to ask the 8-Ball")] [RemainingText] string question = "")
         {
+            if (string.IsNullOrWhiteSpace(question)) return null;
             var output = new DiscordEmbedBuilder()
-                .WithDescription(":8ball: " + EightBallService.GetAnswer() + "(" + ctx.User.Mention + ")")
+                .WithDescription(":8ball: " + EightBallService.GetRandomAnswer() + " (" + ctx.User.Mention + ")")
                 .WithColor(DiscordColor.Black);
             return ctx.RespondAsync(embed: output.Build());
         }
@@ -97,9 +98,9 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .AddField("HEX:", $"{color.Value:X}", true)
-                    .AddField("RGB:", $"{color.R} {color.G} {color.B}", true)
-                    .AddField("Decimal:", color.Value.ToString(), true)
+                    .AddField("HEX:", $"#{color.Value:X}")
+                    .AddField("RGB:", $"{color.R} {color.G} {color.B}")
+                    .AddField("Decimal:", color.Value.ToString())
                     .WithColor(color);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
@@ -126,7 +127,7 @@ namespace FlawBOT.Modules
         #region COMMAND_DOGPIC
 
         [Command("randomdog")]
-        [Aliases("woof")]
+        [Aliases("woof", "dog", "bark")]
         [Description("Retrieve a random dog photo")]
         public async Task DogPic(CommandContext ctx)
         {
@@ -163,7 +164,7 @@ namespace FlawBOT.Modules
         #region COMMAND_IP
 
         [Command("ip")]
-        [Aliases("ipstack")]
+        [Aliases("ipstack", "track")]
         [Description("Retrieve IP address geolocation information")]
         public async Task IPLocation(CommandContext ctx,
             [Description("IP Address")] string address)
@@ -175,10 +176,10 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .AddField("Location", $"{results.City}, {results.Region}, {results.Country}", true)
-                    .AddField("ISP", results.ISP, true)
+                    .WithDescription($"Location: { results.City}, { results.Region}, { results.Country}")
                     .AddField("Longitude", results.Longitude.ToString(), true)
                     .AddField("Latitude", results.Latitude.ToString(), true)
+                    .AddField("ISP", results.ISP)
                     .WithFooter($"IP: {results.Query}")
                     .WithColor(new DiscordColor("#4d2f63"));
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
@@ -186,20 +187,5 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_IP
-
-        #region COMMAND_TTS
-
-        [Command("tts")]
-        [Description("Sends a text-to-speech message")]
-        [RequirePermissions(Permissions.SendTtsMessages)]
-        public Task SayTTS(CommandContext ctx,
-            [Description("Text to convert to speech")] [RemainingText] string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return ctx.RespondAsync("I need something to say...");
-            return ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(text)), isTTS: true);
-        }
-
-        #endregion COMMAND_TTS
     }
 }

@@ -15,7 +15,7 @@ namespace FlawBOT.Common
         private string description;
         private readonly DiscordEmbedBuilder output;
 
-        public HelpFormatter(CommandContext cnext) : base(cnext)
+        public HelpFormatter(CommandContext ctx) : base(ctx)
         {
             output = new DiscordEmbedBuilder()
                 .WithColor(DiscordColor.Turquoise)
@@ -24,7 +24,7 @@ namespace FlawBOT.Common
 
         public override CommandHelpMessage Build()
         {
-            string desc = $"Listing all commands and groups. Use {Formatter.InlineCode(".help <command>")} for detailed information.";
+            string desc = $"Listing all commands and groups. Use {Formatter.InlineCode(".help <command>")} for more details.";
             if (!string.IsNullOrWhiteSpace(name))
             {
                 output.WithTitle(name);
@@ -36,27 +36,27 @@ namespace FlawBOT.Common
 
         public override BaseHelpFormatter WithCommand(Command cmd)
         {
-            name = (cmd is CommandGroup) ? "Group: " + cmd.QualifiedName : "Command: " + cmd.QualifiedName;
+            name = ((cmd is CommandGroup) ? "Group: " : "Command: ") + cmd.QualifiedName;
             description = cmd.Description;
 
             if (cmd.Overloads?.Any() ?? false)
             {
                 foreach (var overload in cmd.Overloads.OrderByDescending(o => o.Priority))
                 {
-                    var ab = new StringBuilder();
+                    var args = new StringBuilder();
                     foreach (var arg in overload.Arguments)
                     {
-                        ab.Append(Formatter.InlineCode($"[{CommandsNext.GetUserFriendlyTypeName(arg.Type)}]"));
-                        ab.Append(" ");
-                        ab.Append(arg.Description ?? "No description provided.");
+                        args.Append(Formatter.InlineCode($"[{CommandsNext.GetUserFriendlyTypeName(arg.Type)}]"));
+                        args.Append(" ");
+                        args.Append(arg.Description ?? "No description provided.");
                         if (arg.IsOptional)
                         {
-                            ab.Append(" (def: ").Append(Formatter.InlineCode(arg.DefaultValue is null ? "None" : arg.DefaultValue.ToString())).Append(")");
-                            ab.Append(" (optional)");
+                            args.Append(" (def: ").Append(Formatter.InlineCode(arg.DefaultValue is null ? "None" : arg.DefaultValue.ToString())).Append(")");
+                            args.Append(" (optional)");
                         }
-                        ab.AppendLine();
+                        args.AppendLine();
                     }
-                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", ab.ToString() ?? "No arguments.");
+                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", args.ToString() ?? "No arguments.");
                 }
             }
 

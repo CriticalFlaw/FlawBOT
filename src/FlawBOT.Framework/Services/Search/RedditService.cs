@@ -12,7 +12,7 @@ namespace FlawBOT.Framework.Services
         public static DiscordEmbed GetEmbeddedResults(string query, RedditCategory category = RedditCategory.Hot)
         {
             var results = GetResults(query, category);
-            if (results == null || results.Count == 0)
+            if (results is null || results.Count == 0)
                 return new DiscordEmbedBuilder
                 {
                     Description = ":warning: No results found!",
@@ -29,7 +29,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                query = $"https://www.reddit.com{"/r/" + query.ToLowerInvariant()}/{GetPostCategory(category)}.rss";
+                query = $"https://www.reddit.com/r/{query.ToLowerInvariant()}/{GetPostCategory(category)}.rss";
                 using var reader = XmlReader.Create(query);
                 return SyndicationFeed.Load(reader).Items?.ToList();
             }

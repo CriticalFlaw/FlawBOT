@@ -2,7 +2,6 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
@@ -107,7 +106,7 @@ namespace FlawBOT.Modules
                 return;
             }
             var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);
-            var interactivity = await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && m.Content.ToLowerInvariant() == "yes", TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+            var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
             if (interactivity.Result is null) return;
             await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
             await BotServices.RemoveMessage(prompt).ConfigureAwait(false);

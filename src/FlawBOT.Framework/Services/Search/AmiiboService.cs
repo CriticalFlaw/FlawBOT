@@ -7,7 +7,7 @@ namespace FlawBOT.Framework.Services
 {
     public class AmiiboService : HttpHandler
     {
-        public static async Task<AmiiboData> GetAmiiboFigurineAsync(string query)
+        public static async Task<AmiiboData> GetAmiiboDataAsync(string query)
         {
             try
             {
