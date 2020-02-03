@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
 
         [Command("delete")]
         [Aliases("remove", "rm", "del")]
-        [Description("Remove an existing server emoji. Note: Bots can only delete emojis they created!")]
+        [Description("Remove an existing server emoji. Note: Bots can only delete emojis they created.")]
         [RequirePermissions(Permissions.ManageEmojis)]
         public async Task DeleteAsync(CommandContext ctx,
             [Description("Server emoji to delete.")] DiscordEmoji query)

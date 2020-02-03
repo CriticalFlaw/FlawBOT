@@ -13,7 +13,7 @@ namespace FlawBOT.Modules
         #region COMMAND_POST
 
         [Command("hot")]
-        [Description("Get newest hot posts for a subreddit.")]
+        [Description("Get hottest posts for a subreddit.")]
         public Task HowPost(CommandContext ctx, [Description("Subreddit.")] string query)
             => RedditPost(ctx, query, RedditCategory.Hot);
 

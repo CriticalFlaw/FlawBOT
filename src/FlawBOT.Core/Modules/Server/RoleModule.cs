@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [Group("roles")]
-    [Aliases("role", "rl")]
+    [Group("role")]
+    [Aliases("roles", "rl")]
     [Description("Commands for controlling server roles")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
     public class RoleModule : BaseCommandModule

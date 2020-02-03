@@ -9,9 +9,9 @@ namespace GamesModule
         [Test, Ignore("API requires key.")]
         public void GetMapStats()
         {
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result.MapName);
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result.MapName);
-            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onpward").Result.MapName);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result.Name);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result.Name);
+            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onpward").Result.Name);
         }
 
         [Test, Ignore("API requires key.")]

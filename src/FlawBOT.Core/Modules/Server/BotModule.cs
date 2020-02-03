@@ -124,10 +124,10 @@ namespace FlawBOT.Modules
 
         [Command("tts")]
         [Aliases("talk")]
-        [Description("Sends a text-to-speech message")]
+        [Description("Make FlawBOT repeat a message in text-to-speech")]
         [RequirePermissions(Permissions.SendTtsMessages)]
         public Task SayTTS(CommandContext ctx,
-            [Description("Text to convert to speech")] [RemainingText] string text)
+            [Description("Message for the bot to convert to speech")] [RemainingText] string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return ctx.RespondAsync("I need something to say...");

@@ -25,6 +25,7 @@
     <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
     <PackageReference Include="SteamWebAPI2" Version="4.0.14" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
+    <PackageReference Include="TeamworkAPI" Version="0.9.1" />
     <PackageReference Include="TwitchLib.Api" Version="3.1.2" />
   </ItemGroup>
 

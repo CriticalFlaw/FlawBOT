@@ -65,13 +65,13 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
-            if (results.MapName is null)
+            if (results.Name is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
                 double.TryParse(results.AvgPlayers, out var avg_players);
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.MapName)
+                    .WithTitle(results.Name)
                     .AddField("Official", results.OfficialMap ? "Yes" : "No", true)
                     .AddField("Game Mode", results.GameModes[0] ?? "Unknown", true)
                     .AddField("Highest Server Count", results.HighestServerCount.ToString() ?? "Unknown", true)
@@ -79,7 +79,7 @@ namespace FlawBOT.Modules
                     .AddField("Avg. Players", Math.Round(avg_players, 2).ToString() ?? "Unknown", true)
                     .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
                     .WithImageUrl(results.Thumbnail)
-                    .WithUrl("https://wiki.teamfortress.com/wiki/" + results.MapName)
+                    .WithUrl("https://wiki.teamfortress.com/wiki/" + results.Name)
                     .WithColor(new DiscordColor("#E7B53B"));
 
                 if (results.RelatedMaps.Count > 0)
@@ -124,7 +124,6 @@ namespace FlawBOT.Modules
             [Description("Name of the game-mode, like payload")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            query = TeamFortressService.NormalizedGameMode(query);
             var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-')).ConfigureAwait(false);
             if (results.Count <= 0)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
@@ -137,14 +136,14 @@ namespace FlawBOT.Modules
                         .WithTitle(server.Name)
                         .WithDescription("steam://connect/" + server.IP + ":" + server.Port)
                         .AddField("Provider", server.Provider ?? "Unknown", true)
-                        .AddField("Player Count", (server.PlayerCount.ToString() ?? "Unknown") + "/" + (server.PlayerMax.ToString() ?? "Unknown"), true)
+                        .AddField("Player Count", (server.PlayerCount.ToString() ?? "Unknown") + "/" + (server.PlayerCountMax.ToString() ?? "Unknown"), true)
                         .AddField("Password Lock", (server.HasPassword == true) ? "Yes" : "No", true)
                         .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
                         .AddField("Instant Respawn", server.HasNoSpawnTimer ? "Yes" : "No", true)
                         .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
                         .AddField("Current Map", server.MapName ?? "Unknown", true)
                         .AddField("Next Map", server.NextMap ?? "Unknown", true)
-                        .WithImageUrl("https://teamwork.tf" + server.MapThumbnail)
+                        .WithImageUrl("https://teamwork.tf" + server.ThumbnailPath)
                         .WithFooter("Type 'next' within 10 seconds for the next server")
                         .WithColor(new DiscordColor("#E7B53B"));
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
