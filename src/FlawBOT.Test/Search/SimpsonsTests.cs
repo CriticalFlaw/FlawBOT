@@ -7,12 +7,6 @@ namespace SearchModule
     internal class SimpsonsTests
     {
         [Test]
-        public void GetSimpsonsEpisode()
-        {
-            Assert.NotNull(SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Frinkiac).Result.Title);
-        }
-
-        [Test]
         public void GetFuturamaEpisode()
         {
             Assert.NotNull(SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Morbotron).Result.Title);
@@ -22,6 +16,12 @@ namespace SearchModule
         public void GetRickMortyEpisode()
         {
             Assert.NotNull(SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience).Result.Title);
+        }
+
+        [Test]
+        public void GetSimpsonsEpisode()
+        {
+            Assert.NotNull(SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Frinkiac).Result.Title);
         }
     }
 }

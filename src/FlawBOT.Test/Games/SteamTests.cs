@@ -14,7 +14,7 @@ namespace GamesModule
             Assert.IsTrue(regex.Success);
         }
 
-        [Test, Ignore("API requires key.")]
+        [Test]
         public void GetSteamProfile()
         {
             Assert.IsNotNull(SteamService.GetSteamProfileAsync("criticalflaw").Result);
@@ -23,7 +23,7 @@ namespace GamesModule
             Assert.IsNull(SteamService.GetSteamSummaryAsync("99999999999999999").Result);
         }
 
-        [Test, Ignore("API requires key.")]
+        [Test]
         public void UpdateSteamList()
         {
             Assert.IsTrue(SteamService.UpdateSteamListAsync().Result);

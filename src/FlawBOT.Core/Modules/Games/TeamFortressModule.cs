@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
-            if (results.Name is null)
+            if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
@@ -102,7 +102,7 @@ namespace FlawBOT.Modules
         public async Task TF2News(CommandContext ctx)
         {
             var results = await TeamFortressService.GetNewsOverviewAsync().ConfigureAwait(false);
-            if (results is null || results.Count == 0)
+            if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
@@ -125,7 +125,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetServersAsync(query.Trim().Replace(' ', '-')).ConfigureAwait(false);
-            if (results.Count <= 0)
+            if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {

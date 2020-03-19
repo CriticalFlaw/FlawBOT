@@ -31,8 +31,15 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<WeatherData> GetWeatherDataAsync(string query)
         {
-            var results = await _http.GetStringAsync(Resources.API_Google_Weather + "?q=" + query + "&appid=42cd627dd60debf25a5739e50a217d74&units=metric").ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<WeatherData>(results);
+            try
+            {
+                var results = await _http.GetStringAsync(Resources.API_Google_Weather + "?q=" + query + "&appid=42cd627dd60debf25a5739e50a217d74&units=metric").ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<WeatherData>(results);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async static Task<TimeData> GetLocationGeoData(string query)

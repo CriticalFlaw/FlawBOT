@@ -6,7 +6,7 @@ namespace SearchModule
     [TestFixture]
     internal class NASATests
     {
-        [Test, Ignore("API requires key.")]
+        [Test]
         public void GetNASAData()
         {
             Assert.IsNotNull(NASAService.GetNASAImageAsync().Result);

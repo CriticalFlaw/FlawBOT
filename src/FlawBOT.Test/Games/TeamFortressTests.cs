@@ -6,35 +6,35 @@ namespace GamesModule
     [TestFixture]
     internal class TeamFortressTests
     {
-        [Test, Ignore("API requires key.")]
+        [Test]
         public void GetMapStats()
         {
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result.Name);
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result.Name);
-            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onpward").Result.Name);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result);
+            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onpward").Result);
         }
 
-        [Test, Ignore("API requires key.")]
+        [Test]
         public void GetNewsOverview()
         {
             Assert.IsNotNull(TeamFortressService.GetNewsOverviewAsync().Result);
         }
 
-        [Test, Ignore("API requires key.")]
+        [Test, Order(2)]
         public void GetSchemaItem()
         {
             Assert.IsNotNull(TeamFortressService.GetSchemaItem("scattergun"));
             Assert.IsNull(TeamFortressService.GetSchemaItem("shattergun"));
         }
 
-        [Test, Ignore("API requires key.")]
+        [Test]
         public void GetServers()
         {
-            Assert.Greater(TeamFortressService.GetServersAsync("payload").Result.Count, 0);
-            Assert.Equals(TeamFortressService.GetServersAsync("payloader").Result.Count, 0);
+            Assert.IsNotNull(TeamFortressService.GetServersAsync("payload").Result);
+            Assert.IsNull(TeamFortressService.GetServersAsync("payloader").Result);
         }
 
-        [Test, Ignore("API requires key.")]
+        [Test, Order(1)]
         public void UpdateTF2Schema()
         {
             Assert.IsTrue(TeamFortressService.UpdateTF2SchemaAsync().Result);
