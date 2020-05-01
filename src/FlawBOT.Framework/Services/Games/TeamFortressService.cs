@@ -5,9 +5,9 @@ using SteamWebAPI2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TeamworkAPI;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TeamworkAPI;
 
 namespace FlawBOT.Framework.Services
 {

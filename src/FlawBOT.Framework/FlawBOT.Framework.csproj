@@ -18,12 +18,12 @@
     <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00656" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00656" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00656" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.44.1.1869" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.45.0.1929" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />
-    <PackageReference Include="PokemonTcgSdk" Version="1.0.0" />
-    <PackageReference Include="SteamWebAPI2" Version="4.1.0" />
+    <PackageReference Include="PokemonTcgSdk" Version="1.1.0" />
+    <PackageReference Include="SteamWebAPI2" Version="4.2.0" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
     <PackageReference Include="TeamworkAPI" Version="0.9.2" />
     <PackageReference Include="TwitchLib.Api" Version="3.1.2" />
