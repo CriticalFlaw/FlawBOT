@@ -30,8 +30,7 @@ namespace FlawBOT.Modules
                 {
                     var card = PokemonService.GetExactPokemon(dex.ID);
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(card.Name)
-                        .WithDescription("Pokédex ID: " + card.NationalPokedexNumber.ToString() ?? "Unknown")
+                        .WithTitle(card.Name + $" (#{card.NationalPokedexNumber})")
                         .AddField("Series", card.Series ?? "Unknown", true)
                         .AddField("Rarity", card.Rarity ?? "Unknown", true)
                         .AddField("HP", card.Hp ?? "Unknown", true)

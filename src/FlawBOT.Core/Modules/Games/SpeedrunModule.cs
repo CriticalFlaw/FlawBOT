@@ -5,6 +5,7 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
@@ -34,19 +35,28 @@ namespace FlawBOT.Modules
                         .AddField("Developers", SpeedrunService.GetSpeedrunExtraAsync(game.Developers, SpeedrunExtras.Developers).Result ?? "Unknown", true)
                         .AddField("Publishers", SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result ?? "Unknown", true)
                         .AddField("Platforms", SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result ?? "Unknown")
-                        //.AddField("Genres", SpeedrunService.GetSpeedrunExtraAsync(game.Genres, SpeedrunExtras.Genres).Result ?? "Unknown")
                         .WithFooter($"ID: {game.ID} - Abbreviation: {game.Abbreviation}")
                         .WithThumbnailUrl(game.Assets.CoverLarge.URL ?? game.Assets.Icon.URL)
                         .WithUrl(game.WebLink)
                         .WithColor(new DiscordColor("#0F7A4D"));
-                    var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+
+                    var link = game.Links.Where(x => x.REL == "categories").First().URL;
+                    var categories = SpeedrunService.GetSpeedrunCategoryAsync(link).Result.Data;
+                    var category = new StringBuilder();
+                    if (categories != null || categories.Count > 0)
+                    {
+                        foreach (var x in categories)
+                            category.Append(x.Name).Append(!query.Equals(categories.Last()) ? ", " : string.Empty);
+                    }
+                    output.AddField("Categories", category.ToString() ?? "Unknown", true);
+                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
                     if (results.Count == 1) continue;
                     var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                     if (!game.Equals(results.Last()))
-                        await BotServices.RemoveMessage(message).ConfigureAwait(false);
+                        await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }
             }
         }

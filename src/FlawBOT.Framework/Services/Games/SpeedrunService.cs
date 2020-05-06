@@ -29,6 +29,39 @@ namespace FlawBOT.Framework.Services
         }
 
         /// <summary>
+        /// Retrieve category speedrun data
+        /// </summary>
+        /// <param name="query">Name of the game</param>
+        public static async Task<SpeedrunCategory> GetSpeedrunCategoryAsync(string query)
+        {
+            try
+            {
+                var results = await _http.GetStringAsync(query).ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<SpeedrunCategory>(results);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retrieve game's identification key for Speedrun.com
+        /// </summary>
+        public static async Task<string> GetSpeedrunGameIDAsync(string query)
+        {
+            try
+            {
+                var results = await _http.GetStringAsync(Resources.API_Speedrun + "games?name=" + Uri.EscapeUriString(query.Trim())).ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<SpeedrunGame>(results).Data.First().ID;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Retrieve the speedrun game's platforms, genres, developers or publishers.
         /// </summary>
         /// <param name="queryList">Developer IDs</param>

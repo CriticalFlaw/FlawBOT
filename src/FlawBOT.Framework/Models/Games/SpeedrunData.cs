@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace FlawBOT.Framework.Models
 {
+    #region GAME
+
     public class SpeedrunGame
     {
         [JsonProperty("data")]
@@ -24,32 +26,11 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("weblink")]
         public string WebLink { get; set; }
 
-        [JsonProperty("released")]
-        public int ReleaseYear { get; set; }
-
         [JsonProperty("release-date")]
         public string ReleaseDate { get; set; }
 
-        [JsonProperty("ruleset")]
-        public Ruleset RuleSet { get; set; }
-
-        [JsonProperty("romhack")]
-        public bool ROMHack { get; set; }
-
-        [JsonProperty("gametypes")]
-        public List<object> GameTypes { get; set; }
-
         [JsonProperty("platforms")]
         public List<object> Platforms { get; set; }
-
-        [JsonProperty("regions")]
-        public List<string> Regions { get; set; }
-
-        [JsonProperty("genres")]
-        public List<object> Genres { get; set; }
-
-        [JsonProperty("engines")]
-        public List<object> Engines { get; set; }
 
         [JsonProperty("developers")]
         public List<object> Developers { get; set; }
@@ -57,14 +38,43 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("publishers")]
         public List<object> Publishers { get; set; }
 
-        [JsonProperty("created")]
-        public DateTime? Created { get; set; }
-
         [JsonProperty("assets")]
         public Assets Assets { get; set; }
 
         [JsonProperty("links")]
         public List<Link> Links { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("released")]
+        public int ReleaseYear { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("ruleset")]
+        public int RuleSet { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("romhack")]
+        public int ROMHack { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("gametypes")]
+        public int GameTypes { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("regions")]
+        public int Regions { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("genres")]
+        public int Genres { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("engines")]
+        public int Engines { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("created")]
+        public int Created { get; set; }
     }
 
     public class Names
@@ -76,31 +86,9 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("japanese")]
         public string Japanese { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("twitch")]
         public string Twitch { get; set; }
-    }
-
-    public class Ruleset
-    {
-        [JsonProperty("show-milliseconds")]
-        public bool ShowMilliseconds { get; set; }
-
-        [JsonProperty("require-verification")]
-        public bool RequiresVerification { get; set; }
-
-        [JsonProperty("require-video")]
-        public bool RequiresVideo { get; set; }
-
-        [JsonIgnore]
-        [JsonProperty("run-times")]
-        public List<string> RunTimes { get; set; }
-
-        [JsonIgnore]
-        [JsonProperty("default-time")]
-        public string DefaultTime { get; set; }
-
-        [JsonProperty("emulators-allowed")]
-        public bool EmulatorsAllowed { get; set; }
     }
 
     public class Assets
@@ -129,9 +117,11 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("uri")]
         public string URL { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("width")]
         public int Width { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("height")]
         public int Height { get; set; }
     }
@@ -145,6 +135,64 @@ namespace FlawBOT.Framework.Models
         public string URL { get; set; }
     }
 
+    #endregion GAME
+
+    #region CATEGORY
+
+    public class SpeedrunCategory
+    {
+        [JsonProperty("data")]
+        public List<CategoryData> Data { get; set; }
+    }
+
+    public partial class CategoryData
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("weblink")]
+        public Uri Weblink { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("rules")]
+        public string Rules { get; set; }
+
+        [JsonProperty("players")]
+        public Players Players { get; set; }
+
+        [JsonIgnore]
+        [JsonProperty("miscellaneous")]
+        public bool Miscellaneous { get; set; }
+
+        [JsonProperty("links")]
+        public List<Link> Links { get; set; }
+    }
+
+    public partial class Players
+    {
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("value")]
+        public long Value { get; set; }
+    }
+
+    #endregion CATEGORY
+
+    #region EXTRA
+
+    public class SpeedrunExtra
+    {
+        [JsonProperty("data")]
+        public ExtraData Data { get; set; }
+    }
+
     public class ExtraData
     {
         [JsonProperty("id")]
@@ -153,17 +201,12 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("released")]
         public int? Released { get; set; }
 
         [JsonProperty("links")]
         public List<Link> Links { get; set; }
-    }
-
-    public class SpeedrunExtra
-    {
-        [JsonProperty("data")]
-        public ExtraData Data { get; set; }
     }
 
     public enum SpeedrunExtras
@@ -173,4 +216,6 @@ namespace FlawBOT.Framework.Models
         Developers,
         Publishers
     }
+
+    #endregion EXTRA
 }
