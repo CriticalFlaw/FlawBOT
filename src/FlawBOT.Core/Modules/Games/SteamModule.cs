@@ -29,25 +29,30 @@ namespace FlawBOT.Modules
             try
             {
                 var app = SteamService.GetSteamAppAsync(query).Result;
-                var output = new DiscordEmbedBuilder()
+                if (app is null)
+                    await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                else
+                {
+                    var output = new DiscordEmbedBuilder()
                     .WithTitle(app.Name)
                     .WithDescription((Regex.Replace(app.DetailedDescription.Length <= 500 ? app.DetailedDescription : app.DetailedDescription.Substring(0, 250) + "...", "<[^>]*>", "")) ?? "Unknown")
                     .AddField("Release Date", app.ReleaseDate.Date ?? "Unknown", true)
                     .AddField("Developers", app.Developers[0] ?? "Unknown", true)
                     .AddField("Publisher", app.Publishers[0] ?? "Unknown", true)
-                    .AddField("Price", (app.IsFree ? "Free" : (app.PriceOverview.FinalFormatted ?? "Unknown")), true)
-                    .AddField("Metacritic", app.Metacritic.Score.ToString() ?? "Unknown", true)
+                    .AddField("Price", app.IsFree ? "Free" : (app.PriceOverview.FinalFormatted ?? "Unknown"), true)
+                    .AddField("Metacritic", (app.Metacritic != null) ? app.Metacritic.Score.ToString() : "Unknown", true)
                     .WithThumbnailUrl(app.HeaderImage)
                     .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId.ToString())
                     .WithFooter("App ID: " + app.SteamAppId.ToString())
                     .WithColor(new DiscordColor("#1B2838"));
 
-                var genres = new StringBuilder();
-                foreach (var genre in app.Genres.Take(3))
-                    genres.Append(genre.Description).Append(!genre.Equals(app.Genres.Last()) ? ", " : string.Empty);
-                output.AddField("Genres", genres.ToString() ?? "Unknown", true);
+                    var genres = new StringBuilder();
+                    foreach (var genre in app.Genres.Take(3))
+                        genres.Append(genre.Description).Append(!genre.Equals(app.Genres.Last()) ? ", " : string.Empty);
+                    output.AddField("Genres", genres.ToString() ?? "Unknown", true);
 
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                }
             }
             catch
             {

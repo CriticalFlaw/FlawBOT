@@ -1,4 +1,5 @@
 ﻿using FlawBOT.Framework.Models;
+using Microsoft.Extensions.Options;
 using Steam.Models.SteamCommunity;
 using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
@@ -19,14 +20,22 @@ namespace FlawBOT.Framework.Services
         /// <remarks>https://github.com/babelshift/SteamWebAPI2/issues/81</remarks>
         public static async Task<StoreAppDetailsDataModel> GetSteamAppAsync(string query)
         {
-            SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-            //var steam = SteamInterface.CreateSteamWebInterface<SteamStore>(new HttpClient());
-            //var appId = SteamAppList.FirstOrDefault(n => string.Equals(n.Value, query, StringComparison.InvariantCultureIgnoreCase)).Key;
-            var steam = SteamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient());
-            var store = new SteamStore();
-            var list = await steam.GetAppListAsync();
-            var appId = list.Data.FirstOrDefault(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
-            return await store.GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
+            try
+            {
+                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                SteamWebInterfaceFactoryOptions factoryOptions = new SteamWebInterfaceFactoryOptions()
+                {
+                    SteamWebApiKey = TokenHandler.Tokens.SteamToken
+                };
+                var store = new SteamWebInterfaceFactory(Options.Create(factoryOptions)).CreateSteamStoreInterface();
+                var list = await SteamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient()).GetAppListAsync();
+                var appId = list.Data.Where(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).First().AppId;
+                return await store.GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static async Task<SteamCommunityProfileModel> GetSteamProfileAsync(string query)

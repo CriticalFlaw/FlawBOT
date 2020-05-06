@@ -26,7 +26,7 @@ namespace FlawBOT.Framework.Services
             try
             {
                 SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                var steam = SteamInterface.CreateSteamWebInterface<EconItems>(new HttpClient(), EconItemsAppId.TeamFortress2);
+                var steam = SteamInterface.CreateSteamWebInterface<EconItems>(AppId.TeamFortress2, new HttpClient());
                 var games = await steam.GetSchemaItemsForTF2Async().ConfigureAwait(false);
                 ItemSchemaList.Clear();
                 foreach (var game in games.Data.Result.Items)
