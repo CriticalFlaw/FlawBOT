@@ -10,32 +10,29 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("discord")]
         public string DiscordToken { get; private set; }
 
-        [JsonProperty("google")]
+        [JsonProperty("google", NullValueHandling = NullValueHandling.Ignore)]
         public string GoogleToken { get; private set; }
 
-        [JsonProperty("steam")]
+        [JsonProperty("steam", NullValueHandling = NullValueHandling.Ignore)]
         public string SteamToken { get; private set; }
 
-        [JsonProperty("imgur")]
+        [JsonProperty("imgur", NullValueHandling = NullValueHandling.Ignore)]
         public string ImgurToken { get; private set; }
 
-        [JsonProperty("omdb")]
+        [JsonProperty("omdb", NullValueHandling = NullValueHandling.Ignore)]
         public string OMDBToken { get; private set; }
 
-        [JsonProperty("twitch")]
+        [JsonProperty("twitch", NullValueHandling = NullValueHandling.Ignore)]
         public string TwitchToken { get; private set; }
 
-        [JsonProperty("nasa")]
+        [JsonProperty("nasa", NullValueHandling = NullValueHandling.Ignore)]
         public string NASAToken { get; private set; }
 
-        [JsonProperty("teamworktf")]
+        [JsonProperty("teamworktf", NullValueHandling = NullValueHandling.Ignore)]
         public string TeamworkToken { get; private set; }
 
-        [JsonProperty("news")]
+        [JsonProperty("news", NullValueHandling = NullValueHandling.Ignore)]
         public string NewsToken { get; private set; }
-
-        [JsonProperty("goodreads")]
-        public string GoodReadsToken { get; private set; }
     }
 
     public enum EmbedType

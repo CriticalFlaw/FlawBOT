@@ -132,9 +132,6 @@
   <data name="API_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>
   </data>
-  <data name="API_GoodReads" xml:space="preserve">
-    <value>https://www.goodreads.com/search/index.xml</value>
-  </data>
   <data name="API_Google_Geo" xml:space="preserve">
     <value>https://maps.googleapis.com/maps/api/geocode/json</value>
   </data>

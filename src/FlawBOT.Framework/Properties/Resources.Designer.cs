@@ -106,15 +106,6 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.goodreads.com/search/index.xml.
-        /// </summary>
-        internal static string API_GoodReads {
-            get {
-                return ResourceManager.GetString("API_GoodReads", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/geocode/json.
         /// </summary>
         internal static string API_Google_Geo {
