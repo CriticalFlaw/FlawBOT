@@ -46,8 +46,8 @@ namespace FlawBOT.Framework.Services
                 var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 if (ulong.TryParse(query, out var steamId))
                     return await steam.GetCommunityProfileAsync(steamId).ConfigureAwait(false);
-                var decode = await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
-                return await steam.GetCommunityProfileAsync(decode.Data).ConfigureAwait(false);
+                else
+                    return await steam.GetCommunityProfileAsync(GetSteamUserID(query).Result.Data).ConfigureAwait(false);
             }
             catch
             {
@@ -63,8 +63,8 @@ namespace FlawBOT.Framework.Services
                 var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 if (ulong.TryParse(query, out var steamId))
                     return await steam.GetPlayerSummaryAsync(ulong.Parse(query)).ConfigureAwait(false);
-                var decode = await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
-                return await steam.GetPlayerSummaryAsync(decode.Data).ConfigureAwait(false);
+                else
+                    return await steam.GetPlayerSummaryAsync(GetSteamUserID(query).Result.Data).ConfigureAwait(false);
             }
             catch
             {
@@ -89,6 +89,19 @@ namespace FlawBOT.Framework.Services
             {
                 Console.WriteLine("Error updating Steam games list. " + ex.Message);
                 return false;
+            }
+        }
+
+        public static async Task<ISteamWebResponse<ulong>> GetSteamUserID(string query)
+        {
+            try
+            {
+                var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
+                return await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
             }
         }
     }

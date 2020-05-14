@@ -302,5 +302,59 @@ namespace FlawBOT.Core.Properties {
                 return ResourceManager.GetString("SIMPSONS_GIF_WARNING", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://discord.gg/.
+        /// </summary>
+        internal static string URL_DISCORD {
+            get {
+                return ResourceManager.GetString("URL_DISCORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://steamcommunity.com/groups/.
+        /// </summary>
+        internal static string URL_STEAM_GROUP {
+            get {
+                return ResourceManager.GetString("URL_STEAM_GROUP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://steamcommunity.com/id/.
+        /// </summary>
+        internal static string URL_STEAM_USER {
+            get {
+                return ResourceManager.GetString("URL_STEAM_USER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.twitch.tv/.
+        /// </summary>
+        internal static string URL_TWITCH_CHANNEL {
+            get {
+                return ResourceManager.GetString("URL_TWITCH_CHANNEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://twitter.com/.
+        /// </summary>
+        internal static string URL_TWITTER {
+            get {
+                return ResourceManager.GetString("URL_TWITTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.youtube.com/channel/.
+        /// </summary>
+        internal static string URL_YOUTUBE_CHANNEL {
+            get {
+                return ResourceManager.GetString("URL_YOUTUBE_CHANNEL", resourceCulture);
+            }
+        }
     }
 }

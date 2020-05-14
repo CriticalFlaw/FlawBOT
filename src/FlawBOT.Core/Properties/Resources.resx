@@ -198,4 +198,22 @@
   <data name="SIMPSONS_GIF_WARNING" xml:space="preserve">
     <value>Note: First time gifs take a few minutes to properly generate.</value>
   </data>
+  <data name="URL_DISCORD" xml:space="preserve">
+    <value>https://discord.gg/</value>
+  </data>
+  <data name="URL_STEAM_GROUP" xml:space="preserve">
+    <value>https://steamcommunity.com/groups/</value>
+  </data>
+  <data name="URL_STEAM_USER" xml:space="preserve">
+    <value>https://steamcommunity.com/id/</value>
+  </data>
+  <data name="URL_TWITCH_CHANNEL" xml:space="preserve">
+    <value>https://www.twitch.tv/</value>
+  </data>
+  <data name="URL_TWITTER" xml:space="preserve">
+    <value>https://twitter.com/</value>
+  </data>
+  <data name="URL_YOUTUBE_CHANNEL" xml:space="preserve">
+    <value>https://www.youtube.com/channel/</value>
+  </data>
 </root>
