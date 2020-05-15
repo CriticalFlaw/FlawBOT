@@ -45,6 +45,26 @@ namespace FlawBOT.Framework.Services
 
         #endregion SCHEMA
 
+        #region MAPS
+
+        public static async Task<List<MapName>> GetMapsBySearchAsync(string query)
+        {
+            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapsBySearchAsync(query).ConfigureAwait(false);
+        }
+
+        public static async Task<Map> GetMapStatsAsync(string query)
+        {
+            var map = GetMapsBySearchAsync(query).Result.FirstOrDefault().Name;
+            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapStatsAsync(map).ConfigureAwait(false);
+        }
+
+        public static async Task<MapThumbnail> GetMapThumbnailAsync(string query)
+        {
+            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapThumbnailAsync(query).ConfigureAwait(false);
+        }
+
+        #endregion MAPS
+
         #region NEWS
 
         public static async Task<List<News>> GetNewsOverviewAsync(int page = 0, string provider = "")
@@ -70,7 +90,7 @@ namespace FlawBOT.Framework.Services
 
         #endregion CREATORS
 
-        #region QUICKPLAY
+        #region SERVERS
 
         public static async Task<GameMode> GetGameModeAsync(string query)
         {
@@ -87,38 +107,9 @@ namespace FlawBOT.Framework.Services
             return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetGameModeServerAsync(query).ConfigureAwait(false);
         }
 
-        public static async Task<List<Server>> GetGameServerInfoAsync(string query)
+        public static async Task<List<Server>> GetGameServerInfoAsync(string ip, int port)
         {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetGameServerInfoAsync(query).ConfigureAwait(false);
-        }
-
-        #endregion QUICKPLAY
-
-        #region SERVERS
-
-        public static async Task<Provider> GetCommunityProviderAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCommunityProviderAsync(query).ConfigureAwait(false);
-        }
-
-        public static async Task<List<Server>> GetCommunityProviderServersAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCommunityProviderServersAsync(query).ConfigureAwait(false);
-        }
-
-        public static async Task<ProviderStats> GetCommunityProviderStatsAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCommunityProviderStatsAsync(query).ConfigureAwait(false);
-        }
-
-        public static async Task<CompProvider> GetCompetitiveProviderAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCompetitiveProviderAsync(query).ConfigureAwait(false);
-        }
-
-        public static async Task<CompProviderStats> GetCompetitiveProviderStatsAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCompetitiveProviderStatsAsync(query).ConfigureAwait(false);
+            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetGameServerInfoAsync(ip, port).ConfigureAwait(false);
         }
 
         public static async Task<List<ServerList>> GetCustomServerListsAsync()
@@ -126,36 +117,6 @@ namespace FlawBOT.Framework.Services
             return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCustomServerListsAsync().ConfigureAwait(false);
         }
 
-        public static async Task<ServerList> GetSpecificServerListAsync(int query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetSpecificServerListAsync(query).ConfigureAwait(false);
-        }
-
-        public static async Task<List<Server>> GetServersFromServerListAsync(int query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetServersFromServerListAsync(query).ConfigureAwait(false);
-        }
-
         #endregion SERVERS
-
-        #region MAPS
-
-        public static async Task<List<MapName>> GetMapsBySearchAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapsBySearchAsync(query).ConfigureAwait(false);
-        }
-
-        public static async Task<Map> GetMapStatsAsync(string query)
-        {
-            var map = GetMapsBySearchAsync(query).Result.FirstOrDefault().Name;
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapStatsAsync(map).ConfigureAwait(false);
-        }
-
-        public static async Task<MapThumbnail> GetMapThumbnailAsync(string query)
-        {
-            return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapThumbnailAsync(query).ConfigureAwait(false);
-        }
-
-        #endregion MAPS
     }
 }

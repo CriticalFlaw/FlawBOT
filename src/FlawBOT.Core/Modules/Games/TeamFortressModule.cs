@@ -5,6 +5,7 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -72,8 +73,6 @@ namespace FlawBOT.Modules
                 double.TryParse(results.AllTimeAvgPlayers, out var avg_players);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.MapName)
-                    .AddField("Official", results.OfficialMap ? "Yes" : "No", true)
-                    .AddField("Game Mode", results.GameModes[0] ?? "Unknown", true)
                     .AddField("Highest Server Count", results.HighestServers.ToString() ?? "Unknown", true)
                     .AddField("Highest Player Count", results.HighestPlayers.ToString() ?? "Unknown", true)
                     .AddField("Avg. Players", Math.Round(avg_players, 2).ToString() ?? "Unknown", true)
@@ -100,6 +99,13 @@ namespace FlawBOT.Modules
                     if (results.ExtraInfo.GameBananaUrl != null)
                         links.Append($"[GameBanana]({results.ExtraInfo.GameBananaUrl}) **|**");
                     output.AddField("Links", links.ToString(), true);
+                }
+
+                if (results.GameModes.Count > 0)
+                {
+                    var desc = TeamFortressService.GetGameModeAsync(results.GameModes.FirstOrDefault()).Result;
+                    output.WithDescription(desc.Title + " - " + desc.Description);
+                    output.WithColor(new DiscordColor($"#{desc.Color}"));
                 }
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
@@ -187,7 +193,7 @@ namespace FlawBOT.Modules
         [Command("server")]
         [Aliases("servers")]
         [Description("Retrieve a list of servers with given game-mode")]
-        public async Task TF2Servers(CommandContext ctx,
+        public async Task TF2ServerByMode(CommandContext ctx,
             [Description("Name of the game-mode, like payload")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
@@ -195,37 +201,83 @@ namespace FlawBOT.Modules
             if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
+                await OutputServerInfo(ctx, results.OrderBy(_ => new Random().Next()).ToList()).ConfigureAwait(false);
+        }
+
+        [Command("ip")]
+        [Aliases("find")]
+        [Description("Retrieve a game server with given ip address")]
+        public async Task TF2ServerByIP(CommandContext ctx,
+            [Description("Game server IP address, like 164.132.233.16")] string ip,
+            [Description("Game server port, like 27022")] int port = 0)
+        {
+            if (!BotServices.CheckUserInput(ip)) return;
+            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(ip);
+            if (!regex.Success) return;
+            var results = await TeamFortressService.GetGameServerInfoAsync(ip, port).ConfigureAwait(false);
+            if (results is null || results.Count <= 0)
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+            else
+                await OutputServerInfo(ctx, results.OrderBy(_ => new Random().Next()).ToList()).ConfigureAwait(false);
+        }
+
+        public async Task OutputServerInfo(CommandContext ctx, List<TeamworkTF.Sharp.Server> results)
+        {
+            foreach (var server in results)
             {
-                results = results.OrderBy(_ => new Random().Next()).ToList();
-                foreach (var server in results.Where(n => n.GameModes.Contains(query)))
-                {
-                    var output = new DiscordEmbedBuilder()
-                        .WithTitle(server.Name)
-                        .WithDescription("steam://connect/" + server.Ip + ":" + server.Port)
-                        .AddField("Provider", (server.Provider != null) ? server.Provider.Name : "Unknown", true)
-                        .AddField("Player Count", (server.Players.ToString() ?? "Unknown") + "/" + (server.MaxPlayers.ToString() ?? "Unknown"), true)
-                        .AddField("Password Lock", (server.HasPassword == true) ? "Yes" : "No", true)
-                        .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
-                        .AddField("Instant Respawn", server.HasNoRespawnTime ? "Yes" : "No", true)
-                        .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
-                        .AddField("Current Map", server.MapName ?? "Unknown", true)
-                        .AddField("Next Map", server.MapNameNext ?? "Unknown", true)
-                        //.WithImageUrl("https://teamwork.tf" + server.ThumbnailPath)
-                        .WithFooter("Type 'next' within 10 seconds for the next server")
-                        .WithColor(new DiscordColor("#E7B53B"));
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(server.Name)
+                    .WithDescription("steam://connect/" + server.Ip + ":" + server.Port)
+                    .AddField("Provider", (server.Provider != null) ? server.Provider.Name : "Unknown", true)
+                    .AddField("Player Count", (server.Players.ToString() ?? "Unknown") + "/" + (server.MaxPlayers.ToString() ?? "Unknown"), true)
+                    .AddField("Password Lock", (server.HasPassword) ? "Yes" : "No", true)
+                    .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
+                    .AddField("Instant Respawn", server.HasNoRespawnTime ? "Yes" : "No", true)
+                    .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
+                    .AddField("Current Map", server.MapName ?? "Unknown", true)
+                    .AddField("Next Map", server.MapNameNext ?? "Unknown", true)
+                    .WithFooter("Type 'next' within 10 seconds for the next server")
+                    .WithColor(new DiscordColor("#E7B53B"));
 
-                    var thumbnailUrl = await TeamFortressService.GetMapThumbnailAsync(server.MapName).ConfigureAwait(false);
-                    output.WithImageUrl(thumbnailUrl.Name);
+                var thumbnailUrl = await TeamFortressService.GetMapThumbnailAsync(server.MapName).ConfigureAwait(false);
+                output.WithImageUrl(thumbnailUrl.Name);
 
-                    var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
-                    if (results.Count == 1) continue;
-                    var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
-                    if (interactivity.Result is null) break;
-                    if (!server.Equals(results.Last()))
-                        await BotServices.RemoveMessage(message).ConfigureAwait(false);
-                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                }
+                if (results.Count == 1) continue;
+                var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
+                if (interactivity.Result is null) break;
+                if (!server.Equals(results.Last()))
+                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
+                await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+            }
+        }
+
+        [Command("server-list")]
+        [Aliases("serverList")]
+        [Description("Retrieve a curated list of servers")]
+        public async Task TF2ServerList(CommandContext ctx)
+        {
+            var results = await TeamFortressService.GetCustomServerListsAsync().ConfigureAwait(false);
+            results = results.OrderBy(_ => new Random().Next()).ToList();
+            foreach (var server in results)
+            {
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(server.Name)
+                    .WithDescription((Regex.Replace(server.DescriptionLarge.Length <= 500 ? server.DescriptionLarge : server.DescriptionLarge.Substring(0, 250) + "...", "<[^>]*>", "")) ?? "Unknown")
+                    .AddField("Created by", server.Creator.Name ?? "Unknown", true)
+                    .AddField("Subscribers", server.Subscribed.ToString() ?? "Unknown", true)
+                    .WithUrl(Resources.URL_TEAMWORK_SERVERS + server.Id)
+                    .WithFooter("Type 'next' within 10 seconds for the next server list")
+                    .WithColor(new DiscordColor("#E7B53B"));
+                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+
+                if (results.Count == 1) continue;
+                var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
+                if (interactivity.Result is null) break;
+                if (!server.Equals(results.Last()))
+                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
+                await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
             }
         }
 

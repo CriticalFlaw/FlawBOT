@@ -331,6 +331,15 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://teamwork.tf/community/customserverlist/.
+        /// </summary>
+        internal static string URL_TEAMWORK_SERVERS {
+            get {
+                return ResourceManager.GetString("URL_TEAMWORK_SERVERS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://www.twitch.tv/.
         /// </summary>
         internal static string URL_TWITCH_CHANNEL {

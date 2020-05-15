@@ -21,4 +21,3 @@ To run your own instance of FlawBOT, [clone this repository](https://github.com/
 * [NASA](https://api.nasa.gov/)
 * [Teamwork.TF](https://teamwork.tf/api)
 * [News API](https://newsapi.org/)
-* [GoodReads](https://www.goodreads.com/api)

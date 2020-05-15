@@ -207,6 +207,9 @@
   <data name="URL_STEAM_USER" xml:space="preserve">
     <value>https://steamcommunity.com/id/</value>
   </data>
+  <data name="URL_TEAMWORK_SERVERS" xml:space="preserve">
+    <value>https://teamwork.tf/community/customserverlist/</value>
+  </data>
   <data name="URL_TWITCH_CHANNEL" xml:space="preserve">
     <value>https://www.twitch.tv/</value>
   </data>
