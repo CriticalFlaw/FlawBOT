@@ -176,10 +176,9 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithDescription($"Location: { results.City}, { results.Region}, { results.Country}")
-                    .AddField("Longitude", results.Longitude.ToString(), true)
-                    .AddField("Latitude", results.Latitude.ToString(), true)
+                    .AddField("Location", $"{results.City}, {results.Region}, {results.Country}")
                     .AddField("ISP", results.ISP)
+                    .AddField("Coordinates", $"{results.Latitude}°N, {results.Longitude}°W")
                     .WithFooter($"IP: {results.Query}")
                     .WithColor(new DiscordColor("#4d2f63"));
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);

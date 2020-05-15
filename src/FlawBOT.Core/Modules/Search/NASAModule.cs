@@ -14,7 +14,7 @@ namespace FlawBOT.Modules
         #region COMMAND_NASA
 
         [Command("nasa")]
-        [Aliases("apod")]
+        [Aliases("apod", "space")]
         [Description("Retrieve NASA's Astronomy Picture of the Day")]
         public async Task NASA(CommandContext ctx)
         {
@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
             else
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.Title)
+                    .WithDescription(results.Title)
                     .WithImageUrl(results.ImageHD ?? results.ImageSD)
                     .WithFooter(results.Description)
                     .WithColor(new DiscordColor("#0B3D91"));

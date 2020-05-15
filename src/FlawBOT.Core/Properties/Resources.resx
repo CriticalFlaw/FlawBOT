@@ -166,7 +166,7 @@
     <value>This user doesn't have any roles.</value>
   </data>
   <data name="ERR_ROLE_NOT_ALLOWED" xml:space="preserve">
-    <value>You are unauthorised to remove roles from this user.</value>
+    <value>You are unauthorized to remove roles from this user.</value>
   </data>
   <data name="ERR_STEAM_CONNECT_FORMAT" xml:space="preserve">
     <value>Invalid connection info, follow the format: 123.345.56.789:000; password hello</value>

@@ -25,7 +25,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(location)) return;
             var results = GoogleService.GetTimeDataAsync(location).Result;
-            if (results.status != "OK")
+            if (results == null || results.status != "OK")
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
             else
             {
@@ -59,7 +59,7 @@ namespace FlawBOT.Modules
 
                     foreach (var result in results.Articles.Take(5))
                     {
-                        output.AddField(result.Title, result.Url);
+                        output.AddField(result.PublishDate.ToString(), $"[{result.Title}]({result.Url})");
                         results.Articles.Remove(result);
                     }
                     var message = await ctx.RespondAsync("Latest Google News articles from News API", embed: output.Build()).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await GoogleService.GetWeatherDataAsync(query).ConfigureAwait(false);
-            if (results.COD == 404)
+            if (results == null || results.COD == 404)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Missing).ConfigureAwait(false);
             else
             {

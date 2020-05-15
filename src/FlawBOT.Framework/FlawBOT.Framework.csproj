@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyVersion>2.5.0.0</AssemblyVersion>
-    <Version>2.5.0</Version>
-    <FileVersion>2.5.0.0</FileVersion>
-    <Authors>CriticalFlaw</Authors>
+    <AssemblyVersion>2.7.0.0</AssemblyVersion>
+    <Version>2.6.0</Version>
+    <FileVersion>2.6.0.0</FileVersion>
+    <Authors>Igor Nikitin</Authors>
     <Company>CriticalFlaw</Company>
     <Product>FlawBOT</Product>
     <Description>Multipurpose Discord bot written in C# using DSharpPlus. Application Framework.</Description>

@@ -46,7 +46,7 @@ namespace FlawBOT.Modules
                     if (categories != null || categories.Count > 0)
                     {
                         foreach (var x in categories)
-                            category.Append(x.Name).Append(!query.Equals(categories.Last()) ? ", " : string.Empty);
+                            category.Append($"[{x.Name}]({x.Weblink}) **|** ");
                     }
                     output.AddField("Categories", category.ToString() ?? "Unknown", true);
                     await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);

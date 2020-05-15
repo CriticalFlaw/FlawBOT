@@ -30,8 +30,8 @@ namespace GamesModule
         [Test]
         public void GetServers()
         {
-            Assert.IsNotNull(TeamFortressService.GetServersAsync("payload").Result);
-            Assert.IsNull(TeamFortressService.GetServersAsync("payloader").Result);
+            Assert.IsNotNull(TeamFortressService.GetGameModeServerAsync("payload").Result);
+            Assert.IsNull(TeamFortressService.GetGameModeServerAsync("payloader").Result);
         }
 
         [Test, Order(1)]

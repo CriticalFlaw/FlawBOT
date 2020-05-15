@@ -205,7 +205,7 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are unauthorised to remove roles from this user..
+        ///   Looks up a localized string similar to You are unauthorized to remove roles from this user..
         /// </summary>
         internal static string ERR_ROLE_NOT_ALLOWED {
             get {

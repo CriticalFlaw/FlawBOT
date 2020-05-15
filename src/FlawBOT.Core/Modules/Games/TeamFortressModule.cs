@@ -127,7 +127,7 @@ namespace FlawBOT.Modules
             {
                 var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#E7B53B"));
                 foreach (var result in results.Take(5))
-                    output.AddField(result.Title, result.Link.AbsoluteUri);
+                    output.AddField(result.CreatedAt.Date.ToString(), $"{result.Type}: [{result.Title}]({result.Link.AbsoluteUri})");
                 await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build()).ConfigureAwait(false);
             }
         }

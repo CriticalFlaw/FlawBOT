@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
         [Description("Ping the FlawBOT client")]
         public async Task Ping(CommandContext ctx)
         {
-            await ctx.RespondAsync($":ping_pong: Pong! Ping: **{ctx.Client.Ping}**ms").ConfigureAwait(false);
+            await BotServices.SendEmbedAsync(ctx, $":ping_pong: Pong! Ping: **{ctx.Client.Ping}**ms", EmbedType.Default).ConfigureAwait(false);
         }
 
         #endregion COMMAND_PING

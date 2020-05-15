@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
@@ -22,12 +23,16 @@ namespace FlawBOT.Modules
             var results = ImgurService.GetImgurGalleryAsync(query).Result;
             switch (results)
             {
-                case GalleryAlbum _:
-                    await ctx.RespondAsync(((GalleryAlbum)results).Link).ConfigureAwait(false);
+                case GalleryImage _:
+                    var output = new DiscordEmbedBuilder()
+                        .WithImageUrl(((GalleryImage)results).Link)
+                        .WithFooter(((GalleryImage)results).Title ?? string.Empty)
+                        .WithColor(new DiscordColor("#85BF25"));
+                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
                     break;
 
-                case GalleryImage _:
-                    await ctx.RespondAsync(((GalleryImage)results).Link).ConfigureAwait(false);
+                case GalleryAlbum _:
+                    await ctx.RespondAsync(((GalleryAlbum)results).Link).ConfigureAwait(false);
                     break;
 
                 default:

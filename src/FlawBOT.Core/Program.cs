@@ -33,11 +33,11 @@ namespace FlawBOT
                 app.RunBotAsync().GetAwaiter().GetResult();
                 await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine($"\nException occurred: {e.GetType()} :\n{e.Message}");
-                if (!(e.InnerException is null))
-                    Console.WriteLine($"Inner exception: {e.InnerException.GetType()} :\n{e.InnerException.Message}");
+                Console.WriteLine($"\nException occurred: {ex.GetType()} :\n{ex.Message}");
+                if (!(ex.InnerException is null))
+                    Console.WriteLine($"Inner exception: {ex.InnerException.GetType()} :\n{ex.InnerException.Message}");
                 Console.ReadKey();
             }
             Console.WriteLine("\nShutting down...");
@@ -103,7 +103,7 @@ namespace FlawBOT
             Commands.SetHelpFormatter<HelpFormatter>();
 
             // Start the uptime counter
-            Console.Title = SharedData.Name + " (" + SharedData.Version + ")";
+            Console.Title = SharedData.Name + $" ({SharedData.Version})";
             SharedData.ProcessStarted = DateTime.Now;
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
             await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
