@@ -1,12 +1,13 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using PokemonTcgSdk;
 using PokemonTcgSdk.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Card = PokemonTcgSdk.Card;
 
 namespace FlawBOT.Framework.Services
 {
@@ -17,13 +18,15 @@ namespace FlawBOT.Framework.Services
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query = "")
         {
             query ??= GetRandomPokemon();
-            var results = await _http.GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim()).ConfigureAwait(false);
+            var results = await _http
+                .GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim())
+                .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<PokemonCards>(results);
         }
 
         public static PokemonCard GetExactPokemon(string cardID)
         {
-            return PokemonTcgSdk.Card.Find<Pokemon>(cardID).Card;
+            return Card.Find<Pokemon>(cardID).Card;
         }
 
         public static string GetRandomPokemon()

@@ -1,12 +1,12 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -23,9 +23,9 @@ namespace FlawBOT.Modules
         {
             var results = await PokemonService.GetPokemonCardsAsync(query).ConfigureAwait(false);
             if (results.Cards.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
-            {
                 foreach (var dex in results.Cards)
                 {
                     var card = PokemonService.GetExactPokemon(dex.ID);
@@ -34,9 +34,11 @@ namespace FlawBOT.Modules
                         .AddField("Series", card.Series ?? "Unknown", true)
                         .AddField("Rarity", card.Rarity ?? "Unknown", true)
                         .AddField("HP", card.Hp ?? "Unknown", true)
-                        .AddField("Ability", (card.Ability != null) ? card.Ability.Name : "Unknown", true)
+                        .AddField("Ability", card.Ability != null ? card.Ability.Name : "Unknown", true)
                         .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
-                        .WithFooter(!card.Equals(results.Cards.Last()) ? "Type 'next' within 10 seconds for the next Pokémon" : "This is the last found Pokémon on the list.")
+                        .WithFooter(!card.Equals(results.Cards.Last())
+                            ? "Type 'next' within 10 seconds for the next Pokémon"
+                            : "This is the last found Pokémon on the list.")
                         .WithColor(DiscordColor.Gold);
 
                     var types = new StringBuilder();
@@ -56,7 +58,6 @@ namespace FlawBOT.Modules
                     if (!card.Equals(results.Cards.Last()))
                         await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }
-            }
         }
 
         #endregion COMMAND_POKEMON

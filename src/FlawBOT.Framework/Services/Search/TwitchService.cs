@@ -1,8 +1,8 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {

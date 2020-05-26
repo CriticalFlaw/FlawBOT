@@ -1,11 +1,11 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -27,7 +27,7 @@ namespace FlawBOT.Modules
                 double result = 0;
                 switch (operation)
                 {
-                    default:    //case "+":
+                    default: //case "+":
                         result = num1 + num2;
                         break;
 
@@ -56,7 +56,8 @@ namespace FlawBOT.Modules
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_MATH_EQUATION, EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_MATH_EQUATION, EmbedType.Warning)
+                    .ConfigureAwait(false);
             }
         }
 

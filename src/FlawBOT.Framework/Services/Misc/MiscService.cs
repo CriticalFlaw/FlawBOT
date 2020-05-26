@@ -1,21 +1,15 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
     public static class EightBallService
     {
-        public static string GetRandomAnswer()
-        {
-            var random = new Random();
-            return Answers[random.Next(Answers.Length)];
-        }
-
         private static ImmutableArray<string> Answers = new[]
         {
             "It is certain",
@@ -39,6 +33,12 @@ namespace FlawBOT.Framework.Services
             "Outlook not so good",
             "Very doubtful"
         }.ToImmutableArray();
+
+        public static string GetRandomAnswer()
+        {
+            var random = new Random();
+            return Answers[random.Next(Answers.Length)];
+        }
     }
 
     public class CatService : HttpHandler

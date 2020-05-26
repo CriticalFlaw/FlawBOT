@@ -30,6 +30,7 @@ namespace FlawBOT.Framework.Services
                 case RedditCategory.New: return "new";
                 case RedditCategory.Top: return "top";
             }
+
             throw new ArgumentException("Unknown reddit category", nameof(category));
         }
     }

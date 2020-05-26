@@ -1,4 +1,9 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
@@ -10,26 +15,21 @@ using FlawBOT.Common;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using FlawBOT.Modules;
-using System;
-using System.IO;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FlawBOT
 {
     public class Program
     {
+        private static readonly object _lock = new object();
         public DiscordClient Client { get; set; }
         public CommandsNextExtension Commands { get; private set; }
-        private static readonly object _lock = new object();
 
         public static async Task Main(string[] args)
         {
             try
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                Program app = new Program();
+                var app = new Program();
                 app.RunBotAsync().GetAwaiter().GetResult();
                 await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
             }
@@ -40,6 +40,7 @@ namespace FlawBOT
                     Console.WriteLine($"Inner exception: {ex.InnerException.GetType()} :\n{ex.InnerException.Message}");
                 Console.ReadKey();
             }
+
             Console.WriteLine("\nShutting down...");
         }
 
@@ -72,7 +73,7 @@ namespace FlawBOT
                 PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
                 EnableDms = false, // Set the boolean for responding to direct messages
                 EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
-                CaseSensitive = false,
+                CaseSensitive = false
             });
             Commands.CommandExecuted += Commands_CommandExecuted;
             Commands.CommandErrored += Commands_CommandErrored;
@@ -141,38 +142,52 @@ namespace FlawBOT
                             return;
 
                         default:
-                            await BotServices.SendEmbedAsync(e.Context, $"Command **{e.Command.QualifiedName}** could not be executed.", EmbedType.Error).ConfigureAwait(false);
+                            await BotServices.SendEmbedAsync(e.Context,
+                                    $"Command **{e.Command.QualifiedName}** could not be executed.", EmbedType.Error)
+                                .ConfigureAwait(false);
                             foreach (var check in cfe.FailedChecks)
-                            {
                                 switch (check)
                                 {
                                     case RequirePermissionsAttribute perms:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!", EmbedType.Error).ConfigureAwait(false);
+                                        await BotServices.SendEmbedAsync(e.Context,
+                                            $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!",
+                                            EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequireUserPermissionsAttribute uperms:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- You do not have sufficient permissions ({uperms.Permissions.ToPermissionString()})!", EmbedType.Error).ConfigureAwait(false);
+                                        await BotServices.SendEmbedAsync(e.Context,
+                                            $"- You do not have sufficient permissions ({uperms.Permissions.ToPermissionString()})!",
+                                            EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequireBotPermissionsAttribute bperms:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- I do not have sufficient permissions ({bperms.Permissions.ToPermissionString()})!", EmbedType.Error).ConfigureAwait(false);
+                                        await BotServices.SendEmbedAsync(e.Context,
+                                            $"- I do not have sufficient permissions ({bperms.Permissions.ToPermissionString()})!",
+                                            EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     case RequireOwnerAttribute _:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- This command is reserved only for the bot owner.", EmbedType.Error).ConfigureAwait(false);
+                                        await BotServices.SendEmbedAsync(e.Context,
+                                                "- This command is reserved only for the bot owner.", EmbedType.Error)
+                                            .ConfigureAwait(false);
                                         break;
 
                                     case RequirePrefixesAttribute pa:
-                                        await BotServices.SendEmbedAsync(e.Context, $"- This command can only be invoked with the following prefixes: {string.Join(" ", pa.Prefixes)}.", EmbedType.Error).ConfigureAwait(false);
+                                        await BotServices.SendEmbedAsync(e.Context,
+                                            $"- This command can only be invoked with the following prefixes: {string.Join(" ", pa.Prefixes)}.",
+                                            EmbedType.Error).ConfigureAwait(false);
                                         break;
 
                                     default:
-                                        await BotServices.SendEmbedAsync(e.Context, "Unknown check triggered. Please notify the developer using the command *.bot report*", EmbedType.Error).ConfigureAwait(false);
+                                        await BotServices.SendEmbedAsync(e.Context,
+                                            "Unknown check triggered. Please notify the developer using the command *.bot report*",
+                                            EmbedType.Error).ConfigureAwait(false);
                                         break;
                                 }
-                            }
+
                             break;
                     }
+
                     break;
 
                 case CommandNotFoundException _:
@@ -184,26 +199,36 @@ namespace FlawBOT
                     break;
 
                 case ArgumentNullException _:
-                    await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error).ConfigureAwait(false);
+                    await BotServices
+                        .SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error)
+                        .ConfigureAwait(false);
                     break;
 
                 case ArgumentException _:
                     if (e.Exception.Message.Contains("Not enough arguments supplied to the command"))
-                        await BotServices.SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error).ConfigureAwait(false);
+                        await BotServices
+                            .SendEmbedAsync(e.Context, "Not enough arguments supplied to the command!", EmbedType.Error)
+                            .ConfigureAwait(false);
                     break;
 
                 case InvalidDataException _:
                     if (e.Exception.Message.Contains("The data within the stream was not valid image data"))
-                        await BotServices.SendEmbedAsync(e.Context, "Provided URL is not an image type!", EmbedType.Error).ConfigureAwait(false);
+                        await BotServices
+                            .SendEmbedAsync(e.Context, "Provided URL is not an image type!", EmbedType.Error)
+                            .ConfigureAwait(false);
                     break;
 
                 default:
                     if (e.Exception.Message.Contains("Given emote was not found"))
-                        await BotServices.SendEmbedAsync(e.Context, "Suggested emote was not found!", EmbedType.Error).ConfigureAwait(false);
+                        await BotServices.SendEmbedAsync(e.Context, "Suggested emote was not found!", EmbedType.Error)
+                            .ConfigureAwait(false);
                     if (e.Exception.Message.Contains("Unauthorized: 403"))
-                        await BotServices.SendEmbedAsync(e.Context, "Insufficient Permissions", EmbedType.Error).ConfigureAwait(false);
+                        await BotServices.SendEmbedAsync(e.Context, "Insufficient Permissions", EmbedType.Error)
+                            .ConfigureAwait(false);
                     else
-                        e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now); // DEBUG ONLY
+                        e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name,
+                            $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}",
+                            DateTime.Now); // DEBUG ONLY
                     break;
             }
         }
@@ -250,6 +275,7 @@ namespace FlawBOT
                         ccfg = ConsoleColor.Magenta;
                         break;
                 }
+
                 Console.ForegroundColor = ccfg;
                 Console.BackgroundColor = ccbg;
                 Console.Write("[{0}]", ea.Level.ToString());

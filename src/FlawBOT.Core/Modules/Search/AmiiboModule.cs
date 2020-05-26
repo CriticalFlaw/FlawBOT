@@ -1,11 +1,11 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -23,9 +23,9 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = await AmiiboService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
-            {
                 foreach (var amiibo in results.Amiibo)
                 {
                     var output = new DiscordEmbedBuilder()
@@ -37,7 +37,9 @@ namespace FlawBOT.Modules
                         .AddField(":flag_eu: Release:", amiibo.ReleaseDate.European, true)
                         .AddField(":flag_au: Release:", amiibo.ReleaseDate.Australian, true)
                         .WithImageUrl(amiibo.Image)
-                        .WithFooter(!amiibo.Equals(results.Amiibo.Last()) ? "Type 'next' within 10 seconds for the next amiibo" : "This is the last found amiibo on the list.")
+                        .WithFooter(!amiibo.Equals(results.Amiibo.Last())
+                            ? "Type 'next' within 10 seconds for the next amiibo"
+                            : "This is the last found amiibo on the list.")
                         .WithColor(new DiscordColor("#E70009"));
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
@@ -48,7 +50,6 @@ namespace FlawBOT.Modules
                     if (!amiibo.Equals(results.Amiibo.Last()))
                         await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
-            }
         }
 
         #endregion COMMAND_AMIIBO

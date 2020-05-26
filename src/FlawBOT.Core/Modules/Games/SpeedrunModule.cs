@@ -1,12 +1,12 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -24,9 +24,9 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result.Data;
             if (results is null || results.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
-            {
                 foreach (var game in results)
                 {
                     var output = new DiscordEmbedBuilder()
@@ -40,14 +40,12 @@ namespace FlawBOT.Modules
                         .WithUrl(game.WebLink)
                         .WithColor(new DiscordColor("#0F7A4D"));
 
-                    var link = game.Links.Where(x => x.REL == "categories").First().URL;
+                    var link = game.Links.First(x => x.REL == "categories").URL;
                     var categories = SpeedrunService.GetSpeedrunCategoryAsync(link).Result.Data;
                     var category = new StringBuilder();
                     if (categories != null || categories.Count > 0)
-                    {
                         foreach (var x in categories)
                             category.Append($"[{x.Name}]({x.Weblink}) **|** ");
-                    }
                     output.AddField("Categories", category.ToString() ?? "Unknown", true);
                     await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
@@ -58,7 +56,6 @@ namespace FlawBOT.Modules
                     if (!game.Equals(results.Last()))
                         await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }
-            }
         }
 
         #endregion COMMAND_SPEEDRUN

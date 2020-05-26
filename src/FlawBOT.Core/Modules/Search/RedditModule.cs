@@ -1,11 +1,11 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -19,25 +19,32 @@ namespace FlawBOT.Modules
         [Command("hot")]
         [Description("Get hottest posts for a subreddit.")]
         public Task HowPost(CommandContext ctx, [Description("Subreddit.")] string query)
-            => RedditPost(ctx, query, RedditCategory.Hot);
+        {
+            return RedditPost(ctx, query, RedditCategory.Hot);
+        }
 
         [Command("new")]
         [Description("Get newest posts for a subreddit.")]
         [Aliases("newest", "latest")]
         public Task NewPost(CommandContext ctx, [Description("Subreddit.")] string query)
-            => RedditPost(ctx, query, RedditCategory.New);
+        {
+            return RedditPost(ctx, query, RedditCategory.New);
+        }
 
         [Command("top")]
         [Description("Get top posts for a subreddit.")]
         public Task TopPost(CommandContext ctx, [Description("Subreddit.")] string query)
-            => RedditPost(ctx, query, RedditCategory.Top);
+        {
+            return RedditPost(ctx, query, RedditCategory.Top);
+        }
 
         private async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = RedditService.GetResults(query, category);
             if (results is null || results.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
 
             while (results.Count > 0)
             {
@@ -50,7 +57,9 @@ namespace FlawBOT.Modules
                     output.AddField(result.Authors[0].Name, $"[{(result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "...")}]({result.Links.First().Uri})");
                     results.Remove(result);
                 }
-                var message = await ctx.RespondAsync("Search results for r/" + query, embed: output).ConfigureAwait(false);
+
+                var message = await ctx.RespondAsync("Search results for r/" + query, embed: output)
+                    .ConfigureAwait(false);
 
                 if (results.Count == 5) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

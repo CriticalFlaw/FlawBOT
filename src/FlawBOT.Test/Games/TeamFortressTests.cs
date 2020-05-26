@@ -20,7 +20,8 @@ namespace GamesModule
             Assert.IsNotNull(TeamFortressService.GetNewsOverviewAsync().Result);
         }
 
-        [Test, Order(2)]
+        [Test]
+        [Order(2)]
         public void GetSchemaItem()
         {
             Assert.IsNotNull(TeamFortressService.GetSchemaItem("scattergun"));
@@ -34,7 +35,8 @@ namespace GamesModule
             Assert.IsNull(TeamFortressService.GetGameModeServerAsync("payloader").Result);
         }
 
-        [Test, Order(1)]
+        [Test]
+        [Order(1)]
         public void UpdateTF2Schema()
         {
             Assert.IsTrue(TeamFortressService.UpdateTF2SchemaAsync().Result);

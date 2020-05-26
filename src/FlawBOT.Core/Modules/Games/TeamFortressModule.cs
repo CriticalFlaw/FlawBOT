@@ -1,16 +1,17 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using FlawBOT.Core.Properties;
-using FlawBOT.Framework.Models;
-using FlawBOT.Framework.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
+using FlawBOT.Core.Properties;
+using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Services;
+using TeamworkTF.Sharp;
 
 namespace FlawBOT.Modules
 {
@@ -29,7 +30,10 @@ namespace FlawBOT.Modules
         {
             var item = TeamFortressService.GetSchemaItem(query);
             if (item is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+            {
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
+            }
             else
             {
                 var textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -47,8 +51,8 @@ namespace FlawBOT.Modules
                 output.AddField("Used by:", classes.ToString() ?? "Unknown", true);
                 output.AddField("Item Slot:", textInfo.ToTitleCase(item.ItemSlot) ?? "Unknown", true);
                 output.AddField("Item Type:", item.ItemTypeName ?? "Unknown", true);
-                output.AddField("Giftable:", (item.Capabilities.CanGiftWrap == true) ? "Yes" : "No", true);
-                output.AddField("Nameable:", (item.Capabilities.Nameable) ? "Yes" : "No", true);
+                output.AddField("Giftable:", item.Capabilities.CanGiftWrap == true ? "Yes" : "No", true);
+                output.AddField("Nameable:", item.Capabilities.Nameable ? "Yes" : "No", true);
                 output.AddField("Restriction:", item.HolidayRestriction ?? "None", true);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
@@ -67,7 +71,10 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+            {
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
+            }
             else
             {
                 double.TryParse(results.AllTimeAvgPlayers, out var avg_players);
@@ -107,6 +114,7 @@ namespace FlawBOT.Modules
                     output.WithDescription(desc.Title + " - " + desc.Description);
                     output.WithColor(new DiscordColor($"#{desc.Color}"));
                 }
+
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
         }
@@ -118,17 +126,21 @@ namespace FlawBOT.Modules
         [Command("news")]
         [Description("Retrieve the latest news article from teamwork.tf")]
         public async Task TF2News(CommandContext ctx,
-            [Description("Page number from which to retrieve the news")] [RemainingText] int query = 0)
+            [Description("Page number from which to retrieve the news")] int query = 0)
         {
-            var results = await TeamFortressService.GetNewsOverviewAsync(page: query).ConfigureAwait(false);
+            var results = await TeamFortressService.GetNewsOverviewAsync(query).ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+            {
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
+            }
             else
             {
                 var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#E7B53B"));
                 foreach (var result in results.Take(5))
                     output.AddField(result.CreatedAt.Date.ToString(), $"{result.Type}: [{result.Title}]({result.Link.AbsoluteUri})");
-                await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build()).ConfigureAwait(false);
+                await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output.Build())
+                    .ConfigureAwait(false);
             }
         }
 
@@ -146,9 +158,9 @@ namespace FlawBOT.Modules
             var steamID = SteamService.GetSteamUserID(query).Result.Data;
             var results = await TeamFortressService.GetCreatorByIDAsync(steamID).ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
-            {
                 foreach (var creator in results)
                 {
                     var user = results.FirstOrDefault();
@@ -158,7 +170,9 @@ namespace FlawBOT.Modules
                         .WithThumbnailUrl(user.ThumbnailUrl)
                         .WithUrl(user.Link)
                         .WithColor(new DiscordColor("#E7B53B"))
-                        .WithFooter(!creator.Equals(results.Last()) ? "Type 'next' within 10 seconds for the next creator" : "Data retrieved from teamwork.tf");
+                        .WithFooter(!creator.Equals(results.Last())
+                            ? "Type 'next' within 10 seconds for the next creator"
+                            : "Data retrieved from teamwork.tf");
 
                     var links = new StringBuilder();
                     if (creator.DiscordGroup != null)
@@ -183,7 +197,6 @@ namespace FlawBOT.Modules
                     if (!creator.Equals(results.Last()))
                         await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
-            }
         }
 
         #endregion COMMAND_CREATORS
@@ -197,9 +210,11 @@ namespace FlawBOT.Modules
             [Description("Name of the game-mode, like payload")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = await TeamFortressService.GetGameModeServerAsync(query.Trim().Replace(' ', '-')).ConfigureAwait(false);
+            var results = await TeamFortressService.GetGameModeServerAsync(query.Trim().Replace(' ', '-'))
+                .ConfigureAwait(false);
             if (results is null)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
                 await OutputServerInfo(ctx, results.OrderBy(_ => new Random().Next()).ToList()).ConfigureAwait(false);
         }
@@ -216,21 +231,22 @@ namespace FlawBOT.Modules
             if (!regex.Success) return;
             var results = await TeamFortressService.GetGameServerInfoAsync(ip, port).ConfigureAwait(false);
             if (results is null || results.Count <= 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
                 await OutputServerInfo(ctx, results.OrderBy(_ => new Random().Next()).ToList()).ConfigureAwait(false);
         }
 
-        public async Task OutputServerInfo(CommandContext ctx, List<TeamworkTF.Sharp.Server> results)
+        public async Task OutputServerInfo(CommandContext ctx, List<Server> results)
         {
             foreach (var server in results)
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(server.Name)
                     .WithDescription("steam://connect/" + server.Ip + ":" + server.Port)
-                    .AddField("Provider", (server.Provider != null) ? server.Provider.Name : "Unknown", true)
+                    .AddField("Provider", server.Provider != null ? server.Provider.Name : "Unknown", true)
                     .AddField("Player Count", (server.Players.ToString() ?? "Unknown") + "/" + (server.MaxPlayers.ToString() ?? "Unknown"), true)
-                    .AddField("Password Lock", (server.HasPassword) ? "Yes" : "No", true)
+                    .AddField("Password Lock", server.HasPassword ? "Yes" : "No", true)
                     .AddField("Random Crits", server.HasRandomCrits == true ? "Yes" : "No", true)
                     .AddField("Instant Respawn", server.HasNoRespawnTime ? "Yes" : "No", true)
                     .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
@@ -264,7 +280,11 @@ namespace FlawBOT.Modules
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(server.Name)
-                    .WithDescription((Regex.Replace(server.DescriptionLarge.Length <= 500 ? server.DescriptionLarge : server.DescriptionLarge.Substring(0, 250) + "...", "<[^>]*>", "")) ?? "Unknown")
+                    .WithDescription(
+                        Regex.Replace(
+                            server.DescriptionLarge.Length <= 500
+                                ? server.DescriptionLarge
+                                : server.DescriptionLarge.Substring(0, 250) + "...", "<[^>]*>", "") ?? "Unknown")
                     .AddField("Created by", server.Creator.Name ?? "Unknown", true)
                     .AddField("Subscribers", server.Subscribed.ToString() ?? "Unknown", true)
                     .WithUrl(Resources.URL_TEAMWORK_SERVERS + server.Id)
