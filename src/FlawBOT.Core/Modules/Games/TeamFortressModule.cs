@@ -25,7 +25,7 @@ namespace FlawBOT.Modules
         [Command("item")]
         [Aliases("schema", "hat")]
         [Description("Retrieve an item from the latest TF2 item schema")]
-        public async Task TF2Item(CommandContext ctx,
+        public async Task Tf2Item(CommandContext ctx,
             [Description("Item to find in the TF2 schema")] [RemainingText] string query = "The Scattergun")
         {
             var item = TeamFortressService.GetSchemaItem(query);
@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
         [Command("map")]
         [Aliases("maps")]
         [Description("Retrieve map information from teamwork.tf")]
-        public async Task TF2Map(CommandContext ctx,
+        public async Task Tf2Map(CommandContext ctx,
             [Description("Normalized map name, like pl_upward")] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
@@ -77,12 +77,12 @@ namespace FlawBOT.Modules
             }
             else
             {
-                double.TryParse(results.AllTimeAvgPlayers, out var avg_players);
+                double.TryParse(results.AllTimeAvgPlayers, out var avgPlayers);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(results.MapName)
                     .AddField("Highest Server Count", results.HighestServers.ToString() ?? "Unknown", true)
                     .AddField("Highest Player Count", results.HighestPlayers.ToString() ?? "Unknown", true)
-                    .AddField("Avg. Players", Math.Round(avg_players, 2).ToString() ?? "Unknown", true)
+                    .AddField("Avg. Players", Math.Round(avgPlayers, 2).ToString(CultureInfo.InvariantCulture) ?? "Unknown", true)
                     .WithFooter("Statistics retrieved from teamwork.tf - refreshed every 5 minutes")
                     .WithImageUrl(results.Thumbnail)
                     .WithUrl("https://wiki.teamfortress.com/wiki/" + results.MapName)
@@ -125,7 +125,7 @@ namespace FlawBOT.Modules
 
         [Command("news")]
         [Description("Retrieve the latest news article from teamwork.tf")]
-        public async Task TF2News(CommandContext ctx,
+        public async Task Tf2News(CommandContext ctx,
             [Description("Page number from which to retrieve the news")] int query = 0)
         {
             var results = await TeamFortressService.GetNewsOverviewAsync(query).ConfigureAwait(false);
@@ -151,12 +151,12 @@ namespace FlawBOT.Modules
         [Command("creator")]
         [Aliases("creators", "youtuber")]
         [Description("Retrieve a community creator profile from teamwork.tf")]
-        public async Task TF2Creators(CommandContext ctx,
+        public async Task Tf2Creators(CommandContext ctx,
             [Description("Name of the community creator to find")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var steamID = SteamService.GetSteamUserID(query).Result.Data;
-            var results = await TeamFortressService.GetCreatorByIDAsync(steamID).ConfigureAwait(false);
+            var steamId = SteamService.GetSteamUserID(query).Result.Data;
+            var results = await TeamFortressService.GetCreatorByIdAsync(steamId).ConfigureAwait(false);
             if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
                     .ConfigureAwait(false);
@@ -165,10 +165,10 @@ namespace FlawBOT.Modules
                 {
                     var user = results.FirstOrDefault();
                     var output = new DiscordEmbedBuilder()
-                        .WithTitle(user.Name)
-                        .WithDescription("Main Class: " + user.Main.ToString().ToUpper())
-                        .WithThumbnailUrl(user.ThumbnailUrl)
-                        .WithUrl(user.Link)
+                        .WithTitle(user?.Name)
+                        .WithDescription("Main Class: " + user?.Main.ToString()?.ToUpper())
+                        .WithThumbnailUrl(user?.ThumbnailUrl)
+                        .WithUrl(user?.Link)
                         .WithColor(new DiscordColor("#E7B53B"))
                         .WithFooter(!creator.Equals(results.Last())
                             ? "Type 'next' within 10 seconds for the next creator"
@@ -206,7 +206,7 @@ namespace FlawBOT.Modules
         [Command("server")]
         [Aliases("servers")]
         [Description("Retrieve a list of servers with given game-mode")]
-        public async Task TF2ServerByMode(CommandContext ctx,
+        public async Task Tf2ServerByMode(CommandContext ctx,
             [Description("Name of the game-mode, like payload")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
@@ -222,7 +222,7 @@ namespace FlawBOT.Modules
         [Command("ip")]
         [Aliases("find")]
         [Description("Retrieve a game server with given ip address")]
-        public async Task TF2ServerByIP(CommandContext ctx,
+        public async Task Tf2ServerByIp(CommandContext ctx,
             [Description("Game server IP address, like 164.132.233.16")] string ip,
             [Description("Game server port, like 27022")] int port = 0)
         {
@@ -272,7 +272,7 @@ namespace FlawBOT.Modules
         [Command("server-list")]
         [Aliases("serverList")]
         [Description("Retrieve a curated list of servers")]
-        public async Task TF2ServerList(CommandContext ctx)
+        public async Task Tf2ServerList(CommandContext ctx)
         {
             var results = await TeamFortressService.GetCustomServerListsAsync().ConfigureAwait(false);
             results = results.OrderBy(_ => new Random().Next()).ToList();

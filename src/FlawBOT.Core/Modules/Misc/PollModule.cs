@@ -30,9 +30,11 @@ namespace FlawBOT.Modules
             else
             {
                 var interactivity = ctx.Client.GetInteractivity();
-                var pollOptions = new List<DiscordEmoji>();
-                pollOptions.Add(DiscordEmoji.FromName(ctx.Client, ":thumbsup:"));
-                pollOptions.Add(DiscordEmoji.FromName(ctx.Client, ":thumbsdown:"));
+                var pollOptions = new List<DiscordEmoji>
+                {
+                    DiscordEmoji.FromName(ctx.Client, ":thumbsup:"),
+                    DiscordEmoji.FromName(ctx.Client, ":thumbsdown:")
+                };
                 var duration = new TimeSpan(0, 0, 3, 0, 0);
                 var output = new DiscordEmbedBuilder().WithDescription(ctx.User.Mention + "asked: " + question + "\nThis poll ends in 3 minutes.");
                 var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);

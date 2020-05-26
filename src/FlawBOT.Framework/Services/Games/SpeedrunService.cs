@@ -19,7 +19,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http
+                var results = await Http
                     .GetStringAsync(Resources.API_Speedrun + "games?name=" + Uri.EscapeUriString(query.Trim()))
                     .ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<SpeedrunGame>(results);
@@ -38,7 +38,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http.GetStringAsync(query).ConfigureAwait(false);
+                var results = await Http.GetStringAsync(query).ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<SpeedrunCategory>(results);
             }
             catch
@@ -50,14 +50,14 @@ namespace FlawBOT.Framework.Services
         /// <summary>
         ///     Retrieve game's identification key for Speedrun.com
         /// </summary>
-        public static async Task<string> GetSpeedrunGameIDAsync(string query)
+        public static async Task<string> GetSpeedrunGameIdAsync(string query)
         {
             try
             {
-                var results = await _http
+                var results = await Http
                     .GetStringAsync(Resources.API_Speedrun + "games?name=" + Uri.EscapeUriString(query.Trim()))
                     .ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<SpeedrunGame>(results).Data.First().ID;
+                return JsonConvert.DeserializeObject<SpeedrunGame>(results).Data.First().Id;
             }
             catch
             {
@@ -68,7 +68,8 @@ namespace FlawBOT.Framework.Services
         /// <summary>
         ///     Retrieve the speedrun game's platforms, genres, developers or publishers.
         /// </summary>
-        /// <param name="queryList">Developer IDs</param>
+        /// <param name="queryList">Speedrun extra identifier</param>
+        /// <param name="search">Speedrun extra category</param>
         public static async Task<string> GetSpeedrunExtraAsync(List<object> queryList, SpeedrunExtras search)
         {
             try
@@ -77,7 +78,7 @@ namespace FlawBOT.Framework.Services
                 var results = new StringBuilder();
                 foreach (var query in queryList.Take(3))
                 {
-                    var output = await _http
+                    var output = await Http
                         .GetStringAsync(Resources.API_Speedrun + search.ToString().ToLowerInvariant() + "/" + query)
                         .ConfigureAwait(false);
                     var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output).Data.Name;

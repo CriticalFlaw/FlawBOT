@@ -11,7 +11,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http.GetStringAsync(Resources.API_Amiibo + "?name=" + query.ToLowerInvariant())
+                var results = await Http.GetStringAsync(Resources.API_Amiibo + "?name=" + query.ToLowerInvariant())
                     .ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<AmiiboData>(results);
             }

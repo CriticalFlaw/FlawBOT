@@ -179,13 +179,13 @@ namespace FlawBOT.Modules
         [Command("activity")]
         [Hidden]
         [Aliases("setactivity")]
-        [Description("Set FlawBOT's activity")]
+        [Description("Set FlawBOT activity")]
         public async Task SetBotActivity(CommandContext ctx,
             [Description("Name of the activity")] [RemainingText] string activity)
         {
             if (string.IsNullOrWhiteSpace(activity))
             {
-                await ctx.Client.UpdateStatusAsync(null).ConfigureAwait(false);
+                await ctx.Client.UpdateStatusAsync().ConfigureAwait(false);
                 await BotServices.SendEmbedAsync(ctx, SharedData.Name + " activity has been changed to Normal")
                     .ConfigureAwait(false);
             }
@@ -282,7 +282,7 @@ namespace FlawBOT.Modules
         {
             var message = await ctx.RespondAsync("Starting update...").ConfigureAwait(false);
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await message.ModifyAsync("Starting update...done!").ConfigureAwait(false);
         }

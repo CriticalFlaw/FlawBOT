@@ -11,7 +11,7 @@ namespace FlawBOT.Framework.Models
         public string Message { get; set; }
     }
 
-    public class IPLocationData
+    public class IpLocationData
     {
         [JsonProperty("@as")]
         public string Title { get; set; }

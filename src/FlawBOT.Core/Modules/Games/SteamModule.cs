@@ -96,9 +96,9 @@ namespace FlawBOT.Modules
                 {
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(summary.Data.Nickname)
-                        .WithDescription(Regex.Replace(profile.Summary, "<[^>]*>", "") ?? string.Empty)
+                        .WithDescription(Regex.Replace(profile?.Summary ?? string.Empty, "<[^>]*>", "") ?? string.Empty)
                         .AddField("Member since", summary.Data.AccountCreatedDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true)
-                        .WithThumbnailUrl(profile.AvatarFull.ToString() ?? profile.Avatar.ToString())
+                        .WithThumbnailUrl(profile?.AvatarFull.ToString() ?? profile.Avatar.ToString())
                         .WithColor(new DiscordColor("#1B2838"))
                         .WithUrl("http://steamcommunity.com/profiles/" + profile.SteamID)
                         .WithFooter("Steam ID: " + profile.SteamID);
@@ -129,7 +129,7 @@ namespace FlawBOT.Modules
 
         [Command("connect")]
         [Aliases("link")]
-        [Description("Format a game connection string into a clickable link")]
+        [Description("Format a game connection string into a link")]
         public async Task SteamServerLink(CommandContext ctx,
             [Description("Connection string")] [RemainingText] string link)
         {

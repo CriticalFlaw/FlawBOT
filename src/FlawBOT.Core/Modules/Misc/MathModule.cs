@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
         {
             try
             {
-                double result = 0;
+                double result;
                 switch (operation)
                 {
                     default: //case "+":

@@ -39,7 +39,7 @@ namespace FlawBOT.Modules
                     .AddField("Country", results.Country, true)
                     .AddField("Box Office", results.BoxOffice, true)
                     .AddField("Production", results.Production, true)
-                    .AddField("IMDB Rating", results.IMDbRating, true)
+                    .AddField("IMDb Rating", results.IMDbRating, true)
                     .AddField("Metacritic", results.Metascore, true)
                     .AddField("Directors", results.Director)
                     .AddField("Actors", results.Actors)

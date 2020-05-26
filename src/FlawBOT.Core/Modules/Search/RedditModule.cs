@@ -46,7 +46,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
                     .ConfigureAwait(false);
 
-            while (results.Count > 0)
+            while (results != null && results.Count > 0)
             {
                 var output = new DiscordEmbedBuilder()
                     .WithFooter("Type 'next' within 10 seconds for the next five posts.")

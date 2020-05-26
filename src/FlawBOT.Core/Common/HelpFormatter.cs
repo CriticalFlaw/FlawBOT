@@ -11,13 +11,13 @@ namespace FlawBOT.Common
 {
     public sealed class HelpFormatter : BaseHelpFormatter
     {
-        private readonly DiscordEmbedBuilder output;
-        private string description;
-        private string name;
+        private readonly DiscordEmbedBuilder _output;
+        private string _description;
+        private string _name;
 
         public HelpFormatter(CommandContext ctx) : base(ctx)
         {
-            output = new DiscordEmbedBuilder()
+            _output = new DiscordEmbedBuilder()
                 .WithColor(DiscordColor.Turquoise)
                 .WithUrl(SharedData.GitHubLink + "wiki");
         }
@@ -25,20 +25,20 @@ namespace FlawBOT.Common
         public override CommandHelpMessage Build()
         {
             var desc = $"Listing all commands and groups. Use {Formatter.InlineCode(".help <command>")} for more details.";
-            if (!string.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(_name))
             {
-                output.WithTitle(name);
-                desc = description ?? "No description provided.";
+                _output.WithTitle(_name);
+                desc = _description ?? "No description provided.";
             }
 
-            output.WithDescription(desc);
-            return new CommandHelpMessage(embed: output);
+            _output.WithDescription(desc);
+            return new CommandHelpMessage(embed: _output);
         }
 
         public override BaseHelpFormatter WithCommand(Command cmd)
         {
-            name = (cmd is CommandGroup ? "Group: " : "Command: ") + cmd.QualifiedName;
-            description = cmd.Description;
+            _name = (cmd is CommandGroup ? "Group: " : "Command: ") + cmd.QualifiedName;
+            _description = cmd.Description;
 
             if (cmd.Overloads?.Any() ?? false)
                 foreach (var overload in cmd.Overloads.OrderByDescending(o => o.Priority))
@@ -61,18 +61,19 @@ namespace FlawBOT.Common
                         args.AppendLine();
                     }
 
-                    output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", args.ToString() ?? "No arguments.");
+                    _output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", args.ToString() ?? "No arguments.");
                 }
 
             if (cmd.Aliases?.Any() ?? false)
-                output.AddField("Aliases", string.Join(", ", cmd.Aliases.Select(a => Formatter.InlineCode(a))), true);
+                _output.AddField("Aliases", string.Join(", ", cmd.Aliases.Select(Formatter.InlineCode)), true);
             return this;
         }
 
         public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
         {
-            if (subcommands.Any())
-                output.AddField(name is null ? "Commands" : "Subcommands", string.Join(", ", subcommands.Select(c => Formatter.InlineCode(c.Name))));
+            var enumerable = subcommands.ToList();
+            if (enumerable.Any())
+                _output.AddField(_name is null ? "Commands" : "Subcommands", string.Join(", ", enumerable.Select(c => Formatter.InlineCode(c.Name))));
             return this;
         }
     }

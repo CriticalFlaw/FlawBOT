@@ -17,21 +17,21 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<DiscordEmbedBuilder> GetSimpsonsDataAsync(SiteRoot site)
         {
-            var output = await _http.GetStringAsync($"https://{site}.com/api/random").ConfigureAwait(false);
+            var output = await Http.GetStringAsync($"https://{site}.com/api/random").ConfigureAwait(false);
             var results = JsonConvert.DeserializeObject<SimpsonsData>(output);
             return EmbedSimpsonsEpisode(results, site);
         }
 
         public static async Task<string> GetSimpsonsGifAsync(SiteRoot site)
         {
-            var result = await _http.GetStringAsync($"https://{site}.com/api/random").ConfigureAwait(false);
+            var result = await Http.GetStringAsync($"https://{site}.com/api/random").ConfigureAwait(false);
             var content = JsonConvert.DeserializeObject<SimpsonsData>(result);
-            var frames_result = await _http
+            var framesResult = await Http
                 .GetStringAsync($"https://{site}.com/api/frames/{content.Episode.Key}/{content.Frame.Timestamp}/3000/4000")
                 .ConfigureAwait(false);
-            var frames = JsonConvert.DeserializeObject<List<Frame>>(frames_result);
+            var frames = JsonConvert.DeserializeObject<List<Frame>>(framesResult);
             var start = frames[0].Timestamp;
-            var end = frames[frames.Count - 1].Timestamp;
+            var end = frames[^1].Timestamp;
             return $"https://{site}.com/gif/{content.Episode.Key}/{start}/{end}.gif";
         }
 

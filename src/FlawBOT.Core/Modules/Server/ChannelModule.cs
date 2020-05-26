@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -124,7 +125,7 @@ namespace FlawBOT.Modules
             switch (channel.Type)
             {
                 case ChannelType.Voice:
-                    output.AddField("Bitrate", channel.Bitrate.ToString() ?? "Unknown", true);
+                    output.AddField("Bitrate", channel.Bitrate.ToString(), true);
                     output.AddField("User limit", channel.UserLimit > 0 ? channel.UserLimit.ToString() : "No limit.", true);
                     break;
 
@@ -176,10 +177,10 @@ namespace FlawBOT.Modules
             }
             else
             {
-                var old_name = channel.Name;
+                var oldName = channel.Name;
                 await channel.ModifyAsync(m => m.Name = name.Trim().Replace(" ", "-")).ConfigureAwait(false);
                 await BotServices.SendEmbedAsync(ctx,
-                    "Successfully renamed the channel " + Formatter.Bold(old_name) + " to " + Formatter.Bold(name),
+                    "Successfully renamed the channel " + Formatter.Bold(oldName) + " to " + Formatter.Bold(name),
                     EmbedType.Good).ConfigureAwait(false);
             }
         }
@@ -200,7 +201,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
                     .ConfigureAwait(false);
             }
-            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, true) == 0))
+            else if (ctx.Guild.Channels.Any(chn => String.Compare(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase) == 0))
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning)
                     .ConfigureAwait(false);
@@ -257,7 +258,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
                     .ConfigureAwait(false);
             }
-            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, true) == 0))
+            else if (ctx.Guild.Channels.Any(chn => String.Compare(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase) == 0))
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning)
                     .ConfigureAwait(false);

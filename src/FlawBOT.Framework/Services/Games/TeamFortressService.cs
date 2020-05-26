@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Models.GameEconomy;
 using SteamWebAPI2.Utilities;
@@ -20,7 +21,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<List<News>> GetNewsOverviewAsync(int page = 0, string provider = "")
         {
-            var results = new List<News>();
+            List<News> results;
             if (page > 0)
                 results = await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetNewsByPageAsync(page)
                     .ConfigureAwait(false);
@@ -37,7 +38,7 @@ namespace FlawBOT.Framework.Services
 
         #region CREATORS
 
-        public static async Task<List<Creator>> GetCreatorByIDAsync(ulong query)
+        public static async Task<List<Creator>> GetCreatorByIdAsync(ulong query)
         {
             return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetCreatorByIDAsync(query.ToString())
                 .ConfigureAwait(false);
@@ -53,7 +54,7 @@ namespace FlawBOT.Framework.Services
                 n.ItemName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public static async Task<bool> UpdateTF2SchemaAsync()
+        public static async Task<bool> UpdateTf2SchemaAsync()
         {
             try
             {
@@ -68,7 +69,7 @@ namespace FlawBOT.Framework.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error updating TF2 item schema. " + ex.Message);
+                Console.WriteLine(Resources.ERR_TF2_LIST, ex.Message);
                 return false;
             }
         }
@@ -85,7 +86,7 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<Map> GetMapStatsAsync(string query)
         {
-            var map = GetMapsBySearchAsync(query).Result.FirstOrDefault().Name;
+            var map = GetMapsBySearchAsync(query).Result.FirstOrDefault()?.Name;
             return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapStatsAsync(map)
                 .ConfigureAwait(false);
         }

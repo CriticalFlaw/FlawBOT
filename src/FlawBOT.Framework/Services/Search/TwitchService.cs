@@ -12,7 +12,7 @@ namespace FlawBOT.Framework.Services
         {
             using var request = new HttpRequestMessage(new HttpMethod("GET"), Resources.API_Twitch + "streams?user_login=" + query);
             request.Headers.TryAddWithoutValidation("Client-ID", TokenHandler.Tokens.TwitchToken);
-            var response = await _http.SendAsync(request).ConfigureAwait(false);
+            var response = await Http.SendAsync(request).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             var results = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<TwitchData>(results);

@@ -12,6 +12,7 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using FlawBOT.Common;
+using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using FlawBOT.Modules;
@@ -20,7 +21,7 @@ namespace FlawBOT
 {
     public class Program
     {
-        private static readonly object _lock = new object();
+        private static readonly object Lock = new object();
         public DiscordClient Client { get; set; }
         public CommandsNextExtension Commands { get; private set; }
 
@@ -35,13 +36,13 @@ namespace FlawBOT
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"\nException occurred: {ex.GetType()} :\n{ex.Message}");
+                Console.WriteLine(Resources.ERR_EXCEPTION, ex.GetType(), ex.Message);
                 if (!(ex.InnerException is null))
-                    Console.WriteLine($"Inner exception: {ex.InnerException.GetType()} :\n{ex.InnerException.Message}");
+                    Console.WriteLine(Resources.ERR_EXCEPTION_INNER, ex.InnerException.GetType(), ex.InnerException.Message);
                 Console.ReadKey();
             }
 
-            Console.WriteLine("\nShutting down...");
+            Console.WriteLine(Resources.INFO_SHUTDOWN);
         }
 
         public async Task RunBotAsync()
@@ -104,10 +105,10 @@ namespace FlawBOT
             Commands.SetHelpFormatter<HelpFormatter>();
 
             // Start the uptime counter
-            Console.Title = SharedData.Name + $" ({SharedData.Version})";
+            Console.Title = SharedData.Name + " - " + SharedData.Version;
             SharedData.ProcessStarted = DateTime.Now;
             await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTF2SchemaAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await Client.ConnectAsync().ConfigureAwait(false); // Connect and log into Discord
             await Task.Delay(-1).ConfigureAwait(false); // Prevent the console window from closing
@@ -154,15 +155,15 @@ namespace FlawBOT
                                             EmbedType.Error).ConfigureAwait(false);
                                         break;
 
-                                    case RequireUserPermissionsAttribute uperms:
+                                    case RequireUserPermissionsAttribute perms:
                                         await BotServices.SendEmbedAsync(e.Context,
-                                            $"- You do not have sufficient permissions ({uperms.Permissions.ToPermissionString()})!",
+                                            $"- You do not have sufficient permissions ({perms.Permissions.ToPermissionString()})!",
                                             EmbedType.Error).ConfigureAwait(false);
                                         break;
 
-                                    case RequireBotPermissionsAttribute bperms:
+                                    case RequireBotPermissionsAttribute perms:
                                         await BotServices.SendEmbedAsync(e.Context,
-                                            $"- I do not have sufficient permissions ({bperms.Permissions.ToPermissionString()})!",
+                                            $"- I do not have sufficient permissions ({perms.Permissions.ToPermissionString()})!",
                                             EmbedType.Error).ConfigureAwait(false);
                                         break;
 
@@ -227,7 +228,7 @@ namespace FlawBOT
                             .ConfigureAwait(false);
                     else
                         e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, SharedData.Name,
-                            $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}",
+                            $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message}",
                             DateTime.Now); // DEBUG ONLY
                     break;
             }
@@ -240,7 +241,7 @@ namespace FlawBOT
 
         private static void Client_LogMessageHandler(object sender, DebugLogMessageEventArgs ea)
         {
-            lock (_lock)
+            lock (Lock)
             {
                 Console.BackgroundColor = ConsoleColor.Black;
 
@@ -250,34 +251,34 @@ namespace FlawBOT
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("[{0}] ", ea.Application);
 
-                var ccfg = ConsoleColor.Gray;
-                var ccbg = ConsoleColor.Black;
+                var fgcolor = ConsoleColor.Gray;
+                var bgcolor = ConsoleColor.Black;
                 switch (ea.Level)
                 {
                     case LogLevel.Critical:
-                        ccfg = ConsoleColor.Black;
-                        ccbg = ConsoleColor.Red;
+                        fgcolor = ConsoleColor.Black;
+                        bgcolor = ConsoleColor.Red;
                         break;
 
                     case LogLevel.Error:
-                        ccfg = ConsoleColor.Red;
+                        fgcolor = ConsoleColor.Red;
                         break;
 
                     case LogLevel.Warning:
-                        ccfg = ConsoleColor.Yellow;
+                        fgcolor = ConsoleColor.Yellow;
                         break;
 
                     case LogLevel.Info:
-                        ccfg = ConsoleColor.Cyan;
+                        fgcolor = ConsoleColor.Cyan;
                         break;
 
                     case LogLevel.Debug:
-                        ccfg = ConsoleColor.Magenta;
+                        fgcolor = ConsoleColor.Magenta;
                         break;
                 }
 
-                Console.ForegroundColor = ccfg;
-                Console.BackgroundColor = ccbg;
+                Console.ForegroundColor = fgcolor;
+                Console.BackgroundColor = bgcolor;
                 Console.Write("[{0}]", ea.Level.ToString());
 
                 Console.BackgroundColor = ConsoleColor.Black;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -25,7 +26,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(location)) return;
             var results = GoogleService.GetTimeDataAsync(location).Result;
-            if (results == null || results.status != "OK")
+            if (results == null || results.Status != "OK")
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
                     .ConfigureAwait(false);
@@ -34,7 +35,7 @@ namespace FlawBOT.Modules
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(":clock1: Current time in " + results.Results[0].FormattedAddress)
-                    .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.timeZoneName)
+                    .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.TimeZoneName)
                     .WithColor(SharedData.DefaultColor);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
@@ -62,7 +63,7 @@ namespace FlawBOT.Modules
 
                     foreach (var result in results.Articles.Take(5))
                     {
-                        output.AddField(result.PublishDate.ToString(), $"[{result.Title}]({result.Url})");
+                        output.AddField(result.PublishDate.ToString(CultureInfo.InvariantCulture), $"[{result.Title}]({result.Url})");
                         results.Articles.Remove(result);
                     }
 
@@ -102,7 +103,7 @@ namespace FlawBOT.Modules
                     .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
                     .AddField("Humidity", $"{results.Main.Humidity}%", true)
                     .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
-                    .WithUrl("https://openweathermap.org/city/" + results.ID)
+                    .WithUrl("https://openweathermap.org/city/" + results.Id)
                     .WithColor(SharedData.DefaultColor);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }

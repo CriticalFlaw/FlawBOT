@@ -18,15 +18,15 @@ namespace FlawBOT.Framework.Services
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query = "")
         {
             query ??= GetRandomPokemon();
-            var results = await _http
+            var results = await Http
                 .GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim())
                 .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<PokemonCards>(results);
         }
 
-        public static PokemonCard GetExactPokemon(string cardID)
+        public static PokemonCard GetExactPokemon(string cardId)
         {
-            return Card.Find<Pokemon>(cardID).Card;
+            return Card.Find<Pokemon>(cardId).Card;
         }
 
         public static string GetRandomPokemon()
@@ -39,7 +39,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var list = await _http.GetStringAsync(Resources.API_Pokemon).ConfigureAwait(false);
+                var list = await Http.GetStringAsync(Resources.API_Pokemon).ConfigureAwait(false);
                 var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
                 foreach (var pokemon in results)
@@ -50,7 +50,7 @@ namespace FlawBOT.Framework.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error updating the Pokémon list. " + ex.Message);
+                Console.WriteLine(Resources.ERR_POKEMON_LIST, ex.Message);
                 return false;
             }
         }

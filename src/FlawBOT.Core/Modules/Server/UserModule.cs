@@ -222,10 +222,10 @@ namespace FlawBOT.Modules
         [Description("Unban server user")]
         [RequirePermissions(Permissions.BanMembers)]
         public async Task Remove(CommandContext ctx,
-            [Description("Discord user ID to unban from the server")] ulong userID,
+            [Description("Discord user ID to unban from the server")] ulong userId,
             [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
-            var member = await ctx.Client.GetUserAsync(userID).ConfigureAwait(false);
+            var member = await ctx.Client.GetUserAsync(userId).ConfigureAwait(false);
             await ctx.Guild.UnbanMemberAsync(member, reason ?? "No reason provided.").ConfigureAwait(false);
             await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
             await ctx.RespondAsync($"Unbanned Discord User #{member} from the server.").ConfigureAwait(false);

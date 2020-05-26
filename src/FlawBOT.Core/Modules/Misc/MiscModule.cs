@@ -172,11 +172,11 @@ namespace FlawBOT.Modules
         [Command("ip")]
         [Aliases("ipstack", "track")]
         [Description("Retrieve IP address geolocation information")]
-        public async Task IPLocation(CommandContext ctx,
+        public async Task IpLocation(CommandContext ctx,
             [Description("IP Address")] string address)
         {
             if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out var ip)) return;
-            var results = GoogleService.GetIPLocationAsync(ip).Result;
+            var results = GoogleService.GetIpLocationAsync(ip).Result;
             if (results.Status != "success")
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning)

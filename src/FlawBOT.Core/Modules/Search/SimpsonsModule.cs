@@ -29,7 +29,7 @@ namespace FlawBOT.Modules
         [Command("simpsonsgif")]
         [Aliases("doh")]
         [Description("Retrieve a random Simpsons gif")]
-        public async Task SimpsonsGIF(CommandContext ctx,
+        public async Task SimpsonsGif(CommandContext ctx,
             [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
             var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.Frinkiac)
@@ -69,7 +69,7 @@ namespace FlawBOT.Modules
         [Command("futuramagif")]
         [Aliases("neat")]
         [Description("Retrieve a random Futurama gif")]
-        public async Task FuturamaGIF(CommandContext ctx,
+        public async Task FuturamaGif(CommandContext ctx,
             [Description("Inputting anything will add episode information")] [RemainingText] string input)
         {
             var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.Morbotron)

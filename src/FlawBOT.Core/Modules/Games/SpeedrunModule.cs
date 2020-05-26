@@ -35,12 +35,12 @@ namespace FlawBOT.Modules
                         .AddField("Developers", SpeedrunService.GetSpeedrunExtraAsync(game.Developers, SpeedrunExtras.Developers).Result ?? "Unknown", true)
                         .AddField("Publishers", SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result ?? "Unknown", true)
                         .AddField("Platforms", SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result ?? "Unknown")
-                        .WithFooter($"ID: {game.ID} - Abbreviation: {game.Abbreviation}")
-                        .WithThumbnailUrl(game.Assets.CoverLarge.URL ?? game.Assets.Icon.URL)
+                        .WithFooter($"ID: {game.Id} - Abbreviation: {game.Abbreviation}")
+                        .WithThumbnailUrl(game.Assets.CoverLarge.Url ?? game.Assets.Icon.Url)
                         .WithUrl(game.WebLink)
                         .WithColor(new DiscordColor("#0F7A4D"));
 
-                    var link = game.Links.First(x => x.REL == "categories").URL;
+                    var link = game.Links.First(x => x.Rel == "categories").Url;
                     var categories = SpeedrunService.GetSpeedrunCategoryAsync(link).Result.Data;
                     var category = new StringBuilder();
                     if (categories != null || categories.Count > 0)

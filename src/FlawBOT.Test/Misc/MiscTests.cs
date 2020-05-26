@@ -20,9 +20,9 @@ namespace MiscModule
         }
 
         [Test]
-        public void GetIPLocation()
+        public void GetIpLocation()
         {
-            Assert.IsTrue(GoogleService.GetIPLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Status == "success");
+            Assert.IsTrue(GoogleService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Status == "success");
         }
 
         [Test]

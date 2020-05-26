@@ -59,12 +59,12 @@ namespace FlawBOT.Framework.Services
 
         public static bool CheckUserInput(string input)
         {
-            return string.IsNullOrWhiteSpace(input) ? false : true;
+            return !string.IsNullOrWhiteSpace(input);
         }
 
         public static bool CheckChannelName(string input)
         {
-            return string.IsNullOrWhiteSpace(input) || input.Length > 100 ? false : true;
+            return !string.IsNullOrWhiteSpace(input) && input.Length <= 100;
         }
 
         public static async Task<InteractivityResult<DiscordMessage>> GetUserInteractivity(CommandContext ctx, string keyword, int seconds)
@@ -103,12 +103,12 @@ namespace FlawBOT.Framework.Services
                 await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning)
                     .ConfigureAwait(false);
             else
-                using (var client = new WebClient())
-                {
-                    var results = client.DownloadData(input);
-                    stream.Write(results, 0, results.Length);
-                    stream.Position = 0;
-                }
+            {
+                using var client = new WebClient();
+                var results = client.DownloadData(input);
+                stream.Write(results, 0, results.Length);
+                stream.Position = 0;
+            }
 
             return stream;
         }

@@ -12,16 +12,16 @@ namespace FlawBOT.Framework.Models
     public class Stream
     {
         [JsonProperty("id")]
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("user_id")]
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
         [JsonProperty("user_name")]
         public string UserName { get; set; }
 
         [JsonProperty("game_id")]
-        public int GameID { get; set; }
+        public int GameId { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -45,7 +45,7 @@ namespace FlawBOT.Framework.Models
     public class Streamer
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("login")]
         public string Login { get; set; }

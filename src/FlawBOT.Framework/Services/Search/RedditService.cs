@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
+using FlawBOT.Framework.Properties;
 
 namespace FlawBOT.Framework.Services
 {
@@ -31,7 +32,7 @@ namespace FlawBOT.Framework.Services
                 case RedditCategory.Top: return "top";
             }
 
-            throw new ArgumentException("Unknown reddit category", nameof(category));
+            throw new ArgumentException(Resources.ERR_REDDIT_UNKNOWN_CAT, nameof(category));
         }
     }
 

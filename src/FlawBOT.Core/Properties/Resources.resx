@@ -219,4 +219,15 @@
   <data name="URL_YOUTUBE_CHANNEL" xml:space="preserve">
     <value>https://www.youtube.com/channel/</value>
   </data>
+  <data name="ERR_EXCEPTION" xml:space="preserve">
+    <value>Exception occurred: {0} :
+{1}</value>
+  </data>
+  <data name="ERR_EXCEPTION_INNER" xml:space="preserve">
+    <value>Inner exception: {0} :
+{1}</value>
+  </data>
+  <data name="INFO_SHUTDOWN" xml:space="preserve">
+    <value>Shutting Down</value>
+  </data>
 </root>

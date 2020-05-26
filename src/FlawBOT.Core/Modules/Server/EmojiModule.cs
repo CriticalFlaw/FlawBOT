@@ -41,12 +41,12 @@ namespace FlawBOT.Modules
                         await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_IMAGE, EmbedType.Warning)
                             .ConfigureAwait(false);
 
-                var _handler = new HttpClientHandler {AllowAutoRedirect = false};
-                var _http = new HttpClient(_handler, true);
-                var response = await _http.GetAsync(url).ConfigureAwait(false);
+                var handler = new HttpClientHandler {AllowAutoRedirect = false};
+                var http = new HttpClient(handler, true);
+                var response = await http.GetAsync(url).ConfigureAwait(false);
                 if (!response.Content.Headers.ContentType.MediaType.StartsWith("image/")) return;
 
-                using (response = await _http.GetAsync(url).ConfigureAwait(false))
+                using (response = await http.GetAsync(url).ConfigureAwait(false))
                 using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
                     if (stream.Length >= 256000)

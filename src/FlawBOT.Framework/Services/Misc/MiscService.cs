@@ -10,7 +10,7 @@ namespace FlawBOT.Framework.Services
 {
     public static class EightBallService
     {
-        private static ImmutableArray<string> Answers = new[]
+        private static ImmutableArray<string> _answers = new[]
         {
             "It is certain",
             "It is decidedly so",
@@ -37,7 +37,7 @@ namespace FlawBOT.Framework.Services
         public static string GetRandomAnswer()
         {
             var random = new Random();
-            return Answers[random.Next(Answers.Length)];
+            return _answers[random.Next(_answers.Length)];
         }
     }
 
@@ -45,13 +45,13 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<string> GetCatFactAsync()
         {
-            return await _http.GetStringAsync(Resources.API_CatFacts).ConfigureAwait(false);
+            return await Http.GetStringAsync(Resources.API_CatFacts).ConfigureAwait(false);
         }
 
         public static async Task<string> GetCatPhotoAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_CatPhoto).ConfigureAwait(false);
-            return JObject.Parse(results)["file"].ToString();
+            var results = await Http.GetStringAsync(Resources.API_CatPhoto).ConfigureAwait(false);
+            return JObject.Parse(results)["file"]?.ToString();
         }
     }
 
@@ -59,7 +59,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_DogPhoto).ConfigureAwait(false);
+            var results = await Http.GetStringAsync(Resources.API_DogPhoto).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DogData>(results);
         }
     }

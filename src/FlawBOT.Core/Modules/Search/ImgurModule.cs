@@ -16,23 +16,23 @@ namespace FlawBOT.Modules
 
         [Command("imgur")]
         [Aliases("image")]
-        [Description("Retrieve an imager from Imgur")]
+        [Description("Retrieve an image from Imgur")]
         public async Task Imgur(CommandContext ctx,
             [Description("Search query to pass to Imgur")] [RemainingText] string query)
         {
             var results = ImgurService.GetImgurGalleryAsync(query).Result;
             switch (results)
             {
-                case GalleryImage _:
+                case GalleryImage image:
                     var output = new DiscordEmbedBuilder()
-                        .WithImageUrl(((GalleryImage) results).Link)
-                        .WithFooter(((GalleryImage) results).Title ?? string.Empty)
+                        .WithImageUrl(image.Link)
+                        .WithFooter(image.Title ?? string.Empty)
                         .WithColor(new DiscordColor("#85BF25"));
                     await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
                     break;
 
-                case GalleryAlbum _:
-                    await ctx.RespondAsync(((GalleryAlbum) results).Link).ConfigureAwait(false);
+                case GalleryAlbum album:
+                    await ctx.RespondAsync(album.Link).ConfigureAwait(false);
                     break;
 
                 default:

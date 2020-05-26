@@ -239,5 +239,41 @@ namespace FlawBOT.Framework.Properties {
                 return ResourceManager.GetString("API_Wikipedia", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error updating the Pokémon list. {0}.
+        /// </summary>
+        internal static string ERR_POKEMON_LIST {
+            get {
+                return ResourceManager.GetString("ERR_POKEMON_LIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Reddit category.
+        /// </summary>
+        internal static string ERR_REDDIT_UNKNOWN_CAT {
+            get {
+                return ResourceManager.GetString("ERR_REDDIT_UNKNOWN_CAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error updating Steam games list. {0}.
+        /// </summary>
+        internal static string ERR_STEAM_LIST {
+            get {
+                return ResourceManager.GetString("ERR_STEAM_LIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error updating TF2 item schema. {0}.
+        /// </summary>
+        internal static string ERR_TF2_LIST {
+            get {
+                return ResourceManager.GetString("ERR_TF2_LIST", resourceCulture);
+            }
+        }
     }
 }

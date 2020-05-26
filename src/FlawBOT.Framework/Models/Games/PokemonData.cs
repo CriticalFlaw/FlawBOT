@@ -12,7 +12,7 @@ namespace FlawBOT.Framework.Models
     public class Card
     {
         [JsonProperty("id")]
-        public string ID { get; set; }
+        public string Id { get; set; }
     }
 
     public class PokemonData

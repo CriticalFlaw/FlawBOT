@@ -18,11 +18,11 @@ namespace FlawBOT.Framework.Services
                 var latitude = results.Results[0].Geometry.Location.Latitude;
                 var longitude = results.Results[0].Geometry.Location.Longitude;
                 var currentSeconds = (int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                var timeResource = await _http
+                var timeResource = await Http
                     .GetStringAsync(Resources.API_Google_Time + "?location=" + latitude + "," + longitude + "&timestamp=" + currentSeconds + "&key=" + TokenHandler.Tokens.GoogleToken)
                     .ConfigureAwait(false);
                 results.Timezone = JsonConvert.DeserializeObject<TimeData.TimeZoneResult>(timeResource);
-                results.Time = DateTime.UtcNow.AddSeconds(results.Timezone.dstOffset + results.Timezone.rawOffset);
+                results.Time = DateTime.UtcNow.AddSeconds(results.Timezone.DstOffset + results.Timezone.RawOffset);
                 return results;
             }
             catch
@@ -35,7 +35,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http
+                var results = await Http
                     .GetStringAsync(Resources.API_Google_Weather + "?q=" + query + "&appid=42cd627dd60debf25a5739e50a217d74&units=metric").ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<WeatherData>(results);
             }
@@ -47,22 +47,22 @@ namespace FlawBOT.Framework.Services
 
         public static async Task<TimeData> GetLocationGeoData(string query)
         {
-            _http.DefaultRequestHeaders.Clear();
-            var result = await _http
+            Http.DefaultRequestHeaders.Clear();
+            var result = await Http
                 .GetStringAsync(Resources.API_Google_Geo + "?address=" + query + "&key=" + TokenHandler.Tokens.GoogleToken).ConfigureAwait(false);
             var results = JsonConvert.DeserializeObject<TimeData>(result);
-            return results.status == "OK" ? results : null;
+            return results.Status == "OK" ? results : null;
         }
 
-        public static async Task<IPLocationData> GetIPLocationAsync(IPAddress query)
+        public static async Task<IpLocationData> GetIpLocationAsync(IPAddress query)
         {
-            var result = await _http.GetStringAsync(Resources.API_IPLocation + query).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<IPLocationData>(result);
+            var result = await Http.GetStringAsync(Resources.API_IPLocation + query).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<IpLocationData>(result);
         }
 
         public static async Task<NewsData> GetNewsDataAsync(string query = "")
         {
-            var results = await _http
+            var results = await Http
                 .GetStringAsync(Resources.API_News + "&q=" + query + "&apiKey=" + TokenHandler.Tokens.NewsToken)
                 .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<NewsData>(results);

@@ -219,7 +219,7 @@ namespace FlawBOT.Modules
         public async Task RemoveUserRoles(CommandContext ctx,
             [Description("Server user to get revoked")] DiscordMember member)
         {
-            if (member.Roles.Count() == 0)
+            if (!member.Roles.Any())
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NONE, EmbedType.Warning).ConfigureAwait(false);
             }

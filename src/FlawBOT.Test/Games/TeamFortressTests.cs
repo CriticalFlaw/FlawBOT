@@ -11,7 +11,7 @@ namespace GamesModule
         {
             Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result);
             Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result);
-            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onpward").Result);
+            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onward").Result);
         }
 
         [Test]
@@ -37,9 +37,9 @@ namespace GamesModule
 
         [Test]
         [Order(1)]
-        public void UpdateTF2Schema()
+        public void UpdateTf2Schema()
         {
-            Assert.IsTrue(TeamFortressService.UpdateTF2SchemaAsync().Result);
+            Assert.IsTrue(TeamFortressService.UpdateTf2SchemaAsync().Result);
         }
     }
 }

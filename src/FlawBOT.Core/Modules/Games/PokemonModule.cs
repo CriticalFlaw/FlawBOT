@@ -28,7 +28,7 @@ namespace FlawBOT.Modules
             else
                 foreach (var dex in results.Cards)
                 {
-                    var card = PokemonService.GetExactPokemon(dex.ID);
+                    var card = PokemonService.GetExactPokemon(dex.Id);
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(card.Name + $" (#{card.NationalPokedexNumber})")
                         .AddField("Series", card.Series ?? "Unknown", true)

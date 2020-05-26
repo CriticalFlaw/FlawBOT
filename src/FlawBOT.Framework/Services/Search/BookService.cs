@@ -8,13 +8,11 @@ namespace FlawBOT.Framework.Services
     {
         public BookService()
         {
-            Books = new BooksService(new BaseClientService.Initializer
+            var booksService = new BooksService(new BaseClientService.Initializer
             {
                 ApiKey = TokenHandler.Tokens.GoogleToken,
                 ApplicationName = "FlawBOT"
             });
         }
-
-        private BooksService Books { get; }
     }
 }
