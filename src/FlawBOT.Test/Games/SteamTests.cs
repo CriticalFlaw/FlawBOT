@@ -22,11 +22,5 @@ namespace GamesModule
             Assert.IsNull(SteamService.GetSteamProfileAsync("99999999999999999").Result);
             Assert.IsNull(SteamService.GetSteamSummaryAsync("99999999999999999").Result);
         }
-
-        [Test]
-        public void UpdateSteamList()
-        {
-            Assert.IsTrue(SteamService.UpdateSteamListAsync().Result);
-        }
     }
 }

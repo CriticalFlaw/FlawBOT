@@ -155,7 +155,7 @@ namespace FlawBOT.Modules
             [Description("Name of the community creator to find")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var steamId = SteamService.GetSteamUserID(query).Result.Data;
+            var steamId = SteamService.GetSteamUserId(query).Result.Data;
             var results = await TeamFortressService.GetCreatorByIdAsync(steamId).ConfigureAwait(false);
             if (results is null)
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
@@ -167,7 +167,7 @@ namespace FlawBOT.Modules
                     var output = new DiscordEmbedBuilder()
                         .WithTitle(user?.Name)
                         .WithDescription("Main Class: " + user?.Main.ToString()?.ToUpper())
-                        .WithThumbnailUrl(user?.ThumbnailUrl)
+                        .WithThumbnail(user?.ThumbnailUrl)
                         .WithUrl(user?.Link)
                         .WithColor(new DiscordColor("#E7B53B"))
                         .WithFooter(!creator.Equals(results.Last())

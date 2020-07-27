@@ -48,7 +48,7 @@ namespace FlawBOT.Modules
                         .AddField("Publisher", app.Publishers[0] ?? "Unknown", true)
                         .AddField("Price", app.IsFree ? "Free" : app.PriceOverview.FinalFormatted ?? "Unknown", true)
                         .AddField("Metacritic", app.Metacritic != null ? app.Metacritic.Score.ToString() : "Unknown", true)
-                        .WithThumbnailUrl(app.HeaderImage)
+                        .WithThumbnail(app.HeaderImage)
                         .WithUrl("http://store.steampowered.com/app/" + app.SteamAppId)
                         .WithFooter("App ID: " + app.SteamAppId)
                         .WithColor(new DiscordColor("#1B2838"));
@@ -98,7 +98,7 @@ namespace FlawBOT.Modules
                         .WithTitle(summary.Data.Nickname)
                         .WithDescription(Regex.Replace(profile?.Summary ?? string.Empty, "<[^>]*>", "") ?? string.Empty)
                         .AddField("Member since", summary.Data.AccountCreatedDate.ToUniversalTime().ToString(CultureInfo.CurrentCulture), true)
-                        .WithThumbnailUrl(profile?.AvatarFull.ToString() ?? profile.Avatar.ToString())
+                        .WithThumbnail(profile?.AvatarFull.ToString() ?? profile.Avatar.ToString())
                         .WithColor(new DiscordColor("#1B2838"))
                         .WithUrl("http://steamcommunity.com/profiles/" + profile.SteamID)
                         .WithFooter("Steam ID: " + profile.SteamID);

@@ -142,7 +142,7 @@ namespace FlawBOT.Modules
                 .AddField("Creation Date", emoji.CreationTimestamp.ToString(), true)
                 .WithColor(DiscordColor.PhthaloBlue)
                 .WithUrl(emoji.Url)
-                .WithThumbnailUrl(emoji.Url);
+                .WithThumbnail(emoji.Url);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
@@ -157,12 +157,12 @@ namespace FlawBOT.Modules
         {
             var emojiList = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis.Values.OrderBy(e => e.Name))
-                emojiList.Append(emoji.Name).Append(!emoji.Equals(ctx.Guild.Emojis.Last()) ? ", " : string.Empty);
+                emojiList.Append(emoji.Name).Append(!emoji.Equals(ctx.Guild.Emojis.Last().Value) ? ", " : string.Empty);
 
             var output = new DiscordEmbedBuilder()
                 .WithTitle("Emojis available for " + ctx.Guild.Name)
                 .WithDescription(emojiList.ToString())
-                .WithThumbnailUrl(ctx.Guild.IconUrl)
+                .WithThumbnail(ctx.Guild.IconUrl)
                 .WithColor(DiscordColor.PhthaloBlue);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }

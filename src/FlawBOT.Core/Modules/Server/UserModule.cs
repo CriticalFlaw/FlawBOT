@@ -103,7 +103,7 @@ namespace FlawBOT.Modules
                 .AddField("Nickname", member.Nickname ?? "None", true)
                 .AddField("Muted?", member.IsMuted ? "Yes" : "No", true)
                 .AddField("Deafened?", member.IsDeafened ? "Yes" : "No", true)
-                .WithThumbnailUrl(member.AvatarUrl)
+                .WithThumbnail(member.AvatarUrl)
                 .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
                 .WithColor(member.Color);
             if (member.IsBot)

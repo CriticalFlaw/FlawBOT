@@ -87,8 +87,8 @@ namespace FlawBOT
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
-            Commands.RegisterCommands<NASAModule>();
-            Commands.RegisterCommands<OMDBModule>();
+            Commands.RegisterCommands<NasaModule>();
+            Commands.RegisterCommands<OmdbModule>();
             Commands.RegisterCommands<PokemonModule>();
             Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<RedditModule>();
@@ -107,7 +107,6 @@ namespace FlawBOT
             // Start the uptime counter
             Console.Title = SharedData.Name + " - " + SharedData.Version;
             SharedData.ProcessStarted = DateTime.Now;
-            await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
             await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await Client.ConnectAsync().ConfigureAwait(false); // Connect and log into Discord

@@ -186,7 +186,7 @@ namespace FlawBOT.Modules
             {
                 var output = new DiscordEmbedBuilder()
                     .AddField("Location", $"{results.City}, {results.Region}, {results.Country}")
-                    .AddField("ISP", results.ISP)
+                    .AddField("ISP", results.Isp)
                     .AddField("Coordinates", $"{results.Latitude}°N, {results.Longitude}°W")
                     .WithFooter($"IP: {results.Query}")
                     .WithColor(new DiscordColor("#4d2f63"));

@@ -10,18 +10,18 @@ using FlawBOT.Framework.Services;
 namespace FlawBOT.Modules
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class OMDBModule : BaseCommandModule
+    public class OmdbModule : BaseCommandModule
     {
         #region COMMAND_OMDB
 
         [Command("omdb")]
         [Aliases("imdb", "movie")]
         [Description("Retrieve a movie or TV show from OMDB")]
-        public async Task OMDB(CommandContext ctx,
+        public async Task Omdb(CommandContext ctx,
             [Description("Movie or TV show to find on OMDB")] [RemainingText] string query)
         {
             if (!BotServices.CheckUserInput(query)) return;
-            var results = OMDBService.GetMovieDataAsync(query.Replace(" ", "+")).Result;
+            var results = OmdbService.GetMovieDataAsync(query.Replace(" ", "+")).Result;
             if (results.Response == "False")
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)

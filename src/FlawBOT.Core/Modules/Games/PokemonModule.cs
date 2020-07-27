@@ -36,7 +36,7 @@ namespace FlawBOT.Modules
                         .AddField("HP", card.Hp ?? "Unknown", true)
                         .AddField("Ability", card.Ability != null ? card.Ability.Name : "Unknown", true)
                         .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
-                        .WithFooter(!card.Equals(results.Cards.Last())
+                        .WithFooter(!string.Equals(card.Id, results.Cards.Last().Id)
                             ? "Type 'next' within 10 seconds for the next Pokémon"
                             : "This is the last found Pokémon on the list.")
                         .WithColor(DiscordColor.Gold);
@@ -55,7 +55,7 @@ namespace FlawBOT.Modules
                     if (results.Cards.Count == 1) continue;
                     var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                     if (interactivity.Result is null) break;
-                    if (!card.Equals(results.Cards.Last()))
+                    if (!string.Equals(card.Id, results.Cards.Last().Id))
                         await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
                 }
         }

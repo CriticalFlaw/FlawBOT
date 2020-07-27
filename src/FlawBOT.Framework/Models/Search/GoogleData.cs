@@ -17,7 +17,7 @@ namespace FlawBOT.Framework.Models
         [JsonProperty("status")]
         public string Status { get; set; }
 
-        public GeolocationModel[] Results { get; set; }
+        public GeolocationModel[] Results { get; }
         public TimeZoneResult Timezone { get; set; }
         public DateTime Time { get; set; }
 
@@ -120,7 +120,7 @@ namespace FlawBOT.Framework.Models
         public List<Weather> Weather { get; set; }
 
         [JsonProperty("cod")]
-        public int COD { get; set; }
+        public int Cod { get; set; }
     }
 
     public class Sys

@@ -20,13 +20,13 @@ namespace FlawBOT.Framework.Models
         public string ImgurToken { get; private set; }
 
         [JsonProperty("omdb", NullValueHandling = NullValueHandling.Ignore)]
-        public string OMDBToken { get; private set; }
+        public string OmdbToken { get; private set; }
 
         [JsonProperty("twitch", NullValueHandling = NullValueHandling.Ignore)]
         public string TwitchToken { get; private set; }
 
         [JsonProperty("nasa", NullValueHandling = NullValueHandling.Ignore)]
-        public string NASAToken { get; private set; }
+        public string NasaToken { get; private set; }
 
         [JsonProperty("teamworktf", NullValueHandling = NullValueHandling.Ignore)]
         public string TeamworkToken { get; private set; }

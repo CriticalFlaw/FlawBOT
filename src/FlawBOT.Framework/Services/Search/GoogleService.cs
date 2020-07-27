@@ -45,7 +45,7 @@ namespace FlawBOT.Framework.Services
             }
         }
 
-        public static async Task<TimeData> GetLocationGeoData(string query)
+        private static async Task<TimeData> GetLocationGeoData(string query)
         {
             Http.DefaultRequestHeaders.Clear();
             var result = await Http

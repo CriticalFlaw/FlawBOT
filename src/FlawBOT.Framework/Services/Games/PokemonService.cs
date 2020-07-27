@@ -13,7 +13,7 @@ namespace FlawBOT.Framework.Services
 {
     public class PokemonService : HttpHandler
     {
-        public static List<string> PokemonList { get; set; } = new List<string>();
+        private static List<string> PokemonList { get; set; } = new List<string>();
 
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query = "")
         {
@@ -29,7 +29,7 @@ namespace FlawBOT.Framework.Services
             return Card.Find<Pokemon>(cardId).Card;
         }
 
-        public static string GetRandomPokemon()
+        private static string GetRandomPokemon()
         {
             var random = new Random();
             return PokemonList[random.Next(0, PokemonList.Count)];
@@ -42,9 +42,8 @@ namespace FlawBOT.Framework.Services
                 var list = await Http.GetStringAsync(Resources.API_Pokemon).ConfigureAwait(false);
                 var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
-                foreach (var pokemon in results)
-                    if (!string.IsNullOrWhiteSpace(pokemon.Name))
-                        PokemonList.Add(pokemon.Name);
+                foreach (var pokemon in results.Where(pokemon => !string.IsNullOrWhiteSpace(pokemon.Name)))
+                    PokemonList.Add(pokemon.Name);
                 PokemonList = PokemonList.Distinct().ToList();
                 return true;
             }

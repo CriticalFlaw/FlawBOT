@@ -90,7 +90,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckUserInput(query)) return;
             var results = await GoogleService.GetWeatherDataAsync(query).ConfigureAwait(false);
-            if (results == null || results.COD == 404)
+            if (results == null || results.Cod == 404)
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Missing)
                     .ConfigureAwait(false);

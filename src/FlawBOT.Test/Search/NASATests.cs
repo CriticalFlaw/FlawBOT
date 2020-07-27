@@ -4,12 +4,12 @@ using NUnit.Framework;
 namespace SearchModule
 {
     [TestFixture]
-    internal class NASATests
+    internal class NasaTests
     {
         [Test]
-        public void GetNASAData()
+        public void GetNasaData()
         {
-            Assert.IsNotNull(NASAService.GetNASAImageAsync().Result);
+            Assert.IsNotNull(NasaService.GetNasaImageAsync().Result);
         }
     }
 }

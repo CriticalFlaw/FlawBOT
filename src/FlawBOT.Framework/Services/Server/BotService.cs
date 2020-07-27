@@ -78,21 +78,12 @@ namespace FlawBOT.Framework.Services
         public static int LimitToRange(int value, int min = 1, int max = 100)
         {
             if (value <= min) return min;
-            if (value >= max) return max;
-            return value;
+            return value >= max ? max : value;
         }
 
-        public static async Task<bool> RemoveMessage(DiscordMessage message)
+        public static async Task RemoveMessage(DiscordMessage message)
         {
-            try
-            {
-                await message.DeleteAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            await message.DeleteAsync().ConfigureAwait(false);
         }
 
         public static async Task<MemoryStream> CheckImageInput(CommandContext ctx, string input)

@@ -26,7 +26,7 @@ namespace FlawBOT.Framework.Models
         public string CountryCode { get; set; }
 
         [JsonProperty("isp")]
-        public string ISP { get; set; }
+        public string Isp { get; set; }
 
         [JsonProperty("lat")]
         public double Latitude { get; set; }

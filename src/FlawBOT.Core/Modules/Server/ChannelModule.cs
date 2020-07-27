@@ -117,7 +117,7 @@ namespace FlawBOT.Modules
                 .AddField("Type", channel.Type.ToString(), true)
                 .AddField("Private", channel.IsPrivate ? "Yes" : "No", true)
                 .AddField("NSFW", channel.IsNSFW ? "Yes" : "No", true)
-                .WithThumbnailUrl(ctx.Guild.IconUrl)
+                .WithThumbnail(ctx.Guild.IconUrl)
                 .WithFooter("Created on " + channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
                 .WithColor(SharedData.DefaultColor);
 
@@ -201,7 +201,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
                     .ConfigureAwait(false);
             }
-            else if (ctx.Guild.Channels.Any(chn => String.Compare(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase) == 0))
+            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase) == 0))
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning)
                     .ConfigureAwait(false);
@@ -258,7 +258,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
                     .ConfigureAwait(false);
             }
-            else if (ctx.Guild.Channels.Any(chn => String.Compare(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase) == 0))
+            else if (ctx.Guild.Channels.Any(chn => string.Compare(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase) == 0))
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning)
                     .ConfigureAwait(false);

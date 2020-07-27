@@ -5,13 +5,13 @@ using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
-    public class NASAService : HttpHandler
+    public class NasaService : HttpHandler
     {
-        public static async Task<NASAData> GetNASAImageAsync()
+        public static async Task<NasaData> GetNasaImageAsync()
         {
-            var results = await Http.GetStringAsync(Resources.API_NASA + "?api_key=" + TokenHandler.Tokens.NASAToken)
+            var results = await Http.GetStringAsync(Resources.API_NASA + "?api_key=" + TokenHandler.Tokens.NasaToken)
                 .ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<NASAData>(results);
+            return JsonConvert.DeserializeObject<NasaData>(results);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace FlawBOT.Framework.Services
             return $"https://{site}.com/gif/{content.Episode.Key}/{start}/{end}.gif";
         }
 
-        public static DiscordEmbedBuilder EmbedSimpsonsEpisode(SimpsonsData data, SiteRoot site)
+        private static DiscordEmbedBuilder EmbedSimpsonsEpisode(SimpsonsData data, SiteRoot site)
         {
             var output = new DiscordEmbedBuilder()
                 .WithTitle(data.Episode.Title)

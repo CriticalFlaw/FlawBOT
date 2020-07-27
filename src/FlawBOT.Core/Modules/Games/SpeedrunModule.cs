@@ -36,7 +36,7 @@ namespace FlawBOT.Modules
                         .AddField("Publishers", SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result ?? "Unknown", true)
                         .AddField("Platforms", SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result ?? "Unknown")
                         .WithFooter($"ID: {game.Id} - Abbreviation: {game.Abbreviation}")
-                        .WithThumbnailUrl(game.Assets.CoverLarge.Url ?? game.Assets.Icon.Url)
+                        .WithThumbnail(game.Assets.CoverLarge.Url ?? game.Assets.Icon.Url)
                         .WithUrl(game.WebLink)
                         .WithColor(new DiscordColor("#0F7A4D"));
 

@@ -14,8 +14,8 @@ namespace FlawBOT.Framework.Services
 {
     public class TeamFortressService : HttpHandler
     {
-        public static SteamWebInterfaceFactory SteamInterface;
-        public static List<SchemaItem> ItemSchemaList { get; set; } = new List<SchemaItem>();
+        private static SteamWebInterfaceFactory _steamInterface;
+        private static List<SchemaItem> ItemSchemaList { get; set; } = new List<SchemaItem>();
 
         #region NEWS
 
@@ -58,8 +58,8 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                var steam = SteamInterface.CreateSteamWebInterface<EconItems>(AppId.TeamFortress2, new HttpClient());
+                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var steam = _steamInterface.CreateSteamWebInterface<EconItems>(AppId.TeamFortress2, new HttpClient());
                 var games = await steam.GetSchemaItemsForTF2Async().ConfigureAwait(false);
                 ItemSchemaList.Clear();
                 foreach (var game in games.Data.Result.Items)
@@ -78,7 +78,7 @@ namespace FlawBOT.Framework.Services
 
         #region MAPS
 
-        public static async Task<List<MapName>> GetMapsBySearchAsync(string query)
+        private static async Task<List<MapName>> GetMapsBySearchAsync(string query)
         {
             return await new TeamworkClient(TokenHandler.Tokens.TeamworkToken).GetMapsBySearchAsync(query)
                 .ConfigureAwait(false);

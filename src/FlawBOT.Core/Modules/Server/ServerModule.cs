@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
                 .WithFooter(ctx.Guild.Name + " / #" + ctx.Channel.Name + " / " + DateTime.Now)
                 .WithColor(DiscordColor.Rose);
             if (!string.IsNullOrEmpty(ctx.Guild.IconHash))
-                output.WithThumbnailUrl(ctx.Guild.IconUrl);
+                output.WithThumbnail(ctx.Guild.IconUrl);
 
             var roles = new StringBuilder();
             foreach (var role in ctx.Guild.Roles)
@@ -163,7 +163,7 @@ namespace FlawBOT.Modules
                 .WithDescription(Formatter.Bold(ctx.Guild.Name) + " has issued you a server warning!")
                 .AddField("Sender:", ctx.Member.Username + "#" + ctx.Member.Discriminator, true)
                 .AddField("Server Owner:", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, true)
-                .WithThumbnailUrl(ctx.Guild.IconUrl)
+                .WithThumbnail(ctx.Guild.IconUrl)
                 .WithTimestamp(DateTime.Now)
                 .WithColor(DiscordColor.Red);
             if (!string.IsNullOrWhiteSpace(reason)) output.AddField("Warning message:", reason);

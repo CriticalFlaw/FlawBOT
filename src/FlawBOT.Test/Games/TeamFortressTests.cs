@@ -11,7 +11,7 @@ namespace GamesModule
         {
             Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result);
             Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result);
-            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onward").Result);
+            Assert.IsNull(TeamFortressService.GetMapStatsAsync("bonewards").Result);
         }
 
         [Test]

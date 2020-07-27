@@ -117,7 +117,7 @@ namespace FlawBOT.Modules
                     .AddField("Hoisted", role.IsHoisted ? "Yes" : "No", true)
                     .AddField("Mentionable", role.IsMentionable ? "Yes" : "No", true)
                     .AddField("Permissions", role.Permissions.ToPermissionString())
-                    .WithThumbnailUrl(ctx.Guild.IconUrl)
+                    .WithThumbnail(ctx.Guild.IconUrl)
                     .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
                     .WithColor(role.Color);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);

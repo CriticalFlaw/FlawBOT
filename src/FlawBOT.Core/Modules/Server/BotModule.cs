@@ -145,12 +145,10 @@ namespace FlawBOT.Modules
         [Aliases("talk")]
         [Description("Make FlawBOT repeat a message in text-to-speech")]
         [RequirePermissions(Permissions.SendTtsMessages)]
-        public Task SayTTS(CommandContext ctx,
+        public Task SayTts(CommandContext ctx,
             [Description("Message for the bot to convert to speech")] [RemainingText] string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                return ctx.RespondAsync("I need something to say...");
-            return ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(text)), true);
+            return string.IsNullOrWhiteSpace(text) ? ctx.RespondAsync("I need something to say...") : ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(text)), true);
         }
 
         #endregion COMMAND_TTS
@@ -179,7 +177,7 @@ namespace FlawBOT.Modules
         [Command("activity")]
         [Hidden]
         [Aliases("setactivity")]
-        [Description("Set FlawBOT activity")]
+        [Description("Set FlawBOT's activity")]
         public async Task SetBotActivity(CommandContext ctx,
             [Description("Name of the activity")] [RemainingText] string activity)
         {
@@ -281,7 +279,6 @@ namespace FlawBOT.Modules
         public async Task Update(CommandContext ctx)
         {
             var message = await ctx.RespondAsync("Starting update...").ConfigureAwait(false);
-            await SteamService.UpdateSteamListAsync().ConfigureAwait(false);
             await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
             await message.ModifyAsync("Starting update...done!").ConfigureAwait(false);
