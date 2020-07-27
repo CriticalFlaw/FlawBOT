@@ -1,4 +1,8 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -7,10 +11,6 @@ using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -59,7 +59,8 @@ namespace FlawBOT.Modules
         {
             var results = CatService.GetCatPhotoAsync().Result;
             if (string.IsNullOrWhiteSpace(results))
-                await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Connection to random.cat failed!", EmbedType.Warning)
+                    .ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
                 .WithImageUrl(results)
                 .WithColor(DiscordColor.Orange);
@@ -94,7 +95,10 @@ namespace FlawBOT.Modules
         {
             var regex = new Regex(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
             if (!regex.Success)
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_COLOR_INVALID, EmbedType.Warning).ConfigureAwait(false);
+            {
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_COLOR_INVALID, EmbedType.Warning)
+                    .ConfigureAwait(false);
+            }
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -133,7 +137,9 @@ namespace FlawBOT.Modules
         {
             var results = DogService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
+            {
                 await BotServices.SendEmbedAsync(ctx, Resources.ERR_DOG_PHOTO, EmbedType.Warning).ConfigureAwait(false);
+            }
             else
             {
                 var output = new DiscordEmbedBuilder()
@@ -154,9 +160,9 @@ namespace FlawBOT.Modules
             [Description("User to say hello to")] [RemainingText] DiscordMember member)
         {
             if (member is null)
-                await ctx.RespondAsync($":wave: Hello, " + ctx.User.Mention).ConfigureAwait(false);
+                await ctx.RespondAsync(":wave: Hello, " + ctx.User.Mention).ConfigureAwait(false);
             else
-                await ctx.RespondAsync($":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name + ". Enjoy your stay!").ConfigureAwait(false);
+                await ctx.RespondAsync(":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name + ". Enjoy your stay!").ConfigureAwait(false);
         }
 
         #endregion COMMAND_HELLO
@@ -166,18 +172,21 @@ namespace FlawBOT.Modules
         [Command("ip")]
         [Aliases("ipstack", "track")]
         [Description("Retrieve IP address geolocation information")]
-        public async Task IPLocation(CommandContext ctx,
+        public async Task IpLocation(CommandContext ctx,
             [Description("IP Address")] string address)
         {
-            if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out IPAddress ip)) return;
-            var results = GoogleService.GetIPLocationAsync(ip).Result;
+            if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out var ip)) return;
+            var results = GoogleService.GetIpLocationAsync(ip).Result;
             if (results.Status != "success")
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning).ConfigureAwait(false);
+            {
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning)
+                    .ConfigureAwait(false);
+            }
             else
             {
                 var output = new DiscordEmbedBuilder()
                     .AddField("Location", $"{results.City}, {results.Region}, {results.Country}")
-                    .AddField("ISP", results.ISP)
+                    .AddField("ISP", results.Isp)
                     .AddField("Coordinates", $"{results.Latitude}°N, {results.Longitude}°W")
                     .WithFooter($"IP: {results.Query}")
                     .WithColor(new DiscordColor("#4d2f63"));

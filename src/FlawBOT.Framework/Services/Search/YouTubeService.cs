@@ -1,18 +1,16 @@
-﻿using DSharpPlus.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
     public class YoutubeService
     {
-        private YouTubeService YouTube { get; }
-
         public YoutubeService()
         {
             YouTube = new YouTubeService(new BaseClientService.Initializer
@@ -21,6 +19,8 @@ namespace FlawBOT.Framework.Services
                 ApplicationName = "FlawBOT"
             });
         }
+
+        private YouTubeService YouTube { get; }
 
         public async Task<string> GetFirstVideoResultAsync(string query)
         {
@@ -38,8 +38,8 @@ namespace FlawBOT.Framework.Services
                     Description = ":warning: No results found!",
                     Color = DiscordColor.Red
                 };
-            results = (results.Count > 25) ? results.Take(25).ToList() : results;
-            var output = new DiscordEmbedBuilder { Color = DiscordColor.Red };
+            results = results.Count > 25 ? results.Take(25).ToList() : results;
+            var output = new DiscordEmbedBuilder {Color = DiscordColor.Red};
             foreach (var result in results)
                 switch (result.Id.Kind)
                 {
@@ -58,6 +58,7 @@ namespace FlawBOT.Framework.Services
                     default:
                         return null;
                 }
+
             return output.Build();
         }
 

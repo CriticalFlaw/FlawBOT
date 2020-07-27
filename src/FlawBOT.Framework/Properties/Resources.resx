@@ -177,4 +177,16 @@
   <data name="API_Wikipedia" xml:space="preserve">
     <value>https://en.wikipedia.org//w/api.php?action=query&amp;format=json&amp;prop=info&amp;redirects=1&amp;formatversion=2&amp;inprop=url</value>
   </data>
+  <data name="ERR_POKEMON_LIST" xml:space="preserve">
+    <value>Error updating the Pokémon list. {0}</value>
+  </data>
+  <data name="ERR_REDDIT_UNKNOWN_CAT" xml:space="preserve">
+    <value>Unknown Reddit category</value>
+  </data>
+  <data name="ERR_STEAM_LIST" xml:space="preserve">
+    <value>Error updating Steam games list. {0}</value>
+  </data>
+  <data name="ERR_TF2_LIST" xml:space="preserve">
+    <value>Error updating TF2 item schema. {0}</value>
+  </data>
 </root>

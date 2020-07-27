@@ -1,8 +1,8 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System.IO;
+using System.Text;
+using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.IO;
-using System.Text;
 
 namespace GamesModule
 {

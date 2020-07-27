@@ -2,7 +2,7 @@
 
 namespace FlawBOT.Framework.Models
 {
-    public class NASAData
+    public class NasaData
     {
         [JsonProperty("copyright")]
         public string Copyright { get; set; }
@@ -14,12 +14,12 @@ namespace FlawBOT.Framework.Models
         public string Description { get; set; }
 
         [JsonProperty("hdurl")]
-        public string ImageHD { get; set; }
+        public string ImageHd { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }
 
         [JsonProperty("url")]
-        public string ImageSD { get; set; }
+        public string ImageSd { get; set; }
     }
 }

@@ -5,12 +5,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject>FlawBOT.Program</StartupObject>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.6.0</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>2.6.1</Version>
     <Win32Resource />
     <LangVersion>7.2</LangVersion>
-    <AssemblyVersion>2.6.0.0</AssemblyVersion>
-    <FileVersion>2.6.0.0</FileVersion>
+    <AssemblyVersion>2.6.1.0</AssemblyVersion>
+    <FileVersion>2.6.1.0</FileVersion>
     <AssemblyName>FlawBOT.Core</AssemblyName>
     <RootNamespace>FlawBOT.Core</RootNamespace>
     <PackageTags />
@@ -40,9 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00697" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00697" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00697" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00709" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00709" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00709" />
   </ItemGroup>
 
   <ItemGroup>

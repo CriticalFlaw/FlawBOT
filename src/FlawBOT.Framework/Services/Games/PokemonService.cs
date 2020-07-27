@@ -1,32 +1,35 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using PokemonTcgSdk;
 using PokemonTcgSdk.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Card = PokemonTcgSdk.Card;
 
 namespace FlawBOT.Framework.Services
 {
     public class PokemonService : HttpHandler
     {
-        public static List<string> PokemonList { get; set; } = new List<string>();
+        private static List<string> PokemonList { get; set; } = new List<string>();
 
         public static async Task<PokemonCards> GetPokemonCardsAsync(string query = "")
         {
             query ??= GetRandomPokemon();
-            var results = await _http.GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim()).ConfigureAwait(false);
+            var results = await Http
+                .GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim())
+                .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<PokemonCards>(results);
         }
 
-        public static PokemonCard GetExactPokemon(string cardID)
+        public static PokemonCard GetExactPokemon(string cardId)
         {
-            return PokemonTcgSdk.Card.Find<Pokemon>(cardID).Card;
+            return Card.Find<Pokemon>(cardId).Card;
         }
 
-        public static string GetRandomPokemon()
+        private static string GetRandomPokemon()
         {
             var random = new Random();
             return PokemonList[random.Next(0, PokemonList.Count)];
@@ -36,18 +39,17 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var list = await _http.GetStringAsync(Resources.API_Pokemon).ConfigureAwait(false);
+                var list = await Http.GetStringAsync(Resources.API_Pokemon).ConfigureAwait(false);
                 var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
-                foreach (var pokemon in results)
-                    if (!string.IsNullOrWhiteSpace(pokemon.Name))
-                        PokemonList.Add(pokemon.Name);
+                foreach (var pokemon in results.Where(pokemon => !string.IsNullOrWhiteSpace(pokemon.Name)))
+                    PokemonList.Add(pokemon.Name);
                 PokemonList = PokemonList.Distinct().ToList();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error updating the Pokémon list. " + ex.Message);
+                Console.WriteLine(Resources.ERR_POKEMON_LIST, ex.Message);
                 return false;
             }
         }

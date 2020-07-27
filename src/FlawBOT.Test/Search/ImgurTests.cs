@@ -1,7 +1,6 @@
-﻿using FlawBOT.Framework.Services;
-using Imgur.API.Enums;
+﻿using System.Threading.Tasks;
+using FlawBOT.Framework.Services;
 using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace SearchModule
 {
@@ -11,10 +10,10 @@ namespace SearchModule
         [Test]
         public async Task GetImgurGalleryData()
         {
-            var results = await ImgurService.GetImgurGalleryAsync("cats", GallerySortOrder.Top, TimeWindow.All).ConfigureAwait(false);
+            var results = await ImgurService.GetImgurGalleryAsync("cats").ConfigureAwait(false);
             Assert.IsNotNull(results);
 
-            results = await ImgurService.GetImgurGalleryAsync("dogs", GallerySortOrder.Top, TimeWindow.All).ConfigureAwait(false);
+            results = await ImgurService.GetImgurGalleryAsync("dogs").ConfigureAwait(false);
             Assert.IsNotNull(results);
         }
     }

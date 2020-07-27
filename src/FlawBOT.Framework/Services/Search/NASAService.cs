@@ -1,16 +1,17 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
-    public class NASAService : HttpHandler
+    public class NasaService : HttpHandler
     {
-        public static async Task<NASAData> GetNASAImageAsync()
+        public static async Task<NasaData> GetNasaImageAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_NASA + "?api_key=" + TokenHandler.Tokens.NASAToken).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<NASAData>(results);
+            var results = await Http.GetStringAsync(Resources.API_NASA + "?api_key=" + TokenHandler.Tokens.NasaToken)
+                .ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<NasaData>(results);
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using DSharpPlus;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -24,20 +24,26 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
             if (results.ResultType == "no_results" || results.List.Count == 0)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
-            {
                 foreach (var definition in results.List)
                 {
                     var output = new DiscordEmbedBuilder()
                         .WithTitle("Urban Dictionary definition for " + Formatter.Bold(query))
-                        .WithDescription(!string.IsNullOrWhiteSpace(definition.Author) ? "Submitted by: " + definition.Author : string.Empty)
-                        .AddField("Definition", definition.Definition.Length < 500 ? definition.Definition : definition.Definition.Take(500) + "...")
+                        .WithDescription(!string.IsNullOrWhiteSpace(definition.Author)
+                            ? "Submitted by: " + definition.Author
+                            : string.Empty)
+                        .AddField("Definition", definition.Definition.Length < 500
+							? definition.Definition
+							: definition.Definition.Take(500) + "...")
                         .AddField("Example", definition.Example ?? "None")
                         .AddField(":thumbsup:", definition.ThumbsUp.ToString(), true)
                         .AddField(":thumbsdown:", definition.ThumbsDown.ToString(), true)
                         .WithUrl(definition.Permalink)
-                        .WithFooter(!definition.Equals(results.List.Last()) ? "Type 'next' within 10 seconds for the next definition" : "This is the last found definition on the list.")
+                        .WithFooter(!definition.Equals(results.List.Last())
+                            ? "Type 'next' within 10 seconds for the next definition"
+                            : "This is the last found definition on the list.")
                         .WithColor(new DiscordColor("#1F2439"));
                     var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
 
@@ -48,7 +54,6 @@ namespace FlawBOT.Modules
                     if (!definition.Equals(results.List.Last()))
                         await BotServices.RemoveMessage(message).ConfigureAwait(false);
                 }
-            }
         }
 
         #endregion COMMAND_DICTIONARY

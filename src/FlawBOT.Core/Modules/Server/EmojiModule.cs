@@ -1,4 +1,9 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -6,11 +11,6 @@ using DSharpPlus.Exceptions;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -33,24 +33,29 @@ namespace FlawBOT.Modules
             try
             {
                 if (string.IsNullOrWhiteSpace(query) || query.Length < 2 || query.Length > 50)
-                    await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NAME, EmbedType.Warning).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NAME, EmbedType.Warning)
+                        .ConfigureAwait(false);
 
                 if (url is null)
                     if (!ctx.Message.Attachments.Any() || !Uri.TryCreate(ctx.Message.Attachments.First().Url, UriKind.Absolute, out url))
-                        await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_IMAGE, EmbedType.Warning).ConfigureAwait(false);
+                        await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_IMAGE, EmbedType.Warning)
+                            .ConfigureAwait(false);
 
-                var _handler = new HttpClientHandler { AllowAutoRedirect = false };
-                var _http = new HttpClient(_handler, true);
-                var response = await _http.GetAsync(url).ConfigureAwait(false);
+                var handler = new HttpClientHandler {AllowAutoRedirect = false};
+                var http = new HttpClient(handler, true);
+                var response = await http.GetAsync(url).ConfigureAwait(false);
                 if (!response.Content.Headers.ContentType.MediaType.StartsWith("image/")) return;
 
-                using (response = await _http.GetAsync(url).ConfigureAwait(false))
+                using (response = await http.GetAsync(url).ConfigureAwait(false))
                 using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
                     if (stream.Length >= 256000)
-                        await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_SIZE, EmbedType.Warning).ConfigureAwait(false);
+                        await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_SIZE, EmbedType.Warning)
+                            .ConfigureAwait(false);
                     var emoji = await ctx.Guild.CreateEmojiAsync(query, stream).ConfigureAwait(false);
-                    await BotServices.SendEmbedAsync(ctx, "Successfully added " + Formatter.Bold(emoji.Name), EmbedType.Good).ConfigureAwait(false);
+                    await BotServices
+                        .SendEmbedAsync(ctx, "Successfully added " + Formatter.Bold(emoji.Name), EmbedType.Good)
+                        .ConfigureAwait(false);
                 }
             }
             catch
@@ -74,11 +79,14 @@ namespace FlawBOT.Modules
             {
                 var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
                 await ctx.Guild.DeleteEmojiAsync(emoji).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(emoji.Name), EmbedType.Good).ConfigureAwait(false);
+                await BotServices
+                    .SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(emoji.Name), EmbedType.Good)
+                    .ConfigureAwait(false);
             }
             catch (NotFoundException)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_EMOJI, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_EMOJI, EmbedType.Missing)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -97,17 +105,22 @@ namespace FlawBOT.Modules
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
-                    await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_NAME, EmbedType.Warning).ConfigureAwait(false);
+                {
+                    await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_NAME, EmbedType.Warning)
+                        .ConfigureAwait(false);
+                }
                 else
                 {
                     var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
-                    emoji = await ctx.Guild.ModifyEmojiAsync(emoji, name: name).ConfigureAwait(false);
-                    await BotServices.SendEmbedAsync(ctx, "Successfully renamed emoji to " + Formatter.Bold(emoji.Name), EmbedType.Good).ConfigureAwait(false);
+                    emoji = await ctx.Guild.ModifyEmojiAsync(emoji, name).ConfigureAwait(false);
+                    await BotServices.SendEmbedAsync(ctx, "Successfully renamed emoji to " + Formatter.Bold(emoji.Name),
+                        EmbedType.Good).ConfigureAwait(false);
                 }
             }
             catch (NotFoundException)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_EMOJI, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_EMOJI, EmbedType.Missing)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -124,12 +137,12 @@ namespace FlawBOT.Modules
             var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
                 .WithTitle(emoji.Name)
-                .WithDescription("Created By" + ((emoji.User is null) ? "<unknown>" : emoji.User.Username))
+                .WithDescription("Created By" + (emoji.User is null ? "<unknown>" : emoji.User.Username))
                 .AddField("Server", emoji.Guild.Name, true)
                 .AddField("Creation Date", emoji.CreationTimestamp.ToString(), true)
                 .WithColor(DiscordColor.PhthaloBlue)
                 .WithUrl(emoji.Url)
-                .WithThumbnailUrl(emoji.Url);
+                .WithThumbnail(emoji.Url);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
@@ -144,12 +157,12 @@ namespace FlawBOT.Modules
         {
             var emojiList = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis.Values.OrderBy(e => e.Name))
-                emojiList.Append(emoji.Name).Append(!emoji.Equals(ctx.Guild.Emojis.Last()) ? ", " : string.Empty);
+                emojiList.Append(emoji.Name).Append(!emoji.Equals(ctx.Guild.Emojis.Last().Value) ? ", " : string.Empty);
 
             var output = new DiscordEmbedBuilder()
                 .WithTitle("Emojis available for " + ctx.Guild.Name)
                 .WithDescription(emojiList.ToString())
-                .WithThumbnailUrl(ctx.Guild.IconUrl)
+                .WithThumbnail(ctx.Guild.IconUrl)
                 .WithColor(DiscordColor.PhthaloBlue);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
+using FlawBOT.Framework.Properties;
 
 namespace FlawBOT.Framework.Services
 {
@@ -22,15 +23,15 @@ namespace FlawBOT.Framework.Services
             }
         }
 
-        public static string GetPostCategory(this RedditCategory category)
+        private static string GetPostCategory(this RedditCategory category)
         {
-            switch (category)
+            return category switch
             {
-                case RedditCategory.Hot: return "hot";
-                case RedditCategory.New: return "new";
-                case RedditCategory.Top: return "top";
-            }
-            throw new ArgumentException("Unknown reddit category", nameof(category));
+                RedditCategory.Hot => "hot",
+                RedditCategory.New => "new",
+                RedditCategory.Top => "top",
+                _ => throw new ArgumentException(Resources.ERR_REDDIT_UNKNOWN_CAT, nameof(category))
+            };
         }
     }
 

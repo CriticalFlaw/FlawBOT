@@ -1,14 +1,16 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using OMDbSharp;
-using System.Threading.Tasks;
+using OMDbSharp.Objects;
 
 namespace FlawBOT.Framework.Services
 {
-    public static class OMDBService
+    public static class OmdbService
     {
-        public static async Task<OMDbSharp.Objects.Item> GetMovieDataAsync(string query)
+        public static async Task<Item> GetMovieDataAsync(string query)
         {
-            return await new OMDbClient(TokenHandler.Tokens.OMDBToken, false).GetItemByTitle(query.ToLowerInvariant().Replace("&", "%26")).ConfigureAwait(false);
+            return await new OMDbClient(TokenHandler.Tokens.OmdbToken, false)
+                .GetItemByTitle(query.ToLowerInvariant().Replace("&", "%26")).ConfigureAwait(false);
         }
     }
 }

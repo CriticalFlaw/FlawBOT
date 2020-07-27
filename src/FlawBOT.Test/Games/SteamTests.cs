@@ -1,6 +1,6 @@
-﻿using FlawBOT.Framework.Services;
+﻿using System.Text.RegularExpressions;
+using FlawBOT.Framework.Services;
 using NUnit.Framework;
-using System.Text.RegularExpressions;
 
 namespace GamesModule
 {
@@ -21,12 +21,6 @@ namespace GamesModule
             Assert.IsNotNull(SteamService.GetSteamSummaryAsync("criticalflaw").Result);
             Assert.IsNull(SteamService.GetSteamProfileAsync("99999999999999999").Result);
             Assert.IsNull(SteamService.GetSteamSummaryAsync("99999999999999999").Result);
-        }
-
-        [Test]
-        public void UpdateSteamList()
-        {
-            Assert.IsTrue(SteamService.UpdateSteamListAsync().Result);
         }
     }
 }

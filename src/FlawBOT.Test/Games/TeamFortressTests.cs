@@ -11,7 +11,7 @@ namespace GamesModule
         {
             Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result);
             Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result);
-            Assert.IsNull(TeamFortressService.GetMapStatsAsync("onpward").Result);
+            Assert.IsNull(TeamFortressService.GetMapStatsAsync("bonewards").Result);
         }
 
         [Test]
@@ -20,7 +20,8 @@ namespace GamesModule
             Assert.IsNotNull(TeamFortressService.GetNewsOverviewAsync().Result);
         }
 
-        [Test, Order(2)]
+        [Test]
+        [Order(2)]
         public void GetSchemaItem()
         {
             Assert.IsNotNull(TeamFortressService.GetSchemaItem("scattergun"));
@@ -34,10 +35,11 @@ namespace GamesModule
             Assert.IsNull(TeamFortressService.GetGameModeServerAsync("payloader").Result);
         }
 
-        [Test, Order(1)]
-        public void UpdateTF2Schema()
+        [Test]
+        [Order(1)]
+        public void UpdateTf2Schema()
         {
-            Assert.IsTrue(TeamFortressService.UpdateTF2SchemaAsync().Result);
+            Assert.IsTrue(TeamFortressService.UpdateTf2SchemaAsync().Result);
         }
     }
 }

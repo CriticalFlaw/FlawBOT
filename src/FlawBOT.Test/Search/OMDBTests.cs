@@ -4,12 +4,12 @@ using NUnit.Framework;
 namespace SearchModule
 {
     [TestFixture]
-    internal class OMDBTests
+    internal class OmdbTests
     {
         [Test]
         public void GetMovieData()
         {
-            Assert.IsNotNull(OMDBService.GetMovieDataAsync("office+space").Result);
+            Assert.IsNotNull(OmdbService.GetMovieDataAsync("office+space").Result);
         }
     }
 }

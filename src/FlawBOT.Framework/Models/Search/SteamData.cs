@@ -18,7 +18,7 @@ namespace FlawBOT.Framework.Models
     public class App
     {
         [JsonProperty("appid")]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

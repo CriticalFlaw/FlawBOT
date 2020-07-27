@@ -1,35 +1,33 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using Microsoft.Extensions.Options;
 using Steam.Models.SteamCommunity;
 using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
     public class SteamService : HttpHandler
     {
-        public static Dictionary<uint, string> SteamAppList { get; set; } = new Dictionary<uint, string>();
-        public static SteamWebInterfaceFactory SteamInterface;
+        private static SteamWebInterfaceFactory _steamInterface;
 
         /// <remarks>https://github.com/babelshift/SteamWebAPI2/issues/81</remarks>
         public static async Task<StoreAppDetailsDataModel> GetSteamAppAsync(string query)
         {
             try
             {
-                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                SteamWebInterfaceFactoryOptions factoryOptions = new SteamWebInterfaceFactoryOptions()
+                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var factoryOptions = new SteamWebInterfaceFactoryOptions
                 {
                     SteamWebApiKey = TokenHandler.Tokens.SteamToken
                 };
                 var store = new SteamWebInterfaceFactory(Options.Create(factoryOptions)).CreateSteamStoreInterface();
-                var list = await SteamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient()).GetAppListAsync();
-                var appId = list.Data.Where(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).First().AppId;
+                var list = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient()).GetAppListAsync();
+                var appId = list.Data.First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
                 return await store.GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
             }
             catch
@@ -42,12 +40,11 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
+                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 if (ulong.TryParse(query, out var steamId))
                     return await steam.GetCommunityProfileAsync(steamId).ConfigureAwait(false);
-                else
-                    return await steam.GetCommunityProfileAsync(GetSteamUserID(query).Result.Data).ConfigureAwait(false);
+                return await steam.GetCommunityProfileAsync(GetSteamUserId(query).Result.Data).ConfigureAwait(false);
             }
             catch
             {
@@ -59,12 +56,11 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
+                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 if (ulong.TryParse(query, out var steamId))
-                    return await steam.GetPlayerSummaryAsync(ulong.Parse(query)).ConfigureAwait(false);
-                else
-                    return await steam.GetPlayerSummaryAsync(GetSteamUserID(query).Result.Data).ConfigureAwait(false);
+                    return await steam.GetPlayerSummaryAsync(steamId).ConfigureAwait(false);
+                return await steam.GetPlayerSummaryAsync(GetSteamUserId(query).Result.Data).ConfigureAwait(false);
             }
             catch
             {
@@ -72,31 +68,11 @@ namespace FlawBOT.Framework.Services
             }
         }
 
-        public static async Task<bool> UpdateSteamListAsync()
+        public static async Task<ISteamWebResponse<ulong>> GetSteamUserId(string query)
         {
             try
             {
-                SteamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                var steam = SteamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient());
-                var games = (await steam.GetAppListAsync().ConfigureAwait(false)).Data;
-                SteamAppList.Clear();
-                foreach (var game in games)
-                    if (!string.IsNullOrWhiteSpace(game.Name))
-                        SteamAppList.Add(Convert.ToUInt32(game.AppId), game.Name);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error updating Steam games list. " + ex.Message);
-                return false;
-            }
-        }
-
-        public static async Task<ISteamWebResponse<ulong>> GetSteamUserID(string query)
-        {
-            try
-            {
-                var steam = SteamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
+                var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 return await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
             }
             catch

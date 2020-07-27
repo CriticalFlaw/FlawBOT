@@ -15,7 +15,7 @@ namespace FlawBOT.Framework.Models
     public class Data
     {
         [JsonProperty("id")]
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("names")]
         public Names Names { get; set; }
@@ -54,7 +54,7 @@ namespace FlawBOT.Framework.Models
 
         [JsonIgnore]
         [JsonProperty("romhack")]
-        public int ROMHack { get; set; }
+        public int RomHack { get; set; }
 
         [JsonIgnore]
         [JsonProperty("gametypes")]
@@ -115,7 +115,7 @@ namespace FlawBOT.Framework.Models
     public class Image
     {
         [JsonProperty("uri")]
-        public string URL { get; set; }
+        public string Url { get; set; }
 
         [JsonIgnore]
         [JsonProperty("width")]
@@ -129,10 +129,10 @@ namespace FlawBOT.Framework.Models
     public class Link
     {
         [JsonProperty("rel")]
-        public string REL { get; set; }
+        public string Rel { get; set; }
 
         [JsonProperty("uri")]
-        public string URL { get; set; }
+        public string Url { get; set; }
     }
 
     #endregion GAME
@@ -145,7 +145,7 @@ namespace FlawBOT.Framework.Models
         public List<CategoryData> Data { get; set; }
     }
 
-    public partial class CategoryData
+    public class CategoryData
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -174,7 +174,7 @@ namespace FlawBOT.Framework.Models
         public List<Link> Links { get; set; }
     }
 
-    public partial class Players
+    public class Players
     {
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -196,7 +196,7 @@ namespace FlawBOT.Framework.Models
     public class ExtraData
     {
         [JsonProperty("id")]
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

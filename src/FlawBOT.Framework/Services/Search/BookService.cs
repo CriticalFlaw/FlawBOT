@@ -6,11 +6,9 @@ namespace FlawBOT.Framework.Services
 {
     public class BookService : HttpHandler
     {
-        private BooksService Books { get; }
-
         public BookService()
         {
-            Books = new BooksService(new BaseClientService.Initializer
+            var booksService = new BooksService(new BaseClientService.Initializer
             {
                 ApiKey = TokenHandler.Tokens.GoogleToken,
                 ApplicationName = "FlawBOT"

@@ -1,7 +1,7 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
@@ -11,7 +11,8 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                var results = await _http.GetStringAsync(Resources.API_Amiibo + "?name=" + query.ToLowerInvariant()).ConfigureAwait(false);
+                var results = await Http.GetStringAsync(Resources.API_Amiibo + "?name=" + query.ToLowerInvariant())
+                    .ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<AmiiboData>(results);
             }
             catch

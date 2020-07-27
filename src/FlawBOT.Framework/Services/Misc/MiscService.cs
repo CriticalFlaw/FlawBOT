@@ -1,22 +1,16 @@
-﻿using FlawBOT.Framework.Models;
+﻿using System;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
+using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Framework.Services
 {
     public static class EightBallService
     {
-        public static string GetRandomAnswer()
-        {
-            var random = new Random();
-            return Answers[random.Next(Answers.Length)];
-        }
-
-        private static ImmutableArray<string> Answers = new[]
+        private static ImmutableArray<string> _answers = new[]
         {
             "It is certain",
             "It is decidedly so",
@@ -39,19 +33,25 @@ namespace FlawBOT.Framework.Services
             "Outlook not so good",
             "Very doubtful"
         }.ToImmutableArray();
+
+        public static string GetRandomAnswer()
+        {
+            var random = new Random();
+            return _answers[random.Next(_answers.Length)];
+        }
     }
 
     public class CatService : HttpHandler
     {
         public static async Task<string> GetCatFactAsync()
         {
-            return await _http.GetStringAsync(Resources.API_CatFacts).ConfigureAwait(false);
+            return await Http.GetStringAsync(Resources.API_CatFacts).ConfigureAwait(false);
         }
 
         public static async Task<string> GetCatPhotoAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_CatPhoto).ConfigureAwait(false);
-            return JObject.Parse(results)["file"].ToString();
+            var results = await Http.GetStringAsync(Resources.API_CatPhoto).ConfigureAwait(false);
+            return JObject.Parse(results)["file"]?.ToString();
         }
     }
 
@@ -59,7 +59,7 @@ namespace FlawBOT.Framework.Services
     {
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await _http.GetStringAsync(Resources.API_DogPhoto).ConfigureAwait(false);
+            var results = await Http.GetStringAsync(Resources.API_DogPhoto).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DogData>(results);
         }
     }

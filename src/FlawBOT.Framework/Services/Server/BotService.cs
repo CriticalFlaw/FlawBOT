@@ -1,13 +1,13 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
-using FlawBOT.Framework.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+using FlawBOT.Framework.Models;
+using Newtonsoft.Json;
 
 namespace FlawBOT.Framework.Services
 {
@@ -42,6 +42,7 @@ namespace FlawBOT.Framework.Services
                     color = new DiscordColor("#00FF7F");
                     break;
             }
+
             var output = new DiscordEmbedBuilder()
                 .WithDescription(prefix + message)
                 .WithColor(color);
@@ -58,53 +59,48 @@ namespace FlawBOT.Framework.Services
 
         public static bool CheckUserInput(string input)
         {
-            return (string.IsNullOrWhiteSpace(input)) ? false : true;
+            return !string.IsNullOrWhiteSpace(input);
         }
 
         public static bool CheckChannelName(string input)
         {
-            return (string.IsNullOrWhiteSpace(input) || input.Length > 100) ? false : true;
+            return !string.IsNullOrWhiteSpace(input) && input.Length <= 100;
         }
 
         public static async Task<InteractivityResult<DiscordMessage>> GetUserInteractivity(CommandContext ctx, string keyword, int seconds)
         {
-            return await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, keyword, StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(seconds)).ConfigureAwait(false);
+            return await ctx.Client.GetInteractivity()
+                .WaitForMessageAsync(
+                    m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, keyword, StringComparison.InvariantCultureIgnoreCase),
+                    TimeSpan.FromSeconds(seconds)).ConfigureAwait(false);
         }
 
         public static int LimitToRange(int value, int min = 1, int max = 100)
         {
-            if (value <= min) { return min; }
-            if (value >= max) { return max; }
-            return value;
+            if (value <= min) return min;
+            return value >= max ? max : value;
         }
 
-        public static async Task<bool> RemoveMessage(DiscordMessage message)
+        public static async Task RemoveMessage(DiscordMessage message)
         {
-            try
-            {
-                await message.DeleteAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            await message.DeleteAsync().ConfigureAwait(false);
         }
 
         public static async Task<MemoryStream> CheckImageInput(CommandContext ctx, string input)
         {
             var stream = new MemoryStream();
-            if (!Uri.TryCreate(input, UriKind.Absolute, out _) && (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
-                await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning).ConfigureAwait(false);
+            if (!Uri.TryCreate(input, UriKind.Absolute, out _) &&
+                (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
+                await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning)
+                    .ConfigureAwait(false);
             else
             {
-                using (var client = new WebClient())
-                {
-                    var results = client.DownloadData(input);
-                    stream.Write(results, 0, results.Length);
-                    stream.Position = 0;
-                }
+                using var client = new WebClient();
+                var results = client.DownloadData(input);
+                stream.Write(results, 0, results.Length);
+                stream.Position = 0;
             }
+
             return stream;
         }
 

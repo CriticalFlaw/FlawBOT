@@ -142,6 +142,26 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exception occurred: {0} :
+        ///{1}.
+        /// </summary>
+        internal static string ERR_EXCEPTION {
+            get {
+                return ResourceManager.GetString("ERR_EXCEPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inner exception: {0} :
+        ///{1}.
+        /// </summary>
+        internal static string ERR_EXCEPTION_INNER {
+            get {
+                return ResourceManager.GetString("ERR_EXCEPTION_INNER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error calculating math equation, make sure your values are integers and the operation is valid!.
         /// </summary>
         internal static string ERR_MATH_EQUATION {
@@ -219,6 +239,15 @@ namespace FlawBOT.Core.Properties {
         internal static string ERR_STEAM_CONNECT_FORMAT {
             get {
                 return ResourceManager.GetString("ERR_STEAM_CONNECT_FORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutting Down.
+        /// </summary>
+        internal static string INFO_SHUTDOWN {
+            get {
+                return ResourceManager.GetString("INFO_SHUTDOWN", resourceCulture);
             }
         }
         

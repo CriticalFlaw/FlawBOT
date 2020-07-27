@@ -9,20 +9,17 @@ namespace FlawBOT.Framework.Models
     public class TimeData
     {
         [JsonProperty("results")]
-        private GeolocationModel[] results;
+        private GeolocationModel[] _results;
 
         [JsonProperty("timezone")]
-        private TimeZoneResult timeZone;
-
-        [JsonProperty("time")]
-        private DateTime time;
+        private TimeZoneResult _timeZone;
 
         [JsonProperty("status")]
-        public string status { get; set; }
+        public string Status { get; set; }
 
-        public GeolocationModel[] Results { get => results; set => results = value; }
-        public TimeZoneResult Timezone { get => timeZone; set => timeZone = value; }
-        public DateTime Time { get => time; set => time = value; }
+        public GeolocationModel[] Results { get; }
+        public TimeZoneResult Timezone { get; set; }
+        public DateTime Time { get; set; }
 
         public class GeolocationModel
         {
@@ -51,13 +48,13 @@ namespace FlawBOT.Framework.Models
         public class TimeZoneResult
         {
             [JsonProperty("dstOffset")]
-            public double dstOffset { get; set; }
+            public double DstOffset { get; set; }
 
             [JsonProperty("rawOffset")]
-            public double rawOffset { get; set; }
+            public double RawOffset { get; set; }
 
             [JsonProperty("timeZoneName")]
-            public string timeZoneName { get; set; }
+            public string TimeZoneName { get; set; }
         }
     }
 
@@ -105,7 +102,7 @@ namespace FlawBOT.Framework.Models
     public class WeatherData
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -123,7 +120,7 @@ namespace FlawBOT.Framework.Models
         public List<Weather> Weather { get; set; }
 
         [JsonProperty("cod")]
-        public int COD { get; set; }
+        public int Cod { get; set; }
     }
 
     public class Sys
@@ -156,7 +153,7 @@ namespace FlawBOT.Framework.Models
     public class Weather
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("main")]
         public string Main { get; set; }

@@ -1,13 +1,13 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.Globalization;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System;
-using System.Globalization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -28,7 +28,7 @@ namespace FlawBOT.Modules
             member = member ?? ctx.Member;
             var output = new DiscordEmbedBuilder()
                 .WithImageUrl(member.AvatarUrl)
-                .WithUrl("https://images.google.com/searchbyimage?image_url=" + member.AvatarUrl)   // UNUSED
+                .WithUrl("https://images.google.com/searchbyimage?image_url=" + member.AvatarUrl) // UNUSED
                 .WithColor(DiscordColor.Lilac);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
@@ -45,7 +45,9 @@ namespace FlawBOT.Modules
             [Description("Reason for the ban")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
+            {
                 await ctx.RespondAsync("You cannot ban yourself.").ConfigureAwait(false);
+            }
             else
             {
                 await ctx.Guild.BanMemberAsync(member, 7, reason).ConfigureAwait(false);
@@ -67,7 +69,10 @@ namespace FlawBOT.Modules
             [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
             if (member.IsDeafened)
-                await ctx.RespondAsync($"{member.DisplayName}#{member.Discriminator} is already **deafened**.").ConfigureAwait(false);
+            {
+                await ctx.RespondAsync($"{member.DisplayName}#{member.Discriminator} is already **deafened**.")
+                    .ConfigureAwait(false);
+            }
             else
             {
                 await member.SetDeafAsync(true, reason).ConfigureAwait(false);
@@ -92,13 +97,13 @@ namespace FlawBOT.Modules
             var perms = permsobj.ToPermissionString();
             var output = new DiscordEmbedBuilder()
                 .WithTitle($"@{member.Username}#{member.Discriminator}")
-                .WithDescription("ID: " + member.Id.ToString())
+                .WithDescription("ID: " + member.Id)
                 .AddField("Registered on", member.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Joined on", member.JoinedAt.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Nickname", member.Nickname ?? "None", true)
                 .AddField("Muted?", member.IsMuted ? "Yes" : "No", true)
                 .AddField("Deafened?", member.IsDeafened ? "Yes" : "No", true)
-                .WithThumbnailUrl(member.AvatarUrl)
+                .WithThumbnail(member.AvatarUrl)
                 .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
                 .WithColor(member.Color);
             if (member.IsBot)
@@ -129,7 +134,9 @@ namespace FlawBOT.Modules
             [Description("Reason for the kick")] [RemainingText] string reason = null)
         {
             if (ctx.Member.Id == member.Id)
+            {
                 await ctx.RespondAsync("You cannot kick yourself.").ConfigureAwait(false);
+            }
             else
             {
                 await member.RemoveAsync(reason).ConfigureAwait(false);
@@ -151,7 +158,10 @@ namespace FlawBOT.Modules
             [Description("Reason for the mute")] [RemainingText] string reason = null)
         {
             if (member.IsMuted)
-                await ctx.RespondAsync($"{member.DisplayName}#{member.Discriminator} is already **muted**.").ConfigureAwait(false);
+            {
+                await ctx.RespondAsync($"{member.DisplayName}#{member.Discriminator} is already **muted**.")
+                    .ConfigureAwait(false);
+            }
             else
             {
                 await member.SetMuteAsync(true, reason).ConfigureAwait(false);
@@ -175,7 +185,9 @@ namespace FlawBOT.Modules
             member = member ?? ctx.Member;
             var nickname = member.DisplayName;
             await member.ModifyAsync(usr => usr.Nickname = name).ConfigureAwait(false);
-            var response = (!string.IsNullOrWhiteSpace(name)) ? $"{nickname}'s nickname has been changed to **{name}**" : $"{nickname}'s nickname has been reset.";
+            var response = !string.IsNullOrWhiteSpace(name)
+                ? $"{nickname}'s nickname has been changed to **{name}**"
+                : $"{nickname}'s nickname has been reset.";
             await BotServices.SendEmbedAsync(ctx, response, EmbedType.Good).ConfigureAwait(false);
         }
 
@@ -210,10 +222,10 @@ namespace FlawBOT.Modules
         [Description("Unban server user")]
         [RequirePermissions(Permissions.BanMembers)]
         public async Task Remove(CommandContext ctx,
-            [Description("Discord user ID to unban from the server")] ulong userID,
+            [Description("Discord user ID to unban from the server")] ulong userId,
             [Description("Reason for the deafen")] [RemainingText] string reason = null)
         {
-            var member = await ctx.Client.GetUserAsync(userID).ConfigureAwait(false);
+            var member = await ctx.Client.GetUserAsync(userId).ConfigureAwait(false);
             await ctx.Guild.UnbanMemberAsync(member, reason ?? "No reason provided.").ConfigureAwait(false);
             await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
             await ctx.RespondAsync($"Unbanned Discord User #{member} from the server.").ConfigureAwait(false);

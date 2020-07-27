@@ -16,7 +16,7 @@ namespace SearchModule
         [Test]
         public void GetTimeData()
         {
-            Assert.IsNotNull(GoogleService.GetTimeDataAsync("Ottawa").Result.status);
+            Assert.IsNotNull(GoogleService.GetTimeDataAsync("Ottawa").Result.Status);
             Assert.IsNull(GoogleService.GetTimeDataAsync("Ottura").Result);
         }
 

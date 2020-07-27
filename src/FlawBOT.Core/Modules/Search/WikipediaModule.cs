@@ -1,9 +1,9 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using FlawBOT.Core.Properties;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Services;
-using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
@@ -21,7 +21,8 @@ namespace FlawBOT.Modules
             if (!BotServices.CheckUserInput(query)) return;
             var results = WikipediaService.GetWikipediaDataAsync(query).Result;
             if (results.Missing)
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, EmbedType.Missing)
+                    .ConfigureAwait(false);
             else
                 await ctx.Channel.SendMessageAsync(results.FullUrl).ConfigureAwait(false);
         }
