@@ -15,11 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00709" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00709" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00709" />
-    <PackageReference Include="Google.Apis.Books.v1" Version="1.48.0.2024" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.47.0.2008" />
+    <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00738" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00738" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00738" />
+    <PackageReference Include="DSharpPlus.Lavalink" Version="4.0.0-nightly-00738" />
+    <PackageReference Include="DSharpPlus.VoiceNext" Version="4.0.0-nightly-00738" />
+    <PackageReference Include="Google.Apis.Books.v1" Version="1.49.0.2094" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.49.0.2099" />
     <PackageReference Include="Imgur.API" Version="4.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="OMDbSharp" Version="0.3.0" />

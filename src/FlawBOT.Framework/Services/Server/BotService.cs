@@ -104,10 +104,14 @@ namespace FlawBOT.Framework.Services
             return stream;
         }
 
-        public void LoadBotConfiguration()
+        public bool LoadBotConfiguration()
         {
+            if (!File.Exists("config.json")) return false;
+            // TO-DO: Generate a config.json file if one does not already exist.
+
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
             TokenHandler.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
+            return true;
         }
     }
 }
