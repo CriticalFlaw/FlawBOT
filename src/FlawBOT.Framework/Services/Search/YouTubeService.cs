@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using FlawBOT.Framework.Models;
+using FlawBOT.Framework.Properties;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
@@ -26,7 +27,7 @@ namespace FlawBOT.Framework.Services
         {
             var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
             if (results is null || results.Count == 0) return ":warning: No results found!";
-            return "https://www.youtube.com/watch?v=" + results[0].Id.VideoId;
+            return string.Format(Resources.URL_YouTube_Video, results.FirstOrDefault().Id.VideoId);
         }
 
         public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, string type = null)
@@ -44,15 +45,18 @@ namespace FlawBOT.Framework.Services
                 switch (result.Id.Kind)
                 {
                     case "youtube#video":
-                        output.AddField(result.Snippet.Title, "https://www.youtube.com/watch?v=" + result.Id.VideoId);
+                        output.AddField(result.Snippet.Title,
+                            string.Format(Resources.URL_YouTube_Video, result.Id.VideoId));
                         break;
 
                     case "youtube#channel":
-                        output.AddField(result.Snippet.Title, "https://www.youtube.com/channel/" + result.Id.ChannelId);
+                        output.AddField(result.Snippet.Title,
+                            string.Format(Resources.URL_YouTube_Channel, result.Id.ChannelId));
                         break;
 
                     case "youtube#playlist":
-                        output.AddField(result.Snippet.Title, "https://www.youtube.com/playlist?list=" + result.Id.PlaylistId);
+                        output.AddField(result.Snippet.Title,
+                            string.Format(Resources.URL_YouTube_Playlist, result.Id.PlaylistId));
                         break;
 
                     default:

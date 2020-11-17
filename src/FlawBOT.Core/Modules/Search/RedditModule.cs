@@ -18,7 +18,7 @@ namespace FlawBOT.Modules
 
         [Command("hot")]
         [Description("Get hottest posts for a subreddit.")]
-        public Task HowPost(CommandContext ctx, [Description("Subreddit.")] string query)
+        public Task HotPost(CommandContext ctx, [Description("Subreddit.")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Hot);
         }
@@ -38,15 +38,18 @@ namespace FlawBOT.Modules
             return RedditPost(ctx, query, RedditCategory.Top);
         }
 
-        private async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
+        private static async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
         {
-            if (!BotServices.CheckUserInput(query)) return;
+            if (string.IsNullOrWhiteSpace(query)) return;
             var results = RedditService.GetResults(query, category);
             if (results is null || results.Count == 0)
+            {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
                     .ConfigureAwait(false);
+                return;
+            }
 
-            while (results != null && results.Count > 0)
+            while (results.Count > 0)
             {
                 var output = new DiscordEmbedBuilder()
                     .WithFooter("Type 'next' within 10 seconds for the next five posts.")
@@ -54,11 +57,12 @@ namespace FlawBOT.Modules
 
                 foreach (var result in results.Take(5))
                 {
-                    output.AddField(result.Authors[0].Name, $"[{(result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "...")}]({result.Links.First().Uri})");
+                    output.AddField(result.Authors.FirstOrDefault().Name,
+                        $"[{(result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "...")}]({result.Links.First().Uri})");
                     results.Remove(result);
                 }
 
-                var message = await ctx.RespondAsync("Search results for r/" + query, embed: output)
+                var message = await ctx.RespondAsync("Search results for r/" + query + " on Reddit", embed: output)
                     .ConfigureAwait(false);
 
                 if (results.Count == 5) continue;

@@ -4,11 +4,9 @@ namespace FlawBOT.Framework.Models
 {
     public class TokenData
     {
-        [JsonProperty("prefix")]
-        public string CommandPrefix { get; private set; }
+        [JsonProperty("prefix")] public string CommandPrefix { get; private set; }
 
-        [JsonProperty("discord")]
-        public string DiscordToken { get; private set; }
+        [JsonProperty("discord")] public string DiscordToken { get; private set; }
 
         [JsonProperty("google", NullValueHandling = NullValueHandling.Ignore)]
         public string GoogleToken { get; private set; }

@@ -9,17 +9,19 @@ namespace FlawBOT
 {
     internal sealed class Program
     {
-        private static List<FlawBOT> Shards { get; } = new List<FlawBOT>();
-        public static CancellationTokenSource CancelTokenSource { get; } = new CancellationTokenSource();
-        private static CancellationToken CancelToken => CancelTokenSource.Token;
+        private static List<FlawBot> Shards { get; } = new List<FlawBot>();
+        private static CancellationTokenSource CancelTokenSource { get; } = new CancellationTokenSource();
 
-        public static void Main(string[] args) => RunBotAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
+        public static void Main(string[] args)
+        {
+            RunBotAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
 
-        public static async Task RunBotAsync(string[] args)
+        private static async Task RunBotAsync(string[] args)
         {
             try
             {
-                // TO-DO: Remove?
+                // TODO: Remove?
                 //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
                 // Set a command for cancelling the bot process
@@ -31,9 +33,9 @@ namespace FlawBOT
 
                 // Generate a list of shards
                 var botList = new List<Task>();
-                for (var i = 0; i < 1; i++) // TO-DO: Replace 1 with ShardCount
+                for (var i = 0; i < 1; i++) // TODO: Replace 1 with ShardCount
                 {
-                    var client = new FlawBOT(i);
+                    var client = new FlawBot(i);
                     Shards.Add(client);
                     botList.Add(client.RunAsync());
                     await Task.Delay(7500).ConfigureAwait(false);
@@ -47,7 +49,8 @@ namespace FlawBOT
             {
                 Console.WriteLine(Resources.ERR_EXCEPTION, ex.GetType(), ex.Message);
                 if (!(ex.InnerException is null))
-                    Console.WriteLine(Resources.ERR_EXCEPTION_INNER, ex.InnerException.GetType(), ex.InnerException.Message);
+                    Console.WriteLine(Resources.ERR_EXCEPTION_INNER, ex.InnerException.GetType(),
+                        ex.InnerException.Message);
                 Console.ReadKey();
             }
 

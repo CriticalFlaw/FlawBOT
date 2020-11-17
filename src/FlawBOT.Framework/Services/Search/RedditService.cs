@@ -13,7 +13,7 @@ namespace FlawBOT.Framework.Services
         {
             try
             {
-                query = $"https://www.reddit.com/r/{query.ToLowerInvariant()}/{GetPostCategory(category)}.rss";
+                query = string.Format(Resources.URL_Reddit, query.ToLowerInvariant(), GetPostCategory(category));
                 using var reader = XmlReader.Create(query);
                 return SyndicationFeed.Load(reader).Items?.ToList();
             }

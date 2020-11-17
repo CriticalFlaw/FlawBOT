@@ -11,7 +11,7 @@ namespace FlawBOT.Framework.Services
         public static async Task<DictionaryData> GetDictionaryDefinitionAsync(string query)
         {
             var results = await Http
-                .GetStringAsync(Resources.API_Dictionary + "?term=" + WebUtility.UrlEncode(query.Trim()))
+                .GetStringAsync(string.Format(Resources.API_Dictionary, WebUtility.UrlEncode(query.Trim())))
                 .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DictionaryData>(results);
         }

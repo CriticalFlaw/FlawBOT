@@ -168,8 +168,8 @@
   <data name="ERR_ROLE_NOT_ALLOWED" xml:space="preserve">
     <value>You are unauthorized to remove roles from this user.</value>
   </data>
-  <data name="ERR_STEAM_CONNECT_FORMAT" xml:space="preserve">
-    <value>Invalid connection info, follow the format: 123.345.56.789:000; password hello</value>
+  <data name="ERR_INVALID_IP_GAME" xml:space="preserve">
+    <value>Invalid connection info, please follow the format: `174.116.36.120:27015; password hello`</value>
   </data>
   <data name="NOT_FOUND_EMOJI" xml:space="preserve">
     <value>Emoji not found in the server list.</value>
@@ -195,7 +195,7 @@
   <data name="REQUEST_TIMEOUT" xml:space="preserve">
     <value>Request timed out...</value>
   </data>
-  <data name="SIMPSONS_GIF_WARNING" xml:space="preserve">
+  <data name="WARN_GIF_LOADING" xml:space="preserve">
     <value>Note: First time gifs take a few minutes to properly generate.</value>
   </data>
   <data name="URL_DISCORD" xml:space="preserve">
@@ -210,13 +210,13 @@
   <data name="URL_TEAMWORK_SERVERS" xml:space="preserve">
     <value>https://teamwork.tf/community/customserverlist/</value>
   </data>
-  <data name="URL_TWITCH_CHANNEL" xml:space="preserve">
+  <data name="URL_TWITCH" xml:space="preserve">
     <value>https://www.twitch.tv/</value>
   </data>
   <data name="URL_TWITTER" xml:space="preserve">
     <value>https://twitter.com/</value>
   </data>
-  <data name="URL_YOUTUBE_CHANNEL" xml:space="preserve">
+  <data name="URL_YOUTUBE" xml:space="preserve">
     <value>https://www.youtube.com/channel/</value>
   </data>
   <data name="ERR_EXCEPTION" xml:space="preserve">
@@ -229,5 +229,45 @@
   </data>
   <data name="INFO_SHUTDOWN" xml:space="preserve">
     <value>Shutting Down</value>
+  </data>
+  <data name="ERR_VOICE_CHN_NOT_FOUND" xml:space="preserve">
+    <value>Unable to find voice channel or you're not connected...</value>
+  </data>
+  <data name="ERR_VOICE_NOT_ACTIVE" xml:space="preserve">
+    <value>Voice is not activated</value>
+  </data>
+  <data name="ERR_VOICE_NOT_CONNECTED" xml:space="preserve">
+    <value>Voice is not connected in this server</value>
+  </data>
+  <data name="WARN_VOICE_VOLUME" xml:space="preserve">
+    <value>Volume needs to be between 0 and 250% inclusive.</value>
+  </data>
+  <data name="INFO_RESPOND" xml:space="preserve">
+    <value>Respond with **yes** to proceed or wait 10 seconds to cancel this operation.</value>
+  </data>
+  <data name="URL_TF2_WIKI" xml:space="preserve">
+    <value>https://wiki.teamfortress.com/wiki/{0}</value>
+  </data>
+  <data name="BOT_GITHUB" xml:space="preserve">
+    <value>https://github.com/CriticalFlaw/FlawBOT/</value>
+  </data>
+  <data name="BOT_INVITE" xml:space="preserve">
+    <value>https://discordapp.com/oauth2/authorize?client_id=339833029013012483&amp;scope=bot&amp;permissions=66186303</value>
+  </data>
+  <data name="URL_GOOGLE_IMAGE" xml:space="preserve">
+    <value>https://images.google.com/searchbyimage?image_url={0}</value>
+  </data>
+  <data name="URL_STEAM_APP" xml:space="preserve">
+    <value>http://store.steampowered.com/app/{0}</value>
+  </data>
+  <data name="URL_WEATHER" xml:space="preserve">
+    <value>https://openweathermap.org/city/{0}</value>
+  </data>
+  <data name="ERR_INVALID_IP" xml:space="preserve">
+    <value>Invalid IP address, please follow the format: `174.116.36.120`</value>
+  </data>
+  <data name="URL_GOOGLE_MAPS" xml:space="preserve">
+    <value>https://www.google.ca/maps/@{0},{1},14z</value>
+    <comment>0 = longitude, 1 = latitude</comment>
   </data>
 </root>

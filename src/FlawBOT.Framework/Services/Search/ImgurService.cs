@@ -11,7 +11,8 @@ namespace FlawBOT.Framework.Services
 {
     public static class ImgurService
     {
-        public static async Task<IGalleryItem> GetImgurGalleryAsync(string query, GallerySortOrder order = GallerySortOrder.Top, TimeWindow time = TimeWindow.All)
+        public static async Task<IGalleryItem> GetImgurGalleryAsync(string query,
+            GallerySortOrder order = GallerySortOrder.Top, TimeWindow time = TimeWindow.All)
         {
             var random = new Random();
             var imgur = new ImgurClient(TokenHandler.Tokens.ImgurToken);

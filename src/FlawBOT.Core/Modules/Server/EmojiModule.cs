@@ -14,32 +14,37 @@ using FlawBOT.Framework.Services;
 
 namespace FlawBOT.Modules
 {
-    [Group("emoji")]
-    [Aliases("emojis", "em", "e")]
+    [Group("emoji"), Aliases("emojis", "em", "e")]
     [Description("Commands for managing server emojis")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class EmojiModule : BaseCommandModule
     {
         #region COMMAND_ADD
 
-        [Command("add")]
-        [Aliases("addnew", "create")]
+        [Command("add"), Aliases("addnew", "create")]
         [Description("Add a new server emoji through URL or as an attachment.")]
         [RequirePermissions(Permissions.ManageEmojis)]
-        public async Task AddAsync(CommandContext ctx,
+        public async Task CreateEmoji(CommandContext ctx,
             [Description("Name for the emoji.")] string query,
             [Description("Image URL.")] Uri url = null)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(query) || query.Length < 2 || query.Length > 50)
+                {
                     await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NAME, EmbedType.Warning)
                         .ConfigureAwait(false);
+                    return;
+                }
 
                 if (url is null)
-                    if (!ctx.Message.Attachments.Any() || !Uri.TryCreate(ctx.Message.Attachments.First().Url, UriKind.Absolute, out url))
+                {
+                    if (!ctx.Message.Attachments.Any() ||
+                        !Uri.TryCreate(ctx.Message.Attachments[0].Url, UriKind.Absolute, out url))
                         await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_IMAGE, EmbedType.Warning)
                             .ConfigureAwait(false);
+                    return;
+                }
 
                 var handler = new HttpClientHandler {AllowAutoRedirect = false};
                 var http = new HttpClient(handler, true);
@@ -47,7 +52,7 @@ namespace FlawBOT.Modules
                 if (!response.Content.Headers.ContentType.MediaType.StartsWith("image/")) return;
 
                 using (response = await http.GetAsync(url).ConfigureAwait(false))
-                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                await using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
                     if (stream.Length >= 256000)
                         await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_SIZE, EmbedType.Warning)
@@ -68,12 +73,12 @@ namespace FlawBOT.Modules
 
         #region COMMAND_DELETE
 
-        [Command("delete")]
-        [Aliases("remove", "rm", "del")]
+        [Command("delete"), Aliases("remove", "rm", "del")]
         [Description("Remove an existing server emoji. Note: Bots can only delete emojis they created.")]
         [RequirePermissions(Permissions.ManageEmojis)]
-        public async Task DeleteAsync(CommandContext ctx,
-            [Description("Server emoji to delete.")] DiscordEmoji query)
+        public async Task DeleteEmoji(CommandContext ctx,
+            [Description("Server emoji to delete.")]
+            DiscordEmoji query)
         {
             try
             {
@@ -94,11 +99,10 @@ namespace FlawBOT.Modules
 
         #region COMMAND_EDIT
 
-        [Command("modify")]
-        [Aliases("e", "edit", "rename")]
+        [Command("modify"), Aliases("e", "edit", "rename")]
         [Description("Edit the name of an existing server emoji.")]
         [RequirePermissions(Permissions.ManageEmojis)]
-        public async Task ModifyAsync(CommandContext ctx,
+        public async Task EditEmoji(CommandContext ctx,
             [Description("Emoji to rename.")] DiscordEmoji query,
             [Description("New name.")] string name)
         {
@@ -108,14 +112,13 @@ namespace FlawBOT.Modules
                 {
                     await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_NAME, EmbedType.Warning)
                         .ConfigureAwait(false);
+                    return;
                 }
-                else
-                {
-                    var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
-                    emoji = await ctx.Guild.ModifyEmojiAsync(emoji, name).ConfigureAwait(false);
-                    await BotServices.SendEmbedAsync(ctx, "Successfully renamed emoji to " + Formatter.Bold(emoji.Name),
-                        EmbedType.Good).ConfigureAwait(false);
-                }
+
+                var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
+                emoji = await ctx.Guild.ModifyEmojiAsync(emoji, name).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, "Successfully renamed emoji to " + Formatter.Bold(emoji.Name),
+                    EmbedType.Good).ConfigureAwait(false);
             }
             catch (NotFoundException)
             {
@@ -128,11 +131,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_INFO
 
-        [Command("info")]
-        [Aliases("i")]
+        [Command("info"), Aliases("i")]
         [Description("Retrieve server emoji information.")]
         public async Task GetEmoji(CommandContext ctx,
-            [Description("Server emoji information to retrieve.")] DiscordEmoji query)
+            [Description("Server emoji information to retrieve.")]
+            DiscordEmoji query)
         {
             var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
@@ -150,8 +153,7 @@ namespace FlawBOT.Modules
 
         #region COMMAND_LIST
 
-        [Command("list")]
-        [Aliases("print", "l", "ls", "all")]
+        [Command("list"), Aliases("print", "l", "ls", "all")]
         [Description("Retrieve list of server emojis.")]
         public async Task GetEmojiList(CommandContext ctx)
         {

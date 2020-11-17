@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 using FlawBOT.Framework.Models;
 using Newtonsoft.Json;
 
@@ -49,17 +50,14 @@ namespace FlawBOT.Framework.Services
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
-        public static async Task SendUserStateChangeAsync(CommandContext ctx, UserStateChange state, DiscordMember user, string reason)
+        public static async Task SendUserStateChangeAsync(CommandContext ctx, UserStateChange state, DiscordMember user,
+            string reason)
         {
             var output = new DiscordEmbedBuilder()
-                .WithDescription($"{state}: {user.DisplayName}#{user.Discriminator}\nIdentifier: {user.Id}\nReason: {reason}\nIssued by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}")
+                .WithDescription(
+                    $"{state}: {user.DisplayName}#{user.Discriminator}\nIdentifier: {user.Id}\nReason: {reason}\nIssued by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}")
                 .WithColor(DiscordColor.Green);
             await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
-        }
-
-        public static bool CheckUserInput(string input)
-        {
-            return !string.IsNullOrWhiteSpace(input);
         }
 
         public static bool CheckChannelName(string input)
@@ -67,11 +65,13 @@ namespace FlawBOT.Framework.Services
             return !string.IsNullOrWhiteSpace(input) && input.Length <= 100;
         }
 
-        public static async Task<InteractivityResult<DiscordMessage>> GetUserInteractivity(CommandContext ctx, string keyword, int seconds)
+        public static async Task<InteractivityResult<DiscordMessage>> GetUserInteractivity(CommandContext ctx,
+            string keyword, int seconds)
         {
             return await ctx.Client.GetInteractivity()
                 .WaitForMessageAsync(
-                    m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, keyword, StringComparison.InvariantCultureIgnoreCase),
+                    m => m.Channel.Id == ctx.Channel.Id &&
+                         string.Equals(m.Content, keyword, StringComparison.InvariantCultureIgnoreCase),
                     TimeSpan.FromSeconds(seconds)).ConfigureAwait(false);
         }
 
@@ -91,8 +91,10 @@ namespace FlawBOT.Framework.Services
             var stream = new MemoryStream();
             if (!Uri.TryCreate(input, UriKind.Absolute, out _) &&
                 (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
+            {
                 await SendEmbedAsync(ctx, "An image URL ending with .img, .png or .jpg is required!", EmbedType.Warning)
                     .ConfigureAwait(false);
+            }
             else
             {
                 using var client = new WebClient();
@@ -104,10 +106,10 @@ namespace FlawBOT.Framework.Services
             return stream;
         }
 
-        public bool LoadBotConfiguration()
+        public bool LoadConfiguration()
         {
             if (!File.Exists("config.json")) return false;
-            // TO-DO: Generate a config.json file if one does not already exist.
+            // TODO: Generate a config.json file if one does not already exist.
 
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
             TokenHandler.Tokens = JsonConvert.DeserializeObject<TokenData>(json);

@@ -61,6 +61,24 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/CriticalFlaw/FlawBOT/.
+        /// </summary>
+        internal static string BOT_GITHUB {
+            get {
+                return ResourceManager.GetString("BOT_GITHUB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://discordapp.com/oauth2/authorize?client_id=339833029013012483&amp;scope=bot&amp;permissions=66186303.
+        /// </summary>
+        internal static string BOT_INVITE {
+            get {
+                return ResourceManager.GetString("BOT_INVITE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel with the same name already exists..
         /// </summary>
         internal static string ERR_CHANNEL_EXISTS {
@@ -162,6 +180,24 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid IP address, please follow the format: `174.116.36.120`.
+        /// </summary>
+        internal static string ERR_INVALID_IP {
+            get {
+                return ResourceManager.GetString("ERR_INVALID_IP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid connection info, please follow the format: `174.116.36.120:27015; password hello`.
+        /// </summary>
+        internal static string ERR_INVALID_IP_GAME {
+            get {
+                return ResourceManager.GetString("ERR_INVALID_IP_GAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error calculating math equation, make sure your values are integers and the operation is valid!.
         /// </summary>
         internal static string ERR_MATH_EQUATION {
@@ -234,11 +270,38 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid connection info, follow the format: 123.345.56.789:000; password hello.
+        ///   Looks up a localized string similar to Unable to find voice channel or you&apos;re not connected....
         /// </summary>
-        internal static string ERR_STEAM_CONNECT_FORMAT {
+        internal static string ERR_VOICE_CHN_NOT_FOUND {
             get {
-                return ResourceManager.GetString("ERR_STEAM_CONNECT_FORMAT", resourceCulture);
+                return ResourceManager.GetString("ERR_VOICE_CHN_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voice is not activated.
+        /// </summary>
+        internal static string ERR_VOICE_NOT_ACTIVE {
+            get {
+                return ResourceManager.GetString("ERR_VOICE_NOT_ACTIVE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voice is not connected in this server.
+        /// </summary>
+        internal static string ERR_VOICE_NOT_CONNECTED {
+            get {
+                return ResourceManager.GetString("ERR_VOICE_NOT_CONNECTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Respond with **yes** to proceed or wait 10 seconds to cancel this operation..
+        /// </summary>
+        internal static string INFO_RESPOND {
+            get {
+                return ResourceManager.GetString("INFO_RESPOND", resourceCulture);
             }
         }
         
@@ -324,20 +387,38 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note: First time gifs take a few minutes to properly generate..
-        /// </summary>
-        internal static string SIMPSONS_GIF_WARNING {
-            get {
-                return ResourceManager.GetString("SIMPSONS_GIF_WARNING", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to https://discord.gg/.
         /// </summary>
         internal static string URL_DISCORD {
             get {
                 return ResourceManager.GetString("URL_DISCORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://images.google.com/searchbyimage?image_url={0}.
+        /// </summary>
+        internal static string URL_GOOGLE_IMAGE {
+            get {
+                return ResourceManager.GetString("URL_GOOGLE_IMAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.google.ca/maps/@{0},{1},14z.
+        /// </summary>
+        internal static string URL_GOOGLE_MAPS {
+            get {
+                return ResourceManager.GetString("URL_GOOGLE_MAPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://store.steampowered.com/app/{0}.
+        /// </summary>
+        internal static string URL_STEAM_APP {
+            get {
+                return ResourceManager.GetString("URL_STEAM_APP", resourceCulture);
             }
         }
         
@@ -369,11 +450,20 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://wiki.teamfortress.com/wiki/{0}.
+        /// </summary>
+        internal static string URL_TF2_WIKI {
+            get {
+                return ResourceManager.GetString("URL_TF2_WIKI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://www.twitch.tv/.
         /// </summary>
-        internal static string URL_TWITCH_CHANNEL {
+        internal static string URL_TWITCH {
             get {
-                return ResourceManager.GetString("URL_TWITCH_CHANNEL", resourceCulture);
+                return ResourceManager.GetString("URL_TWITCH", resourceCulture);
             }
         }
         
@@ -387,11 +477,38 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://openweathermap.org/city/{0}.
+        /// </summary>
+        internal static string URL_WEATHER {
+            get {
+                return ResourceManager.GetString("URL_WEATHER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://www.youtube.com/channel/.
         /// </summary>
-        internal static string URL_YOUTUBE_CHANNEL {
+        internal static string URL_YOUTUBE {
             get {
-                return ResourceManager.GetString("URL_YOUTUBE_CHANNEL", resourceCulture);
+                return ResourceManager.GetString("URL_YOUTUBE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note: First time gifs take a few minutes to properly generate..
+        /// </summary>
+        internal static string WARN_GIF_LOADING {
+            get {
+                return ResourceManager.GetString("WARN_GIF_LOADING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volume needs to be between 0 and 250% inclusive..
+        /// </summary>
+        internal static string WARN_VOICE_VOLUME {
+            get {
+                return ResourceManager.GetString("WARN_VOICE_VOLUME", resourceCulture);
             }
         }
     }

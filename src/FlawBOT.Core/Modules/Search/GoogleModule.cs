@@ -18,27 +18,27 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_TIME
 
-        [Command("time")]
-        [Aliases("clock")]
+        [Command("time"), Aliases("clock")]
         [Description("Retrieve the time for specified location")]
         public async Task GetTime(CommandContext ctx,
-            [Description("Location to retrieve time data from")] [RemainingText] string location)
+            [Description("Location to retrieve time data from"), RemainingText]
+            string location)
         {
-            if (!BotServices.CheckUserInput(location)) return;
+            if (string.IsNullOrWhiteSpace(location)) return;
             var results = GoogleService.GetTimeDataAsync(location).Result;
             if (results == null || results.Status != "OK")
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
                     .ConfigureAwait(false);
+                return;
             }
-            else
-            {
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(":clock1: Current time in " + results.Results[0].FormattedAddress)
-                    .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " + results.Timezone.TimeZoneName)
-                    .WithColor(SharedData.DefaultColor);
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
-            }
+
+            var output = new DiscordEmbedBuilder()
+                .WithTitle(":clock1: Current time in " + results.Results.FirstOrDefault().FormattedAddress)
+                .WithDescription(Formatter.Bold(results.Time.ToShortTimeString()) + " " +
+                                 results.Timezone.TimeZoneName)
+                .WithColor(SharedData.DefaultColor);
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_TIME
@@ -48,35 +48,40 @@ namespace FlawBOT.Modules
         [Command("news")]
         [Description("Retrieve the latest news articles from NewsAPI.org")]
         public async Task News(CommandContext ctx,
-            [Description("Article topic to find on Google News")] [RemainingText] string query)
+            [Description("Article topic to find on Google News"), RemainingText]
+            string query)
         {
             var results = await GoogleService.GetNewsDataAsync(query).ConfigureAwait(false);
             if (results.Status != "ok")
+            {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_GENERIC, EmbedType.Missing)
                     .ConfigureAwait(false);
-            else
-                while (results.Articles.Count > 0)
+                return;
+            }
+
+            while (results.Articles.Count > 0)
+            {
+                var output = new DiscordEmbedBuilder()
+                    .WithFooter("Type 'next' within 10 seconds for the next five articles.")
+                    .WithColor(new DiscordColor("#253B80"));
+
+                foreach (var result in results.Articles.Take(5))
                 {
-                    var output = new DiscordEmbedBuilder()
-                        .WithFooter("Type 'next' within 10 seconds for the next five articles.")
-                        .WithColor(new DiscordColor("#253B80"));
-
-                    foreach (var result in results.Articles.Take(5))
-                    {
-                        output.AddField(result.PublishDate.ToString(CultureInfo.InvariantCulture), $"[{result.Title}]({result.Url})");
-                        results.Articles.Remove(result);
-                    }
-
-                    var message = await ctx
-                        .RespondAsync("Latest Google News articles from News API", embed: output.Build())
-                        .ConfigureAwait(false);
-
-                    if (results.Articles.Count == 5) continue;
-                    var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
-                    if (interactivity.Result is null) break;
-                    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
+                    output.AddField(result.PublishDate.ToString(CultureInfo.InvariantCulture),
+                        $"[{result.Title}]({result.Url})");
+                    results.Articles.Remove(result);
                 }
+
+                var message = await ctx
+                    .RespondAsync("Latest Google News articles from News API", embed: output.Build())
+                    .ConfigureAwait(false);
+
+                if (results.Articles.Count == 5) continue;
+                var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
+                if (interactivity.Result is null) break;
+                await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+                await BotServices.RemoveMessage(message).ConfigureAwait(false);
+            }
         }
 
         #endregion COMMAND_NEWS
@@ -86,27 +91,28 @@ namespace FlawBOT.Modules
         [Command("weather")]
         [Description("Retrieve the weather for specified location")]
         public async Task Weather(CommandContext ctx,
-            [Description("Location to retrieve weather data from")] [RemainingText] string query)
+            [Description("Location to retrieve weather data from"), RemainingText]
+            string query)
         {
-            if (!BotServices.CheckUserInput(query)) return;
+            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await GoogleService.GetWeatherDataAsync(query).ConfigureAwait(false);
             if (results == null || results.Cod == 404)
             {
                 await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Missing)
                     .ConfigureAwait(false);
+                return;
             }
-            else
-            {
-                Func<double, double> format = GoogleService.CelsiusToFahrenheit;
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
-                    .AddField("Temperature", $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
-                    .AddField("Humidity", $"{results.Main.Humidity}%", true)
-                    .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
-                    .WithUrl("https://openweathermap.org/city/" + results.Id)
-                    .WithColor(SharedData.DefaultColor);
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
-            }
+
+            Func<double, double> format = GoogleService.CelsiusToFahrenheit;
+            var output = new DiscordEmbedBuilder()
+                .WithTitle(":partly_sunny: Current weather in " + results.Name + ", " + results.Sys.Country)
+                .AddField("Temperature",
+                    $"{results.Main.Temperature:F1}°C / {format(results.Main.Temperature):F1}°F", true)
+                .AddField("Humidity", $"{results.Main.Humidity}%", true)
+                .AddField("Wind Speed", $"{results.Wind.Speed}m/s", true)
+                .WithUrl(string.Format(Resources.URL_WEATHER, results.Id))
+                .WithColor(SharedData.DefaultColor);
+            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_WEATHER

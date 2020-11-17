@@ -61,7 +61,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.amiiboapi.com/api/amiibo/.
+        ///   Looks up a localized string similar to https://www.amiiboapi.com/api/amiibo/?name={0}.
         /// </summary>
         internal static string API_Amiibo {
             get {
@@ -88,7 +88,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.urbandictionary.com/v0/define.
+        ///   Looks up a localized string similar to http://api.urbandictionary.com/v0/define?term={0}.
         /// </summary>
         internal static string API_Dictionary {
             get {
@@ -106,7 +106,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/geocode/json.
+        ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/geocode/json?address={0}&amp;key={1}.
         /// </summary>
         internal static string API_Google_Geo {
             get {
@@ -115,7 +115,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/timezone/json.
+        ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&amp;timestamp={2}&amp;key={3}.
         /// </summary>
         internal static string API_Google_Time {
             get {
@@ -124,7 +124,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.openweathermap.org/data/2.5/weather.
+        ///   Looks up a localized string similar to http://api.openweathermap.org/data/2.5/weather?q={0}&amp;appid=42cd627dd60debf25a5739e50a217d74&amp;units=metric.
         /// </summary>
         internal static string API_Google_Weather {
             get {
@@ -133,7 +133,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://ip-api.com/json/.
+        ///   Looks up a localized string similar to http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1.
         /// </summary>
         internal static string API_IPLocation {
             get {
@@ -142,7 +142,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://api.nasa.gov/planetary/apod.
+        ///   Looks up a localized string similar to https://api.nasa.gov/planetary/apod?api_key={0}.
         /// </summary>
         internal static string API_NASA {
             get {
@@ -151,7 +151,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://newsapi.org/v2/everything?sources=google-news.
+        ///   Looks up a localized string similar to https://newsapi.org/v2/everything?sources=google-news&amp;q={0}&amp;apiKey={1}.
         /// </summary>
         internal static string API_News {
             get {
@@ -160,34 +160,7 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://pokeapi.co/api/v2/pokemon/?limit=800.
-        /// </summary>
-        internal static string API_Pokemon {
-            get {
-                return ResourceManager.GetString("API_Pokemon", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://api.pokemontcg.io/v1/cards.
-        /// </summary>
-        internal static string API_PokemonTCG {
-            get {
-                return ResourceManager.GetString("API_PokemonTCG", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://api.kuroganehammer.com/api/characters/.
-        /// </summary>
-        internal static string API_SmashBros {
-            get {
-                return ResourceManager.GetString("API_SmashBros", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://www.speedrun.com/api/v1/.
+        ///   Looks up a localized string similar to https://www.speedrun.com/api/v1/games?name={0}.
         /// </summary>
         internal static string API_Speedrun {
             get {
@@ -196,47 +169,11 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.steampowered.com/ISteamApps/GetAppList/v0002/.
+        ///   Looks up a localized string similar to https://www.speedrun.com/api/v1/{0}/{1}.
         /// </summary>
-        internal static string API_SteamGames {
+        internal static string API_SpeedrunExtras {
             get {
-                return ResourceManager.GetString("API_SteamGames", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://teamwork.tf/api/v1/.
-        /// </summary>
-        internal static string API_TeamworkTF {
-            get {
-                return ResourceManager.GetString("API_TeamworkTF", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://www.trade.tf/api/schema_440.json.
-        /// </summary>
-        internal static string API_TradeTF {
-            get {
-                return ResourceManager.GetString("API_TradeTF", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://api.twitch.tv/helix/.
-        /// </summary>
-        internal static string API_Twitch {
-            get {
-                return ResourceManager.GetString("API_Twitch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://en.wikipedia.org//w/api.php?action=query&amp;format=json&amp;prop=info&amp;redirects=1&amp;formatversion=2&amp;inprop=url.
-        /// </summary>
-        internal static string API_Wikipedia {
-            get {
-                return ResourceManager.GetString("API_Wikipedia", resourceCulture);
+                return ResourceManager.GetString("API_SpeedrunExtras", resourceCulture);
             }
         }
         
@@ -273,6 +210,69 @@ namespace FlawBOT.Framework.Properties {
         internal static string ERR_TF2_LIST {
             get {
                 return ResourceManager.GetString("ERR_TF2_LIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://{0}.com/api/frames/{1}/{2}/3000/4000.
+        /// </summary>
+        internal static string URL_GIFS_Frames {
+            get {
+                return ResourceManager.GetString("URL_GIFS_Frames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://{0}.com/api/random.
+        /// </summary>
+        internal static string URL_GIFS_Random {
+            get {
+                return ResourceManager.GetString("URL_GIFS_Random", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://{0}.com/gif/{1}/{2}/{3}.gif.
+        /// </summary>
+        internal static string URL_GIFS_Result {
+            get {
+                return ResourceManager.GetString("URL_GIFS_Result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.reddit.com/r/{0}/{1}.rss.
+        /// </summary>
+        internal static string URL_Reddit {
+            get {
+                return ResourceManager.GetString("URL_Reddit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.youtube.com/channel/{0}.
+        /// </summary>
+        internal static string URL_YouTube_Channel {
+            get {
+                return ResourceManager.GetString("URL_YouTube_Channel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.youtube.com/playlist?list={0}.
+        /// </summary>
+        internal static string URL_YouTube_Playlist {
+            get {
+                return ResourceManager.GetString("URL_YouTube_Playlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.youtube.com/watch?v={0}.
+        /// </summary>
+        internal static string URL_YouTube_Video {
+            get {
+                return ResourceManager.GetString("URL_YouTube_Video", resourceCulture);
             }
         }
     }

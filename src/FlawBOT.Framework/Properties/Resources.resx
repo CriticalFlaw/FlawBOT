@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="API_Amiibo" xml:space="preserve">
-    <value>https://www.amiiboapi.com/api/amiibo/</value>
+    <value>https://www.amiiboapi.com/api/amiibo/?name={0}</value>
   </data>
   <data name="API_CatFacts" xml:space="preserve">
     <value>https://catfact.ninja/fact</value>
@@ -127,55 +127,34 @@
     <value>http://aws.random.cat/meow</value>
   </data>
   <data name="API_Dictionary" xml:space="preserve">
-    <value>http://api.urbandictionary.com/v0/define</value>
+    <value>http://api.urbandictionary.com/v0/define?term={0}</value>
   </data>
   <data name="API_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>
   </data>
   <data name="API_Google_Geo" xml:space="preserve">
-    <value>https://maps.googleapis.com/maps/api/geocode/json</value>
+    <value>https://maps.googleapis.com/maps/api/geocode/json?address={0}&amp;key={1}</value>
   </data>
   <data name="API_Google_Time" xml:space="preserve">
-    <value>https://maps.googleapis.com/maps/api/timezone/json</value>
+    <value>https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&amp;timestamp={2}&amp;key={3}</value>
   </data>
   <data name="API_Google_Weather" xml:space="preserve">
-    <value>http://api.openweathermap.org/data/2.5/weather</value>
+    <value>http://api.openweathermap.org/data/2.5/weather?q={0}&amp;appid=42cd627dd60debf25a5739e50a217d74&amp;units=metric</value>
   </data>
   <data name="API_IPLocation" xml:space="preserve">
-    <value>http://ip-api.com/json/</value>
+    <value>http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1</value>
   </data>
   <data name="API_NASA" xml:space="preserve">
-    <value>https://api.nasa.gov/planetary/apod</value>
+    <value>https://api.nasa.gov/planetary/apod?api_key={0}</value>
   </data>
   <data name="API_News" xml:space="preserve">
-    <value>https://newsapi.org/v2/everything?sources=google-news</value>
-  </data>
-  <data name="API_Pokemon" xml:space="preserve">
-    <value>https://pokeapi.co/api/v2/pokemon/?limit=800</value>
-  </data>
-  <data name="API_PokemonTCG" xml:space="preserve">
-    <value>https://api.pokemontcg.io/v1/cards</value>
-  </data>
-  <data name="API_SmashBros" xml:space="preserve">
-    <value>https://api.kuroganehammer.com/api/characters/</value>
+    <value>https://newsapi.org/v2/everything?sources=google-news&amp;q={0}&amp;apiKey={1}</value>
   </data>
   <data name="API_Speedrun" xml:space="preserve">
-    <value>https://www.speedrun.com/api/v1/</value>
+    <value>https://www.speedrun.com/api/v1/games?name={0}</value>
   </data>
-  <data name="API_SteamGames" xml:space="preserve">
-    <value>http://api.steampowered.com/ISteamApps/GetAppList/v0002/</value>
-  </data>
-  <data name="API_TeamworkTF" xml:space="preserve">
-    <value>https://teamwork.tf/api/v1/</value>
-  </data>
-  <data name="API_TradeTF" xml:space="preserve">
-    <value>https://www.trade.tf/api/schema_440.json</value>
-  </data>
-  <data name="API_Twitch" xml:space="preserve">
-    <value>https://api.twitch.tv/helix/</value>
-  </data>
-  <data name="API_Wikipedia" xml:space="preserve">
-    <value>https://en.wikipedia.org//w/api.php?action=query&amp;format=json&amp;prop=info&amp;redirects=1&amp;formatversion=2&amp;inprop=url</value>
+  <data name="API_SpeedrunExtras" xml:space="preserve">
+    <value>https://www.speedrun.com/api/v1/{0}/{1}</value>
   </data>
   <data name="ERR_POKEMON_LIST" xml:space="preserve">
     <value>Error updating the Pokémon list. {0}</value>
@@ -188,5 +167,30 @@
   </data>
   <data name="ERR_TF2_LIST" xml:space="preserve">
     <value>Error updating TF2 item schema. {0}</value>
+  </data>
+  <data name="URL_GIFS_Frames" xml:space="preserve">
+    <value>https://{0}.com/api/frames/{1}/{2}/3000/4000</value>
+    <comment>0 = site, 1 = episode, 2 = timestamp</comment>
+  </data>
+  <data name="URL_GIFS_Random" xml:space="preserve">
+    <value>https://{0}.com/api/random</value>
+    <comment>0 = site</comment>
+  </data>
+  <data name="URL_GIFS_Result" xml:space="preserve">
+    <value>https://{0}.com/gif/{1}/{2}/{3}.gif</value>
+    <comment>0 = site, 1 = episode, 2 = start, 3 = end</comment>
+  </data>
+  <data name="URL_Reddit" xml:space="preserve">
+    <value>https://www.reddit.com/r/{0}/{1}.rss</value>
+    <comment>0 = query, 1 = category</comment>
+  </data>
+  <data name="URL_YouTube_Channel" xml:space="preserve">
+    <value>https://www.youtube.com/channel/{0}</value>
+  </data>
+  <data name="URL_YouTube_Playlist" xml:space="preserve">
+    <value>https://www.youtube.com/playlist?list={0}</value>
+  </data>
+  <data name="URL_YouTube_Video" xml:space="preserve">
+    <value>https://www.youtube.com/watch?v={0}</value>
   </data>
 </root>
