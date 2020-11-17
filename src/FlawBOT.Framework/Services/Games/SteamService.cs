@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FlawBOT.Framework.Models;
 using Microsoft.Extensions.Options;
+using Steam.Models;
 using Steam.Models.SteamCommunity;
 using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
@@ -15,20 +17,26 @@ namespace FlawBOT.Framework.Services
     {
         private static SteamWebInterfaceFactory _steamInterface;
 
-        /// <remarks>https://github.com/babelshift/SteamWebAPI2/issues/81</remarks>
+        private static ISteamWebResponse<IReadOnlyCollection<SteamAppModel>> SteamAppList { get; set; } =
+            new SteamWebResponse<IReadOnlyCollection<SteamAppModel>>();
+
+        #region STORE
+
+        /// <summary>
+        ///     Call the Steam API for data on a given game title.
+        /// </summary>
         public static async Task<StoreAppDetailsDataModel> GetSteamAppAsync(string query)
         {
             try
             {
-                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                var appId = SteamAppList.Data
+                    .First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
                 var factoryOptions = new SteamWebInterfaceFactoryOptions
                 {
                     SteamWebApiKey = TokenHandler.Tokens.SteamToken
                 };
-                var store = new SteamWebInterfaceFactory(Options.Create(factoryOptions)).CreateSteamStoreInterface();
-                var list = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient()).GetAppListAsync();
-                var appId = list.Data.First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
-                return await store.GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
+                return await new SteamWebInterfaceFactory(Options.Create(factoryOptions)).CreateSteamStoreInterface()
+                    .GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
             }
             catch
             {
@@ -36,15 +44,39 @@ namespace FlawBOT.Framework.Services
             }
         }
 
-        public static async Task<SteamCommunityProfileModel> GetSteamProfileAsync(string query)
+        public static async Task<bool> UpdateSteamAppListAsync()
+        {
+            try
+            {
+                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
+                SteamAppList = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient())
+                    .GetAppListAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion STORE
+
+        #region USERS
+
+        /// <summary>
+        ///     Call the Steam API for summary data on a given user.
+        /// </summary>
+        public static async Task<ISteamWebResponse<PlayerSummaryModel>> GetSteamProfileAsync(string query)
         {
             try
             {
                 _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
                 var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
-                if (ulong.TryParse(query, out var steamId))
-                    return await steam.GetCommunityProfileAsync(steamId).ConfigureAwait(false);
-                return await steam.GetCommunityProfileAsync(GetSteamUserId(query).Result.Data).ConfigureAwait(false);
+                var userId = ulong.TryParse(query, out var steamId) ? steamId : 0;
+                if (userId != 0) return await steam.GetPlayerSummaryAsync(userId).ConfigureAwait(false);
+                var data = GetSteamUserId(query).Result;
+                if (data is null) return null;
+                return await steam.GetPlayerSummaryAsync(data.Data).ConfigureAwait(false);
             }
             catch
             {
@@ -52,33 +84,22 @@ namespace FlawBOT.Framework.Services
             }
         }
 
-        public static async Task<ISteamWebResponse<PlayerSummaryModel>> GetSteamSummaryAsync(string query)
-        {
-            try
-            {
-                _steamInterface = new SteamWebInterfaceFactory(TokenHandler.Tokens.SteamToken);
-                var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
-                if (ulong.TryParse(query, out var steamId))
-                    return await steam.GetPlayerSummaryAsync(steamId).ConfigureAwait(false);
-                return await steam.GetPlayerSummaryAsync(GetSteamUserId(query).Result.Data).ConfigureAwait(false);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
+        /// <summary>
+        ///     Call the Steam API for the id of a given user.
+        /// </summary>
         public static async Task<ISteamWebResponse<ulong>> GetSteamUserId(string query)
         {
             try
             {
                 var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
-                return await steam.ResolveVanityUrlAsync(query).ConfigureAwait(false);
+                return await steam.ResolveVanityUrlAsync(query.Replace(" ", "")).ConfigureAwait(false) ?? null;
             }
             catch
             {
                 return null;
             }
         }
+
+        #endregion USERS
     }
 }
