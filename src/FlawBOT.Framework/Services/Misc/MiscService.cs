@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Net;
 using System.Threading.Tasks;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
@@ -8,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace FlawBOT.Framework.Services
 {
-    public static class EightBallService
+    public class MiscService : HttpHandler
     {
         private static ImmutableArray<string> _answers = new[]
         {
@@ -39,10 +40,7 @@ namespace FlawBOT.Framework.Services
             var random = new Random();
             return _answers[random.Next(_answers.Length)];
         }
-    }
 
-    public class CatService : HttpHandler
-    {
         public static async Task<string> GetCatFactAsync()
         {
             return await Http.GetStringAsync(Resources.API_CatFacts).ConfigureAwait(false);
@@ -53,14 +51,18 @@ namespace FlawBOT.Framework.Services
             var results = await Http.GetStringAsync(Resources.API_CatPhoto).ConfigureAwait(false);
             return JObject.Parse(results)["file"]?.ToString();
         }
-    }
 
-    public class DogService : HttpHandler
-    {
         public static async Task<DogData> GetDogPhotoAsync()
         {
             var results = await Http.GetStringAsync(Resources.API_DogPhoto).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DogData>(results);
+        }
+
+        public static async Task<IpStack> GetIpLocationAsync(IPAddress query)
+        {
+            var result = await Http.GetStringAsync(string.Format(Resources.API_IPLocation, query))
+                .ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<IpStack>(result);
         }
     }
 }

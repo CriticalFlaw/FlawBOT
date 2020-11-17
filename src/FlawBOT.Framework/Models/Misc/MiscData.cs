@@ -4,52 +4,45 @@ namespace FlawBOT.Framework.Models
 {
     public class DogData
     {
-        [JsonProperty("status")]
-        public string Status { get; set; }
+        [JsonProperty("status")] public string Status { get; set; }
 
-        [JsonProperty("message")]
-        public string Message { get; set; }
+        [JsonProperty("message")] public string Message { get; set; }
     }
 
-    public class IpLocationData
+    public class IpStack
     {
-        [JsonProperty("@as")]
-        public string Title { get; set; }
+        [JsonProperty("ip")] public string Ip { get; set; }
 
-        [JsonProperty("city")]
-        public string City { get; set; }
+        [JsonProperty("type")] public string Type { get; set; }
 
-        [JsonProperty("country")]
-        public string Country { get; set; }
+        [JsonProperty("continent_name")] public string Continent { get; set; }
 
-        [JsonProperty("countryCode")]
-        public string CountryCode { get; set; }
+        [JsonProperty("country_name")] public string Country { get; set; }
 
-        [JsonProperty("isp")]
-        public string Isp { get; set; }
+        [JsonProperty("region_name")] public string Region { get; set; }
 
-        [JsonProperty("lat")]
-        public double Latitude { get; set; }
+        [JsonProperty("city")] public string City { get; set; }
 
-        [JsonProperty("lon")]
-        public double Longitude { get; set; }
+        [JsonProperty("zip")] public string ZipCode { get; set; }
 
-        [JsonProperty("query")]
-        public string Query { get; set; }
+        [JsonProperty("latitude")] public double Latitude { get; set; }
 
-        [JsonProperty("regionName")]
-        public string Region { get; set; }
+        [JsonProperty("longitude")] public double Longitude { get; set; }
 
-        [JsonProperty("region")]
-        public string RegionCode { get; set; }
+        [JsonProperty("continent_code")]
+        [JsonIgnore]
+        private string ContinentCode { get; set; }
 
-        [JsonProperty("status")]
-        public string Status { get; set; }
+        [JsonProperty("country_code")]
+        [JsonIgnore]
+        private string CountryCode { get; set; }
 
-        [JsonProperty("timezone")]
-        public string TimeZone { get; set; }
+        [JsonProperty("region_code")]
+        [JsonIgnore]
+        private string RegionCode { get; set; }
 
-        [JsonProperty("zip")]
-        public string ZipCode { get; set; }
+        [JsonProperty("location")]
+        [JsonIgnore]
+        private string Location { get; set; }
     }
 }
