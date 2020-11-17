@@ -1,21 +1,17 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FlawBOT.Framework.Models;
-using FlawBOT.Framework.Properties;
-using Newtonsoft.Json;
+using TwitchLib.Api;
+using TwitchLib.Api.V5.Models.Search;
 
 namespace FlawBOT.Framework.Services
 {
     public class TwitchService : HttpHandler
     {
-        public static async Task<TwitchData> GetTwitchDataAsync(string query)
+        public static async Task<SearchStreams> GetTwitchDataAsync(string query)
         {
-            using var request = new HttpRequestMessage(new HttpMethod("GET"), Resources.API_Twitch + "streams?user_login=" + query);
-            request.Headers.TryAddWithoutValidation("Client-ID", TokenHandler.Tokens.TwitchToken);
-            var response = await Http.SendAsync(request).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            var results = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<TwitchData>(results);
+            var service = new TwitchAPI();
+            service.Settings.ClientId = TokenHandler.Tokens.TwitchToken;
+            return await service.V5.Search.SearchStreamsAsync(query).ConfigureAwait(false);
         }
     }
 }

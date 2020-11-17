@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -14,25 +15,27 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_IMGUR
 
-        [Command("imgur")]
-        [Aliases("image")]
+        [Command("imgur"), Aliases("image")]
         [Description("Retrieve an image from Imgur")]
         public async Task Imgur(CommandContext ctx,
-            [Description("Search query to pass to Imgur")] [RemainingText] string query)
+            [Description("Search query to pass to Imgur"), RemainingText]
+            string query)
         {
             var results = ImgurService.GetImgurGalleryAsync(query).Result;
+            var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#89C623"));
+
             switch (results)
             {
                 case GalleryImage image:
-                    var output = new DiscordEmbedBuilder()
-                        .WithImageUrl(image.Link)
-                        .WithFooter(image.Title ?? string.Empty)
-                        .WithColor(new DiscordColor("#85BF25"));
+                    output.WithDescription(image.Title ?? "Search results for " + Formatter.Bold(query) + " on Imgur");
+                    output.WithImageUrl(image.Link);
                     await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
                     break;
 
                 case GalleryAlbum album:
-                    await ctx.RespondAsync(album.Link).ConfigureAwait(false);
+                    output.WithDescription(album.Title ?? "Search results for " + Formatter.Bold(query) + " on Imgur");
+                    output.WithImageUrl(album.Link);
+                    await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
                     break;
 
                 default:

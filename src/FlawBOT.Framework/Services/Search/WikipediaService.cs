@@ -1,18 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using FlawBOT.Framework.Models;
-using FlawBOT.Framework.Properties;
-using Newtonsoft.Json;
+﻿using FlawBOT.Framework.Models;
+using WikipediaNet;
+using WikipediaNet.Objects;
 
 namespace FlawBOT.Framework.Services
 {
     public class WikipediaService : HttpHandler
     {
-        public static async Task<WikipediaData.WikipediaQuery.WikipediaPage> GetWikipediaDataAsync(string query)
+        public static QueryResult GetWikipediaDataAsync(string query)
         {
-            var results = await Http.GetStringAsync(Resources.API_Wikipedia + "&titles=" + Uri.EscapeDataString(query))
-                .ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<WikipediaData>(results).Query.Pages[0];
+            var wikipedia = new Wikipedia {Limit = 5};
+            return wikipedia.Search(query);
         }
     }
 }

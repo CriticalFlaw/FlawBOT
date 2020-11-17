@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlawBOT.Framework.Models;
 using FlawBOT.Framework.Properties;
-using Newtonsoft.Json;
 using PokemonTcgSdk;
 using PokemonTcgSdk.Models;
-using Card = PokemonTcgSdk.Card;
 
 namespace FlawBOT.Framework.Services
 {
@@ -15,34 +13,42 @@ namespace FlawBOT.Framework.Services
     {
         private static List<string> PokemonList { get; set; } = new List<string>();
 
-        public static async Task<PokemonCards> GetPokemonCardsAsync(string query = "")
+        /// <summary>
+        ///     Call the Pokémon TCG API for a set of cards.
+        /// </summary>
+        public static async Task<Pokemon> GetPokemonCardsAsync(string query = "")
         {
+            // If the user did not provide a search query, pick at random.
             query ??= GetRandomPokemon();
-            var results = await Http
-                .GetStringAsync(Resources.API_PokemonTCG + "?name=" + query.ToLowerInvariant().Trim())
-                .ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<PokemonCards>(results);
+            return await Card.GetAsync<Pokemon>(new Dictionary<string, string> {{"name", query}});
         }
 
+        /// <summary>
+        ///     Return a Pokémon card based on the Id provided.
+        /// </summary>
         public static PokemonCard GetExactPokemon(string cardId)
         {
             return Card.Find<Pokemon>(cardId).Card;
         }
 
+        /// <summary>
+        ///     Pick a random Pokémon from the list.
+        /// </summary>
         private static string GetRandomPokemon()
         {
-            var random = new Random();
-            return PokemonList[random.Next(0, PokemonList.Count)];
+            return PokemonList[new Random().Next(0, PokemonList.Count)];
         }
 
+        /// <summary>
+        ///     Update the list of Pokémon cards.
+        /// </summary>
         public static async Task<bool> UpdatePokemonListAsync()
         {
             try
             {
-                var list = await Http.GetStringAsync(Resources.API_Pokemon).ConfigureAwait(false);
-                var results = JsonConvert.DeserializeObject<PokemonData>(list).Results;
                 PokemonList.Clear();
-                foreach (var pokemon in results.Where(pokemon => !string.IsNullOrWhiteSpace(pokemon.Name)))
+                var cards = await Card.AllAsync();
+                foreach (var pokemon in cards)
                     PokemonList.Add(pokemon.Name);
                 PokemonList = PokemonList.Distinct().ToList();
                 return true;

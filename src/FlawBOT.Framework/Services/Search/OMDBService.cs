@@ -12,5 +12,11 @@ namespace FlawBOT.Framework.Services
             return await new OMDbClient(TokenHandler.Tokens.OmdbToken, false)
                 .GetItemByTitle(query.ToLowerInvariant().Replace("&", "%26")).ConfigureAwait(false);
         }
+
+        public static async Task<ItemList> GetMovieListAsync(string query)
+        {
+            return await new OMDbClient(TokenHandler.Tokens.OmdbToken, false)
+                .GetItemList(query.ToLowerInvariant().Replace("&", "%26")).ConfigureAwait(false);
+        }
     }
 }
