@@ -17,7 +17,7 @@ namespace GamesModule
         [Test]
         public void GetNewsOverview()
         {
-            Assert.IsNotNull(TeamFortressService.GetNewsOverviewAsync().Result);
+            Assert.IsNotNull(TeamFortressService.GetNewsArticlesAsync().Result);
         }
 
         [Test]
@@ -31,8 +31,8 @@ namespace GamesModule
         [Test]
         public void GetServers()
         {
-            Assert.IsNotNull(TeamFortressService.GetGameModeServerAsync("payload").Result);
-            Assert.IsNull(TeamFortressService.GetGameModeServerAsync("payloader").Result);
+            Assert.IsNotNull(TeamFortressService.GetServersByGameModeAsync("payload").Result);
+            Assert.IsNull(TeamFortressService.GetServersByGameModeAsync("payloader").Result);
         }
 
         [Test]

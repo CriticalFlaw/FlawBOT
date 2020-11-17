@@ -15,7 +15,8 @@ namespace SearchModule
         [Test]
         public void GetRickMortyEpisode()
         {
-            Assert.NotNull(SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience).Result.Title);
+            Assert.NotNull(SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience).Result
+                .Title);
         }
 
         [Test]

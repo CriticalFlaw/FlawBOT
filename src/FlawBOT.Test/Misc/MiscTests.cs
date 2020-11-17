@@ -10,25 +10,25 @@ namespace MiscModule
         [Test]
         public void GetCatFact()
         {
-            Assert.IsNotNull(CatService.GetCatFactAsync().Result);
+            Assert.IsNotNull(MiscService.GetCatFactAsync().Result);
         }
 
         [Test]
         public void GetDogPhoto()
         {
-            Assert.IsTrue(DogService.GetDogPhotoAsync().Result.Status == "success");
+            Assert.IsTrue(MiscService.GetDogPhotoAsync().Result.Status == "success");
         }
 
         [Test]
         public void GetIpLocation()
         {
-            Assert.IsTrue(GoogleService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Status == "success");
+            Assert.IsNotNull(MiscService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Type);
         }
 
         [Test]
         public void GetRandomAnswer()
         {
-            Assert.IsNotNull(EightBallService.GetRandomAnswer());
+            Assert.IsNotNull(MiscService.GetRandomAnswer());
         }
     }
 }

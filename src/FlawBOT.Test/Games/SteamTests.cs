@@ -18,9 +18,14 @@ namespace GamesModule
         public void GetSteamProfile()
         {
             Assert.IsNotNull(SteamService.GetSteamProfileAsync("criticalflaw").Result);
-            Assert.IsNotNull(SteamService.GetSteamSummaryAsync("criticalflaw").Result);
             Assert.IsNull(SteamService.GetSteamProfileAsync("99999999999999999").Result);
-            Assert.IsNull(SteamService.GetSteamSummaryAsync("99999999999999999").Result);
+        }
+
+        [Test]
+        [Order(1)]
+        public void UpdateSteamAppList()
+        {
+            Assert.IsTrue(SteamService.UpdateSteamAppListAsync().Result);
         }
     }
 }

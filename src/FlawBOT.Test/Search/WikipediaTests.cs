@@ -9,7 +9,7 @@ namespace SearchModule
         [Test]
         public void GetWikipediaPage()
         {
-            Assert.IsFalse(WikipediaService.GetWikipediaDataAsync("Russia").Result.Missing);
+            Assert.IsNull(WikipediaService.GetWikipediaDataAsync("Russia").Error);
         }
     }
 }
