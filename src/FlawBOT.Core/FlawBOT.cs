@@ -67,7 +67,7 @@ namespace FlawBOT
             Commands.RegisterCommands<ChannelModule>();
             Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<EmojiModule>();
-            Commands.RegisterCommands<GoogleModule>();
+            Commands.RegisterCommands<WorldModule>();
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();

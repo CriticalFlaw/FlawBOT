@@ -270,4 +270,7 @@
     <value>https://www.google.ca/maps/@{0},{1},14z</value>
     <comment>0 = longitude, 1 = latitude</comment>
   </data>
+  <data name="URL_STEAM_CONNECT" xml:space="preserve">
+    <value>steam://connect/{0}:27015</value>
+  </data>
 </root>

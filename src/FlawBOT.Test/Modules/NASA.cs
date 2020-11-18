@@ -1,10 +1,10 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace SearchModule
+namespace Modules
 {
     [TestFixture]
-    internal class NasaTests
+    internal class NASA
     {
         [Test]
         public void GetNasaData()

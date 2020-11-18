@@ -4,7 +4,7 @@ namespace FlawBOT.Framework.Models
 {
     public abstract class HttpHandler
     {
-        private static readonly HttpClientHandler Handler = new HttpClientHandler {AllowAutoRedirect = false};
+        private static readonly HttpClientHandler Handler = new HttpClientHandler { AllowAutoRedirect = false };
         protected static readonly HttpClient Http = new HttpClient(Handler, true);
     }
 

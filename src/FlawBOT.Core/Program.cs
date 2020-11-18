@@ -29,7 +29,7 @@ namespace FlawBOT
 
                 // Load the bot configuration
                 var service = new BotServices();
-                if (!service.LoadBotConfiguration()) return;
+                if (!service.LoadConfiguration()) return;
 
                 // Generate a list of shards
                 var botList = new List<Task>();

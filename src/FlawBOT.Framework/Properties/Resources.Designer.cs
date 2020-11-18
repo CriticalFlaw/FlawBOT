@@ -106,33 +106,6 @@ namespace FlawBOT.Framework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/geocode/json?address={0}&amp;key={1}.
-        /// </summary>
-        internal static string API_Google_Geo {
-            get {
-                return ResourceManager.GetString("API_Google_Geo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&amp;timestamp={2}&amp;key={3}.
-        /// </summary>
-        internal static string API_Google_Time {
-            get {
-                return ResourceManager.GetString("API_Google_Time", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://api.openweathermap.org/data/2.5/weather?q={0}&amp;appid=42cd627dd60debf25a5739e50a217d74&amp;units=metric.
-        /// </summary>
-        internal static string API_Google_Weather {
-            get {
-                return ResourceManager.GetString("API_Google_Weather", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1.
         /// </summary>
         internal static string API_IPLocation {
@@ -174,6 +147,15 @@ namespace FlawBOT.Framework.Properties {
         internal static string API_SpeedrunExtras {
             get {
                 return ResourceManager.GetString("API_SpeedrunExtras", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://api.weatherstack.com//current?access_key={0}&amp;query={1}.
+        /// </summary>
+        internal static string API_Weather {
+            get {
+                return ResourceManager.GetString("API_Weather", resourceCulture);
             }
         }
         

@@ -57,7 +57,7 @@ namespace FlawBOT.Modules
 
                 foreach (var result in results.Take(5))
                 {
-                    output.AddField(result.Authors.FirstOrDefault().Name,
+                    output.AddField(result.Authors.FirstOrDefault()?.Name,
                         $"[{(result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "...")}]({result.Links.First().Uri})");
                     results.Remove(result);
                 }

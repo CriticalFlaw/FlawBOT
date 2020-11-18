@@ -1,10 +1,10 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace GamesModule
+namespace Modules
 {
     [TestFixture]
-    internal class TeamFortressTests
+    internal class TeamFortress
     {
         [Test]
         public void GetMapStats()

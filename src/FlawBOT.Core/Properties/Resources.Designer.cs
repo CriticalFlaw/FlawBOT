@@ -423,6 +423,15 @@ namespace FlawBOT.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to steam://connect/{0}:27015.
+        /// </summary>
+        internal static string URL_STEAM_CONNECT {
+            get {
+                return ResourceManager.GetString("URL_STEAM_CONNECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://steamcommunity.com/groups/.
         /// </summary>
         internal static string URL_STEAM_GROUP {

@@ -43,7 +43,7 @@ namespace FlawBOT.Modules
                 .RespondAsync(embed: new DiscordEmbedBuilder()
                     .WithDescription(question + $"\nThis poll ends in {duration.Minutes} minutes.").Build())
                 .ConfigureAwait(false);
-            var results = await interactivity.DoPollAsync(message, pollOptions, PollBehaviour.DeleteEmojis, duration);
+            var results = await interactivity.DoPollAsync(message, pollOptions, PollBehaviour.DeleteEmojis, duration).ConfigureAwait(false);
 
             // Removed the initial poll and return the calculated results
             await BotServices.RemoveMessage(message).ConfigureAwait(false);

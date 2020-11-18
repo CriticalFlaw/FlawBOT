@@ -13,11 +13,12 @@ To run your own instance of FlawBOT, [clone this repository](https://github.com/
 
 ## API Tokens
 * [Discord](https://discordapp.com/developers/applications/me) (*required*)
-* [Google](https://console.cloud.google.com/projectselector/apis/credentials) (*YouTube, Geological Data*)
 * [Steam](https://steamcommunity.com/dev/apikey)
 * [Imgur](https://api.imgur.com/oauth2/addclient)
 * [OMDB](http://www.omdbapi.com/apikey.aspx)
 * [Twitch](https://dev.twitch.tv/dashboard/apps/create)
 * [NASA](https://api.nasa.gov/)
-* [Teamwork.TF](https://teamwork.tf/api)
+* [Teamwork.TF](https://github.com/teamworktf/website_api)
 * [News API](https://newsapi.org/)
+* [WeatherStack](https://weatherstack.com/)
+* [YouTube](https://console.cloud.google.com/projectselector/apis/credentials)

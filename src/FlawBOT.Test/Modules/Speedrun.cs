@@ -1,10 +1,10 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace GamesModule
+namespace Modules
 {
     [TestFixture]
-    internal class SpeedrunTests
+    internal class Speedrun
     {
         [Test]
         public void GetSpeedrunGame()

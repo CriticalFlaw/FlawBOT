@@ -28,7 +28,7 @@ namespace FlawBOT.Modules
                 .WithDescription(
                     "A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime",
-                    $"{(int) uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                    $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .AddField(":link: Links",
                     $"[Commands]({SharedData.GitHubLink}wiki) **|** [GitHub]({SharedData.GitHubLink})", true)
                 .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
@@ -148,9 +148,9 @@ namespace FlawBOT.Modules
             string message)
         {
             if (string.IsNullOrWhiteSpace(message))
-                await ctx.RespondAsync(":thinking:");
+                await ctx.RespondAsync(":thinking:").ConfigureAwait(false);
             else
-                await ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(message)), true);
+                await ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(message)), true).ConfigureAwait(false);
         }
 
         #endregion COMMAND_TTS

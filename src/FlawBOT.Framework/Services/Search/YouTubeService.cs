@@ -16,7 +16,7 @@ namespace FlawBOT.Framework.Services
         {
             YouTube = new YouTubeService(new BaseClientService.Initializer
             {
-                ApiKey = TokenHandler.Tokens.GoogleToken,
+                ApiKey = TokenHandler.Tokens.YouTubeToken,
                 ApplicationName = "FlawBOT"
             });
         }
@@ -27,7 +27,7 @@ namespace FlawBOT.Framework.Services
         {
             var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
             if (results is null || results.Count == 0) return ":warning: No results found!";
-            return string.Format(Resources.URL_YouTube_Video, results.FirstOrDefault().Id.VideoId);
+            return string.Format(Resources.URL_YouTube_Video, results.FirstOrDefault()?.Id.VideoId);
         }
 
         public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, string type = null)
@@ -40,7 +40,7 @@ namespace FlawBOT.Framework.Services
                     Color = DiscordColor.Red
                 };
             results = results.Count > 25 ? results.Take(25).ToList() : results;
-            var output = new DiscordEmbedBuilder {Color = DiscordColor.Red};
+            var output = new DiscordEmbedBuilder { Color = DiscordColor.Red };
             foreach (var result in results)
                 switch (result.Id.Kind)
                 {

@@ -23,31 +23,14 @@ namespace FlawBOT.Modules
         {
             try
             {
-                double result;
-                switch (operation)
+                var result = operation switch
                 {
-                    default: //case "+":
-                        result = num1 + num2;
-                        break;
-
-                    case "-":
-                        result = num1 - num2;
-                        break;
-
-                    case "*":
-                    case "x":
-                        result = num1 * num2;
-                        break;
-
-                    case "/":
-                        result = num1 / num2;
-                        break;
-
-                    case "%":
-                        result = num1 % num2;
-                        break;
-                }
-
+                    "-" => num1 - num2,
+                    "*" or "x" => num1 * num2,
+                    "/" => num1 / num2,
+                    "%" => num1 % num2,
+                    _ => num1 + num2,
+                };
                 var output = new DiscordEmbedBuilder()
                     .WithDescription($":1234: The result is {result:#,##0.00}")
                     .WithColor(DiscordColor.CornflowerBlue);

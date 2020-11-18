@@ -1,10 +1,10 @@
 ﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace SearchModule
+namespace Modules
 {
     [TestFixture]
-    internal class WikipediaTests
+    internal class Wikipedia
     {
         [Test]
         public void GetWikipediaPage()

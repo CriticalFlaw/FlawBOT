@@ -2,10 +2,10 @@
 using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace GamesModule
+namespace Modules
 {
     [TestFixture]
-    internal class SteamTests
+    internal class Steam
     {
         [Test]
         public void GenerateConnectionLink()

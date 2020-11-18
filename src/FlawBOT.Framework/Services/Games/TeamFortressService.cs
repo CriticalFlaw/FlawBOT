@@ -50,8 +50,7 @@ namespace FlawBOT.Framework.Services
 
         public static SchemaItem GetSchemaItem(string query)
         {
-            return ItemSchemaList.FirstOrDefault(n =>
-                n.ItemName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
+            return ItemSchemaList.Find(n => n.ItemName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static async Task<bool> UpdateTf2SchemaAsync()

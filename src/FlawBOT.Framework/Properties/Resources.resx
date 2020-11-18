@@ -132,15 +132,6 @@
   <data name="API_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>
   </data>
-  <data name="API_Google_Geo" xml:space="preserve">
-    <value>https://maps.googleapis.com/maps/api/geocode/json?address={0}&amp;key={1}</value>
-  </data>
-  <data name="API_Google_Time" xml:space="preserve">
-    <value>https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&amp;timestamp={2}&amp;key={3}</value>
-  </data>
-  <data name="API_Google_Weather" xml:space="preserve">
-    <value>http://api.openweathermap.org/data/2.5/weather?q={0}&amp;appid=42cd627dd60debf25a5739e50a217d74&amp;units=metric</value>
-  </data>
   <data name="API_IPLocation" xml:space="preserve">
     <value>http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1</value>
   </data>
@@ -155,6 +146,9 @@
   </data>
   <data name="API_SpeedrunExtras" xml:space="preserve">
     <value>https://www.speedrun.com/api/v1/{0}/{1}</value>
+  </data>
+  <data name="API_Weather" xml:space="preserve">
+    <value>http://api.weatherstack.com//current?access_key={0}&amp;query={1}</value>
   </data>
   <data name="ERR_POKEMON_LIST" xml:space="preserve">
     <value>Error updating the Pokémon list. {0}</value>

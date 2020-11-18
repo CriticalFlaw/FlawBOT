@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -122,37 +121,5 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_HELLO
-
-        #region COMMAND_IP
-
-        [Command("ip"), Aliases("ipstack", "track")]
-        [Description("Retrieve IP address geolocation information")]
-        public async Task IpTrack(CommandContext ctx,
-            [Description("IP Address")] string address)
-        {
-            if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out var ip))
-            {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_INVALID_IP, EmbedType.Missing)
-                    .ConfigureAwait(false);
-                return;
-            }
-
-            var results = MiscService.GetIpLocationAsync(ip).Result;
-            if (results.Type == null)
-            {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning)
-                    .ConfigureAwait(false);
-                return;
-            }
-
-            var output = new DiscordEmbedBuilder()
-                .WithTitle($"{results.City}, {results.Region}, {results.Country}")
-                .WithDescription($"Coordinates: {results.Latitude}°N, {results.Longitude}°W")
-                .WithUrl(string.Format(Resources.URL_GOOGLE_MAPS, results.Latitude, results.Longitude))
-                .WithColor(new DiscordColor("#4d2f63"));
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
-        }
-
-        #endregion COMMAND_IP
     }
 }

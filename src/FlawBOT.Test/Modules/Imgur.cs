@@ -2,10 +2,10 @@
 using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace SearchModule
+namespace Modules
 {
     [TestFixture]
-    internal class ImgurTests
+    internal class Imgur
     {
         [Test]
         public async Task GetImgurGalleryData()

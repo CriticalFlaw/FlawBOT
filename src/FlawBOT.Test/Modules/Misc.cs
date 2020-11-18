@@ -1,11 +1,10 @@
-﻿using System.Net;
-using FlawBOT.Framework.Services;
+﻿using FlawBOT.Framework.Services;
 using NUnit.Framework;
 
-namespace MiscModule
+namespace Modules
 {
     [TestFixture]
-    internal class MiscTests
+    internal class Misc
     {
         [Test]
         public void GetCatFact()
@@ -17,12 +16,6 @@ namespace MiscModule
         public void GetDogPhoto()
         {
             Assert.IsTrue(MiscService.GetDogPhotoAsync().Result.Status == "success");
-        }
-
-        [Test]
-        public void GetIpLocation()
-        {
-            Assert.IsNotNull(MiscService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Type);
         }
 
         [Test]

@@ -296,8 +296,8 @@ namespace FlawBOT.Modules
                 return;
             }
 
-            await ctx.RespondAsync($"steam://connect/{address}:27015");
-            await ctx.RespondAsync(TeamFortressService.GetServerInfo(address.ToString()));
+            await ctx.RespondAsync(string.Format(Resources.URL_STEAM_CONNECT, address)).ConfigureAwait(false);
+            await ctx.RespondAsync(TeamFortressService.GetServerInfo(address.ToString())).ConfigureAwait(false);
         }
 
         [Command("list"), Aliases("serverList", "server-list", "custom")]

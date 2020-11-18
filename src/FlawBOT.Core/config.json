@@ -1,12 +1,13 @@
 {
   "prefix": ".",
   "discord": null,
-  "google": null,
   "steam": null,
   "imgur": null,
   "omdb": null,
   "twitch": null,
   "nasa": null,
   "teamworktf": null,
-  "news": null
+  "news": null,
+  "weather": null,
+  "youtube": null
 }
