@@ -1,6 +1,6 @@
-﻿using FlawBOT.Framework.Services;
+﻿using System.Net;
+using FlawBOT.Services;
 using NUnit.Framework;
-using System.Net;
 
 namespace Modules
 {

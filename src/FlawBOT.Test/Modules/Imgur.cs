@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using FlawBOT.Framework.Services;
+using FlawBOT.Services;
 using NUnit.Framework;
 
 namespace Modules
