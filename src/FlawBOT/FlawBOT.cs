@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -9,9 +10,11 @@ using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.Lavalink;
 using DSharpPlus.VoiceNext;
+using Emzi0767;
 using FlawBOT.Common;
 using FlawBOT.Modules;
 using FlawBOT.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace FlawBOT
@@ -20,31 +23,35 @@ namespace FlawBOT
     {
         public FlawBot(int shardId = 0)
         {
-            //var depot = new ServiceCollection();
-
             // Setup Client
             Client = new DiscordClient(new DiscordConfiguration
             {
                 Token = SharedData.Tokens.DiscordToken,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
+                ReconnectIndefinitely = true,
                 MinimumLogLevel = LogLevel.Information,
                 GatewayCompressionLevel = GatewayCompressionLevel.Stream,
                 LargeThreshold = 250,
                 MessageCacheSize = 2048,
                 LogTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz",
-                ShardId = shardId
-                //ShardCount = 0
+                ShardId = shardId,
+                ShardCount = SharedData.ShardCount
             });
             Client.Ready += Client_Ready;
-            //Client.GuildAvailable += Client_GuildAvailable;
-            Client.ClientErrored += Client_Error;
-            //Client.SocketErrored += Client_SocketError;
-            //Client.GuildCreated += Client_GuildCreated;
+            Client.GuildAvailable += Client_GuildAvailable;
+            Client.ClientErrored += Client_ClientErrored;
+            Client.SocketErrored += Client_SocketErrored;
             Client.VoiceStateUpdated += Client_VoiceStateUpdated;
-            //Client.GuildDownloadCompleted += Client_GuildDownloadCompleted;
-            //Client.GuildUpdated += Client_GuildUpdated;
-            //Client.ChannelDeleted += Client_ChannelDeleted;
+
+            // Setup Services
+            Services = new ServiceCollection()
+                .AddTransient<SecureRandom>()
+                .AddSingleton<MusicService>()
+                .AddSingleton(new LavalinkService(Client))
+                .AddSingleton(new YoutubeService())
+                .AddSingleton(this)
+                .BuildServiceProvider(true);
 
             // Setup Commands
             Commands = Client.UseCommandsNext(new CommandsNextConfiguration
@@ -52,14 +59,13 @@ namespace FlawBOT
                 PrefixResolver = PrefixResolverAsync, // Set the command prefix that will be used by the bot
                 EnableDms = false, // Set the boolean for responding to direct messages
                 EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
-                CaseSensitive = false
-                //StringPrefixes = null,
-                //Services = depot.BuildServiceProvider(true),
-                //IgnoreExtraArguments = false,
-                //UseDefaultCommandHandler = false
+                CaseSensitive = false,
+                IgnoreExtraArguments = true,
+                EnableDefaultHelp = false,
+                Services = Services
             });
-            Commands.CommandExecuted += Commands_Executed;
-            Commands.CommandErrored += Commands_Error;
+            Commands.CommandExecuted += Command_Executed;
+            Commands.CommandErrored += Command_Errored;
             Commands.SetHelpFormatter<HelpFormatter>();
             Commands.RegisterCommands<AmiiboModule>();
             Commands.RegisterCommands<BotModule>();
@@ -91,7 +97,7 @@ namespace FlawBOT
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
             {
                 PaginationBehaviour = PaginationBehaviour.Ignore,
-                Timeout = TimeSpan.FromMinutes(2)
+                Timeout = TimeSpan.FromSeconds(30)
             });
 
             // Setup Voice
@@ -109,6 +115,7 @@ namespace FlawBOT
             SharedData.ProcessStarted = DateTime.Now;
         }
 
+        private IServiceProvider Services { get; }
         private static EventId EventId { get; } = new EventId(1000, SharedData.Name);
         private DiscordClient Client { get; }
         private CommandsNextExtension Commands { get; }
@@ -116,21 +123,13 @@ namespace FlawBOT
         private VoiceNextExtension Voice { get; }
         private LavalinkExtension Lavalink { get; }
 
-        private Task Client_VoiceStateUpdated(DiscordClient sender, VoiceStateUpdateEventArgs e)
-        {
-            Client.Logger.LogDebug(EventId, "Voice state changed for '{0}' (mute: {1} -> {2}; deaf: {3} -> {4})",
-                e.User, e.Before?.IsServerMuted, e.After.IsServerMuted, e.Before?.IsServerDeafened,
-                e.After.IsServerDeafened);
-            return Task.CompletedTask;
-        }
-
         public async Task RunAsync()
         {
             // Update any other services that are being used.
             Client.Logger.LogInformation(EventId, "Loading...");
-            await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
-            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
+            //await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
+            //await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
+            //await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);
@@ -148,21 +147,63 @@ namespace FlawBOT
             return Task.CompletedTask;
         }
 
-        private static Task Client_Error(DiscordClient sender, ClientErrorEventArgs e)
+        private Task Client_GuildAvailable(DiscordClient sender, GuildCreateEventArgs e)
+        {
+            sender.Logger.LogInformation(EventId, $"Connected to server: {e.Guild.Name}");
+            return Task.CompletedTask;
+        }
+
+        private static Task Client_ClientErrored(DiscordClient sender, ClientErrorEventArgs e)
         {
             sender.Logger.LogError(EventId, $"[{e.Exception.GetType()}] Client Exception. {e.Exception.Message}");
             return Task.CompletedTask;
         }
 
-        private static Task Commands_Executed(CommandsNextExtension sender, CommandExecutionEventArgs e)
+        private Task Client_SocketErrored(DiscordClient sender, SocketErrorEventArgs e)
         {
-            e.Context.Client.Logger.LogInformation(EventId,
-                string.Format("[{0} : {1}] {2} executed the command '{3}'", e.Context.Guild.Name,
-                    e.Context.Channel.Name, e.Context.User.Username, e.Command.QualifiedName));
+            var ex = e.Exception;
+            while (ex is AggregateException)
+                ex = ex.InnerException;
+
+            sender.Logger.LogCritical(EventId, $"Socket threw an exception {ex.GetType()}: {ex.Message}");
             return Task.CompletedTask;
         }
 
-        private static async Task Commands_Error(CommandsNextExtension sender, CommandErrorEventArgs e)
+        private async Task Client_VoiceStateUpdated(DiscordClient sender, VoiceStateUpdateEventArgs e)
+        {
+            var musicData = await Services.GetService<MusicService>().GetOrCreateDataAsync(e.Guild);
+            if (e.After.Channel == null && e.User == Client.CurrentUser)
+            {
+                await musicData.StopAsync();
+                await musicData.DestroyPlayerAsync();
+                return;
+            }
+
+            if (e.User == Client.CurrentUser) return;
+            var channel = musicData.Channel;
+            if (channel == null || channel != e.Before.Channel) return;
+
+            var users = channel.Users;
+            if (musicData.IsPlaying && !users.Any(x => !x.IsBot))
+            {
+                sender.Logger.LogInformation(EventId, $"All users left voice in {e.Guild.Name}, pausing playback...");
+                await musicData.PauseAsync();
+
+                if (musicData.CommandChannel != null)
+                    await musicData.CommandChannel.SendMessageAsync(
+                            "All users left the channel, playback paused. You can resume it by joining the channel and using the `resume` command.")
+                        .ConfigureAwait(false);
+            }
+        }
+
+        private static Task Command_Executed(CommandsNextExtension sender, CommandExecutionEventArgs e)
+        {
+            e.Context.Client.Logger.LogInformation(EventId,
+                $"[{e.Context.Guild.Name} : {e.Context.Channel.Name}] {e.Context.User.Username} executed the command '{e.Command.QualifiedName}'");
+            return Task.CompletedTask;
+        }
+
+        private static async Task Command_Errored(CommandsNextExtension sender, CommandErrorEventArgs e)
         {
             await Exceptions.Process(e, EventId);
         }

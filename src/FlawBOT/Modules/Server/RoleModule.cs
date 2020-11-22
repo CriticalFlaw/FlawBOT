@@ -21,7 +21,7 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_COLOR
 
-        [Command("color"), Aliases("clr")]
+        [Command("color"), Aliases("clr", "setcolor")]
         [Description("Set the role color")]
         [RequirePermissions(Permissions.ManageRoles)]
         public async Task ColorRole(CommandContext ctx,
@@ -64,9 +64,7 @@ namespace FlawBOT.Modules
             }
 
             await ctx.Guild.CreateRoleAsync(role).ConfigureAwait(false);
-            await BotServices
-                .SendEmbedAsync(ctx, "Successfully created the server role " + Formatter.Bold(role), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created the server role " + Formatter.Bold(role)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CREATE
@@ -88,9 +86,7 @@ namespace FlawBOT.Modules
             }
 
             await role.DeleteAsync().ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                    "Successfully removed the server role " + Formatter.Bold(role.Name), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully removed the server role " + Formatter.Bold(role.Name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_DELETE
@@ -191,7 +187,7 @@ namespace FlawBOT.Modules
 
         #endregion COMMAND_MENTION
 
-        #region COMMAND_REVOKEROLE
+        #region COMMAND_REVOKE
 
         [Command("revoke")]
         [Description("Remove a role from server user")]
@@ -206,15 +202,13 @@ namespace FlawBOT.Modules
             {
                 member ??= ctx.Member;
                 await member.RevokeRoleAsync(role).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx,
-                    Formatter.Bold(member.DisplayName) + " has been removed from the role " + Formatter.Bold(role.Name),
-                    EmbedType.Good).ConfigureAwait(false);
+                await ctx.RespondAsync(Formatter.Bold(member.DisplayName) + " has been removed from the role " + Formatter.Bold(role.Name)).ConfigureAwait(false);
             }
         }
 
-        #endregion COMMAND_REVOKEROLE
+        #endregion COMMAND_REVOKE
 
-        #region COMMAND_REVOKEROLES
+        #region COMMAND_REVOKE_ALL
 
         [Command("revokeall")]
         [Description("Remove all role from server user")]
@@ -237,14 +231,12 @@ namespace FlawBOT.Modules
             }
 
             await member.ReplaceRolesAsync(Enumerable.Empty<DiscordRole>()).ConfigureAwait(false);
-            await BotServices
-                .SendEmbedAsync(ctx, "Removed all roles from " + Formatter.Bold(member.DisplayName), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Removed all roles from " + Formatter.Bold(member.DisplayName)).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_REVOKEROLES
+        #endregion COMMAND_REVOKE_ALL
 
-        #region COMMAND_SETROLE
+        #region COMMAND_ASSIGN
 
         [Command("setrole"), Aliases("addrole", "sr")]
         [Description("Assign a role to server user")]
@@ -257,12 +249,10 @@ namespace FlawBOT.Modules
         {
             member ??= ctx.Member;
             await member.GrantRoleAsync(role).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                    member.DisplayName + " been granted the role " + Formatter.Bold(role.Name), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync(member.DisplayName + " been granted the role " + Formatter.Bold(role.Name)).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_SETROLE
+        #endregion COMMAND_ASSIGN
 
         #region COMMAND_SHOW
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 
@@ -21,9 +22,6 @@ namespace FlawBOT
         {
             try
             {
-                // TODO: Remove?
-                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
                 // Set a command for canceling the bot process
                 Console.CancelKeyPress += ConsoleOnCancelKeyPress;
 
@@ -33,7 +31,7 @@ namespace FlawBOT
 
                 // Generate a list of shards
                 var botList = new List<Task>();
-                for (var i = 0; i < 1; i++) // TODO: Replace 1 with ShardCount
+                for (var i = 0; i < SharedData.ShardCount; i++)
                 {
                     var client = new FlawBot(i);
                     Shards.Add(client);

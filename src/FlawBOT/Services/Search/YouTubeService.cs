@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
+using FlawBOT.Models;
 using FlawBOT.Properties;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
+using Newtonsoft.Json.Linq;
 
 namespace FlawBOT.Services
 {
-    public class YoutubeService
+    public class YoutubeService : HttpHandler
     {
         public YoutubeService()
         {
@@ -77,6 +83,27 @@ namespace FlawBOT.Services
             var videos = new List<SearchResult>();
             videos.AddRange(searchListResponse.Items);
             return videos;
+        }
+
+        public async Task<IEnumerable<YouTubeData>> GetMusicDataAsync(string term)
+        {
+            var uri = new Uri(
+                $"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&fields=items(id(videoId),snippet(title,channelTitle))&key={YouTube.ApiKey}&q={WebUtility.UrlEncode(term)}");
+
+            var json = "{}";
+            Http.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/search");
+            Http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SharedData.Name);
+            using (var req = await Http.GetAsync(uri))
+            using (var res = await req.Content.ReadAsStreamAsync())
+            using (var sr = new StreamReader(res, Encoding.UTF8))
+            {
+                json = await sr.ReadToEndAsync();
+            }
+
+            var jsonData = JObject.Parse(json);
+            var data = jsonData["items"].ToObject<IEnumerable<YouTubeResponse>>();
+
+            return data.Select(x => new YouTubeData(x.Snippet.Title, x.Snippet.Author, x.Id.VideoId));
         }
     }
 }

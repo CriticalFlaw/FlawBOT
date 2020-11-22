@@ -35,9 +35,7 @@ namespace FlawBOT.Modules
             }
 
             var category = await ctx.Guild.CreateChannelCategoryAsync(name.Trim()).ConfigureAwait(false);
-            await BotServices
-                .SendEmbedAsync(ctx, "Successfully created category " + Formatter.Bold(category.Name),
-                    EmbedType.Good).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created category " + Formatter.Bold(category.Name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CATEGORY
@@ -53,9 +51,7 @@ namespace FlawBOT.Modules
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name,
-                EmbedType.Good).ConfigureAwait(false);
+            await ctx.RespondAsync(Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name).ConfigureAwait(false);
         }
 
         #endregion CHANNEL_CLEAN
@@ -85,9 +81,7 @@ namespace FlawBOT.Modules
 
             await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
             await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
-            await BotServices
-                .SendEmbedAsync(ctx, "Successfully deleted " + Formatter.Bold(channel.Name), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully deleted " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
             await channel.DeleteAsync().ConfigureAwait(false);
         }
 
@@ -110,9 +104,8 @@ namespace FlawBOT.Modules
 
             // Create the base embed message
             var output = new DiscordEmbedBuilder()
-                .WithTitle(channel.Name)
-                .WithDescription("ID: " + channel.Id)
-                .AddField("Topic", channel.Topic ?? string.Empty)
+                .WithTitle(channel.Name + " (" + channel.Id + ")")
+                .WithDescription("Topic: " + (channel.IsCategory ? "N/A" : channel.Topic ?? string.Empty))
                 .AddField("Type", channel.Type.ToString(), true)
                 .AddField("Private", channel.IsPrivate ? "Yes" : "No", true)
                 .AddField("NSFW", channel.IsNSFW ? "Yes" : "No", true)
@@ -155,9 +148,7 @@ namespace FlawBOT.Modules
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == member.Id)).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                $"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})",
-                EmbedType.Good).ConfigureAwait(false);
+            await ctx.RespondAsync($"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})").ConfigureAwait(false);
         }
 
         #endregion CHANNEL_PURGE
@@ -181,9 +172,7 @@ namespace FlawBOT.Modules
 
             var oldName = channel.Name;
             await channel.ModifyAsync(m => m.Name = name.Trim().Replace(" ", "-")).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                "Successfully renamed the channel " + Formatter.Bold(oldName) + " to " + Formatter.Bold(name),
-                EmbedType.Good).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully renamed the channel " + Formatter.Bold(oldName) + " to " + Formatter.Bold(name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_RENAME
@@ -213,9 +202,7 @@ namespace FlawBOT.Modules
 
             var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-"))
                 .ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                    "Successfully created the text channel " + Formatter.Bold(channel.Name), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created the text channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_TEXT
@@ -238,9 +225,7 @@ namespace FlawBOT.Modules
 
             await ctx.Channel.ModifyAsync(chn => chn.Topic = topic).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(topic))
-                await BotServices.SendEmbedAsync(ctx,
-                        "Successfully changed the channel topic to " + Formatter.Bold(topic), EmbedType.Good)
-                    .ConfigureAwait(false);
+                await ctx.RespondAsync("Successfully changed the channel topic to " + Formatter.Bold(topic)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_TOPIC
@@ -270,9 +255,7 @@ namespace FlawBOT.Modules
 
             var channel = await ctx.Guild.CreateVoiceChannelAsync(name.Trim().Replace(" ", "-"))
                 .ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                    "Successfully created the voice channel " + Formatter.Bold(channel.Name), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created the voice channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_VOICE

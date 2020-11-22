@@ -189,7 +189,7 @@ namespace FlawBOT.Modules
             var response = !string.IsNullOrWhiteSpace(name)
                 ? $"{nickname}'s nickname has been changed to **{name}**"
                 : $"{nickname}'s nickname has been reset.";
-            await BotServices.SendEmbedAsync(ctx, response, EmbedType.Good).ConfigureAwait(false);
+            await ctx.RespondAsync(response).ConfigureAwait(false);
         }
 
         #endregion COMMAND_NICKNAME

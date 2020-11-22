@@ -20,7 +20,7 @@ namespace FlawBOT.Modules
             var results = await NasaService.GetNasaImageAsync().ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_NASA_API, EmbedType.Missing).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_API_CONNECTION, EmbedType.Missing).ConfigureAwait(false);
                 return;
             }
 

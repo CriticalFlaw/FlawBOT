@@ -22,10 +22,6 @@ namespace FlawBOT.Services
             DiscordColor color;
             switch (type)
             {
-                case EmbedType.Good:
-                    color = DiscordColor.Green;
-                    break;
-
                 case EmbedType.Warning:
                     prefix = ":warning: ";
                     color = DiscordColor.Yellow;
@@ -111,8 +107,6 @@ namespace FlawBOT.Services
         public bool LoadConfiguration()
         {
             if (!File.Exists("config.json")) return false;
-            // TODO: Generate a config.json file if one does not already exist.
-
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
             SharedData.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
             return true;

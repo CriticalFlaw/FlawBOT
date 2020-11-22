@@ -92,7 +92,7 @@ namespace FlawBOT.Modules
             var results = MiscService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_DOG_PHOTO, EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendEmbedAsync(ctx, Resources.ERR_API_CONNECTION, EmbedType.Warning).ConfigureAwait(false);
                 return;
             }
 

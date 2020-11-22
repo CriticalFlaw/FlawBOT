@@ -5,6 +5,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
+using DSharpPlus.Exceptions;
 using FlawBOT.Services;
 using Microsoft.Extensions.Logging;
 
@@ -75,16 +76,18 @@ namespace FlawBOT.Common
                 case ArgumentNullException _:
                 case ArgumentException _:
                     await BotServices.SendEmbedAsync(e.Context,
-                        $"Invalid or missing parameters. For more info, use command `.help {e.Command?.QualifiedName}`",
+                        $"Invalid or missing parameters. For help, use command `.help {e.Command?.QualifiedName}`",
                         EmbedType.Warning);
+                    break;
+
+                case UnauthorizedException _:
+                    await BotServices.SendEmbedAsync(e.Context, "One of us does not have the required permissions.", EmbedType.Warning);
                     break;
 
                 case NullReferenceException _:
                 case InvalidDataException _:
                     e.Context.Client.Logger.LogWarning(eventId, e.Exception,
-                        string.Format("[{0} : {1}] {2} executed the command '{3}' but it threw an error: ",
-                            e.Context.Guild.Name, e.Context.Channel.Name, e.Context.User.Username,
-                            e.Command?.QualifiedName ?? "<unknown>"));
+                        $"[{e.Context.Guild.Name} : {e.Context.Channel.Name}] {e.Context.User.Username} executed the command '{e.Command?.QualifiedName ?? "<unknown>"}' but it threw an error: ");
                     await BotServices.SendEmbedAsync(e.Context, e.Exception.Message, EmbedType.Error);
                     break;
 

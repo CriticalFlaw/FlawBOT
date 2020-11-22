@@ -118,34 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ERR_CHANNEL_EXISTS" xml:space="preserve">
-    <value>Channel with the same name already exists.</value>
+    <value>A channel with the same name already exists.</value>
   </data>
   <data name="ERR_CHANNEL_NAME" xml:space="preserve">
-    <value>The name cannot be blank or over 100 characters.</value>
+    <value>Channel name cannot be blank or over a 100 characters long.</value>
   </data>
   <data name="ERR_CHANNEL_TOPIC" xml:space="preserve">
     <value>Channel topic must be less than 1024 characters long.</value>
   </data>
-  <data name="ERR_DOG_PHOTO" xml:space="preserve">
-    <value>Unable to reach the Dog.CEO API.</value>
+  <data name="ERR_API_CONNECTION" xml:space="preserve">
+    <value>Unable to reach the API. Please try again later.</value>
   </data>
   <data name="ERR_EMOJI_ADD" xml:space="preserve">
     <value>Unable to create the server emoji. Either the HTTP request failed or Discord prevented the operation from completing.</value>
   </data>
   <data name="ERR_EMOJI_IMAGE" xml:space="preserve">
-    <value>Please provide a URL pointing to an emoji image or attach an image.</value>
+    <value>The provided URL must point to an image file or an attachment.</value>
   </data>
   <data name="ERR_EMOJI_NAME" xml:space="preserve">
-    <value>Server emoji name is invalid.</value>
+    <value>Emoji name is invalid or does not meet the length requirement of 2-50 characters.</value>
   </data>
   <data name="ERR_EMOJI_SIZE" xml:space="preserve">
-    <value>Unable to create the server emoji. Either the image size was too large.</value>
+    <value>Unable to create the server emoji. Image file size is too large.</value>
   </data>
   <data name="ERR_MATH_EQUATION" xml:space="preserve">
-    <value>Error calculating math equation, make sure your values are integers and the operation is valid!</value>
-  </data>
-  <data name="ERR_NASA_API" xml:space="preserve">
-    <value>Unable to reach the NASA API.</value>
+    <value>Error calculating the equation, make sure your values are integers and the operation is valid.</value>
   </data>
   <data name="ERR_POLL_QUESTION" xml:space="preserve">
     <value>Please provide a poll question.</value>
@@ -272,10 +269,10 @@
     <value>http://api.weatherstack.com//current?access_key={0}&amp;query={1}</value>
   </data>
   <data name="ERR_POKEMON_LIST" xml:space="preserve">
-    <value>Error updating the Pokémon list: {0}</value>
+    <value>Error updating the Pokémon card list: {0}</value>
   </data>
   <data name="ERR_REDDIT_UNKNOWN" xml:space="preserve">
-    <value>Unknown Reddit category</value>
+    <value>Please provide an existing category.</value>
   </data>
   <data name="ERR_STEAM_LIST" xml:space="preserve">
     <value>Error updating Steam games list: {0}</value>

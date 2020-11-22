@@ -15,12 +15,12 @@ namespace FlawBOT.Common
         public static DiscordColor DefaultColor { get; } = new DiscordColor("#00FF7F");
         public static DateTime ProcessStarted { get; set; }
         public static TokenData Tokens { get; set; } = new TokenData();
+        public static int ShardCount { get; } = 1;
     }
 
     public enum EmbedType
     {
         Default,
-        Good,
         Warning,
         Missing,
         Error

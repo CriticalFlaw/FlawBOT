@@ -27,7 +27,7 @@ namespace FlawBOT.Modules
                 .WithDescription(
                     "A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime",
-                    $"{(int) uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                    $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .AddField(":link: Links",
                     $"[Commands]({SharedData.GitHubLink}wiki) **|** [GitHub]({SharedData.GitHubLink})", true)
                 .WithFooter("Thank you for using " + SharedData.Name + $" (v{SharedData.Version})")
@@ -116,8 +116,7 @@ namespace FlawBOT.Modules
                         $"[Click here to add this issue to GitHub]({SharedData.GitHubLink}/issues/new)")
                     .WithColor(SharedData.DefaultColor);
                 await dm.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, "Thank You! Your report has been submitted.", EmbedType.Good)
-                    .ConfigureAwait(false);
+                await ctx.RespondAsync("Thank You! Your report has been submitted.").ConfigureAwait(false);
             }
         }
 
@@ -187,9 +186,7 @@ namespace FlawBOT.Modules
 
             var game = new DiscordActivity(activity);
             await ctx.Client.UpdateStatusAsync(game).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx, $"{SharedData.Name} activity has been changed to Playing {game.Name}",
-                    EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync($"{SharedData.Name} activity has been changed to Playing {game.Name}").ConfigureAwait(false);
         }
 
         #endregion COMMAND_ACTIVITY
@@ -205,8 +202,7 @@ namespace FlawBOT.Modules
             var stream = BotServices.CheckImageInput(ctx, query).Result;
             if (stream.Length <= 0) return;
             await ctx.Client.UpdateCurrentUserAsync(avatar: stream).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx, SharedData.Name + " avatar has been updated!", EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync($"{SharedData.Name} avatar has been updated!").ConfigureAwait(false);
         }
 
         #endregion COMMAND_AVATAR

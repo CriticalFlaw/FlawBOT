@@ -30,9 +30,7 @@ namespace FlawBOT.Modules
             {
                 var stream = BotServices.CheckImageInput(ctx, query).Result;
                 await ctx.Guild.ModifyAsync(chn => chn.Icon = stream).ConfigureAwait(false);
-                await BotServices
-                    .SendEmbedAsync(ctx, ctx.Guild.Name + " server avatar has been updated!", EmbedType.Good)
-                    .ConfigureAwait(false);
+                await ctx.RespondAsync(ctx.Guild.Name + " server avatar has been updated!").ConfigureAwait(false);
             }
             catch
             {
@@ -144,9 +142,7 @@ namespace FlawBOT.Modules
             }
 
             await ctx.Guild.ModifyAsync(srv => srv.Name = name).ConfigureAwait(false);
-            await BotServices
-                .SendEmbedAsync(ctx, "Server name has been changed to " + Formatter.Bold(name), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Server name has been changed to " + Formatter.Bold(name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_RENAME
@@ -179,9 +175,7 @@ namespace FlawBOT.Modules
             }
 
             await dm.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
-            await BotServices.SendEmbedAsync(ctx,
-                    "Successfully sent a warning to " + Formatter.Bold(member.Username), EmbedType.Good)
-                .ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully sent a warning to " + Formatter.Bold(member.Username)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_WARN

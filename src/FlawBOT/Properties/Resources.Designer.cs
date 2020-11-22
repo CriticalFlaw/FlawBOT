@@ -61,7 +61,16 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel with the same name already exists..
+        ///   Looks up a localized string similar to Unable to reach the API. Please try again later..
+        /// </summary>
+        internal static string ERR_API_CONNECTION {
+            get {
+                return ResourceManager.GetString("ERR_API_CONNECTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A channel with the same name already exists..
         /// </summary>
         internal static string ERR_CHANNEL_EXISTS {
             get {
@@ -70,7 +79,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The name cannot be blank or over 100 characters..
+        ///   Looks up a localized string similar to Channel name cannot be blank or over a 100 characters long..
         /// </summary>
         internal static string ERR_CHANNEL_NAME {
             get {
@@ -88,15 +97,6 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to reach the Dog.CEO API..
-        /// </summary>
-        internal static string ERR_DOG_PHOTO {
-            get {
-                return ResourceManager.GetString("ERR_DOG_PHOTO", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unable to create the server emoji. Either the HTTP request failed or Discord prevented the operation from completing..
         /// </summary>
         internal static string ERR_EMOJI_ADD {
@@ -106,7 +106,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please provide a URL pointing to an emoji image or attach an image..
+        ///   Looks up a localized string similar to The provided URL must point to an image file or an attachment..
         /// </summary>
         internal static string ERR_EMOJI_IMAGE {
             get {
@@ -115,7 +115,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server emoji name is invalid..
+        ///   Looks up a localized string similar to Emoji name is invalid or does not meet the length requirement of 2-50 characters..
         /// </summary>
         internal static string ERR_EMOJI_NAME {
             get {
@@ -124,7 +124,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to create the server emoji. Either the image size was too large..
+        ///   Looks up a localized string similar to Unable to create the server emoji. Image file size is too large..
         /// </summary>
         internal static string ERR_EMOJI_SIZE {
             get {
@@ -169,7 +169,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error calculating math equation, make sure your values are integers and the operation is valid!.
+        ///   Looks up a localized string similar to Error calculating the equation, make sure your values are integers and the operation is valid..
         /// </summary>
         internal static string ERR_MATH_EQUATION {
             get {
@@ -178,16 +178,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to reach the NASA API..
-        /// </summary>
-        internal static string ERR_NASA_API {
-            get {
-                return ResourceManager.GetString("ERR_NASA_API", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error updating the Pokémon list: {0}.
+        ///   Looks up a localized string similar to Error updating the Pokémon card list: {0}.
         /// </summary>
         internal static string ERR_POKEMON_LIST {
             get {
@@ -205,7 +196,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown Reddit category.
+        ///   Looks up a localized string similar to Please provide an existing category..
         /// </summary>
         internal static string ERR_REDDIT_UNKNOWN {
             get {
