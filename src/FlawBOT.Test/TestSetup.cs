@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
-using FlawBOT.Framework.Models;
+using FlawBOT.Common;
+using FlawBOT.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -13,7 +14,7 @@ namespace GamesModule
         public void PreTest()
         {
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
-            TokenHandler.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
+            SharedData.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
         }
     }
 }
