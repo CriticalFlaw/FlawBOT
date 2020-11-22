@@ -41,33 +41,36 @@ namespace FlawBOT.Common
             _name = (cmd is CommandGroup ? "Group: " : "Command: ") + cmd.QualifiedName;
             _description = cmd.Description;
 
-            if (cmd.Overloads?.Any() ?? false)
-                foreach (var overload in cmd.Overloads.OrderByDescending(o => o.Priority))
-                {
-                    var args = new StringBuilder();
-                    foreach (var arg in overload.Arguments)
-                    {
-                        args.Append(Formatter.InlineCode($"[{CommandsNext.GetUserFriendlyTypeName(arg.Type)}]"));
-                        args.Append(' ');
-                        args.Append(arg.Description ?? "No description provided.");
-                        if (arg.IsOptional)
-                        {
-                            args.Append(" (def: ")
-                                .Append(Formatter.InlineCode(arg.DefaultValue is null
-                                    ? "None"
-                                    : arg.DefaultValue.ToString())).Append(')');
-                            args.Append(" (optional)");
-                        }
-
-                        args.AppendLine();
-                    }
-
-                    _output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}",
-                        args.ToString() ?? "No arguments.");
-                }
-
             if (cmd.Aliases?.Any() ?? false)
                 _output.AddField("Aliases", string.Join(", ", cmd.Aliases.Select(Formatter.InlineCode)), true);
+
+            if (!(cmd.Overloads?.Any() ?? false)) return this;
+            foreach (var overload in cmd.Overloads.OrderByDescending(o => o.Priority))
+            {
+                if (overload.Arguments.Count == 0) continue;
+
+                var args = new StringBuilder();
+                foreach (var arg in overload.Arguments)
+                {
+                    args.Append(Formatter.InlineCode($"[{CommandsNext.GetUserFriendlyTypeName(arg.Type)}]"));
+                    args.Append(' ');
+                    args.Append(arg.Description ?? "No description provided.");
+                    if (arg.IsOptional)
+                    {
+                        args.Append(" (def: ")
+                            .Append(Formatter.InlineCode(arg.DefaultValue is null
+                                ? "None"
+                                : arg.DefaultValue.ToString())).Append(')');
+                        args.Append(" (optional)");
+                    }
+
+                    args.AppendLine();
+                }
+
+                _output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}",
+                    args.ToString() ?? "No arguments.");
+            }
+
             return this;
         }
 

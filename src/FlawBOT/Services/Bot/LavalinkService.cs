@@ -20,7 +20,7 @@ namespace FlawBOT.Services
             Discord = client;
             Discord.Ready += Client_Ready;
             _trackException =
-                new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>("FLAWBOT_LAVALINK_TRACK_EXCEPTION",
+                new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>($"{SharedData.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION",
                     TimeSpan.Zero, EventExceptionHandler);
         }
 

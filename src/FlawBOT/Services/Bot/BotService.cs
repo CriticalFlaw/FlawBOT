@@ -16,36 +16,17 @@ namespace FlawBOT.Services
 {
     public class BotServices
     {
-        public static async Task SendEmbedAsync(CommandContext ctx, string message, EmbedType type = EmbedType.Default)
+        public static async Task SendResponseAsync(CommandContext ctx, string message, ResponseType type = ResponseType.Default)
         {
-            var prefix = string.Empty;
-            DiscordColor color;
-            switch (type)
+            message = type switch
             {
-                case EmbedType.Warning:
-                    prefix = ":warning: ";
-                    color = DiscordColor.Yellow;
-                    break;
+                ResponseType.Warning => ":exclamation: " + message,
+                ResponseType.Missing => ":mag: " + message,
+                ResponseType.Error => ":no_entry: " + message,
+                _ => message
+            };
 
-                case EmbedType.Missing:
-                    prefix = ":mag: ";
-                    color = DiscordColor.Wheat;
-                    break;
-
-                case EmbedType.Error:
-                    prefix = ":no_entry: ";
-                    color = DiscordColor.Red;
-                    break;
-
-                default:
-                    color = new DiscordColor("#00FF7F");
-                    break;
-            }
-
-            var output = new DiscordEmbedBuilder()
-                .WithDescription(prefix + message)
-                .WithColor(color);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(message).ConfigureAwait(false);
         }
 
         public static async Task SendUserStateChangeAsync(CommandContext ctx, UserStateChange state, DiscordMember user,
@@ -90,7 +71,7 @@ namespace FlawBOT.Services
             if (!Uri.TryCreate(input, UriKind.Absolute, out _) &&
                 (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
             {
-                await SendEmbedAsync(ctx, Resources.URL_INVALID_IMG, EmbedType.Warning)
+                await SendResponseAsync(ctx, Resources.URL_INVALID_IMG, ResponseType.Warning)
                     .ConfigureAwait(false);
             }
             else

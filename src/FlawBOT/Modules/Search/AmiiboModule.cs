@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
             var results = await AmiiboService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

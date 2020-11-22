@@ -61,7 +61,6 @@ namespace FlawBOT
                 EnableMentionPrefix = true, // Set the boolean for mentioning the bot as a command prefix
                 CaseSensitive = false,
                 IgnoreExtraArguments = true,
-                EnableDefaultHelp = false,
                 Services = Services
             });
             Commands.CommandExecuted += Command_Executed;
@@ -72,11 +71,12 @@ namespace FlawBOT
             Commands.RegisterCommands<ChannelModule>();
             Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<EmojiModule>();
-            Commands.RegisterCommands<WorldModule>();
             Commands.RegisterCommands<ImgurModule>();
             Commands.RegisterCommands<MathModule>();
             Commands.RegisterCommands<MiscModule>();
+            Commands.RegisterCommands<MusicModule>();
             Commands.RegisterCommands<NasaModule>();
+            Commands.RegisterCommands<NewsModule>();
             Commands.RegisterCommands<OmdbModule>();
             Commands.RegisterCommands<PokemonModule>();
             Commands.RegisterCommands<PollModule>();
@@ -90,8 +90,8 @@ namespace FlawBOT
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<UserModule>();
             Commands.RegisterCommands<WikipediaModule>();
+            Commands.RegisterCommands<WorldModule>();
             Commands.RegisterCommands<YouTubeModule>();
-            Commands.RegisterCommands<MusicModule>();
 
             // Setup Interactivity
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
@@ -109,9 +109,10 @@ namespace FlawBOT
 
             // Setup Lavalink
             Lavalink = Client.UseLavalink();
+            //Process.Start("java", $"-jar {Directory.GetCurrentDirectory()}\\Lavalink.jar");
 
             // Start the uptime counter
-            Console.Title = SharedData.Name + "-" + SharedData.Version;
+            Console.Title = $"{SharedData.Name}-{SharedData.Version}";
             SharedData.ProcessStarted = DateTime.Now;
         }
 
@@ -127,9 +128,9 @@ namespace FlawBOT
         {
             // Update any other services that are being used.
             Client.Logger.LogInformation(EventId, "Loading...");
-            //await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
-            //await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
-            //await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
+            await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
+            await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
+            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);
@@ -184,7 +185,7 @@ namespace FlawBOT
             if (channel == null || channel != e.Before.Channel) return;
 
             var users = channel.Users;
-            if (musicData.IsPlaying && !users.Any(x => !x.IsBot))
+            if (musicData.IsPlaying && users.All(x => x.IsBot))
             {
                 sender.Logger.LogInformation(EventId, $"All users left voice in {e.Guild.Name}, pausing playback...");
                 await musicData.PauseAsync();

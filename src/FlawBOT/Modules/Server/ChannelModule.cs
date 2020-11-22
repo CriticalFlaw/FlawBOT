@@ -29,7 +29,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -100,7 +100,7 @@ namespace FlawBOT.Modules
 
             // Check that the user has the permission in the channel to view its information
             if (!ctx.Member.PermissionsIn(channel).HasPermission(Permissions.AccessChannels))
-                return BotServices.SendEmbedAsync(ctx, "You are not allowed to see this channel!", EmbedType.Warning);
+                return BotServices.SendResponseAsync(ctx, "You are not allowed to see this channel!", ResponseType.Warning);
 
             // Create the base embed message
             var output = new DiscordEmbedBuilder()
@@ -165,7 +165,7 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -188,14 +188,14 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
 
             if (ctx.Guild.Channels.Any(chn => string.Equals(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_EXISTS, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -218,7 +218,7 @@ namespace FlawBOT.Modules
         {
             if (topic.Length > 1024)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_TOPIC, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_TOPIC, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -241,14 +241,14 @@ namespace FlawBOT.Modules
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_NAME, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
 
             if (ctx.Guild.Channels.Any(chn => string.Equals(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_CHANNEL_EXISTS, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_EXISTS, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }

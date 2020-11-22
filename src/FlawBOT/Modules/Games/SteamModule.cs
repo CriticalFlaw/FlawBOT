@@ -32,7 +32,7 @@ namespace FlawBOT.Modules
                 var app = SteamService.GetSteamAppAsync(query).Result;
                 if (app is null)
                 {
-                    await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                    await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                         .ConfigureAwait(false);
                     return;
                 }
@@ -81,12 +81,12 @@ namespace FlawBOT.Modules
             var profile = SteamService.GetSteamProfileAsync(query).Result;
             if (profile is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
             }
             else if (profile.Data.ProfileVisibility == ProfileVisibility.Private)
             {
-                await BotServices.SendEmbedAsync(ctx, "This profile is private...", EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, "This profile is private...", ResponseType.Warning)
                     .ConfigureAwait(false);
             }
             else
@@ -131,7 +131,7 @@ namespace FlawBOT.Modules
                         string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"))
                     .ConfigureAwait(false);
             else
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_INVALID_IP_GAME, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP_GAME, ResponseType.Warning)
                     .ConfigureAwait(false);
         }
 

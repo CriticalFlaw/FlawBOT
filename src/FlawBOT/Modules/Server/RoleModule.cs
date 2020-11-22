@@ -33,8 +33,8 @@ namespace FlawBOT.Modules
             var regex = new Regex("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
             if (!regex.Success)
             {
-                await BotServices.SendEmbedAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B",
-                    EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B",
+                    ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
@@ -59,7 +59,7 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(role))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NAME, EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_ROLE_NAME, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace FlawBOT.Modules
         {
             if (role is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_ROLE_EXISTING, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -101,7 +101,7 @@ namespace FlawBOT.Modules
         {
             if (role is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_ROLE_EXISTING, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -132,7 +132,7 @@ namespace FlawBOT.Modules
         {
             if (role is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_EXISTING, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_ROLE_EXISTING, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -151,11 +151,11 @@ namespace FlawBOT.Modules
                 }
 
             if (usersList.Length == 0)
-                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " has no members")
+                await BotServices.SendResponseAsync(ctx, Formatter.Bold(role.Name) + " has no members")
                     .ConfigureAwait(false);
             else
                 await BotServices
-                    .SendEmbedAsync(ctx, Formatter.Bold(role.Name) + $" has **{userCount}** member(s): {usersList}")
+                    .SendResponseAsync(ctx, Formatter.Bold(role.Name) + $" has **{userCount}** member(s): {usersList}")
                     .ConfigureAwait(false);
         }
 
@@ -174,13 +174,13 @@ namespace FlawBOT.Modules
             if (role.IsMentionable)
             {
                 await role.ModifyAsync(mentionable: false).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **not-mentionable**")
+                await BotServices.SendResponseAsync(ctx, Formatter.Bold(role.Name) + " is now **not-mentionable**")
                     .ConfigureAwait(false);
             }
             else
             {
                 await role.ModifyAsync(mentionable: true).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **mentionable**")
+                await BotServices.SendResponseAsync(ctx, Formatter.Bold(role.Name) + " is now **mentionable**")
                     .ConfigureAwait(false);
             }
         }
@@ -219,13 +219,13 @@ namespace FlawBOT.Modules
         {
             if (!member.Roles.Any())
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NONE, EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_ROLE_NONE, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
             if (member.Roles.Max(r => r.Position) >= ctx.Member.Roles.Max(r => r.Position))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_ROLE_NOT_ALLOWED, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_ROLE_NOT_ALLOWED, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -268,13 +268,13 @@ namespace FlawBOT.Modules
             if (role.IsHoisted)
             {
                 await role.ModifyAsync(hoist: false).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **hidden**")
+                await BotServices.SendResponseAsync(ctx, Formatter.Bold(role.Name) + " is now **hidden**")
                     .ConfigureAwait(false);
             }
             else
             {
                 await role.ModifyAsync(hoist: true).ConfigureAwait(false);
-                await BotServices.SendEmbedAsync(ctx, Formatter.Bold(role.Name) + " is now **displayed**")
+                await BotServices.SendResponseAsync(ctx, Formatter.Bold(role.Name) + " is now **displayed**")
                     .ConfigureAwait(false);
             }
         }

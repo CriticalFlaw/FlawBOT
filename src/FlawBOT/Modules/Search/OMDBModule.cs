@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
             var results = OmdbService.GetMovieListAsync(query.Replace(" ", "+")).Result;
             if (!results.Search.Any())
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

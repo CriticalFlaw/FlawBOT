@@ -39,7 +39,7 @@ namespace FlawBOT.Modules
                     break;
 
                 default:
-                    await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                    await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                         .ConfigureAwait(false);
                     break;
             }

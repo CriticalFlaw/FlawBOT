@@ -34,14 +34,14 @@ namespace FlawBOT.Modules
                 {
                     if (!ctx.Message.Attachments.Any() ||
                         !Uri.TryCreate(ctx.Message.Attachments[0].Url, UriKind.Absolute, out url))
-                        await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_IMAGE, EmbedType.Warning)
+                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_IMAGE, ResponseType.Warning)
                             .ConfigureAwait(false);
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(name) || name.Length < 2 || name.Length > 50)
                 {
-                    await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_NAME, EmbedType.Warning)
+                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning)
                         .ConfigureAwait(false);
                     return;
                 }
@@ -56,7 +56,7 @@ namespace FlawBOT.Modules
                 {
                     if (stream.Length >= 256000)
                     {
-                        await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_SIZE, EmbedType.Warning).ConfigureAwait(false);
+                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_SIZE, ResponseType.Warning).ConfigureAwait(false);
                         return;
                     }
                     var emoji = await ctx.Guild.CreateEmojiAsync(name, stream).ConfigureAwait(false);
@@ -65,7 +65,7 @@ namespace FlawBOT.Modules
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_ADD, EmbedType.Error).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_ADD, ResponseType.Error).ConfigureAwait(false);
             }
         }
 
@@ -88,7 +88,7 @@ namespace FlawBOT.Modules
             }
             catch (NotFoundException)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_EMOJI, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_EMOJI, ResponseType.Missing)
                     .ConfigureAwait(false);
             }
         }
@@ -108,7 +108,7 @@ namespace FlawBOT.Modules
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
-                    await BotServices.SendEmbedAsync(ctx, Resources.ERR_EMOJI_NAME, EmbedType.Warning)
+                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning)
                         .ConfigureAwait(false);
                     return;
                 }
@@ -119,7 +119,7 @@ namespace FlawBOT.Modules
             }
             catch (NotFoundException)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_EMOJI, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_EMOJI, ResponseType.Missing)
                     .ConfigureAwait(false);
             }
         }

@@ -35,7 +35,7 @@ namespace FlawBOT.Modules
             catch
             {
                 await BotServices
-                    .SendEmbedAsync(ctx, ctx.Guild.Name + " server avatar has not been updated!", EmbedType.Error)
+                    .SendResponseAsync(ctx, ctx.Guild.Name + " server avatar has not been updated!", ResponseType.Error)
                     .ConfigureAwait(false);
             }
         }
@@ -102,7 +102,7 @@ namespace FlawBOT.Modules
             int days = 7)
         {
             if (days < 1 || days > 30)
-                await BotServices.SendEmbedAsync(ctx, "Number of days must be between 1 and 30", EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning)
                     .ConfigureAwait(false);
             var count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
             if (count == 0)
@@ -136,7 +136,7 @@ namespace FlawBOT.Modules
             if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
             {
                 await BotServices
-                    .SendEmbedAsync(ctx, "Server name cannot be blank or over 100 characters!", EmbedType.Warning)
+                    .SendResponseAsync(ctx, "Server name cannot be blank or over 100 characters!", ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -169,7 +169,7 @@ namespace FlawBOT.Modules
             var dm = await member.CreateDmChannelAsync().ConfigureAwait(false);
             if (dm is null)
             {
-                await BotServices.SendEmbedAsync(ctx, "Unable to direct message this user", EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, "Unable to direct message this user", ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }

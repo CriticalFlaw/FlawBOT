@@ -314,4 +314,7 @@
   <data name="URL_Simpsons_Image" xml:space="preserve">
     <value>https://{0}.com/img/{1}/{2}.jpg</value>
   </data>
+  <data name="INFO_REPORT_SENDER" xml:space="preserve">
+    <value>The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.</value>
+  </data>
 </root>

@@ -44,7 +44,7 @@ namespace FlawBOT.Modules
             var results = RedditService.GetResults(query, category);
             if (results is null || results.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

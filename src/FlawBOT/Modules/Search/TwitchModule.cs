@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
             var results = await TwitchService.GetTwitchDataAsync(query).ConfigureAwait(false);
             if (results.Total == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_TWITCH, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_TWITCH, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

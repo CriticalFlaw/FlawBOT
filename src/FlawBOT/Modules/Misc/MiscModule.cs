@@ -92,7 +92,7 @@ namespace FlawBOT.Modules
             var results = MiscService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_API_CONNECTION, EmbedType.Warning).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
@@ -113,12 +113,27 @@ namespace FlawBOT.Modules
             DiscordMember member)
         {
             if (member is null)
-                await ctx.RespondAsync(":wave: Hello, " + ctx.User.Mention).ConfigureAwait(false);
+                await ctx.RespondAsync($"Hello, {ctx.User.Mention}", true).ConfigureAwait(false);
             else
-                await ctx.RespondAsync(":wave: Welcome " + member.Mention + " to " + ctx.Guild.Name +
-                                       ". Enjoy your stay!").ConfigureAwait(false);
+                await ctx.RespondAsync($"Welcome {member.Mention} to {ctx.Guild.Name}. Enjoy your stay!", true).ConfigureAwait(false);
         }
 
         #endregion COMMAND_HELLO
+
+        #region COMMAND_TTS
+
+        [Command("tts"), Aliases("echo", "repeat", "say", "talk")]
+        [Description("Make FlawBOT repeat a message as text-to-speech")]
+        public async Task Say(CommandContext ctx,
+            [Description("Message for the bot to repeat"), RemainingText]
+            string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+                await ctx.RespondAsync(":thinking:").ConfigureAwait(false);
+            else
+                await ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(message)), true).ConfigureAwait(false);
+        }
+
+        #endregion COMMAND_TTS
     }
 }

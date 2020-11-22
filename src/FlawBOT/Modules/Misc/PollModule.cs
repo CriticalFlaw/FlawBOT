@@ -25,7 +25,7 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(question))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_POLL_QUESTION, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_POLL_QUESTION, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }

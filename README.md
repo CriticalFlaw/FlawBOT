@@ -11,6 +11,9 @@ A Discord bot written in C# using the [DSharpPlus](https://github.com/DSharpPlus
 ## Installation
 To run your own instance of FlawBOT, [clone this repository](https://github.com/CriticalFlaw/FlawBOT/archive/master.zip) or [download the release package](https://github.com/CriticalFlaw/FlawBOT/releases) and modify the provided **config.json** file, adding the API tokens. If you're cloning the repository, use [Visual Studio 2019](https://www.visualstudio.com/downloads/) to compile the project. 
 
+## Running FlawBOT
+As of version 3.0, FlawBOT requires a [Lavalink](https://github.com/Frederikam/Lavalink#requirements) node to be running in order to play music and not display lavalink-related errors in console. `lavalink.jar` and `application.yml` are included in the project directory, so all you have to do is open the command prompt and launch lavalink with the command `java -jar Lavalink.jar` (be sure to install [Java 13 or later](https://www.oracle.com/java/technologies/javase-jdk13-downloads.html)).
+
 ## API Tokens
 * [Discord](https://discordapp.com/developers/applications/me) (*required*)
 * [Steam](https://steamcommunity.com/dev/apikey)

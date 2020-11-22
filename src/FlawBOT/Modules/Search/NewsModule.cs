@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
             var results = await NewsService.GetNewsDataAsync(query).ConfigureAwait(false);
             if (results.Status != "ok")
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

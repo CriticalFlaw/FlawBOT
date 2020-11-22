@@ -46,7 +46,7 @@ namespace FlawBOT.Services
                     Color = DiscordColor.Red
                 };
             results = results.Count > 25 ? results.Take(25).ToList() : results;
-            var output = new DiscordEmbedBuilder {Color = DiscordColor.Red};
+            var output = new DiscordEmbedBuilder { Color = DiscordColor.Red };
             foreach (var result in results)
                 switch (result.Id.Kind)
                 {
@@ -90,11 +90,11 @@ namespace FlawBOT.Services
             var uri = new Uri(
                 $"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&fields=items(id(videoId),snippet(title,channelTitle))&key={YouTube.ApiKey}&q={WebUtility.UrlEncode(term)}");
 
-            var json = "{}";
+            string json;
             Http.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/search");
             Http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SharedData.Name);
             using (var req = await Http.GetAsync(uri))
-            using (var res = await req.Content.ReadAsStreamAsync())
+            await using (var res = await req.Content.ReadAsStreamAsync())
             using (var sr = new StreamReader(res, Encoding.UTF8))
             {
                 json = await sr.ReadToEndAsync();
@@ -103,7 +103,7 @@ namespace FlawBOT.Services
             var jsonData = JObject.Parse(json);
             var data = jsonData["items"].ToObject<IEnumerable<YouTubeResponse>>();
 
-            return data.Select(x => new YouTubeData(x.Snippet.Title, x.Snippet.Author, x.Id.VideoId));
+            return data!.Select(x => new YouTubeData(x.Snippet.Title, x.Snippet.Author, x.Id.VideoId));
         }
     }
 }

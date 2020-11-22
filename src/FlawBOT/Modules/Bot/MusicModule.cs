@@ -162,7 +162,7 @@ namespace FlawBOT.Modules
             var results = await YouTube.GetMusicDataAsync(query);
             if (!results.Any())
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

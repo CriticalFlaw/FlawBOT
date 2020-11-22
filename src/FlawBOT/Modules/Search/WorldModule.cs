@@ -23,7 +23,7 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(address) || !IPAddress.TryParse(address, out var ip))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_INVALID_IP, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -31,7 +31,7 @@ namespace FlawBOT.Modules
             var results = WorldService.GetIpLocationAsync(ip).Result;
             if (results.Type == null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_LOCATION, ResponseType.Warning)
                     .ConfigureAwait(false);
                 return;
             }
@@ -58,7 +58,7 @@ namespace FlawBOT.Modules
             var results = await WorldService.GetWeatherDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_LOCATION, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_LOCATION, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

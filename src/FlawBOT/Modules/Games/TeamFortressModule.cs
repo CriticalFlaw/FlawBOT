@@ -30,7 +30,7 @@ namespace FlawBOT.Modules
             var item = TeamFortressService.GetSchemaItem(query);
             if (item is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -77,7 +77,7 @@ namespace FlawBOT.Modules
             var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -137,7 +137,7 @@ namespace FlawBOT.Modules
             var results = await TeamFortressService.GetNewsArticlesAsync(query).ConfigureAwait(false);
             if (results is null || results.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -180,7 +180,7 @@ namespace FlawBOT.Modules
             var steamId = SteamService.GetSteamUserId(query).Result;
             if (steamId is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -188,7 +188,7 @@ namespace FlawBOT.Modules
             var results = await TeamFortressService.GetContentCreatorAsync(steamId.Data).ConfigureAwait(false);
             if (results.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -246,7 +246,7 @@ namespace FlawBOT.Modules
                 .ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -291,7 +291,7 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(ip) || !IPAddress.TryParse(ip, out var address))
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_INVALID_IP, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

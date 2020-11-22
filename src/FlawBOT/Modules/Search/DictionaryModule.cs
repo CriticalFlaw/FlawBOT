@@ -25,7 +25,7 @@ namespace FlawBOT.Modules
             var results = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
             if (results.ResultType == "no_results" || results.List.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

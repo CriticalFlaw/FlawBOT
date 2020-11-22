@@ -32,13 +32,13 @@ namespace FlawBOT.Modules
                     _ => num1 + num2
                 };
                 var output = new DiscordEmbedBuilder()
-                    .WithDescription($":1234: The result is {result:#,##0.00}")
+                    .WithDescription($":1234: The answer is {result:#,##0.00}")
                     .WithColor(DiscordColor.CornflowerBlue);
                 await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
             }
             catch
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.ERR_MATH_EQUATION, EmbedType.Warning)
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_MATH_EQUATION, ResponseType.Warning)
                     .ConfigureAwait(false);
             }
         }

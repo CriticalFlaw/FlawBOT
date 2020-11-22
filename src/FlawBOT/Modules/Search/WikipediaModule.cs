@@ -25,7 +25,7 @@ namespace FlawBOT.Modules
             var results = WikipediaService.GetWikipediaDataAsync(query);
             if (results.Error != null || results.Search.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

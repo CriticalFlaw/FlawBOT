@@ -19,12 +19,12 @@ namespace FlawBOT.Modules
         [Description("Retrieve a Pokémon card")]
         public async Task Pokemon(CommandContext ctx,
             [Description("Name of the Pokémon"), RemainingText]
-            string query)
+            string query = "")
         {
             var results = await PokemonService.GetPokemonCardsAsync(query).ConfigureAwait(false);
             if (results.Cards.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }

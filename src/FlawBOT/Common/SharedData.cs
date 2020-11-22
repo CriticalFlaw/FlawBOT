@@ -18,7 +18,7 @@ namespace FlawBOT.Common
         public static int ShardCount { get; } = 1;
     }
 
-    public enum EmbedType
+    public enum ResponseType
     {
         Default,
         Warning,

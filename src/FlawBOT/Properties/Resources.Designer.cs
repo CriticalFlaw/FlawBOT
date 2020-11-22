@@ -277,6 +277,15 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name..
+        /// </summary>
+        internal static string INFO_REPORT_SENDER {
+            get {
+                return ResourceManager.GetString("INFO_REPORT_SENDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Request timed out....
         /// </summary>
         internal static string INFO_REQ_TIMEOUT {

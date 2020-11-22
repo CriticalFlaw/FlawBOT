@@ -26,7 +26,7 @@ namespace FlawBOT.Modules
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result;
             if (results is null || results.Data.Count == 0)
             {
-                await BotServices.SendEmbedAsync(ctx, Resources.NOT_FOUND_COMMON, EmbedType.Missing)
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
@@ -41,7 +41,7 @@ namespace FlawBOT.Modules
                     .AddField("Publishers",
                         SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result ??
                         "Unknown", true)
-                    .AddField("Release Date", game.ReleaseDate ?? "Unknown", true)
+                    .AddField("Release Date", game.ReleaseDate ?? "Unknown")
                     .AddField("Platforms",
                         SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result ??
                         "Unknown")

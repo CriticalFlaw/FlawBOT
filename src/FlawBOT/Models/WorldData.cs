@@ -97,10 +97,10 @@ namespace FlawBOT.Models
         public string LocalTime { get; set; }
 
         [JsonProperty("localtime_epoch", NullValueHandling = NullValueHandling.Ignore)]
-        public int LocalTime_epoch { get; set; }
+        public int LocalTimeEpoch { get; set; }
 
         [JsonProperty("utc_offset", NullValueHandling = NullValueHandling.Ignore)]
-        public string UTC_Offset { get; set; }
+        public string UtcOffset { get; set; }
     }
 
     public class Current
@@ -121,13 +121,13 @@ namespace FlawBOT.Models
         public List<string> Descriptions { get; set; }
 
         [JsonProperty("wind_speed", NullValueHandling = NullValueHandling.Ignore)]
-        public int Wind_Speed { get; set; }
+        public int WindSpeed { get; set; }
 
         [JsonProperty("wind_degree", NullValueHandling = NullValueHandling.Ignore)]
-        public int Wind_Degree { get; set; }
+        public int WindDegree { get; set; }
 
         [JsonProperty("wind_dir", NullValueHandling = NullValueHandling.Ignore)]
-        public string Wind_Direction { get; set; }
+        public string WindDirection { get; set; }
 
         [JsonProperty("pressure", NullValueHandling = NullValueHandling.Ignore)]
         public int Pressure { get; set; }
@@ -145,7 +145,7 @@ namespace FlawBOT.Models
         public int FeelsLike { get; set; }
 
         [JsonProperty("uv_index", NullValueHandling = NullValueHandling.Ignore)]
-        public int UV_Index { get; set; }
+        public int UvIndex { get; set; }
 
         [JsonProperty("visibility", NullValueHandling = NullValueHandling.Ignore)]
         public int Visibility { get; set; }
