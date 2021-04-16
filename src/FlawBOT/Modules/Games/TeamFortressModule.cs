@@ -21,10 +21,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_SCHEMA
 
-        [Command("item"), Aliases("schema", "hat")]
+        [Command("item")]
+        [Aliases("schema", "hat")]
         [Description("Retrieve an item from the latest TF2 item schema")]
         public async Task Tf2Schema(CommandContext ctx,
-            [Description("Item to find in the TF2 schema"), RemainingText]
+            [Description("Item to find in the TF2 schema")] [RemainingText]
             string query = "The Scattergun")
         {
             var item = TeamFortressService.GetSchemaItem(query);
@@ -60,14 +61,15 @@ namespace FlawBOT.Modules
                 output.AddField("Used by:", "All-Classes");
             }
 
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_SCHEMA
 
         #region COMMAND_MAP
 
-        [Command("map"), Aliases("maps")]
+        [Command("map")]
+        [Aliases("maps")]
         [Description("Retrieve map information from teamwork.tf")]
         public async Task Tf2Map(CommandContext ctx,
             [Description("Normalized map name, like pl_upward")]
@@ -121,7 +123,7 @@ namespace FlawBOT.Modules
                 output.WithColor(new DiscordColor($"#{desc.Color}"));
             }
 
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_MAP
@@ -155,7 +157,7 @@ namespace FlawBOT.Modules
                     results.Remove(result);
                 }
 
-                var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", embed: output)
+                var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", output)
                     .ConfigureAwait(false);
 
                 if (results.Count == 5) continue;
@@ -170,10 +172,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_CREATORS
 
-        [Command("creator"), Aliases("creators", "youtuber")]
+        [Command("creator")]
+        [Aliases("creators", "youtuber")]
         [Description("Retrieve a community creator profile from teamwork.tf")]
         public async Task Tf2Creators(CommandContext ctx,
-            [Description("Name of the community creator to find"), RemainingText]
+            [Description("Name of the community creator to find")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -220,7 +223,7 @@ namespace FlawBOT.Modules
                 if (!string.IsNullOrWhiteSpace(creator.Youtube))
                     links.Append($"[YouTube]({string.Format(Resources.URL_YouTube_Channel, creator.Youtube)})");
                 output.AddField("Links", links.ToString(), true);
-                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
@@ -235,10 +238,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_SERVERS
 
-        [Command("server"), Aliases("servers")]
+        [Command("server")]
+        [Aliases("servers")]
         [Description("Retrieve a list of servers with given game-mode")]
         public async Task Tf2ServerByMode(CommandContext ctx,
-            [Description("Name of the game-mode, like payload"), RemainingText]
+            [Description("Name of the game-mode, like payload")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -272,7 +276,7 @@ namespace FlawBOT.Modules
                 var thumbnailUrl = await TeamFortressService.GetMapThumbnailAsync(server.MapName).ConfigureAwait(false);
                 output.WithImageUrl(thumbnailUrl.Name);
 
-                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
@@ -283,10 +287,11 @@ namespace FlawBOT.Modules
             }
         }
 
-        [Command("find"), Aliases("ip", "banner")]
+        [Command("find")]
+        [Aliases("ip", "banner")]
         [Description("Retrieve a game server with given ip address")]
         public async Task Tf2ServerByIp(CommandContext ctx,
-            [Description("Game server IP address, like 164.132.233.16"), RemainingText]
+            [Description("Game server IP address, like 164.132.233.16")] [RemainingText]
             string ip)
         {
             if (string.IsNullOrWhiteSpace(ip) || !IPAddress.TryParse(ip, out var address))
@@ -300,7 +305,8 @@ namespace FlawBOT.Modules
             await ctx.RespondAsync(TeamFortressService.GetServerInfo(address.ToString())).ConfigureAwait(false);
         }
 
-        [Command("list"), Aliases("serverList", "server-list", "custom")]
+        [Command("list")]
+        [Aliases("serverList", "server-list", "custom")]
         [Description("Retrieve a curated list of servers")]
         public async Task Tf2ServerList(CommandContext ctx)
         {
@@ -325,7 +331,7 @@ namespace FlawBOT.Modules
                 }
 
                 var message = await ctx
-                    .RespondAsync("Community-Curated Server Lists from teamwork.tf", embed: output.Build())
+                    .RespondAsync("Community-Curated Server Lists from teamwork.tf", output.Build())
                     .ConfigureAwait(false);
 
                 if (results.Count == 4) continue;

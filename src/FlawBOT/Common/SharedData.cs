@@ -12,9 +12,9 @@ namespace FlawBOT.Common
         public static string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
         public static string GitHubLink { get; } = Resources.URL_BOT_GitHub;
         public static string InviteLink { get; } = Resources.URL_BOT_Invite;
-        public static DiscordColor DefaultColor { get; } = new DiscordColor("#00FF7F");
+        public static DiscordColor DefaultColor { get; } = new("#00FF7F");
         public static DateTime ProcessStarted { get; set; }
-        public static TokenData Tokens { get; set; } = new TokenData();
+        public static TokenData Tokens { get; set; } = new();
         public static int ShardCount { get; } = 1;
     }
 

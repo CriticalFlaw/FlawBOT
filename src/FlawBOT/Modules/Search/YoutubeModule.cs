@@ -14,15 +14,16 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_CHANNEL
 
-        [Command("channel"), Aliases("channels", "chn")]
+        [Command("channel")]
+        [Aliases("channels", "chn")]
         [Description("Retrieve a list of YouTube channel given a query")]
         public async Task YtChannel(CommandContext ctx,
-            [Description("Channels to find on YouTube"), RemainingText]
+            [Description("Channels to find on YouTube")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             var results = await new YoutubeService().GetEmbeddedResults(query, 5, "channel").ConfigureAwait(false);
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", embed: results)
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", results)
                 .ConfigureAwait(false);
         }
 
@@ -30,15 +31,16 @@ namespace FlawBOT.Modules
 
         #region COMMAND_PLAYLIST
 
-        [Command("playlist"), Aliases("playlists", "list")]
+        [Command("playlist")]
+        [Aliases("playlists", "list")]
         [Description("Retrieve a list of YouTube playlists given a query")]
         public async Task YtPlaylist(CommandContext ctx,
-            [Description("Playlist to find on YouTube"), RemainingText]
+            [Description("Playlist to find on YouTube")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             var results = await new YoutubeService().GetEmbeddedResults(query, 5, "playlist").ConfigureAwait(false);
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", embed: results)
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", results)
                 .ConfigureAwait(false);
         }
 
@@ -46,10 +48,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_SEARCH
 
-        [Command("search"), Aliases("find", "watch")]
+        [Command("search")]
+        [Aliases("find", "watch")]
         [Description("Retrieve the first YouTube search result given a query")]
         public async Task YtVideo(CommandContext ctx,
-            [Description("First result video to find on YouTube"), RemainingText]
+            [Description("First result video to find on YouTube")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -61,15 +64,16 @@ namespace FlawBOT.Modules
 
         #region COMMAND_VIDEO
 
-        [Command("video"), Aliases("videos", "vid")]
+        [Command("video")]
+        [Aliases("videos", "vid")]
         [Description("Retrieve a list of YouTube videos given a query")]
         public async Task YtSearch(CommandContext ctx,
-            [Description("Video to find on YouTube"), RemainingText]
+            [Description("Video to find on YouTube")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             var results = await new YoutubeService().GetEmbeddedResults(query, 5, "video").ConfigureAwait(false);
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", embed: results)
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", results)
                 .ConfigureAwait(false);
         }
 

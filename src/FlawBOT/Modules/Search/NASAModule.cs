@@ -13,14 +13,16 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_NASA
 
-        [Command("nasa"), Aliases("apod", "space")]
+        [Command("nasa")]
+        [Aliases("apod", "space")]
         [Description("Retrieve NASA's Astronomy Picture of the Day")]
         public async Task Nasa(CommandContext ctx)
         {
             var results = await NasaService.GetNasaImageAsync().ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Missing).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Missing)
+                    .ConfigureAwait(false);
                 return;
             }
 
@@ -29,7 +31,7 @@ namespace FlawBOT.Modules
                 .WithImageUrl(results.ImageHd ?? results.ImageSd)
                 .WithFooter(results.Description)
                 .WithColor(new DiscordColor("#0B3D91"));
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_NASA

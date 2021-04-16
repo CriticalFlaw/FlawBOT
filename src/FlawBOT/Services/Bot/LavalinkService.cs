@@ -20,13 +20,14 @@ namespace FlawBOT.Services
             Discord = client;
             Discord.Ready += Client_Ready;
             _trackException =
-                new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>($"{SharedData.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION",
+                new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>(
+                    $"{SharedData.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION",
                     TimeSpan.Zero, EventExceptionHandler);
         }
 
         private DiscordClient Discord { get; }
 
-        public static EventId LogEvent { get; } = new EventId(1001, SharedData.Name);
+        public static EventId LogEvent { get; } = new(1001, SharedData.Name);
 
         public LavalinkNodeConnection Node { get; private set; }
 

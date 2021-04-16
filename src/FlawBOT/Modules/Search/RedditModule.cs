@@ -62,7 +62,7 @@ namespace FlawBOT.Modules
                     results.Remove(result);
                 }
 
-                var message = await ctx.RespondAsync("Search results for r/" + query + " on Reddit", embed: output)
+                var message = await ctx.RespondAsync("Search results for r/" + query + " on Reddit", output)
                     .ConfigureAwait(false);
 
                 if (results.Count == 5) continue;

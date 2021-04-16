@@ -16,24 +16,26 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_8BALL
 
-        [Command("ask"), Aliases("8b", "8ball", "ball", "8")]
+        [Command("ask")]
+        [Aliases("8b", "8ball", "ball", "8")]
         [Description("Ask an 8-ball a question")]
         public Task EightBall(CommandContext ctx,
-            [Description("Question to ask the 8-Ball"), RemainingText]
+            [Description("Question to ask the 8-Ball")] [RemainingText]
             string question = "")
         {
             if (string.IsNullOrWhiteSpace(question)) return Task.CompletedTask;
             var output = new DiscordEmbedBuilder()
                 .WithDescription(":8ball: " + MiscService.GetRandomAnswer() + " (" + ctx.User.Mention + ")")
                 .WithColor(DiscordColor.Black);
-            return ctx.RespondAsync(embed: output.Build());
+            return ctx.RespondAsync(output.Build());
         }
 
         #endregion COMMAND_8BALL
 
         #region COMMAND_CAT
 
-        [Command("cat"), Aliases("meow", "catfact", "randomcat")]
+        [Command("cat")]
+        [Aliases("meow", "catfact", "randomcat")]
         [Description("Retrieve a random cat fact")]
         public async Task GetCat(CommandContext ctx)
         {
@@ -46,14 +48,15 @@ namespace FlawBOT.Modules
             if (!string.IsNullOrWhiteSpace(image))
                 output.WithImageUrl(image);
 
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_CAT
 
         #region COMMAND_COINFLIP
 
-        [Command("coinflip"), Aliases("coin", "flip")]
+        [Command("coinflip")]
+        [Aliases("coin", "flip")]
         [Description("Flip a coin")]
         public Task CoinFlip(CommandContext ctx)
         {
@@ -62,14 +65,15 @@ namespace FlawBOT.Modules
                 .WithDescription(ctx.User.Username + " flipped a coin and got " +
                                  Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
                 .WithColor(SharedData.DefaultColor);
-            return ctx.RespondAsync(embed: output.Build());
+            return ctx.RespondAsync(output.Build());
         }
 
         #endregion COMMAND_COINFLIP
 
         #region COMMAND_DICEROLL
 
-        [Command("diceroll"), Aliases("dice", "roll", "rolldice", "die")]
+        [Command("diceroll")]
+        [Aliases("dice", "roll", "rolldice", "die")]
         [Description("Roll a six-sided die")]
         public Task RollDice(CommandContext ctx)
         {
@@ -78,60 +82,65 @@ namespace FlawBOT.Modules
                 .WithDescription(ctx.User.Username + " rolled a die and got " +
                                  Formatter.Bold(random.Next(1, 7).ToString()))
                 .WithColor(SharedData.DefaultColor);
-            return ctx.RespondAsync(embed: output.Build());
+            return ctx.RespondAsync(output.Build());
         }
 
         #endregion COMMAND_DICEROLL
 
         #region COMMAND_DOG
 
-        [Command("randomdog"), Aliases("woof", "dog", "bark")]
+        [Command("randomdog")]
+        [Aliases("woof", "dog", "bark")]
         [Description("Retrieve a random dog photo")]
         public async Task GetDog(CommandContext ctx)
         {
             var results = MiscService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning)
+                    .ConfigureAwait(false);
                 return;
             }
 
             var output = new DiscordEmbedBuilder()
                 .WithImageUrl(results.Message)
                 .WithColor(DiscordColor.Brown);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_DOG
 
         #region COMMAND_HELLO
 
-        [Command("hello"), Aliases("hi", "howdy")]
+        [Command("hello")]
+        [Aliases("hi", "howdy")]
         [Description("Welcome another user to the server")]
         public async Task Greet(CommandContext ctx,
-            [Description("User to say hello to"), RemainingText]
+            [Description("User to say hello to")] [RemainingText]
             DiscordMember member)
         {
             if (member is null)
-                await ctx.RespondAsync($"Hello, {ctx.User.Mention}", true).ConfigureAwait(false);
+                await ctx.RespondAsync($"Hello, {ctx.User.Mention}").ConfigureAwait(false);
             else
-                await ctx.RespondAsync($"Welcome {member.Mention} to {ctx.Guild.Name}. Enjoy your stay!", true).ConfigureAwait(false);
+                await ctx.RespondAsync($"Welcome {member.Mention} to {ctx.Guild.Name}. Enjoy your stay!")
+                    .ConfigureAwait(false);
         }
 
         #endregion COMMAND_HELLO
 
         #region COMMAND_TTS
 
-        [Command("tts"), Aliases("echo", "repeat", "say", "talk")]
+        [Command("tts")]
+        [Aliases("echo", "repeat", "say", "talk")]
         [Description("Make FlawBOT repeat a message as text-to-speech")]
         public async Task Say(CommandContext ctx,
-            [Description("Message for the bot to repeat"), RemainingText]
+            [Description("Message for the bot to repeat")] [RemainingText]
             string message)
         {
             if (string.IsNullOrWhiteSpace(message))
                 await ctx.RespondAsync(":thinking:").ConfigureAwait(false);
             else
-                await ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(message)), true).ConfigureAwait(false);
+                await ctx.RespondAsync(Formatter.BlockCode(Formatter.Strip(message))).ConfigureAwait(false);
         }
 
         #endregion COMMAND_TTS

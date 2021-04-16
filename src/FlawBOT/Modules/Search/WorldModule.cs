@@ -16,7 +16,8 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_IP
 
-        [Command("ip"), Aliases("ipstack", "track")]
+        [Command("ip")]
+        [Aliases("ipstack", "track")]
         [Description("Retrieve IP address geolocation information")]
         public async Task IpTrack(CommandContext ctx,
             [Description("IP Address")] string address)
@@ -41,17 +42,18 @@ namespace FlawBOT.Modules
                 .WithDescription($"Coordinates: {results.Latitude}°N, {results.Longitude}°W")
                 .WithUrl(string.Format(Resources.URL_Google_Maps, results.Latitude, results.Longitude))
                 .WithColor(new DiscordColor("#4d2f63"));
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_IP
 
         #region COMMAND_WEATHER
 
-        [Command("weather"), Aliases("time", "clock")]
+        [Command("weather")]
+        [Aliases("time", "clock")]
         [Description("Retrieve the time and weather for specified location")]
         public async Task Weather(CommandContext ctx,
-            [Description("Location from which to retrieve data"), RemainingText]
+            [Description("Location from which to retrieve data")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -72,7 +74,7 @@ namespace FlawBOT.Modules
                 .AddField(":droplet: Humidity", $"{results.Current.Humidity}%", true)
                 .AddField(":clock1: Local Time", results.Location.LocalTime, true)
                 .WithColor(SharedData.DefaultColor);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
     }
 

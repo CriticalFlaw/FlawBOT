@@ -51,7 +51,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_RESUME
 
-        [Command("resume"), Aliases("unpause")]
+        [Command("resume")]
+        [Aliases("unpause")]
         [Description("Resume audio playback.")]
         public async Task ResumeAsync(CommandContext ctx)
         {
@@ -63,7 +64,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_VOLUME
 
-        [Command("volume"), Aliases("v")]
+        [Command("volume")]
+        [Aliases("v")]
         [Description("Set audio playback volume.")]
         public async Task SetVolume(CommandContext ctx,
             [Description("Audio volume. Can be set to 0-150 (default 100).")]
@@ -84,7 +86,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_RESTART
 
-        [Command("restart"), Aliases("replay")]
+        [Command("restart")]
+        [Aliases("replay")]
         [Description("Restarts the playback of the current track.")]
         public async Task RestartSong(CommandContext ctx)
         {
@@ -99,7 +102,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_NOWPLAYING
 
-        [Command("nowplaying"), Aliases("np")]
+        [Command("nowplaying")]
+        [Aliases("np")]
         [Description("Displays information about currently-played track.")]
         public async Task NowPlaying(CommandContext ctx)
         {
@@ -145,7 +149,8 @@ namespace FlawBOT.Modules
         #region COMMAND_PLAY
 
         [Priority(1)]
-        [Command("play"), Aliases("p")]
+        [Command("play")]
+        [Aliases("p")]
         [Description("Play audio from provided URL or search by specified query.")]
         public async Task PlaySong(CommandContext ctx,
             [Description("URL from which to play audio")]

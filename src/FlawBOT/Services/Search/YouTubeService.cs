@@ -46,7 +46,7 @@ namespace FlawBOT.Services
                     Color = DiscordColor.Red
                 };
             results = results.Count > 25 ? results.Take(25).ToList() : results;
-            var output = new DiscordEmbedBuilder { Color = DiscordColor.Red };
+            var output = new DiscordEmbedBuilder {Color = DiscordColor.Red};
             foreach (var result in results)
                 switch (result.Id.Kind)
                 {

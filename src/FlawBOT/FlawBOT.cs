@@ -108,7 +108,7 @@ namespace FlawBOT
             });
 
             // Setup Lavalink
-            Lavalink = Client.UseLavalink();
+            //Lavalink = Client.UseLavalink();
             //Process.Start("java", $"-jar {Directory.GetCurrentDirectory()}\\Lavalink.jar");
 
             // Start the uptime counter
@@ -117,7 +117,7 @@ namespace FlawBOT
         }
 
         private IServiceProvider Services { get; }
-        private static EventId EventId { get; } = new EventId(1000, SharedData.Name);
+        private static EventId EventId { get; } = new(1000, SharedData.Name);
         private DiscordClient Client { get; }
         private CommandsNextExtension Commands { get; }
         private InteractivityExtension Interactivity { get; }

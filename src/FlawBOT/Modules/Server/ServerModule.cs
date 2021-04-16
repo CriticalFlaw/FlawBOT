@@ -12,14 +12,16 @@ using FlawBOT.Services;
 
 namespace FlawBOT.Modules
 {
-    [Group("server"), Aliases("guild")]
+    [Group("server")]
+    [Aliases("guild")]
     [Description("Commands for controlling server")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
     public class ServerModule : BaseCommandModule
     {
         #region COMMAND_AVATAR
 
-        [Command("avatar"), Aliases("setavatar")]
+        [Command("avatar")]
+        [Aliases("setavatar")]
         [Description("Set server avatar")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerAvatar(CommandContext ctx,
@@ -44,7 +46,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_INFO
 
-        [Command("info"), Aliases("i")]
+        [Command("info")]
+        [Aliases("i")]
         [Description("Retrieve server information")]
         public async Task GetServer(CommandContext ctx)
         {
@@ -75,7 +78,7 @@ namespace FlawBOT.Modules
             foreach (var emoji in ctx.Guild.Emojis)
                 emojis.Append(emoji.Value.Name + (!emoji.Equals(ctx.Guild.Emojis.Last()) ? ", " : string.Empty));
             if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_INFO
@@ -102,7 +105,8 @@ namespace FlawBOT.Modules
             int days = 7)
         {
             if (days < 1 || days > 30)
-                await BotServices.SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning)
+                await BotServices
+                    .SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning)
                     .ConfigureAwait(false);
             var count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
             if (count == 0)
@@ -126,11 +130,12 @@ namespace FlawBOT.Modules
 
         #region COMMAND_RENAME
 
-        [Command("rename"), Aliases("setname")]
+        [Command("rename")]
+        [Aliases("setname")]
         [Description("Set server name")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerName(CommandContext ctx,
-            [Description("New server name"), RemainingText]
+            [Description("New server name")] [RemainingText]
             string name = "")
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
@@ -149,11 +154,12 @@ namespace FlawBOT.Modules
 
         #region COMMAND_WARN
 
-        [Command("warn"), Aliases("scold")]
+        [Command("warn")]
+        [Aliases("scold")]
         [Description("Direct message user with a warning")]
         public async Task Warn(CommandContext ctx,
             [Description("Server user to warn")] DiscordMember member,
-            [Description("Warning message"), RemainingText]
+            [Description("Warning message")] [RemainingText]
             string reason = null)
         {
             var output = new DiscordEmbedBuilder()
@@ -174,8 +180,9 @@ namespace FlawBOT.Modules
                 return;
             }
 
-            await dm.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully sent a warning to " + Formatter.Bold(member.Username)).ConfigureAwait(false);
+            await dm.SendMessageAsync(output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully sent a warning to " + Formatter.Bold(member.Username))
+                .ConfigureAwait(false);
         }
 
         #endregion COMMAND_WARN

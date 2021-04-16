@@ -10,8 +10,8 @@ namespace FlawBOT
 {
     internal sealed class Program
     {
-        private static List<FlawBot> Shards { get; } = new List<FlawBot>();
-        private static CancellationTokenSource CancelTokenSource { get; } = new CancellationTokenSource();
+        private static List<FlawBot> Shards { get; } = new();
+        private static CancellationTokenSource CancelTokenSource { get; } = new();
 
         public static void Main(string[] args)
         {

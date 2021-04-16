@@ -10,7 +10,7 @@ namespace FlawBOT.Services
 {
     public class PokemonService : HttpHandler
     {
-        private static List<string> PokemonList { get; set; } = new List<string>();
+        private static List<string> PokemonList { get; set; } = new();
 
         /// <summary>
         ///     Call the Pokémon TCG API for a set of cards.

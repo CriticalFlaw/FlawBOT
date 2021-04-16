@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
         [Command("game")]
         [Description("Retrieve Steam game information")]
         public async Task SteamGame(CommandContext ctx,
-            [Description("Game to find on Steam"), RemainingText]
+            [Description("Game to find on Steam")] [RemainingText]
             string query = "Team Fortress 2")
         {
             try
@@ -59,7 +59,7 @@ namespace FlawBOT.Modules
                     genres.Append(genre.Description).Append(!genre.Equals(app.Genres.Last()) ? ", " : string.Empty);
                 output.AddField("Genres", genres.ToString() ?? "Unknown", true);
 
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
             }
             catch
             {
@@ -71,10 +71,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_USER
 
-        [Command("user"), Aliases("player")]
+        [Command("user")]
+        [Aliases("player")]
         [Description("Retrieve Steam user information")]
         public async Task SteamUser(CommandContext ctx,
-            [Description("User to find on Steam"), RemainingText]
+            [Description("User to find on Steam")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -111,7 +112,7 @@ namespace FlawBOT.Modules
                     output.WithColor(new DiscordColor("#79A14D"));
                 }
 
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
             }
         }
 
@@ -119,10 +120,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_CONNECT
 
-        [Command("connect"), Aliases("link")]
+        [Command("connect")]
+        [Aliases("link")]
         [Description("Format a game connection string into a link")]
         public async Task SteamLink(CommandContext ctx,
-            [Description("Connection string"), RemainingText]
+            [Description("Connection string")] [RemainingText]
             string link)
         {
             var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);

@@ -10,14 +10,15 @@ using FlawBOT.Services;
 
 namespace FlawBOT.Modules
 {
-    [Group("bot"),]
+    [Group("bot")]
     [Description("Basic commands for interacting with FlawBOT")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class BotModule : BaseCommandModule
     {
         #region COMMAND_INFO
 
-        [Command("info"), Aliases("about")]
+        [Command("info")]
+        [Aliases("about")]
         [Description("Retrieve FlawBOT information")]
         public async Task BotInfo(CommandContext ctx)
         {
@@ -27,13 +28,13 @@ namespace FlawBOT.Modules
                 .WithDescription(
                     "A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime",
-                    $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                    $"{(int) uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .AddField(":link: Links",
                     $"[Commands]({SharedData.GitHubLink}wiki) **|** [GitHub]({SharedData.GitHubLink})", true)
                 .WithFooter($"Thank you for using {SharedData.Name} (v{SharedData.Version})")
                 .WithUrl(SharedData.GitHubLink)
                 .WithColor(SharedData.DefaultColor);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_INFO
@@ -66,7 +67,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_PING
 
-        [Command("ping"), Aliases("pong")]
+        [Command("ping")]
+        [Aliases("pong")]
         [Description("Ping the FlawBOT client")]
         public async Task PingBot(CommandContext ctx)
         {
@@ -78,10 +80,12 @@ namespace FlawBOT.Modules
 
         #region COMMAND_REPORT
 
-        [Hidden, Command("report"), Aliases("issue")]
+        [Hidden]
+        [Command("report")]
+        [Aliases("issue")]
         [Description("Report a problem with FlawBOT to the developer. Please do not abuse.")]
         public async Task ReportIssue(CommandContext ctx,
-            [Description("Detailed description of the issue"), RemainingText]
+            [Description("Detailed description of the issue")] [RemainingText]
             string report)
         {
             if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
@@ -113,7 +117,7 @@ namespace FlawBOT.Modules
                     .AddField("Confirm",
                         $"[Click here to add this issue to GitHub]({SharedData.GitHubLink}/issues/new)")
                     .WithColor(SharedData.DefaultColor);
-                await dm.SendMessageAsync(embed: output.Build()).ConfigureAwait(false);
+                await dm.SendMessageAsync(output.Build()).ConfigureAwait(false);
                 await ctx.RespondAsync("Thank You! Your report has been submitted.").ConfigureAwait(false);
             }
         }
@@ -122,7 +126,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_UPTIME
 
-        [Command("uptime"), Aliases("time")]
+        [Command("uptime")]
+        [Aliases("time")]
         [Description("Retrieve the FlawBOT uptime")]
         public async Task Uptime(CommandContext ctx)
         {
@@ -139,10 +144,13 @@ namespace FlawBOT.Modules
 
         #region COMMAND_ACTIVITY
 
-        [RequireOwner, Hidden, Command("activity"), Aliases("setactivity")]
+        [RequireOwner]
+        [Hidden]
+        [Command("activity")]
+        [Aliases("setactivity")]
         [Description("Set FlawBOT's activity")]
         public async Task SetBotActivity(CommandContext ctx,
-            [Description("Name of the activity"), RemainingText]
+            [Description("Name of the activity")] [RemainingText]
             string activity)
         {
             if (string.IsNullOrWhiteSpace(activity))
@@ -153,14 +161,18 @@ namespace FlawBOT.Modules
 
             var game = new DiscordActivity(activity);
             await ctx.Client.UpdateStatusAsync(game).ConfigureAwait(false);
-            await ctx.RespondAsync($"{SharedData.Name} activity has been changed to Playing {game.Name}").ConfigureAwait(false);
+            await ctx.RespondAsync($"{SharedData.Name} activity has been changed to Playing {game.Name}")
+                .ConfigureAwait(false);
         }
 
         #endregion COMMAND_ACTIVITY
 
         #region COMMAND_AVATAR
 
-        [RequireOwner, Hidden, Command("avatar"), Aliases("setavatar", "pfp", "photo")]
+        [RequireOwner]
+        [Hidden]
+        [Command("avatar")]
+        [Aliases("setavatar", "pfp", "photo")]
         [Description("Set FlawBOT's avatar")]
         public async Task SetBotAvatar(CommandContext ctx,
             [Description("Image URL. Must be in jpg, png or img format.")]
@@ -176,10 +188,13 @@ namespace FlawBOT.Modules
 
         #region COMMAND_STATUS
 
-        [RequireOwner, Hidden, Command("status"), Aliases("setstatus", "state")]
+        [RequireOwner]
+        [Hidden]
+        [Command("status")]
+        [Aliases("setstatus", "state")]
         [Description("Set FlawBOT's status")]
         public async Task SetBotStatus(CommandContext ctx,
-            [Description("Activity Status. Online, Idle, DND or Offline"), RemainingText]
+            [Description("Activity Status. Online, Idle, DND or Offline")] [RemainingText]
             string status)
         {
             status ??= "ONLINE";
@@ -224,10 +239,13 @@ namespace FlawBOT.Modules
 
         #region COMMAND_USERNAME
 
-        [RequireOwner, Hidden, Command("username"), Aliases("setusername", "name", "setname", "nickname", "nick")]
+        [RequireOwner]
+        [Hidden]
+        [Command("username")]
+        [Aliases("setusername", "name", "setname", "nickname", "nick")]
         [Description("Set FlawBOT's username")]
         public async Task SetBotUsername(CommandContext ctx,
-            [Description("New bot username"), RemainingText]
+            [Description("New bot username")] [RemainingText]
             string name)
         {
             var oldName = ctx.Client.CurrentUser.Username;

@@ -16,7 +16,8 @@ namespace FlawBOT.Services
 {
     public class BotServices
     {
-        public static async Task SendResponseAsync(CommandContext ctx, string message, ResponseType type = ResponseType.Default)
+        public static async Task SendResponseAsync(CommandContext ctx, string message,
+            ResponseType type = ResponseType.Default)
         {
             message = type switch
             {
@@ -36,7 +37,7 @@ namespace FlawBOT.Services
                 .WithDescription(
                     $"{state}: {user.DisplayName}#{user.Discriminator}\nIdentifier: {user.Id}\nReason: {reason}\nIssued by: {ctx.Member.DisplayName}#{ctx.Member.Discriminator}")
                 .WithColor(DiscordColor.Green);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         public static bool CheckChannelName(string input)

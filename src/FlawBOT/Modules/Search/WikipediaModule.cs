@@ -15,10 +15,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_WIKIPEDIA
 
-        [Command("wiki"), Aliases("wikipedia")]
+        [Command("wiki")]
+        [Aliases("wikipedia")]
         [Description("Search Wikipedia for a given query")]
         public async Task Wikipedia(CommandContext ctx,
-            [Description("Query to search on Wikipedia"), RemainingText]
+            [Description("Query to search on Wikipedia")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -44,7 +45,7 @@ namespace FlawBOT.Modules
                 output.AddField(result.Title, $"[[Link]({result.Url.AbsoluteUri})] {desc}");
             }
 
-            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on Wikipedia", embed: output)
+            await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on Wikipedia", output)
                 .ConfigureAwait(false);
         }
 

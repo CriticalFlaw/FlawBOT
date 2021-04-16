@@ -14,10 +14,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_OMDB
 
-        [Command("omdb"), Aliases("imdb", "movie")]
+        [Command("omdb")]
+        [Aliases("imdb", "movie")]
         [Description("Retrieve a movie or TV show from OMDB")]
         public async Task Omdb(CommandContext ctx,
-            [Description("Movie or TV show to find on OMDB"), RemainingText]
+            [Description("Movie or TV show to find on OMDB")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -48,7 +49,7 @@ namespace FlawBOT.Modules
                         : "This is the last found movie on OMDB.")
                     .WithColor(DiscordColor.Goldenrod);
                 if (movie.Poster != "N/A") output.WithImageUrl(movie.Poster);
-                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Search.Length == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

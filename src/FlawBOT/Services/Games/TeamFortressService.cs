@@ -15,7 +15,7 @@ namespace FlawBOT.Services
     public class TeamFortressService : HttpHandler
     {
         private static SteamWebInterfaceFactory _steamInterface;
-        private static List<SchemaItem> ItemSchemaList { get; } = new List<SchemaItem>();
+        private static List<SchemaItem> ItemSchemaList { get; } = new();
 
         #region NEWS
 

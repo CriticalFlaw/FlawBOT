@@ -29,7 +29,8 @@ namespace FlawBOT.Common
 
                 case ChecksFailedException cfe:
                     await BotServices.SendResponseAsync(e.Context,
-                            $"Command {Formatter.Bold(e.Command.QualifiedName)} could not be executed.", ResponseType.Error)
+                            $"Command {Formatter.Bold(e.Command.QualifiedName)} could not be executed.",
+                            ResponseType.Error)
                         .ConfigureAwait(false);
                     foreach (var check in cfe.FailedChecks)
                         switch (check)
@@ -81,7 +82,8 @@ namespace FlawBOT.Common
                     break;
 
                 case UnauthorizedException:
-                    await BotServices.SendResponseAsync(e.Context, "One of us does not have the required permissions.", ResponseType.Warning);
+                    await BotServices.SendResponseAsync(e.Context, "One of us does not have the required permissions.",
+                        ResponseType.Warning);
                     break;
 
                 case NullReferenceException:

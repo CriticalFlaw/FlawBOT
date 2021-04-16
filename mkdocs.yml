@@ -1,0 +1,34 @@
+site_name: FlawBOT
+site_author: criticalflaw
+theme:
+    language: en
+    name: material
+    logo: resources/favicon.ico
+    favicon: resources/favicon.ico
+    palette:
+        scheme: slate
+        primary: indigo
+        accent: orange
+repo_name: GitHub
+site_url: https://www.flawbot.criticalflaw.ca/
+repo_url: https://github.com/CriticalFlaw/FlawBOT/
+nav:
+    - Home: 'index.md'
+    - Installation: 'install.md'
+    - Deployment: 'deploy.md'
+    - Commands: 'commands.md'
+markdown_extensions:
+    - admonition
+    - pymdownx.superfences
+plugins:
+    - search
+    - git-revision-date-localized:
+        type: date
+extra:
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/CriticalFlaw/FlawBOT
+        - icon: fontawesome/brands/twitter
+          link: https://twitter.com/CriticalFlaw_
+        - icon: fontawesome/brands/discord
+          link: https://discord.gg/hTdtK9vBhE

@@ -18,7 +18,7 @@ namespace FlawBOT.Modules
         [Command("news")]
         [Description("Retrieve the latest news articles from NewsAPI.org")]
         public async Task News(CommandContext ctx,
-            [Description("Article topic to find on Google News"), RemainingText]
+            [Description("Article topic to find on Google News")] [RemainingText]
             string query)
         {
             var results = await NewsService.GetNewsDataAsync(query).ConfigureAwait(false);
@@ -43,7 +43,7 @@ namespace FlawBOT.Modules
                 }
 
                 var message = await ctx
-                    .RespondAsync("Latest Google News articles from News API", embed: output.Build())
+                    .RespondAsync("Latest Google News articles from News API", output.Build())
                     .ConfigureAwait(false);
 
                 if (results.Articles.Count == 5) continue;

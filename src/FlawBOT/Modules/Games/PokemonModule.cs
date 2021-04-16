@@ -15,10 +15,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_POKEMON
 
-        [Command("pokemon"), Aliases("poke", "pk")]
+        [Command("pokemon")]
+        [Aliases("poke", "pk")]
         [Description("Retrieve a Pokémon card")]
         public async Task Pokemon(CommandContext ctx,
-            [Description("Name of the Pokémon"), RemainingText]
+            [Description("Name of the Pokémon")] [RemainingText]
             string query = "")
         {
             var results = await PokemonService.GetPokemonCardsAsync(query).ConfigureAwait(false);
@@ -54,7 +55,7 @@ namespace FlawBOT.Modules
                 foreach (var weakness in card.Weaknesses)
                     weaknesses.Append(weakness.Type);
                 output.AddField("Weaknesses", weaknesses.ToString() ?? "Unknown", true);
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Cards.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

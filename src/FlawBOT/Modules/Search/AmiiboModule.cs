@@ -14,10 +14,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_AMIIBO
 
-        [Command("amiibo"), Aliases("amib")]
+        [Command("amiibo")]
+        [Aliases("amib")]
         [Description("Retrieve Amiibo figurine information")]
         public async Task GetAmiibo(CommandContext ctx,
-            [Description("Name of the Amiibo figurine"), RemainingText]
+            [Description("Name of the Amiibo figurine")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -44,7 +45,7 @@ namespace FlawBOT.Modules
                         ? "Type 'next' within 10 seconds for the next amiibo"
                         : "This is the last found amiibo on the list.")
                     .WithColor(new DiscordColor("#E70009"));
-                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Amiibo.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

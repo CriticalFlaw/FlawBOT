@@ -13,18 +13,20 @@ using FlawBOT.Services;
 
 namespace FlawBOT.Modules
 {
-    [Group("channel"), Aliases("chn", "ch", "c")]
+    [Group("channel")]
+    [Aliases("chn", "ch", "c")]
     [Description("Commands for controlling channels")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class ChannelModule : BaseCommandModule
     {
         #region COMMAND_CATEGORY
 
-        [Command("category"), Aliases("createcategory", "newcategory", "ct")]
+        [Command("category")]
+        [Aliases("createcategory", "newcategory", "ct")]
         [Description("Create a new channel category")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task CreateCategory(CommandContext ctx,
-            [Description("New category name"), RemainingText]
+            [Description("New category name")] [RemainingText]
             string name)
         {
             if (!BotServices.CheckChannelName(name))
@@ -35,14 +37,16 @@ namespace FlawBOT.Modules
             }
 
             var category = await ctx.Guild.CreateChannelCategoryAsync(name.Trim()).ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully created category " + Formatter.Bold(category.Name)).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created category " + Formatter.Bold(category.Name))
+                .ConfigureAwait(false);
         }
 
         #endregion COMMAND_CATEGORY
 
         #region CHANNEL_CLEAN
 
-        [Command("clean"), Aliases("clear")]
+        [Command("clean")]
+        [Aliases("clear")]
         [Description("Remove channel messages")]
         [RequirePermissions(Permissions.ManageMessages)]
         public async Task CleanChannel(CommandContext ctx,
@@ -51,18 +55,20 @@ namespace FlawBOT.Modules
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
-            await ctx.RespondAsync(Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name).ConfigureAwait(false);
+            await ctx.RespondAsync(Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" +
+                                   ctx.Channel.Name).ConfigureAwait(false);
         }
 
         #endregion CHANNEL_CLEAN
 
         #region COMMAND_DELETE
 
-        [Command("delete"), Aliases("remove")]
+        [Command("delete")]
+        [Aliases("remove")]
         [Description("Delete a channel. If a channel isn't specified, the current one will be deleted")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task DeleteChannel(CommandContext ctx,
-            [Description("Channel to delete"), RemainingText]
+            [Description("Channel to delete")] [RemainingText]
             DiscordChannel channel = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
@@ -89,10 +95,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_INFO
 
-        [Command("info"), Aliases("i")]
+        [Command("info")]
+        [Aliases("i")]
         [Description("Print channel information. If a channel isn't specified, the current one will be used")]
         public Task GetChannel(CommandContext ctx,
-            [Description("Channel to retrieve information from"), RemainingText]
+            [Description("Channel to retrieve information from")] [RemainingText]
             DiscordChannel channel = null)
         {
             // Set the current channel for viewing if one isn't provided by the user
@@ -100,7 +107,8 @@ namespace FlawBOT.Modules
 
             // Check that the user has the permission in the channel to view its information
             if (!ctx.Member.PermissionsIn(channel).HasPermission(Permissions.AccessChannels))
-                return BotServices.SendResponseAsync(ctx, "You are not allowed to see this channel!", ResponseType.Warning);
+                return BotServices.SendResponseAsync(ctx, "You are not allowed to see this channel!",
+                    ResponseType.Warning);
 
             // Create the base embed message
             var output = new DiscordEmbedBuilder()
@@ -130,7 +138,7 @@ namespace FlawBOT.Modules
                     break;
             }
 
-            return ctx.RespondAsync(embed: output.Build());
+            return ctx.RespondAsync(output.Build());
         }
 
         #endregion COMMAND_INFO
@@ -143,24 +151,27 @@ namespace FlawBOT.Modules
         public async Task Purge(CommandContext ctx,
             [Description("Server user whose messages will be purged")]
             DiscordMember member,
-            [Description("Number of messages to purge"), RemainingText]
+            [Description("Number of messages to purge")] [RemainingText]
             int limit = 0)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == member.Id)).ConfigureAwait(false);
-            await ctx.RespondAsync($"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})").ConfigureAwait(false);
+            await ctx.RespondAsync(
+                    $"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})")
+                .ConfigureAwait(false);
         }
 
         #endregion CHANNEL_PURGE
 
         #region COMMAND_RENAME
 
-        [Command("rename"), Aliases("setname")]
+        [Command("rename")]
+        [Aliases("setname")]
         [Description("Rename a channel. If a channel isn't specified, the current one will be used")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task SetChannelName(CommandContext ctx,
             [Description("Channel to rename")] DiscordChannel channel,
-            [Description("New channel name"), RemainingText]
+            [Description("New channel name")] [RemainingText]
             string name)
         {
             if (!BotServices.CheckChannelName(name))
@@ -172,18 +183,20 @@ namespace FlawBOT.Modules
 
             var oldName = channel.Name;
             await channel.ModifyAsync(m => m.Name = name.Trim().Replace(" ", "-")).ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully renamed the channel " + Formatter.Bold(oldName) + " to " + Formatter.Bold(name)).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully renamed the channel " + Formatter.Bold(oldName) + " to " +
+                                   Formatter.Bold(name)).ConfigureAwait(false);
         }
 
         #endregion COMMAND_RENAME
 
         #region COMMAND_TEXT
 
-        [Command("text"), Aliases("createtext", "newtext", "ctc")]
+        [Command("text")]
+        [Aliases("createtext", "newtext", "ctc")]
         [Description("Create a new text channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task CreateText(CommandContext ctx,
-            [Description("New text channel name"), RemainingText]
+            [Description("New text channel name")] [RemainingText]
             string name = "")
         {
             if (!BotServices.CheckChannelName(name))
@@ -202,18 +215,20 @@ namespace FlawBOT.Modules
 
             var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-"))
                 .ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully created the text channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created the text channel " + Formatter.Bold(channel.Name))
+                .ConfigureAwait(false);
         }
 
         #endregion COMMAND_TEXT
 
         #region COMMAND_TOPIC
 
-        [Command("topic"), Aliases("settopic", "st")]
+        [Command("topic")]
+        [Aliases("settopic", "st")]
         [Description("Set current channel's topic")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task SetChannelTopic(CommandContext ctx,
-            [Description("New channel topic"), RemainingText]
+            [Description("New channel topic")] [RemainingText]
             string topic = "")
         {
             if (topic.Length > 1024)
@@ -225,18 +240,20 @@ namespace FlawBOT.Modules
 
             await ctx.Channel.ModifyAsync(chn => chn.Topic = topic).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(topic))
-                await ctx.RespondAsync("Successfully changed the channel topic to " + Formatter.Bold(topic)).ConfigureAwait(false);
+                await ctx.RespondAsync("Successfully changed the channel topic to " + Formatter.Bold(topic))
+                    .ConfigureAwait(false);
         }
 
         #endregion COMMAND_TOPIC
 
         #region COMMAND_VOICE
 
-        [Command("voice"), Aliases("createvoice", "newvoice", "cvc")]
+        [Command("voice")]
+        [Aliases("createvoice", "newvoice", "cvc")]
         [Description("Create a new voice channel")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task CreateVoice(CommandContext ctx,
-            [Description("New voice channel name"), RemainingText]
+            [Description("New voice channel name")] [RemainingText]
             string name = "")
         {
             if (!BotServices.CheckChannelName(name))
@@ -255,7 +272,8 @@ namespace FlawBOT.Modules
 
             var channel = await ctx.Guild.CreateVoiceChannelAsync(name.Trim().Replace(" ", "-"))
                 .ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully created the voice channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
+            await ctx.RespondAsync("Successfully created the voice channel " + Formatter.Bold(channel.Name))
+                .ConfigureAwait(false);
         }
 
         #endregion COMMAND_VOICE

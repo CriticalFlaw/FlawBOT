@@ -17,10 +17,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_POLL
 
-        [Command("poll"), Aliases("vote")]
+        [Command("poll")]
+        [Aliases("vote")]
         [Description("Run a Yay or Nay poll in the current channel")]
         public async Task Poll(CommandContext ctx,
-            [Description("Question to be polled"), RemainingText]
+            [Description("Question to be polled")] [RemainingText]
             string question)
         {
             if (string.IsNullOrWhiteSpace(question))
@@ -40,7 +41,7 @@ namespace FlawBOT.Modules
             };
             var duration = new TimeSpan(0, 3, 10);
             var message = await ctx
-                .RespondAsync(embed: new DiscordEmbedBuilder()
+                .RespondAsync(new DiscordEmbedBuilder()
                     .WithDescription(question + $"\nThis poll ends in {duration.Minutes} minutes.").Build())
                 .ConfigureAwait(false);
             var results = await interactivity.DoPollAsync(message, pollOptions, PollBehaviour.DeleteEmojis, duration)
@@ -53,7 +54,7 @@ namespace FlawBOT.Modules
                 .WithFooter("The voting has ended.");
             foreach (var vote in results)
                 output.AddField(vote.Emoji.Name, vote.Voted.Count.ToString(), true);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_POLL

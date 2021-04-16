@@ -15,10 +15,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_DICTIONARY
 
-        [Command("dictionary"), Aliases("define", "def", "dic")]
+        [Command("dictionary")]
+        [Aliases("define", "def", "dic")]
         [Description("Retrieve an Urban Dictionary definition of a word or phrase")]
         public async Task UrbanDictionary(CommandContext ctx,
-            [Description("Query to pass to Urban Dictionary"), RemainingText]
+            [Description("Query to pass to Urban Dictionary")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -48,7 +49,7 @@ namespace FlawBOT.Modules
                         ? "Type 'next' within 10 seconds for the next definition"
                         : "This is the last found definition on the list.")
                     .WithColor(new DiscordColor("#1F2439"));
-                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.List.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

@@ -14,10 +14,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_TWITCH
 
-        [Command("twitch"), Aliases("stream")]
+        [Command("twitch")]
+        [Aliases("stream")]
         [Description("Retrieve Twitch stream information")]
         public async Task Twitch(CommandContext ctx,
-            [Description("Channel to find on Twitch"), RemainingText]
+            [Description("Channel to find on Twitch")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -45,7 +46,7 @@ namespace FlawBOT.Modules
                         ? "Type 'next' within 10 seconds for the next streamer"
                         : "This is the last found streamer on the list.")
                     .WithColor(new DiscordColor("#6441A5"));
-                var message = await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Total == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

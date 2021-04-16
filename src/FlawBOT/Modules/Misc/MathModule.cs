@@ -14,7 +14,8 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_MATH
 
-        [Command("math"), Aliases("calculate")]
+        [Command("math")]
+        [Aliases("calculate")]
         [Description("Perform a basic math operation")]
         public async Task Math(CommandContext ctx,
             [Description("First operand")] double num1,
@@ -34,7 +35,7 @@ namespace FlawBOT.Modules
                 var output = new DiscordEmbedBuilder()
                     .WithDescription($":1234: The answer is {result:#,##0.00}")
                     .WithColor(DiscordColor.CornflowerBlue);
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
             }
             catch
             {
@@ -47,7 +48,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_SUM
 
-        [Command("sum"), Aliases("total")]
+        [Command("sum")]
+        [Aliases("total")]
         [Description("Calculate the sum of all inputted values")]
         public async Task Sum(CommandContext ctx,
             [Description("Numbers to sum up")] params int[] args)
@@ -55,7 +57,7 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder()
                 .WithDescription($":1234: The sum is {args.Sum():#,##0}")
                 .WithColor(DiscordColor.CornflowerBlue);
-            await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
 
         #endregion COMMAND_SUM

@@ -16,10 +16,11 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_SPEEDRUN
 
-        [Command("speedrun"), Aliases("game", "run")]
+        [Command("speedrun")]
+        [Aliases("game", "run")]
         [Description("Retrieve a game from Speedrun.com")]
         public async Task Speedrun(CommandContext ctx,
-            [Description("Game to search on Speedrun.com"), RemainingText]
+            [Description("Game to search on Speedrun.com")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -57,7 +58,7 @@ namespace FlawBOT.Modules
                     foreach (var x in categories.Data)
                         category.Append($"[{x.Name}]({x.Weblink}) **|** ");
                 output.AddField("Categories", category.ToString() ?? "Unknown");
-                await ctx.RespondAsync(embed: output.Build()).ConfigureAwait(false);
+                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Data.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
