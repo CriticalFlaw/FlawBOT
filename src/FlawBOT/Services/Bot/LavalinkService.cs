@@ -6,7 +6,6 @@ using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using DSharpPlus.Net;
 using Emzi0767.Utilities;
-using FlawBOT.Common;
 using Microsoft.Extensions.Logging;
 
 namespace FlawBOT.Services

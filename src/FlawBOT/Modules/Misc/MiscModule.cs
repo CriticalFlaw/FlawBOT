@@ -39,6 +39,7 @@ namespace FlawBOT.Modules
         [Description("Retrieve a random cat fact")]
         public async Task GetCat(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
             var results = MiscService.GetCatFactAsync().Result;
             var output = new DiscordEmbedBuilder()
                 .WithFooter($"Fact: {JObject.Parse(results)["fact"]}")
@@ -94,6 +95,7 @@ namespace FlawBOT.Modules
         [Description("Retrieve a random dog photo")]
         public async Task GetDog(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
             var results = MiscService.GetDogPhotoAsync().Result;
             if (results.Status != "success")
             {

@@ -9,13 +9,12 @@ namespace FlawBOT.Common
 {
     public class BotSettings
     {
+        public DiscordColor DefaultColor = new("#00FF7F");
         [JsonPropertyName("Name")] public string Name;
         [JsonPropertyName("Prefix")] public string Prefix;
         [JsonPropertyName("ShardCount")] public int ShardCount;
-        [JsonPropertyName("Lavalink")] public bool UseLavalink;
         [JsonPropertyName("Tokens")] public Tokens Tokens;
-
-        public DiscordColor DefaultColor = new("#00FF7F");
+        [JsonPropertyName("Lavalink")] public bool UseLavalink;
         public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
         public string GitHubLink { get; } = Resources.URL_BOT_GitHub;
         public string InviteLink { get; } = Resources.URL_BOT_Invite;
@@ -25,8 +24,7 @@ namespace FlawBOT.Common
 
     public class Tokens
     {
-        [JsonProperty("Discord")]
-        public string DiscordToken { get; set; }
+        [JsonProperty("Discord")] public string DiscordToken { get; set; }
 
         [JsonProperty("Steam", NullValueHandling = NullValueHandling.Ignore)]
         public string SteamToken { get; set; }

@@ -23,6 +23,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await AmiiboService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {
@@ -43,7 +44,7 @@ namespace FlawBOT.Modules
                     .AddField(":flag_au: Release:", amiibo.ReleaseDate.Australian, true)
                     .WithImageUrl(amiibo.Image)
                     .WithFooter(!amiibo.Equals(results.Amiibo.Last())
-                        ? "Type 'next' within 10 seconds for the next amiibo"
+                        ? "Type 'next' within 10 seconds for the next amiibo."
                         : "This is the last found amiibo on the list.")
                     .WithColor(new DiscordColor("#E70009"));
                 var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
@@ -68,6 +69,7 @@ namespace FlawBOT.Modules
             [Description("Name of the Pokémon")] [RemainingText]
             string query = "")
         {
+            await ctx.TriggerTypingAsync();
             var results = await PokemonService.GetPokemonCardsAsync(query).ConfigureAwait(false);
             if (results.Cards.Count == 0)
             {
@@ -87,7 +89,7 @@ namespace FlawBOT.Modules
                     .AddField("Ability", card.Ability != null ? card.Ability.Name : "Unknown", true)
                     .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
                     .WithFooter(!string.Equals(card.Id, results.Cards.Last().Id)
-                        ? "Type 'next' within 10 seconds for the next Pokémon"
+                        ? "Type 'next' within 10 seconds for the next Pokémon."
                         : "This is the last found Pokémon on the list.")
                     .WithColor(DiscordColor.Gold);
 

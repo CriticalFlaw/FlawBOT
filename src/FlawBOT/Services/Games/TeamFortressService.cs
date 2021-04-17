@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FlawBOT.Common;
 using FlawBOT.Properties;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Models.GameEconomy;
@@ -41,7 +40,8 @@ namespace FlawBOT.Services
 
         public static async Task<List<Creator>> GetContentCreatorAsync(ulong query)
         {
-            return await new TeamworkClient(Program.Settings.Tokens.TeamworkToken).GetYouTubeCreatorAsync(query.ToString())
+            return await new TeamworkClient(Program.Settings.Tokens.TeamworkToken)
+                .GetYouTubeCreatorAsync(query.ToString())
                 .ConfigureAwait(false);
         }
 

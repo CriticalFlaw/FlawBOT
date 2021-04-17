@@ -23,6 +23,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
             if (results.ResultType == "no_results" || results.List.Count == 0)
             {
@@ -46,7 +47,7 @@ namespace FlawBOT.Modules
                     .AddField(":thumbsdown:", definition.ThumbsDown.ToString(), true)
                     .WithUrl(definition.Permalink)
                     .WithFooter(!definition.Equals(results.List.Last())
-                        ? "Type 'next' within 10 seconds for the next definition"
+                        ? "Type 'next' within 10 seconds for the next definition."
                         : "This is the last found definition on the list.")
                     .WithColor(new DiscordColor("#1F2439"));
                 var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);

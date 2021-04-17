@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using FlawBOT.Common;
 using TwitchLib.Api;
 using TwitchLib.Api.V5.Models.Search;
 

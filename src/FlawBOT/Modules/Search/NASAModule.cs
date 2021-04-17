@@ -18,6 +18,7 @@ namespace FlawBOT.Modules
         [Description("Retrieve NASA's Astronomy Picture of the Day")]
         public async Task Nasa(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
             var results = await NasaService.GetNasaImageAsync().ConfigureAwait(false);
             if (results is null)
             {

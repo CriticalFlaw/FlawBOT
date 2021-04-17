@@ -29,6 +29,7 @@ namespace FlawBOT.Modules
                 return;
             }
 
+            await ctx.TriggerTypingAsync();
             var results = WorldService.GetIpLocationAsync(ip).Result;
             if (results.Type == null)
             {
@@ -57,6 +58,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await WorldService.GetWeatherDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {

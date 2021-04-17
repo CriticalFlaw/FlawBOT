@@ -29,6 +29,7 @@ namespace FlawBOT.Modules
         {
             try
             {
+                await ctx.TriggerTypingAsync();
                 var app = SteamService.GetSteamAppAsync(query).Result;
                 if (app is null)
                 {
@@ -79,6 +80,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var profile = SteamService.GetSteamProfileAsync(query).Result;
             if (profile is null)
             {
@@ -127,6 +129,7 @@ namespace FlawBOT.Modules
             [Description("Connection string")] [RemainingText]
             string link)
         {
+            await ctx.TriggerTypingAsync();
             var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
             if (regex.Success)
                 await ctx.RespondAsync(

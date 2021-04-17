@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using FlawBOT.Common;
 using OMDbSharp;
 using OMDbSharp.Objects;
 

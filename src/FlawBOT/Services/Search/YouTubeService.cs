@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Properties;
 using Google.Apis.Services;

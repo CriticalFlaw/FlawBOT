@@ -130,10 +130,13 @@ namespace FlawBOT
         public async Task RunAsync()
         {
             // Update any other services that are being used.
-            Client.Logger.LogInformation(EventId, "Loading...");
+            Client.Logger.LogInformation(EventId, "Initializing...");
             await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
             await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
+
+            // Send a notification to load Lavalink
+            Client.Logger.LogInformation(EventId, "Make sure Lavalink is running!");
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);

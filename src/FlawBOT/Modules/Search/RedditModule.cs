@@ -41,6 +41,7 @@ namespace FlawBOT.Modules
         private static async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = RedditService.GetResults(query, category);
             if (results is null || results.Count == 0)
             {

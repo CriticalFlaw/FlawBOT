@@ -22,6 +22,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = OmdbService.GetMovieListAsync(query.Replace(" ", "+")).Result;
             if (!results.Search.Any())
             {
@@ -45,7 +46,7 @@ namespace FlawBOT.Modules
                     .AddField("Directors", movie.Director)
                     .AddField("Actors", movie.Actors)
                     .WithFooter(!movie.Title.Equals(results.Search.Last().Title)
-                        ? "Type 'next' within 10 seconds for the next movie"
+                        ? "Type 'next' within 10 seconds for the next movie."
                         : "This is the last found movie on OMDB.")
                     .WithColor(DiscordColor.Goldenrod);
                 if (movie.Poster != "N/A") output.WithImageUrl(movie.Poster);

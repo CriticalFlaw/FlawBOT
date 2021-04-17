@@ -32,6 +32,7 @@ namespace FlawBOT.Modules
             }
 
             // Build the poll question, duration and options.
+            await ctx.TriggerTypingAsync();
             question = ctx.User.Mention + " asked: " + question;
             var interactivity = ctx.Client.GetInteractivity();
             var pollOptions = new List<DiscordEmoji>

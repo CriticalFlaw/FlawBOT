@@ -24,6 +24,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result;
             if (results is null || results.Data.Count == 0)
             {

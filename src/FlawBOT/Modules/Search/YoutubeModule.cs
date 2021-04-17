@@ -22,6 +22,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await new YoutubeService().GetEmbeddedResults(query, 5, "channel").ConfigureAwait(false);
             await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", results)
                 .ConfigureAwait(false);
@@ -39,6 +40,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await new YoutubeService().GetEmbeddedResults(query, 5, "playlist").ConfigureAwait(false);
             await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", results)
                 .ConfigureAwait(false);
@@ -56,6 +58,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await new YoutubeService().GetFirstVideoResultAsync(query).ConfigureAwait(false);
             await ctx.RespondAsync(results).ConfigureAwait(false);
         }
@@ -72,6 +75,7 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = await new YoutubeService().GetEmbeddedResults(query, 5, "video").ConfigureAwait(false);
             await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on YouTube", results)
                 .ConfigureAwait(false);

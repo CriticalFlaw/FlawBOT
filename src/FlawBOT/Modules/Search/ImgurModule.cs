@@ -22,6 +22,7 @@ namespace FlawBOT.Modules
             [Description("Search query to pass to Imgur")] [RemainingText]
             string query)
         {
+            await ctx.TriggerTypingAsync();
             var results = ImgurService.GetImgurGalleryAsync(query).Result;
             var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#89C623"));
 

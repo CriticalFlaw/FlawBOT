@@ -21,6 +21,7 @@ namespace FlawBOT.Modules
             [Description("Article topic to find on Google News")] [RemainingText]
             string query)
         {
+            await ctx.TriggerTypingAsync();
             var results = await NewsService.GetNewsDataAsync(query).ConfigureAwait(false);
             if (results.Status != "ok")
             {

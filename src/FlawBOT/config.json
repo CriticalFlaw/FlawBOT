@@ -1,7 +1,6 @@
 {
   "Name": "FlawBOT",
   "Prefix": ".",
-  "Color": "#00FF7F",
   "ShardCount": 1,
   "Lavalink": false,
   "Tokens": {
