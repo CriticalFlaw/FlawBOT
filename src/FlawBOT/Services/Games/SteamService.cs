@@ -34,7 +34,7 @@ namespace FlawBOT.Services
                     .First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
                 var factoryOptions = new SteamWebInterfaceFactoryOptions
                 {
-                    SteamWebApiKey = SharedData.Tokens.SteamToken
+                    SteamWebApiKey = Program.Settings.Tokens.SteamToken
                 };
                 return await new SteamWebInterfaceFactory(Options.Create(factoryOptions)).CreateSteamStoreInterface()
                     .GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
@@ -49,7 +49,7 @@ namespace FlawBOT.Services
         {
             try
             {
-                _steamInterface = new SteamWebInterfaceFactory(SharedData.Tokens.SteamToken);
+                _steamInterface = new SteamWebInterfaceFactory(Program.Settings.Tokens.SteamToken);
                 SteamAppList = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient())
                     .GetAppListAsync();
                 return true;
@@ -72,7 +72,7 @@ namespace FlawBOT.Services
         {
             try
             {
-                _steamInterface = new SteamWebInterfaceFactory(SharedData.Tokens.SteamToken);
+                _steamInterface = new SteamWebInterfaceFactory(Program.Settings.Tokens.SteamToken);
                 var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 var userId = ulong.TryParse(query, out var steamId) ? steamId : 0;
                 if (userId != 0) return await steam.GetPlayerSummaryAsync(userId).ConfigureAwait(false);

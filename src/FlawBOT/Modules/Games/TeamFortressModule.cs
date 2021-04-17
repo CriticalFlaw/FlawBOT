@@ -201,7 +201,7 @@ namespace FlawBOT.Modules
                 var user = results.FirstOrDefault();
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(user?.Name)
-                    .WithDescription("Main Class: " + user?.Main?.ToString().ToUpper())
+                    .WithDescription("Main Class: " + user?.Main?.ToString()?.ToUpper())
                     .WithThumbnail(user?.ThumbnailUrl)
                     .WithUrl(user?.Link)
                     .WithColor(new DiscordColor("#E7B53B"))

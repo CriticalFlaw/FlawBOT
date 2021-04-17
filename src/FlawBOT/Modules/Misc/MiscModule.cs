@@ -64,7 +64,7 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder()
                 .WithDescription(ctx.User.Username + " flipped a coin and got " +
                                  Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
-                .WithColor(SharedData.DefaultColor);
+                .WithColor(Program.Settings.DefaultColor);
             return ctx.RespondAsync(output.Build());
         }
 
@@ -81,7 +81,7 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder()
                 .WithDescription(ctx.User.Username + " rolled a die and got " +
                                  Formatter.Bold(random.Next(1, 7).ToString()))
-                .WithColor(SharedData.DefaultColor);
+                .WithColor(Program.Settings.DefaultColor);
             return ctx.RespondAsync(output.Build());
         }
 

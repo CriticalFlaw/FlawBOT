@@ -115,7 +115,7 @@ namespace FlawBOT.Services
 
         public async Task CreatePlayerAsync(DiscordChannel channel)
         {
-            if (Player != null && Player.IsConnected) return;
+            if (Player is {IsConnected: true}) return;
 
             Player = await LavaLink.Node.ConnectAsync(channel);
 

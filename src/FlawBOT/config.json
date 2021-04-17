@@ -1,13 +1,19 @@
 {
-  "prefix": ".",
-  "discord": null,
-  "steam": null,
-  "imgur": null,
-  "omdb": null,
-  "twitch": null,
-  "nasa": null,
-  "teamworktf": null,
-  "news": null,
-  "weather": null,
-  "youtube": null
+  "Name": "FlawBOT",
+  "Prefix": ".",
+  "Color": "#00FF7F",
+  "ShardCount": 1,
+  "Lavalink": false,
+  "Tokens": {
+    "Discord": null,
+    "Steam": null,
+    "Imgur": null,
+    "OMDB": null,
+    "Twitch": null,
+    "NASA": null,
+    "TeamworkTF": null,
+    "News": null,
+    "Weather": null,
+    "YouTube": null
+  }
 }

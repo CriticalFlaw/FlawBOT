@@ -119,7 +119,7 @@ namespace FlawBOT.Modules
                 .AddField("NSFW", channel.IsNSFW ? "Yes" : "No", true)
                 .WithThumbnail(ctx.Guild.IconUrl)
                 .WithFooter("Created on " + channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture))
-                .WithColor(SharedData.DefaultColor);
+                .WithColor(Program.Settings.DefaultColor);
 
             // Add additional fields depending on the channel type
             switch (channel.Type)

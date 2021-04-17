@@ -9,13 +9,13 @@ namespace FlawBOT.Services
     {
         public static async Task<Item> GetMovieDataAsync(string query)
         {
-            return await new OMDbClient(SharedData.Tokens.OmdbToken, false)
+            return await new OMDbClient(Program.Settings.Tokens.OmdbToken, false)
                 .GetItemByTitle(query.ToLowerInvariant().Replace("&", "%26")).ConfigureAwait(false);
         }
 
         public static async Task<ItemList> GetMovieListAsync(string query)
         {
-            return await new OMDbClient(SharedData.Tokens.OmdbToken, false)
+            return await new OMDbClient(Program.Settings.Tokens.OmdbToken, false)
                 .GetItemList(query.ToLowerInvariant().Replace("&", "%26")).ConfigureAwait(false);
         }
     }

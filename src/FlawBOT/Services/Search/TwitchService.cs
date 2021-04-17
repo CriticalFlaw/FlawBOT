@@ -10,7 +10,7 @@ namespace FlawBOT.Services
         public static async Task<SearchStreams> GetTwitchDataAsync(string query)
         {
             var service = new TwitchAPI();
-            service.Settings.ClientId = SharedData.Tokens.TwitchToken;
+            service.Settings.ClientId = Program.Settings.Tokens.TwitchToken;
             return await service.V5.Search.SearchStreamsAsync(query).ConfigureAwait(false);
         }
     }

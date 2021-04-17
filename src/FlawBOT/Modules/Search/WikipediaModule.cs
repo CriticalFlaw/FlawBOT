@@ -24,7 +24,7 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             var results = WikipediaService.GetWikipediaDataAsync(query);
-            if (results.Error != null || results.Search.Count == 0)
+            if (results.Error != null || results.Search?.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, ResponseType.Missing)
                     .ConfigureAwait(false);
@@ -35,15 +35,16 @@ namespace FlawBOT.Modules
                 .WithFooter("Articles retrieved using WikipediaNET")
                 .WithColor(new DiscordColor("#E7B53B"));
 
-            foreach (var result in results.Search)
-            {
-                var desc = Regex.Replace(
-                    result.Snippet.Length <= 300
-                        ? result.Snippet
-                        : result.Snippet.Substring(0, 150) + "...", "<[^>]*>", "") ?? "Article has not content.";
+            if (results.Search != null)
+                foreach (var result in results.Search)
+                {
+                    var desc = Regex.Replace(
+                        result.Snippet.Length <= 300
+                            ? result.Snippet
+                            : result.Snippet[..150] + "...", "<[^>]*>", "") ?? "Article has not content.";
 
-                output.AddField(result.Title, $"[[Link]({result.Url.AbsoluteUri})] {desc}");
-            }
+                    output.AddField(result.Title, $"[[Link]({result.Url.AbsoluteUri})] {desc}");
+                }
 
             await ctx.RespondAsync("Search results for " + Formatter.Bold(query) + " on Wikipedia", output)
                 .ConfigureAwait(false);

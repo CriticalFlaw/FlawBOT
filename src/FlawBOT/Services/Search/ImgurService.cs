@@ -15,7 +15,7 @@ namespace FlawBOT.Services
             GallerySortOrder order = GallerySortOrder.Top, TimeWindow time = TimeWindow.All)
         {
             var random = new Random();
-            var imgur = new ImgurClient(SharedData.Tokens.ImgurToken);
+            var imgur = new ImgurClient(Program.Settings.Tokens.ImgurToken);
             var endpoint = new GalleryEndpoint(imgur);
             var gallery = string.IsNullOrWhiteSpace(query)
                 ? (await endpoint.GetRandomGalleryAsync().ConfigureAwait(false)).ToList()

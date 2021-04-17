@@ -367,6 +367,15 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://www.flawbot.criticalflaw.ca/.
+        /// </summary>
+        internal static string URL_BOT_Docs {
+            get {
+                return ResourceManager.GetString("URL_BOT_Docs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://github.com/CriticalFlaw/FlawBOT/.
         /// </summary>
         internal static string URL_BOT_GitHub {

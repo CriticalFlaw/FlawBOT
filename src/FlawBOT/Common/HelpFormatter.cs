@@ -19,7 +19,7 @@ namespace FlawBOT.Common
         {
             _output = new DiscordEmbedBuilder()
                 .WithColor(DiscordColor.Turquoise)
-                .WithUrl(SharedData.GitHubLink + "wiki");
+                .WithUrl(Program.Settings.GitHubLink + "wiki");
         }
 
         public override CommandHelpMessage Build()

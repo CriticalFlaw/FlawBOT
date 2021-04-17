@@ -21,7 +21,7 @@ namespace FlawBOT.Services
             try
             {
                 var results = await Http
-                    .GetStringAsync(string.Format(Resources.URL_Weather, SharedData.Tokens.WeatherToken, query))
+                    .GetStringAsync(string.Format(Resources.URL_Weather, Program.Settings.Tokens.WeatherToken, query))
                     .ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<WeatherData>(results);
             }

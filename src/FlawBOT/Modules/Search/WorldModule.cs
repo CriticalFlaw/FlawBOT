@@ -73,7 +73,7 @@ namespace FlawBOT.Modules
                     $"{results.Current.Temperature:F1}°C / {format(results.Current.Temperature):F1}°F", true)
                 .AddField(":droplet: Humidity", $"{results.Current.Humidity}%", true)
                 .AddField(":clock1: Local Time", results.Location.LocalTime, true)
-                .WithColor(SharedData.DefaultColor);
+                .WithColor(Program.Settings.DefaultColor);
             await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
         }
     }
