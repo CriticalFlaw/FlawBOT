@@ -11,28 +11,19 @@
 </p>
 
 <!-- CONTENT -->
-[![banner][banner-image]]
-[![version][version-badge]]
-[![build][build-badge][build-link]]
-[![quality][quality-badge][quality-link]]
 
-A Discord bot written in C# using the [DSharpPlus][dsharp-link] library. This bot is not being hosted online, however you're welcome to fork this repository and host it yourself or reuse the code for your own bot, as long as you credit it properly. 
-
-## Invite
+### Invite
 [Click here to invite FlawBOT to your server][invite-link]. Please note that the bot will only be online periodically for testing purposes.
 
-## Installation
+### Installation
 To run your own instance of FlawBOT, [clone this repository][clone-link] or [download the release package][release-link] and modify the provided **config.json** file, adding the API tokens. If you're cloning the repository, use [Visual Studio 2019][vs-link] to compile the project. 
 
-## Running FlawBOT
-As of version 3.0, FlawBOT requires a [Lavalink][lava-link] node to be running in order to play music and not display lavalink-related errors in console. `lavalink.jar` and `application.yml` are included in the project directory, so all you have to do is open the command prompt and launch lavalink with the command `java -jar Lavalink.jar` (be sure to install [Java 13 or later][java-link].
+### Running FlawBOT
+As of version 3.0, FlawBOT requires a [Lavalink][lava-link] node to be running in order to play music and not display lavalink-related errors in console. `lavalink.jar` and `application.yml` are included in the project directory, so all you have to do is open the command prompt and launch lavalink with the command `java -jar Lavalink.jar` (be sure to install [Java 13 or later][java-link]).
 
-## Documentation
-For more information on the project, including the complete list of commands can be found [here][docs-link].
-
-## API Tokens
+### API Tokens
 * [Discord][api-discord] (*required*)
-* [Steam](
+* [Steam][api-steam]
 * [Imgur][api-imgur]
 * [OMDB][api-omdb]
 * [Twitch][api-twitch]
@@ -41,6 +32,11 @@ For more information on the project, including the complete list of commands can
 * [News API][api-news]
 * [WeatherStack][api-weather]
 * [YouTube][api-youtube]
+
+<!-- BADGES -->
+![version][version-badge]
+[![build][build-badge]][build-link]
+[![quality][quality-badge]][quality-link]
 
 <!-- MARKDOWN LINKS -->
 [banner-image]: https://i.imgur.com/YlbST5I.jpg

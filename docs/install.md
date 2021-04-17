@@ -4,9 +4,11 @@ Follow these steps to setup and run FlawBOT on your local machine.
 2. Modify the included **config.json** file, adding your API tokens (see list below).
 3. Open and compile the project solution using [Visual Studio 2019][vs-link]. 
 
+---
+
 ## API Tokens
 * [Discord][api-discord] (*required*)
-* [Steam](
+* [Steam][api-steam]
 * [Imgur][api-imgur]
 * [OMDB][api-omdb]
 * [Twitch][api-twitch]

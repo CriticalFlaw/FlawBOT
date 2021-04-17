@@ -16,7 +16,12 @@ nav:
     - Home: 'index.md'
     - Installation: 'install.md'
     - Deployment: 'deploy.md'
-    - Commands: 'commands.md'
+    - Modules:
+        - Main: 'modules/bot.md'
+        - Media: 'modules/media.md'
+        - Misc: 'modules/misc.md'
+        - Music: 'modules/music.md'
+        - Server: 'modules/server.md'
 markdown_extensions:
     - admonition
     - pymdownx.superfences
