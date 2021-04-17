@@ -7,10 +7,10 @@ namespace FlawBOT.Services
 {
     public class NasaService : HttpHandler
     {
-        public static async Task<NasaData> GetNasaImageAsync()
+        public static async Task<NasaData> GetNasaImageAsync(string token)
         {
             var results = await Http
-                .GetStringAsync(string.Format(Resources.URL_NASA, Program.Settings.Tokens.NasaToken))
+                .GetStringAsync(string.Format(Resources.URL_NASA, token))
                 .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<NasaData>(results);
         }

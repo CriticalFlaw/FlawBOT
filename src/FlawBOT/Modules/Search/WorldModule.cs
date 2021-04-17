@@ -59,7 +59,8 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var results = await WorldService.GetWeatherDataAsync(query).ConfigureAwait(false);
+            var results = await WorldService.GetWeatherDataAsync(Program.Settings.Tokens.WeatherToken, query)
+                .ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_LOCATION, ResponseType.Missing)

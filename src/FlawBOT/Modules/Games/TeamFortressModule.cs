@@ -78,7 +78,9 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
+            var results = await TeamFortressService
+                .GetMapStatsAsync(Program.Settings.Tokens.TeamworkToken, query.ToLowerInvariant())
+                .ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -120,7 +122,8 @@ namespace FlawBOT.Modules
 
             if (results.GameModes.Count > 0)
             {
-                var desc = TeamFortressService.GetGameModeInfoAsync(results.GameModes.FirstOrDefault()).Result;
+                var desc = TeamFortressService.GetGameModeInfoAsync(Program.Settings.Tokens.TeamworkToken,
+                    results.GameModes.FirstOrDefault()).Result;
                 output.WithDescription(desc.Title + " - " + desc.Description);
                 output.WithColor(new DiscordColor($"#{desc.Color}"));
             }
@@ -139,7 +142,8 @@ namespace FlawBOT.Modules
             int query = 0)
         {
             await ctx.TriggerTypingAsync();
-            var results = await TeamFortressService.GetNewsArticlesAsync(query).ConfigureAwait(false);
+            var results = await TeamFortressService.GetNewsArticlesAsync(Program.Settings.Tokens.TeamworkToken, query)
+                .ConfigureAwait(false);
             if (results is null || results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -194,7 +198,8 @@ namespace FlawBOT.Modules
                 return;
             }
 
-            var results = await TeamFortressService.GetContentCreatorAsync(steamId.Data).ConfigureAwait(false);
+            var results = await TeamFortressService
+                .GetContentCreatorAsync(Program.Settings.Tokens.TeamworkToken, steamId.Data).ConfigureAwait(false);
             if (results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -253,7 +258,8 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var results = await TeamFortressService.GetServersByGameModeAsync(query.Trim().Replace(' ', '-'))
+            var results = await TeamFortressService
+                .GetServersByGameModeAsync(Program.Settings.Tokens.TeamworkToken, query.Trim().Replace(' ', '-'))
                 .ConfigureAwait(false);
             if (results is null)
             {
@@ -280,7 +286,8 @@ namespace FlawBOT.Modules
                     .WithFooter("Type 'next' within 10 seconds for the next server.")
                     .WithColor(new DiscordColor("#E7B53B"));
 
-                var thumbnailUrl = await TeamFortressService.GetMapThumbnailAsync(server.MapName).ConfigureAwait(false);
+                var thumbnailUrl = await TeamFortressService
+                    .GetMapThumbnailAsync(Program.Settings.Tokens.TeamworkToken, server.MapName).ConfigureAwait(false);
                 output.WithImageUrl(thumbnailUrl.Name);
 
                 var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
@@ -310,7 +317,9 @@ namespace FlawBOT.Modules
             }
 
             await ctx.RespondAsync(string.Format(Resources.URL_Steam_Connect, address)).ConfigureAwait(false);
-            await ctx.RespondAsync(TeamFortressService.GetServerInfo(address.ToString())).ConfigureAwait(false);
+            await ctx.RespondAsync(
+                    TeamFortressService.GetServerInfo(Program.Settings.Tokens.TeamworkToken, address.ToString()))
+                .ConfigureAwait(false);
         }
 
         [Command("list")]
@@ -319,7 +328,8 @@ namespace FlawBOT.Modules
         public async Task Tf2ServerList(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var results = await TeamFortressService.GetCustomServerListsAsync().ConfigureAwait(false);
+            var results = await TeamFortressService.GetCustomServerListsAsync(Program.Settings.Tokens.TeamworkToken)
+                .ConfigureAwait(false);
             results = results.OrderBy(_ => new Random().Next()).ToList();
             while (results.Count > 0)
             {

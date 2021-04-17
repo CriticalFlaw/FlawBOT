@@ -19,7 +19,7 @@ namespace FlawBOT.Modules
         public async Task Nasa(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            var results = await NasaService.GetNasaImageAsync().ConfigureAwait(false);
+            var results = await NasaService.GetNasaImageAsync(Program.Settings.Tokens.NasaToken).ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Missing)

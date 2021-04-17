@@ -1,7 +1,7 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class News
@@ -9,8 +9,9 @@ namespace Modules
         [Test]
         public void GetNewsData()
         {
-            Assert.IsTrue(NewsService.GetNewsDataAsync().Result.Status == "ok");
-            Assert.IsTrue(NewsService.GetNewsDataAsync("Nintendo").Result.Status == "ok");
+            Assert.IsTrue(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken).Result.Status == "ok");
+            Assert.IsTrue(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken, "Nintendo").Result.Status ==
+                          "ok");
         }
     }
 }

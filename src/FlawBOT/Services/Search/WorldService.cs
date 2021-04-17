@@ -15,12 +15,12 @@ namespace FlawBOT.Services
             return JsonConvert.DeserializeObject<IpStack>(result);
         }
 
-        public static async Task<WeatherData> GetWeatherDataAsync(string query)
+        public static async Task<WeatherData> GetWeatherDataAsync(string token, string query)
         {
             try
             {
                 var results = await Http
-                    .GetStringAsync(string.Format(Resources.URL_Weather, Program.Settings.Tokens.WeatherToken, query))
+                    .GetStringAsync(string.Format(Resources.URL_Weather, token, query))
                     .ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<WeatherData>(results);
             }

@@ -23,7 +23,8 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var results = OmdbService.GetMovieListAsync(query.Replace(" ", "+")).Result;
+            var results = OmdbService.GetMovieListAsync(Program.Settings.Tokens.OmdbToken, query.Replace(" ", "+"))
+                .Result;
             if (!results.Search.Any())
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -33,7 +34,8 @@ namespace FlawBOT.Modules
 
             foreach (var title in results.Search)
             {
-                var movie = OmdbService.GetMovieDataAsync(title.Title.Replace(" ", "+")).Result;
+                var movie = OmdbService
+                    .GetMovieDataAsync(Program.Settings.Tokens.OmdbToken, title.Title.Replace(" ", "+")).Result;
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(movie.Title)
                     .WithDescription(movie.Plot.Length < 500 ? movie.Plot : movie.Plot.Take(500) + "...")

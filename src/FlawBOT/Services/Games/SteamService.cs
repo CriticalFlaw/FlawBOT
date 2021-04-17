@@ -44,11 +44,11 @@ namespace FlawBOT.Services
             }
         }
 
-        public static async Task<bool> UpdateSteamAppListAsync()
+        public static async Task<bool> UpdateSteamAppListAsync(string token)
         {
             try
             {
-                _steamInterface = new SteamWebInterfaceFactory(Program.Settings.Tokens.SteamToken);
+                _steamInterface = new SteamWebInterfaceFactory(token);
                 SteamAppList = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient())
                     .GetAppListAsync();
                 return true;
@@ -67,11 +67,11 @@ namespace FlawBOT.Services
         /// <summary>
         ///     Call the Steam API for summary data on a given user.
         /// </summary>
-        public static async Task<ISteamWebResponse<PlayerSummaryModel>> GetSteamProfileAsync(string query)
+        public static async Task<ISteamWebResponse<PlayerSummaryModel>> GetSteamProfileAsync(string token, string query)
         {
             try
             {
-                _steamInterface = new SteamWebInterfaceFactory(Program.Settings.Tokens.SteamToken);
+                _steamInterface = new SteamWebInterfaceFactory(token);
                 var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 var userId = ulong.TryParse(query, out var steamId) ? steamId : 0;
                 if (userId != 0) return await steam.GetPlayerSummaryAsync(userId).ConfigureAwait(false);

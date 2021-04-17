@@ -1,11 +1,18 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
-    internal class Pokemon
+    internal class Nintendo
     {
+        [Test]
+        public void GetAmiiboData()
+        {
+            Assert.IsNotNull(AmiiboService.GetAmiiboDataAsync("Donkey Kong").Result);
+            Assert.IsNull(AmiiboService.GetAmiiboDataAsync("Konkey Dong").Result);
+        }
+
         [Test]
         public void GetPokemonCards()
         {

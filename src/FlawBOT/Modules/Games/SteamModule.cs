@@ -81,7 +81,7 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var profile = SteamService.GetSteamProfileAsync(query).Result;
+            var profile = SteamService.GetSteamProfileAsync(Program.Settings.Tokens.SteamToken, query).Result;
             if (profile is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)

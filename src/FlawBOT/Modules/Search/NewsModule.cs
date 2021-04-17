@@ -22,7 +22,8 @@ namespace FlawBOT.Modules
             string query)
         {
             await ctx.TriggerTypingAsync();
-            var results = await NewsService.GetNewsDataAsync(query).ConfigureAwait(false);
+            var results = await NewsService.GetNewsDataAsync(Program.Settings.Tokens.NewsToken, query)
+                .ConfigureAwait(false);
             if (results.Status != "ok")
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)

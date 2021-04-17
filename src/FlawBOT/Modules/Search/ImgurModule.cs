@@ -23,7 +23,7 @@ namespace FlawBOT.Modules
             string query)
         {
             await ctx.TriggerTypingAsync();
-            var results = ImgurService.GetImgurGalleryAsync(query).Result;
+            var results = ImgurService.GetImgurGalleryAsync(Program.Settings.Tokens.ImgurToken, query).Result;
             var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#89C623"));
 
             switch (results)

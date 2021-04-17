@@ -23,7 +23,8 @@ namespace FlawBOT.Modules
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var results = await TwitchService.GetTwitchDataAsync(query).ConfigureAwait(false);
+            var results = await TwitchService.GetTwitchDataAsync(Program.Settings.Tokens.TwitchToken, query)
+                .ConfigureAwait(false);
             if (results.Total == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_TWITCH, ResponseType.Missing)

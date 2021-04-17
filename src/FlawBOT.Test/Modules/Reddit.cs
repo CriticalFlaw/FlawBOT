@@ -1,7 +1,7 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class Reddit

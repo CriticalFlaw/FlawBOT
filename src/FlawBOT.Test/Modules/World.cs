@@ -2,7 +2,7 @@
 using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class World
@@ -16,8 +16,7 @@ namespace Modules
         [Test]
         public void GetWeatherData()
         {
-            Assert.IsNotNull(WorldService.GetWeatherDataAsync("Ottawa").Result);
-            Assert.IsNull(WorldService.GetWeatherDataAsync("Ottura").Result);
+            Assert.IsNotNull(WorldService.GetWeatherDataAsync(TestSetup.Tokens.WeatherToken, "Toronto").Result);
         }
     }
 }

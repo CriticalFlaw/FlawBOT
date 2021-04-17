@@ -1,7 +1,7 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class Twitch
@@ -9,7 +9,7 @@ namespace Modules
         [Test]
         public void GetStreamData()
         {
-            Assert.IsNotNull(TwitchService.GetTwitchDataAsync("rifftrax"));
+            Assert.IsNotNull(TwitchService.GetTwitchDataAsync(TestSetup.Tokens.TwitchToken, "rifftrax"));
         }
     }
 }

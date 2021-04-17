@@ -131,8 +131,8 @@ namespace FlawBOT
         {
             // Update any other services that are being used.
             Client.Logger.LogInformation(EventId, "Initializing...");
-            await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
+            await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
+            await TeamFortressService.UpdateTf2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
             await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
 
             // Send a notification to load Lavalink
