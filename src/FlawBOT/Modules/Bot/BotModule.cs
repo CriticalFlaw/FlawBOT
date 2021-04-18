@@ -10,7 +10,8 @@ using FlawBOT.Services;
 namespace FlawBOT.Modules
 {
     [Group("bot")]
-    [Description("Basic commands for interacting with FlawBOT")]
+    [Aliases("flaw")]
+    [Description("Basic commands for interacting with FlawBOT.")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class BotModule : BaseCommandModule
     {
@@ -18,7 +19,7 @@ namespace FlawBOT.Modules
 
         [Command("info")]
         [Aliases("about")]
-        [Description("Retrieve FlawBOT information")]
+        [Description("Retrieve information about FlawBOT.")]
         public async Task BotInfo(CommandContext ctx)
         {
             var settings = Program.Settings;
@@ -42,7 +43,7 @@ namespace FlawBOT.Modules
         #region COMMAND_LEAVE
 
         [Command("leave")]
-        [Description("Make FlawBOT leave the current server")]
+        [Description("Make FlawBOT leave the server.")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task LeaveServer(CommandContext ctx)
         {
@@ -70,7 +71,7 @@ namespace FlawBOT.Modules
 
         [Command("ping")]
         [Aliases("pong")]
-        [Description("Ping the FlawBOT client")]
+        [Description("Ping the FlawBOT client.")]
         public async Task PingBot(CommandContext ctx)
         {
             await BotServices.SendResponseAsync(ctx, $":ping_pong: Pong! Ping: **{ctx.Client.Ping}**ms")
@@ -84,9 +85,9 @@ namespace FlawBOT.Modules
         [Hidden]
         [Command("report")]
         [Aliases("issue")]
-        [Description("Report a problem with FlawBOT to the developer. Please do not abuse.")]
+        [Description("Report a problem with FlawBOT to the developer.")]
         public async Task ReportIssue(CommandContext ctx,
-            [Description("Detailed description of the issue")] [RemainingText]
+            [Description("Detailed description of the issue.")] [RemainingText]
             string report)
         {
             if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
@@ -129,7 +130,6 @@ namespace FlawBOT.Modules
         #region COMMAND_UPTIME
 
         [Command("uptime")]
-        [Aliases("time")]
         [Description("Retrieve the FlawBOT uptime")]
         public async Task Uptime(CommandContext ctx)
         {
@@ -151,9 +151,9 @@ namespace FlawBOT.Modules
         [Hidden]
         [Command("activity")]
         [Aliases("setactivity")]
-        [Description("Set FlawBOT's activity")]
+        [Description("Set FlawBOT's activity.")]
         public async Task SetBotActivity(CommandContext ctx,
-            [Description("Name of the activity")] [RemainingText]
+            [Description("Name of the activity.")] [RemainingText]
             string activity)
         {
             if (string.IsNullOrWhiteSpace(activity))
@@ -176,9 +176,9 @@ namespace FlawBOT.Modules
         [Hidden]
         [Command("avatar")]
         [Aliases("setavatar", "pfp", "photo")]
-        [Description("Set FlawBOT's avatar")]
+        [Description("Set FlawBOT's avatar.")]
         public async Task SetBotAvatar(CommandContext ctx,
-            [Description("Image URL. Must be in jpg, png or img format.")]
+            [Description("Image URL. Must be in JPG, PNG or IMG format.")]
             string query)
         {
             var stream = BotServices.CheckImageInput(ctx, query).Result;
@@ -195,7 +195,7 @@ namespace FlawBOT.Modules
         [Hidden]
         [Command("status")]
         [Aliases("setstatus", "state")]
-        [Description("Set FlawBOT's status")]
+        [Description("Set FlawBOT's status.")]
         public async Task SetBotStatus(CommandContext ctx,
             [Description("Activity Status. Online, Idle, DND or Offline")] [RemainingText]
             string status)
@@ -247,9 +247,9 @@ namespace FlawBOT.Modules
         [Hidden]
         [Command("username")]
         [Aliases("setusername", "name", "setname", "nickname", "nick")]
-        [Description("Set FlawBOT's username")]
+        [Description("Set FlawBOT's username.")]
         public async Task SetBotUsername(CommandContext ctx,
-            [Description("New bot username")] [RemainingText]
+            [Description("New nickname for FlawBOT.")] [RemainingText]
             string name)
         {
             var oldName = ctx.Client.CurrentUser.Username;

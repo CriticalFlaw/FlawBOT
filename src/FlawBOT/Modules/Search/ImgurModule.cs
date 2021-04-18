@@ -17,9 +17,9 @@ namespace FlawBOT.Modules
 
         [Command("imgur")]
         [Aliases("image")]
-        [Description("Retrieve an image from Imgur")]
+        [Description("Retrieve an image from Imgur.")]
         public async Task Imgur(CommandContext ctx,
-            [Description("Search query to pass to Imgur")] [RemainingText]
+            [Description("Search query to pass to Imgur.")] [RemainingText]
             string query)
         {
             await ctx.TriggerTypingAsync();

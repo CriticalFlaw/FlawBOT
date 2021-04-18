@@ -16,9 +16,9 @@ namespace FlawBOT.Modules
 
         [Command("twitch")]
         [Aliases("stream")]
-        [Description("Retrieve Twitch stream information")]
+        [Description("Retrieve Twitch stream information.")]
         public async Task Twitch(CommandContext ctx,
-            [Description("Channel to find on Twitch")] [RemainingText]
+            [Description("Channel to find on Twitch.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;

@@ -14,7 +14,7 @@ namespace FlawBOT.Modules
 
         [Command("simpsons")]
         [Aliases("caramba")]
-        [Description("Retrieve a random Simpsons screenshot and episode")]
+        [Description("Retrieve a random Simpsons screenshot and episode.")]
         public async Task Simpsons(CommandContext ctx)
         {
             var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Frinkiac)
@@ -26,11 +26,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_SIMPSONS_GIF
 
-        [Command("simpsonsgif")]
+        [Command("frinkiac")]
         [Aliases("doh")]
-        [Description("Retrieve a random Simpsons gif")]
+        [Description("Retrieve a random Simpsons gif.")]
         public async Task SimpsonsGif(CommandContext ctx,
-            [Description("Inputting anything will add episode information")] [RemainingText]
+            [Description("Inputting anything will add episode information.")] [RemainingText]
             string input)
         {
             var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.Frinkiac)
@@ -54,7 +54,7 @@ namespace FlawBOT.Modules
 
         [Command("futurama")]
         [Aliases("bite")]
-        [Description("Retrieve a random Futurama screenshot and episode")]
+        [Description("Retrieve a random Futurama screenshot and episode.")]
         public async Task Futurama(CommandContext ctx)
         {
             var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.Morbotron)
@@ -67,11 +67,11 @@ namespace FlawBOT.Modules
 
         #region COMMAND_FUTURAMA_GIF
 
-        [Command("futuramagif")]
+        [Command("morbotron")]
         [Aliases("neat")]
         [Description("Retrieve a random Futurama gif")]
         public async Task FuturamaGif(CommandContext ctx,
-            [Description("Inputting anything will add episode information")] [RemainingText]
+            [Description("Inputting anything will add episode information.")] [RemainingText]
             string input)
         {
             var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.Morbotron)
@@ -92,11 +92,10 @@ namespace FlawBOT.Modules
 
         #endregion COMMAND_FUTURAMA_GIF
 
-        #region COMMAND_RICKMORTY
+        #region COMMAND_RICK&MORTY
 
         [Command("rick")]
-        [Aliases("morty")]
-        [Description("Retrieve a random Rick and Morty screenshot and episode")]
+        [Description("Retrieve a random Rick and Morty screenshot and episode.")]
         public async Task Morty(CommandContext ctx)
         {
             var results = await SimpsonsService.GetSimpsonsDataAsync(SimpsonsService.SiteRoot.MasterOfAllScience)
@@ -105,15 +104,14 @@ namespace FlawBOT.Modules
             await ctx.RespondAsync(results.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_RICKMORTY
+        #endregion COMMAND_RICK&MORTY
 
-        #region COMMAND_RICKMORTY_GIF
+        #region COMMAND_RICK&MORTY_GIF
 
-        [Command("rickgif")]
-        [Aliases("mortygif")]
-        [Description("Retrieve a random Rick and Morty gif")]
+        [Command("morty")]
+        [Description("Retrieve a random Rick and Morty gif.")]
         public async Task MortyGif(CommandContext ctx,
-            [Description("Inputting anything will add episode information")] [RemainingText]
+            [Description("Inputting anything will add episode information.")] [RemainingText]
             string input)
         {
             var output = await SimpsonsService.GetSimpsonsGifAsync(SimpsonsService.SiteRoot.MasterOfAllScience)
@@ -132,6 +130,6 @@ namespace FlawBOT.Modules
             await ctx.RespondAsync(output, results.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_RICKMORTY_GIF
+        #endregion COMMAND_RICK&MORTY_GIF
     }
 }

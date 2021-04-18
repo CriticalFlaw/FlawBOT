@@ -18,9 +18,9 @@ namespace FlawBOT.Modules
 
         [Command("wiki")]
         [Aliases("wikipedia")]
-        [Description("Search Wikipedia for a given query")]
+        [Description("Find articles on Wikipedia.")]
         public async Task Wikipedia(CommandContext ctx,
-            [Description("Query to search on Wikipedia")] [RemainingText]
+            [Description("Articles to find on Wikipedia.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;

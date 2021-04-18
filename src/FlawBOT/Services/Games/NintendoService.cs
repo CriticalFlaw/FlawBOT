@@ -2,14 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlawBOT.Models;
 using FlawBOT.Properties;
+using Newtonsoft.Json;
 using PokemonTcgSdk;
 using PokemonTcgSdk.Models;
 
 namespace FlawBOT.Services
 {
-    public class PokemonService : HttpHandler
+    public class NintendoService : HttpHandler
     {
+        public static async Task<AmiiboData> GetAmiiboDataAsync(string query)
+        {
+            try
+            {
+                var results = await Http.GetStringAsync(string.Format(Resources.URL_Amiibo, query.ToLowerInvariant()))
+                    .ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<AmiiboData>(results);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private static List<string> PokemonList { get; set; } = new();
 
         /// <summary>

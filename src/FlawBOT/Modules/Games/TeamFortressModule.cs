@@ -15,7 +15,7 @@ using FlawBOT.Services;
 namespace FlawBOT.Modules
 {
     [Group("tf2")]
-    [Description("Commands related to Team Fortress 2")]
+    [Description("Commands related to Team Fortress 2.")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class TeamFortressModule : BaseCommandModule
     {
@@ -23,7 +23,7 @@ namespace FlawBOT.Modules
 
         [Command("item")]
         [Aliases("schema", "hat")]
-        [Description("Retrieve an item from the latest TF2 item schema")]
+        [Description("Retrieve an item from the latest TF2 item schema.")]
         public async Task Tf2Schema(CommandContext ctx,
             [Description("Item to find in the TF2 schema")] [RemainingText]
             string query = "The Scattergun")
@@ -136,7 +136,7 @@ namespace FlawBOT.Modules
         #region COMMAND_NEWS
 
         [Command("news")]
-        [Description("Retrieve the latest news article from teamwork.tf")]
+        [Description("Retrieve the latest news article from teamwork.tf.")]
         public async Task Tf2News(CommandContext ctx,
             [Description("Page number from which to retrieve the news")]
             int query = 0)
@@ -183,9 +183,9 @@ namespace FlawBOT.Modules
 
         [Command("creator")]
         [Aliases("creators", "youtuber")]
-        [Description("Retrieve a community creator profile from teamwork.tf")]
+        [Description("Retrieve a community creator profile from teamwork.tf.")]
         public async Task Tf2Creators(CommandContext ctx,
-            [Description("Name of the community creator to find")] [RemainingText]
+            [Description("Name of the community creator to find.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -251,9 +251,9 @@ namespace FlawBOT.Modules
 
         [Command("server")]
         [Aliases("servers")]
-        [Description("Retrieve a list of servers with given game-mode")]
+        [Description("Retrieve a list of servers with given game-mode.")]
         public async Task Tf2ServerByMode(CommandContext ctx,
-            [Description("Name of the game-mode, like payload")] [RemainingText]
+            [Description("Name of the game-mode, like payload.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;

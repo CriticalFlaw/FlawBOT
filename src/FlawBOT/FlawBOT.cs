@@ -82,7 +82,6 @@ namespace FlawBOT
             Commands.RegisterCommands<NewsModule>();
             Commands.RegisterCommands<NintendoModule>();
             Commands.RegisterCommands<OmdbModule>();
-            Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
@@ -93,7 +92,7 @@ namespace FlawBOT
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<UserModule>();
             Commands.RegisterCommands<WikipediaModule>();
-            Commands.RegisterCommands<WorldModule>();
+            Commands.RegisterCommands<WeatherModule>();
             Commands.RegisterCommands<YouTubeModule>();
 
             // Setup Interactivity
@@ -133,7 +132,7 @@ namespace FlawBOT
             Client.Logger.LogInformation(EventId, "Initializing...");
             await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
             await TeamFortressService.UpdateTf2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
-            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
+            await NintendoService.UpdatePokemonListAsync().ConfigureAwait(false);
 
             // Send a notification to load Lavalink
             Client.Logger.LogInformation(EventId, "Make sure Lavalink is running!");

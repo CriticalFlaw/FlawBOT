@@ -17,14 +17,14 @@ namespace FlawBOT.Modules
 
         [Command("amiibo")]
         [Aliases("amib")]
-        [Description("Retrieve Amiibo figurine information")]
+        [Description("Retrieve information about an Amiibo figurine.")]
         public async Task GetAmiibo(CommandContext ctx,
-            [Description("Name of the Amiibo figurine")] [RemainingText]
+            [Description("Name of the Amiibo figurine.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();
-            var results = await AmiiboService.GetAmiiboDataAsync(query).ConfigureAwait(false);
+            var results = await NintendoService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -70,7 +70,7 @@ namespace FlawBOT.Modules
             string query = "")
         {
             await ctx.TriggerTypingAsync();
-            var results = await PokemonService.GetPokemonCardsAsync(query).ConfigureAwait(false);
+            var results = await NintendoService.GetPokemonCardsAsync(query).ConfigureAwait(false);
             if (results.Cards.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -80,7 +80,7 @@ namespace FlawBOT.Modules
 
             foreach (var dex in results.Cards)
             {
-                var card = PokemonService.GetExactPokemon(dex.Id);
+                var card = NintendoService.GetExactPokemon(dex.Id);
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(card.Name + $" (#{card.NationalPokedexNumber})")
                     .AddField("Series", card.Series ?? "Unknown", true)

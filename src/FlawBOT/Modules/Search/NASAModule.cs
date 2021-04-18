@@ -15,7 +15,7 @@ namespace FlawBOT.Modules
 
         [Command("nasa")]
         [Aliases("apod", "space")]
-        [Description("Retrieve NASA's Astronomy Picture of the Day")]
+        [Description("Retrieve NASA's Astronomy Picture of the Day.")]
         public async Task Nasa(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

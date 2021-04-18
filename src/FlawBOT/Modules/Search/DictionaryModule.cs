@@ -17,9 +17,9 @@ namespace FlawBOT.Modules
 
         [Command("dictionary")]
         [Aliases("define", "def", "dic")]
-        [Description("Retrieve an Urban Dictionary definition of a word or phrase")]
+        [Description("Retrieve an Urban Dictionary definition for a word or phrase.")]
         public async Task UrbanDictionary(CommandContext ctx,
-            [Description("Query to pass to Urban Dictionary")] [RemainingText]
+            [Description("Word or phrase to find on Urban Dictionary.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;

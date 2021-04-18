@@ -151,7 +151,7 @@ namespace FlawBOT.Modules
         [Command("play")]
         [Description("Play audio from provided URL or search by specified query.")]
         public async Task PlaySong(CommandContext ctx,
-            [Description("URL from which to play audio")]
+            [Description("URL from which to play audio.")]
             Uri uri)
         {
             var trackLoad = await Service.GetTracksAsync(uri);

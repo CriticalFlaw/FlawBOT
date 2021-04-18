@@ -133,7 +133,7 @@ namespace FlawBOT.Models
         public int Pressure { get; set; }
 
         [JsonProperty("precip", NullValueHandling = NullValueHandling.Ignore)]
-        public int Precipitation { get; set; }
+        public double Precipitation { get; set; }
 
         [JsonProperty("humidity", NullValueHandling = NullValueHandling.Ignore)]
         public int Humidity { get; set; }

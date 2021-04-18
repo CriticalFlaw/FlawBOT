@@ -10,11 +10,14 @@ This section is for common issues you may encounter and how to resolve them.
 
 ## Bot
 
+Description: Basic commands for interacting with FlawBOT.
+Aliases: flaw
+
 ### info
 
-Description: Retrieve FlawBOT information.
+Description: Retrieve information about FlawBOT.
 Aliases: about
-Parameters: None
+Parameters: None.
 
 ```
 .bot info
@@ -22,8 +25,8 @@ Parameters: None
 
 ### leave
 
-Description: Make FlawBOT leave the current server.
-Aliases: None
+Description: Make FlawBOT leave the server.
+Aliases: None.
 Parameters: None. Respond with yes when prompted to complete the action.
 
 ```
@@ -34,7 +37,7 @@ Parameters: None. Respond with yes when prompted to complete the action.
 
 Description: Ping the FlawBOT client.
 Aliases: pong
-Parameters: None
+Parameters: None.
 
 ```
 .bot ping
@@ -42,7 +45,7 @@ Parameters: None
 
 ### report
 
-Description: Report a problem with FlawBOT to the developer. Please do not abuse.
+Description: Report a problem with FlawBOT to the developer.
 Aliases: issue
 Parameters: Detailed description of the issue. Minimum 50 characters.
 
@@ -53,9 +56,8 @@ Parameters: Detailed description of the issue. Minimum 50 characters.
 ### uptime
 
 Description: Retrieve the FlawBOT uptime.
-Aliases: time
-Parameters: None
-
+Aliases: None.
+Parameters: None.
 
 ```
 .bot uptime
@@ -63,13 +65,14 @@ Parameters: None
 
 ---
 
-## Owner Only
+## Owner-Only
 
 ### activity
 
 Description: Set FlawBOT's activity.
 Aliases: setactivity
 Parameters: Name of the activity.
+
 ```
 .bot activity Team Fortress 2
 ```
@@ -78,7 +81,7 @@ Parameters: Name of the activity.
 
 Description: Set FlawBOT's avatar.
 Aliases: setavatar, pfp, photo
-Parameters: Image URL. Must be in jpg, png or img format.
+Parameters: Image URL. Must be in JPG, PNG or IMG format.
 
 ```
 .bot avatar [Image URL]
@@ -98,7 +101,7 @@ Parameters: Activity Status. Online, Idle, DND or Offline.
 
 Description: Set FlawBOT's username.
 Aliases: setusername, name, setname, nickname, nick
-Parameters: New bot username.
+Parameters: New nickname for FlawBOT.
 
 ```
 .sudo setname FlowBOT

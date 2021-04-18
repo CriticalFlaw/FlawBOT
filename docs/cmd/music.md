@@ -13,9 +13,8 @@ This section is for common issues you may encounter and how to resolve them.
 ### play
 
 Description: Play audio from provided URL or search by specified query.
-Aliases: None
-Parameters: URL from which to play audio
-
+Aliases: None.
+Parameters: URL from which to play audio.
 
 ```
 .play https://www.youtube.com/watch?v=4JkIs37a2JE
@@ -24,9 +23,8 @@ Parameters: URL from which to play audio
 ### pause
 
 Description: Pause audio playback.
-Aliases: None
-Parameters: None
-
+Aliases: None.
+Parameters: None.
 
 ```
 .pause
@@ -36,8 +34,7 @@ Parameters: None
 
 Description: Resume audio playback.
 Aliases: unpause
-Parameters: None
-
+Parameters: None.
 
 ```
 .resume
@@ -46,9 +43,8 @@ Parameters: None
 ### stop
 
 Description: Stop audio playback and leave the voice channel.
-Aliases: None
-Parameters: None
-
+Aliases: None.
+Parameters: None.
 
 ```
 .stop
@@ -57,9 +53,8 @@ Parameters: None
 ### volume
 
 Description: Set audio playback volume.
-Aliases: None
+Aliases: None.
 Parameters: Audio volume. Can be set to 0-150 (default 100).
-
 
 ```
 .volume 50
@@ -69,8 +64,7 @@ Parameters: Audio volume. Can be set to 0-150 (default 100).
 
 Description: Restarts the playback of the current track.
 Aliases: replay
-Parameters: None
-
+Parameters: None.
 
 ```
 .replay
@@ -80,8 +74,7 @@ Parameters: None
 
 Description: Displays information about currently-played track.
 Aliases: np
-Parameters: None
-
+Parameters: None.
 
 ```
 .nowplaying

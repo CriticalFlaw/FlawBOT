@@ -16,11 +16,11 @@ namespace FlawBOT.Modules
 
         [Command("math")]
         [Aliases("calculate")]
-        [Description("Perform a basic math operation")]
+        [Description("Perform a basic math operation.")]
         public async Task Math(CommandContext ctx,
-            [Description("First operand")] double num1,
-            [Description("Operator")] string operation,
-            [Description("Second operand")] double num2)
+            [Description("First operand.")] double num1,
+            [Description("Operator.")] string operation,
+            [Description("Second operand.")] double num2)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace FlawBOT.Modules
         [Aliases("total")]
         [Description("Calculate the sum of all inputted values")]
         public async Task Sum(CommandContext ctx,
-            [Description("Numbers to sum up")] params int[] args)
+            [Description("Numbers to sum up.")] params int[] args)
         {
             var output = new DiscordEmbedBuilder()
                 .WithDescription($":1234: The sum is {args.Sum():#,##0}")

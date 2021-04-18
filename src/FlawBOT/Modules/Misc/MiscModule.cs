@@ -14,13 +14,13 @@ namespace FlawBOT.Modules
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class MiscModule : BaseCommandModule
     {
-        #region COMMAND_8BALL
+        #region COMMAND_ASK
 
         [Command("ask")]
         [Aliases("8b", "8ball", "ball", "8")]
-        [Description("Ask an 8-ball a question")]
+        [Description("Ask an 8-ball a question.")]
         public Task EightBall(CommandContext ctx,
-            [Description("Question to ask the 8-Ball")] [RemainingText]
+            [Description("Question to ask the 8-ball.")] [RemainingText]
             string question = "")
         {
             if (string.IsNullOrWhiteSpace(question)) return Task.CompletedTask;
@@ -30,13 +30,13 @@ namespace FlawBOT.Modules
             return ctx.RespondAsync(output.Build());
         }
 
-        #endregion COMMAND_8BALL
+        #endregion COMMAND_ASK
 
         #region COMMAND_CAT
 
         [Command("cat")]
         [Aliases("meow", "catfact", "randomcat")]
-        [Description("Retrieve a random cat fact")]
+        [Description("Retrieve a random cat fact and picture.")]
         public async Task GetCat(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -58,7 +58,7 @@ namespace FlawBOT.Modules
 
         [Command("coinflip")]
         [Aliases("coin", "flip")]
-        [Description("Flip a coin")]
+        [Description("Flip a coin.")]
         public Task CoinFlip(CommandContext ctx)
         {
             var random = new Random();
@@ -75,7 +75,7 @@ namespace FlawBOT.Modules
 
         [Command("diceroll")]
         [Aliases("dice", "roll", "rolldice", "die")]
-        [Description("Roll a six-sided die")]
+        [Description("Roll a six-sided die.")]
         public Task RollDice(CommandContext ctx)
         {
             var random = new Random();
@@ -90,8 +90,8 @@ namespace FlawBOT.Modules
 
         #region COMMAND_DOG
 
-        [Command("randomdog")]
-        [Aliases("woof", "dog", "bark")]
+        [Command("dog")]
+        [Aliases("woof", "bark", "randomdog")]
         [Description("Retrieve a random dog photo")]
         public async Task GetDog(CommandContext ctx)
         {
@@ -116,9 +116,9 @@ namespace FlawBOT.Modules
 
         [Command("hello")]
         [Aliases("hi", "howdy")]
-        [Description("Welcome another user to the server")]
+        [Description("Say hello to another user to the server.")]
         public async Task Greet(CommandContext ctx,
-            [Description("User to say hello to")] [RemainingText]
+            [Description("User to say hello to.")] [RemainingText]
             DiscordMember member)
         {
             if (member is null)
@@ -134,9 +134,9 @@ namespace FlawBOT.Modules
 
         [Command("tts")]
         [Aliases("echo", "repeat", "say", "talk")]
-        [Description("Make FlawBOT repeat a message as text-to-speech")]
+        [Description("Make FlawBOT repeat a message as text-to-speech.")]
         public async Task Say(CommandContext ctx,
-            [Description("Message for the bot to repeat")] [RemainingText]
+            [Description("Message for FlawBOT to repeat.")] [RemainingText]
             string message)
         {
             if (string.IsNullOrWhiteSpace(message))

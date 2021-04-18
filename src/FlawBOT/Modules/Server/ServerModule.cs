@@ -14,7 +14,7 @@ namespace FlawBOT.Modules
 {
     [Group("server")]
     [Aliases("guild")]
-    [Description("Commands for controlling server")]
+    [Description("Commands for controlling server.")]
     [Cooldown(3, 5, CooldownBucketType.Guild)]
     public class ServerModule : BaseCommandModule
     {
@@ -22,10 +22,10 @@ namespace FlawBOT.Modules
 
         [Command("avatar")]
         [Aliases("setavatar")]
-        [Description("Set server avatar")]
+        [Description("Change the server avatar.")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerAvatar(CommandContext ctx,
-            [Description("Image URL. Must be in jpg, png or img format.")]
+            [Description("URL image in JPG, PNG or IMG format.")]
             string query)
         {
             try
@@ -47,8 +47,7 @@ namespace FlawBOT.Modules
         #region COMMAND_INFO
 
         [Command("info")]
-        [Aliases("i")]
-        [Description("Retrieve server information")]
+        [Description("Retrieve server information.")]
         public async Task GetServer(CommandContext ctx)
         {
             var output = new DiscordEmbedBuilder()
@@ -86,7 +85,7 @@ namespace FlawBOT.Modules
         #region COMMAND_INVITE
 
         [Command("invite")]
-        [Description("Retrieve an instant invite link to the server")]
+        [Description("Retrieve an instant invite link to the server.")]
         public async Task Invite(CommandContext ctx)
         {
             await ctx.RespondAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ":https://discord.gg/" +
@@ -98,10 +97,10 @@ namespace FlawBOT.Modules
         #region COMMAND_PRUNE
 
         [Command("prune")]
-        [Description("Prune inactive server members")]
+        [Description("Prune inactive server members.")]
         [RequirePermissions(Permissions.DeafenMembers)]
         public async Task Prune(CommandContext ctx,
-            [Description("Number of days the user had to be inactive to get pruned")]
+            [Description("Number of days the user had to be inactive to get pruned.")]
             int days = 7)
         {
             if (days < 1 || days > 30)
@@ -132,10 +131,10 @@ namespace FlawBOT.Modules
 
         [Command("rename")]
         [Aliases("setname")]
-        [Description("Set server name")]
+        [Description("Change the server name.")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerName(CommandContext ctx,
-            [Description("New server name")] [RemainingText]
+            [Description("New server name.")] [RemainingText]
             string name = "")
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
@@ -156,10 +155,10 @@ namespace FlawBOT.Modules
 
         [Command("warn")]
         [Aliases("scold")]
-        [Description("Direct message user with a warning")]
+        [Description("Direct message user with a warning.")]
         public async Task Warn(CommandContext ctx,
-            [Description("Server user to warn")] DiscordMember member,
-            [Description("Warning message")] [RemainingText]
+            [Description("Server user to warn.")] DiscordMember member,
+            [Description("Warning message.")] [RemainingText]
             string reason = null)
         {
             var output = new DiscordEmbedBuilder()

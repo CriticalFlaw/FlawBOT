@@ -15,16 +15,38 @@ using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 namespace FlawBOT.Modules
 {
     [Group("steam")]
-    [Description("Commands finding Steam games and users")]
+    [Description("Commands finding Steam games and users.")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SteamModule : BaseCommandModule
     {
+        #region COMMAND_CONNECT
+
+        [Command("connect")]
+        [Aliases("link")]
+        [Description("Format a game connection string into a link.")]
+        public async Task SteamLink(CommandContext ctx,
+            [Description("Connection string (ex. IP:PORT).")] [RemainingText]
+            string link)
+        {
+            await ctx.TriggerTypingAsync();
+            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
+            if (regex.Success)
+                await ctx.RespondAsync(
+                        string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"))
+                    .ConfigureAwait(false);
+            else
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP_GAME, ResponseType.Warning)
+                    .ConfigureAwait(false);
+        }
+
+        #endregion COMMAND_CONNECT
+
         #region COMMAND_GAME
 
         [Command("game")]
-        [Description("Retrieve Steam game information")]
+        [Description("Retrieve information on a Steam game.")]
         public async Task SteamGame(CommandContext ctx,
-            [Description("Game to find on Steam")] [RemainingText]
+            [Description("Game to find on Steam.")] [RemainingText]
             string query = "Team Fortress 2")
         {
             try
@@ -74,9 +96,9 @@ namespace FlawBOT.Modules
 
         [Command("user")]
         [Aliases("player")]
-        [Description("Retrieve Steam user information")]
+        [Description("Retrieve information on a Steam user.")]
         public async Task SteamUser(CommandContext ctx,
-            [Description("User to find on Steam")] [RemainingText]
+            [Description("User to find on Steam.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
@@ -119,27 +141,5 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_USER
-
-        #region COMMAND_CONNECT
-
-        [Command("connect")]
-        [Aliases("link")]
-        [Description("Format a game connection string into a link")]
-        public async Task SteamLink(CommandContext ctx,
-            [Description("Connection string")] [RemainingText]
-            string link)
-        {
-            await ctx.TriggerTypingAsync();
-            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
-            if (regex.Success)
-                await ctx.RespondAsync(
-                        string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}"))
-                    .ConfigureAwait(false);
-            else
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP_GAME, ResponseType.Warning)
-                    .ConfigureAwait(false);
-        }
-
-        #endregion COMMAND_CONNECT
     }
 }

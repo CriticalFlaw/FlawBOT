@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Net;
 using System.Threading.Tasks;
 using FlawBOT.Models;
 using FlawBOT.Properties;
@@ -55,6 +56,13 @@ namespace FlawBOT.Services
         {
             var results = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DogData>(results);
+        }
+
+        public static async Task<IpStack> GetIpLocationAsync(IPAddress query)
+        {
+            var result = await Http.GetStringAsync(string.Format(Resources.URL_IPStack, query))
+                .ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<IpStack>(result);
         }
     }
 }

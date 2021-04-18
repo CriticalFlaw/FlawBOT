@@ -20,7 +20,7 @@ namespace FlawBOT.Modules
         [Aliases("game", "run")]
         [Description("Retrieve a game from Speedrun.com")]
         public async Task Speedrun(CommandContext ctx,
-            [Description("Game to search on Speedrun.com")] [RemainingText]
+            [Description("Game to find on Speedrun.com")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;

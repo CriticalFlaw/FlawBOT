@@ -16,9 +16,9 @@ namespace FlawBOT.Modules
 
         [Command("omdb")]
         [Aliases("imdb", "movie")]
-        [Description("Retrieve a movie or TV show from OMDB")]
+        [Description("Find a movie or TV show from OMDB.")]
         public async Task Omdb(CommandContext ctx,
-            [Description("Movie or TV show to find on OMDB")] [RemainingText]
+            [Description("Movie or TV show to find on OMDB.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;

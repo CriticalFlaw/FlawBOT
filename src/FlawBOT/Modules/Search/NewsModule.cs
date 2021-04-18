@@ -16,9 +16,9 @@ namespace FlawBOT.Modules
         #region COMMAND_NEWS
 
         [Command("news")]
-        [Description("Retrieve the latest news articles from NewsAPI.org")]
+        [Description("Retrieve the news articles on a topic from NewsAPI.org.")]
         public async Task News(CommandContext ctx,
-            [Description("Article topic to find on Google News")] [RemainingText]
+            [Description("Article topic to find on NewsAPI.org.")] [RemainingText]
             string query)
         {
             await ctx.TriggerTypingAsync();
