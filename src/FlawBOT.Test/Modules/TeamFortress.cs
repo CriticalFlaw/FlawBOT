@@ -1,7 +1,7 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class TeamFortress
@@ -9,15 +9,18 @@ namespace Modules
         [Test]
         public void GetMapStats()
         {
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("pl_upward").Result);
-            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync("upward").Result);
-            Assert.IsNull(TeamFortressService.GetMapStatsAsync("bonewards").Result);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "pl_upward")
+                .Result);
+            Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "upward")
+                .Result);
+            Assert.IsNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "bonewards")
+                .Result);
         }
 
         [Test]
         public void GetNewsOverview()
         {
-            Assert.IsNotNull(TeamFortressService.GetNewsArticlesAsync().Result);
+            Assert.IsNotNull(TeamFortressService.GetNewsArticlesAsync(TestSetup.Tokens.TeamworkToken).Result);
         }
 
         [Test]
@@ -31,15 +34,17 @@ namespace Modules
         [Test]
         public void GetServers()
         {
-            Assert.IsNotNull(TeamFortressService.GetServersByGameModeAsync("payload").Result);
-            Assert.IsNull(TeamFortressService.GetServersByGameModeAsync("payloader").Result);
+            Assert.IsNotNull(TeamFortressService
+                .GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payload").Result);
+            Assert.IsNull(TeamFortressService
+                .GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payloader").Result);
         }
 
         [Test]
         [Order(1)]
         public void UpdateTf2Schema()
         {
-            Assert.IsTrue(TeamFortressService.UpdateTf2SchemaAsync().Result);
+            Assert.IsTrue(TeamFortressService.UpdateTf2SchemaAsync(TestSetup.Tokens.SteamToken).Result);
         }
     }
 }

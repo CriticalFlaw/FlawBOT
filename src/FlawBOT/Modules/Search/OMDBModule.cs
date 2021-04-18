@@ -16,13 +16,15 @@ namespace FlawBOT.Modules
 
         [Command("omdb")]
         [Aliases("imdb", "movie")]
-        [Description("Retrieve a movie or TV show from OMDB")]
+        [Description("Find a movie or TV show from OMDB.")]
         public async Task Omdb(CommandContext ctx,
-            [Description("Movie or TV show to find on OMDB")] [RemainingText]
+            [Description("Movie or TV show to find on OMDB.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            var results = OmdbService.GetMovieListAsync(query.Replace(" ", "+")).Result;
+            await ctx.TriggerTypingAsync();
+            var results = OmdbService.GetMovieListAsync(Program.Settings.Tokens.OmdbToken, query.Replace(" ", "+"))
+                .Result;
             if (!results.Search.Any())
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -32,7 +34,8 @@ namespace FlawBOT.Modules
 
             foreach (var title in results.Search)
             {
-                var movie = OmdbService.GetMovieDataAsync(title.Title.Replace(" ", "+")).Result;
+                var movie = OmdbService
+                    .GetMovieDataAsync(Program.Settings.Tokens.OmdbToken, title.Title.Replace(" ", "+")).Result;
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(movie.Title)
                     .WithDescription(movie.Plot.Length < 500 ? movie.Plot : movie.Plot.Take(500) + "...")
@@ -45,7 +48,7 @@ namespace FlawBOT.Modules
                     .AddField("Directors", movie.Director)
                     .AddField("Actors", movie.Actors)
                     .WithFooter(!movie.Title.Equals(results.Search.Last().Title)
-                        ? "Type 'next' within 10 seconds for the next movie"
+                        ? "Type 'next' within 10 seconds for the next movie."
                         : "This is the last found movie on OMDB.")
                     .WithColor(DiscordColor.Goldenrod);
                 if (movie.Poster != "N/A") output.WithImageUrl(movie.Poster);

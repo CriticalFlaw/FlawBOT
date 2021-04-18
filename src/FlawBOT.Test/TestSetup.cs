@@ -1,20 +1,28 @@
 ﻿using System.IO;
 using System.Text;
 using FlawBOT.Common;
-using FlawBOT.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace GamesModule
+namespace FlawBOT.Test
 {
     [SetUpFixture]
-    internal class TestSetup
+    public class TestSetup
     {
+        public static Tokens Tokens { get; set; }
+
         [OneTimeSetUp]
         public void PreTest()
         {
+            if (!File.Exists("config.json")) return;
             var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
-            SharedData.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
+            Tokens = JsonConvert.DeserializeObject<BotSettings>(json)?.Tokens;
+        }
+
+        [OneTimeTearDown]
+        public void PostTest()
+        {
+            // Nothing...
         }
     }
 }

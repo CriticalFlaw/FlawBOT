@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Properties;
 using Google.Apis.Services;
@@ -22,8 +21,8 @@ namespace FlawBOT.Services
         {
             YouTube = new YouTubeService(new BaseClientService.Initializer
             {
-                ApiKey = SharedData.Tokens.YouTubeToken,
-                ApplicationName = SharedData.Name
+                ApiKey = Program.Settings.Tokens.YouTubeToken,
+                ApplicationName = Program.Settings.Name
             });
         }
 
@@ -92,7 +91,7 @@ namespace FlawBOT.Services
 
             string json;
             Http.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/search");
-            Http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SharedData.Name);
+            Http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Program.Settings.Name);
             using (var req = await Http.GetAsync(uri))
             await using (var res = await req.Content.ReadAsStreamAsync())
             using (var sr = new StreamReader(res, Encoding.UTF8))
@@ -101,7 +100,7 @@ namespace FlawBOT.Services
             }
 
             var jsonData = JObject.Parse(json);
-            var data = jsonData["items"].ToObject<IEnumerable<YouTubeResponse>>();
+            var data = jsonData["items"]?.ToObject<IEnumerable<YouTubeResponse>>();
 
             return data!.Select(x => new YouTubeData(x.Snippet.Title, x.Snippet.Author, x.Id.VideoId));
         }

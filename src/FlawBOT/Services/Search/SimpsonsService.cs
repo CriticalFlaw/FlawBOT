@@ -31,12 +31,12 @@ namespace FlawBOT.Services
                 .ConfigureAwait(false);
             var content = JsonConvert.DeserializeObject<SimpsonsData>(result);
             var framesResult = await Http
-                .GetStringAsync(string.Format(Resources.URL_Simpsons_Frames, site, content.Episode.Key,
+                .GetStringAsync(string.Format(Resources.URL_Simpsons_Frames, site, content?.Episode.Key,
                     content.Frame.Timestamp))
                 .ConfigureAwait(false);
             var frames = JsonConvert.DeserializeObject<List<Frame>>(framesResult);
-            var start = frames.FirstOrDefault()?.Timestamp;
-            var end = frames.LastOrDefault()?.Timestamp;
+            var start = frames?.FirstOrDefault()?.Timestamp;
+            var end = frames?.LastOrDefault()?.Timestamp;
             return string.Format(Resources.URL_Simpsons_Result, site, content.Episode.Key, start, end);
         }
 

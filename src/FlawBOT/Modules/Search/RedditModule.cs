@@ -14,33 +14,46 @@ namespace FlawBOT.Modules
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class RedditModule : BaseCommandModule
     {
-        #region COMMAND_POST
+        #region COMMAND_HOT
 
         [Command("hot")]
-        [Description("Get hottest posts for a subreddit.")]
+        [Description("Get hottest posts from a given subreddit.")]
         public Task HotPost(CommandContext ctx, [Description("Subreddit.")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Hot);
         }
 
+        #endregion COMMAND_HOT
+
+        #region COMMAND_NEW
+
         [Command("new")]
-        [Description("Get newest posts for a subreddit.")]
+        [Description("Get newest posts from a given subreddit.")]
         [Aliases("newest", "latest")]
         public Task NewPost(CommandContext ctx, [Description("Subreddit.")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.New);
         }
 
+        #endregion COMMAND_NEW
+
+        #region COMMAND_TOP
+
         [Command("top")]
-        [Description("Get top posts for a subreddit.")]
+        [Description("Get top posts from a given subreddit.")]
         public Task TopPost(CommandContext ctx, [Description("Subreddit.")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Top);
         }
 
+        #endregion COMMAND_TOP
+
+        #region COMMAND_POST
+
         private static async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var results = RedditService.GetResults(query, category);
             if (results is null || results.Count == 0)
             {

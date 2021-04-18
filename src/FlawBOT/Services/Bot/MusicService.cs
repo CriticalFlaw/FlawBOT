@@ -26,7 +26,7 @@ namespace FlawBOT.Services
             if (MusicData.TryGetValue(server.Id, out var player))
                 return player;
 
-            return MusicData.AddOrUpdate(server.Id, new MusicPlayer(Lavalink), (k, v) => v);
+            return MusicData.AddOrUpdate(server.Id, new MusicPlayer(Lavalink), (_, v) => v);
         }
 
         public Task<LavalinkLoadResult> GetTracksAsync(Uri uri)

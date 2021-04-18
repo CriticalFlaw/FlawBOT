@@ -1,16 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using FlawBOT.Common;
-using FlawBOT.Models;
 using FlawBOT.Properties;
-using Newtonsoft.Json;
 
 namespace FlawBOT.Services
 {
@@ -84,14 +81,6 @@ namespace FlawBOT.Services
             }
 
             return stream;
-        }
-
-        public bool LoadConfiguration()
-        {
-            if (!File.Exists("config.json")) return false;
-            var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
-            SharedData.Tokens = JsonConvert.DeserializeObject<TokenData>(json);
-            return true;
         }
     }
 }

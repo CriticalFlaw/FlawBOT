@@ -1,7 +1,7 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class NASA
@@ -9,7 +9,7 @@ namespace Modules
         [Test]
         public void GetNasaData()
         {
-            Assert.IsNotNull(NasaService.GetNasaImageAsync().Result);
+            Assert.IsNotNull(NasaService.GetNasaImageAsync(TestSetup.Tokens.NasaToken).Result);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace FlawBOT.Services
                 var results = await Http
                     .GetStringAsync(string.Format(Resources.URL_Speedrun, Uri.EscapeUriString(query.Trim())))
                     .ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<SpeedrunGame>(results).Data.First().Id;
+                return JsonConvert.DeserializeObject<SpeedrunGame>(results)?.Data.First().Id;
             }
             catch
             {
@@ -82,7 +82,7 @@ namespace FlawBOT.Services
                         .GetStringAsync(string.Format(Resources.URL_Speedrun_Extras,
                             search.ToString().ToLowerInvariant(), query))
                         .ConfigureAwait(false);
-                    var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output).Data.Name;
+                    var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output)?.Data.Name;
                     results.Append(name).Append(!query.Equals(queryList.Take(3).Last()) ? ", " : string.Empty);
                 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -23,10 +24,13 @@ namespace FlawBOT
     {
         public FlawBot(int shardId = 0)
         {
+            // Get Settings
+            var settings = Program.Settings;
+
             // Setup Client
             Client = new DiscordClient(new DiscordConfiguration
             {
-                Token = SharedData.Tokens.DiscordToken,
+                Token = settings.Tokens.DiscordToken,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
                 ReconnectIndefinitely = true,
@@ -36,12 +40,12 @@ namespace FlawBOT
                 MessageCacheSize = 2048,
                 LogTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz",
                 ShardId = shardId,
-                ShardCount = SharedData.ShardCount
+                ShardCount = settings.ShardCount
             });
             Client.Ready += Client_Ready;
             Client.GuildAvailable += Client_GuildAvailable;
-            Client.ClientErrored += Client_ClientErrored;
-            Client.SocketErrored += Client_SocketErrored;
+            Client.ClientErrored += Client_ClientError;
+            Client.SocketErrored += Client_SocketError;
             Client.VoiceStateUpdated += Client_VoiceStateUpdated;
 
             // Setup Services
@@ -64,9 +68,8 @@ namespace FlawBOT
                 Services = Services
             });
             Commands.CommandExecuted += Command_Executed;
-            Commands.CommandErrored += Command_Errored;
+            Commands.CommandErrored += Command_Error;
             Commands.SetHelpFormatter<HelpFormatter>();
-            Commands.RegisterCommands<AmiiboModule>();
             Commands.RegisterCommands<BotModule>();
             Commands.RegisterCommands<ChannelModule>();
             Commands.RegisterCommands<DictionaryModule>();
@@ -77,9 +80,8 @@ namespace FlawBOT
             Commands.RegisterCommands<MusicModule>();
             Commands.RegisterCommands<NasaModule>();
             Commands.RegisterCommands<NewsModule>();
+            Commands.RegisterCommands<NintendoModule>();
             Commands.RegisterCommands<OmdbModule>();
-            Commands.RegisterCommands<PokemonModule>();
-            Commands.RegisterCommands<PollModule>();
             Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
@@ -90,7 +92,7 @@ namespace FlawBOT
             Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<UserModule>();
             Commands.RegisterCommands<WikipediaModule>();
-            Commands.RegisterCommands<WorldModule>();
+            Commands.RegisterCommands<WeatherModule>();
             Commands.RegisterCommands<YouTubeModule>();
 
             // Setup Interactivity
@@ -108,16 +110,16 @@ namespace FlawBOT
             });
 
             // Setup Lavalink
-            //Lavalink = Client.UseLavalink();
-            //Process.Start("java", $"-jar {Directory.GetCurrentDirectory()}\\Lavalink.jar");
+            if (settings.UseLavalink && File.Exists($"{Directory.GetCurrentDirectory()}\\Lavalink.jar"))
+                Lavalink = Client.UseLavalink();
 
             // Start the uptime counter
-            Console.Title = $"{SharedData.Name}-{SharedData.Version}";
-            SharedData.ProcessStarted = DateTime.Now;
+            Console.Title = $"{settings.Name}-{settings.Version}";
+            settings.ProcessStarted = DateTime.Now;
         }
 
         private IServiceProvider Services { get; }
-        private static EventId EventId { get; } = new(1000, SharedData.Name);
+        private static EventId EventId { get; } = new(1000, Program.Settings.Name);
         private DiscordClient Client { get; }
         private CommandsNextExtension Commands { get; }
         private InteractivityExtension Interactivity { get; }
@@ -127,10 +129,13 @@ namespace FlawBOT
         public async Task RunAsync()
         {
             // Update any other services that are being used.
-            Client.Logger.LogInformation(EventId, "Loading...");
-            await SteamService.UpdateSteamAppListAsync().ConfigureAwait(false);
-            await TeamFortressService.UpdateTf2SchemaAsync().ConfigureAwait(false);
-            await PokemonService.UpdatePokemonListAsync().ConfigureAwait(false);
+            Client.Logger.LogInformation(EventId, "Initializing...");
+            await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
+            await TeamFortressService.UpdateTf2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
+            await NintendoService.UpdatePokemonListAsync().ConfigureAwait(false);
+
+            // Send a notification to load Lavalink
+            Client.Logger.LogInformation(EventId, "Make sure Lavalink is running!");
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);
@@ -144,7 +149,8 @@ namespace FlawBOT
 
         private static Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
         {
-            sender.Logger.LogInformation(EventId, $"{SharedData.Name}, version: {SharedData.Version}");
+            var settings = Program.Settings;
+            sender.Logger.LogInformation(EventId, $"{settings.Name}, version: {settings.Version}");
             return Task.CompletedTask;
         }
 
@@ -154,25 +160,25 @@ namespace FlawBOT
             return Task.CompletedTask;
         }
 
-        private static Task Client_ClientErrored(DiscordClient sender, ClientErrorEventArgs e)
+        private static Task Client_ClientError(DiscordClient sender, ClientErrorEventArgs e)
         {
             sender.Logger.LogError(EventId, $"[{e.Exception.GetType()}] Client Exception. {e.Exception.Message}");
             return Task.CompletedTask;
         }
 
-        private Task Client_SocketErrored(DiscordClient sender, SocketErrorEventArgs e)
+        private Task Client_SocketError(DiscordClient sender, SocketErrorEventArgs e)
         {
             var ex = e.Exception;
             while (ex is AggregateException)
                 ex = ex.InnerException;
 
-            sender.Logger.LogCritical(EventId, $"Socket threw an exception {ex.GetType()}: {ex.Message}");
+            sender.Logger.LogCritical(EventId, $"Socket threw an exception {ex?.GetType()}: {ex?.Message}");
             return Task.CompletedTask;
         }
 
         private async Task Client_VoiceStateUpdated(DiscordClient sender, VoiceStateUpdateEventArgs e)
         {
-            var musicData = await Services.GetService<MusicService>().GetOrCreateDataAsync(e.Guild);
+            var musicData = await Services.GetService<MusicService>()?.GetOrCreateDataAsync(e.Guild);
             if (e.After.Channel == null && e.User == Client.CurrentUser)
             {
                 await musicData.StopAsync();
@@ -204,14 +210,14 @@ namespace FlawBOT
             return Task.CompletedTask;
         }
 
-        private static async Task Command_Errored(CommandsNextExtension sender, CommandErrorEventArgs e)
+        private static async Task Command_Error(CommandsNextExtension sender, CommandErrorEventArgs e)
         {
             await Exceptions.Process(e, EventId);
         }
 
         private static Task<int> PrefixResolverAsync(DiscordMessage m)
         {
-            return Task.FromResult(m.GetStringPrefixLength(SharedData.Tokens.CommandPrefix));
+            return Task.FromResult(m.GetStringPrefixLength(Program.Settings.Prefix));
         }
     }
 }

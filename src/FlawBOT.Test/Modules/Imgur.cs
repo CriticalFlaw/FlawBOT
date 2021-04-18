@@ -2,7 +2,7 @@
 using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class Imgur
@@ -10,10 +10,12 @@ namespace Modules
         [Test]
         public async Task GetImgurGalleryData()
         {
-            var results = await ImgurService.GetImgurGalleryAsync("cats").ConfigureAwait(false);
+            var results = await ImgurService.GetImgurGalleryAsync(TestSetup.Tokens.ImgurToken, "cats")
+                .ConfigureAwait(false);
             Assert.IsNotNull(results);
 
-            results = await ImgurService.GetImgurGalleryAsync("dogs").ConfigureAwait(false);
+            results = await ImgurService.GetImgurGalleryAsync(TestSetup.Tokens.ImgurToken, "dogs")
+                .ConfigureAwait(false);
             Assert.IsNotNull(results);
         }
     }

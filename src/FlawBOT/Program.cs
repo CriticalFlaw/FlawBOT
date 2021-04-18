@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FlawBOT.Common;
 using FlawBOT.Properties;
-using FlawBOT.Services;
+using Newtonsoft.Json;
 
 namespace FlawBOT
 {
@@ -12,6 +14,7 @@ namespace FlawBOT
     {
         private static List<FlawBot> Shards { get; } = new();
         private static CancellationTokenSource CancelTokenSource { get; } = new();
+        public static BotSettings Settings { get; set; }
 
         public static void Main(string[] args)
         {
@@ -25,13 +28,14 @@ namespace FlawBOT
                 // Set a command for canceling the bot process
                 Console.CancelKeyPress += ConsoleOnCancelKeyPress;
 
-                // Load the bot configuration
-                var service = new BotServices();
-                if (!service.LoadConfiguration()) return;
+                // Load Settings
+                if (!File.Exists("config.json")) return;
+                var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
+                Settings = JsonConvert.DeserializeObject<BotSettings>(json);
 
                 // Generate a list of shards
                 var botList = new List<Task>();
-                for (var i = 0; i < SharedData.ShardCount; i++)
+                for (var i = 0; i < Settings.ShardCount; i++)
                 {
                     var client = new FlawBot(i);
                     Shards.Add(client);
@@ -46,7 +50,7 @@ namespace FlawBOT
             catch (Exception ex)
             {
                 Console.WriteLine(Resources.ERR_EXCEPTION, ex.Message);
-                if (!(ex.InnerException is null))
+                if (ex.InnerException is not null)
                     Console.WriteLine(Resources.ERR_EXCEPTION_INNER, ex.InnerException.Message);
                 Console.ReadKey();
             }

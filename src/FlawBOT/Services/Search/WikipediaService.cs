@@ -1,5 +1,5 @@
-﻿using WikipediaNet;
-using WikipediaNet.Objects;
+﻿using Genbox.Wikipedia;
+using Genbox.Wikipedia.Objects;
 
 namespace FlawBOT.Services
 {
@@ -7,7 +7,7 @@ namespace FlawBOT.Services
     {
         public static QueryResult GetWikipediaDataAsync(string query)
         {
-            var wikipedia = new Wikipedia {Limit = 5};
+            var wikipedia = new WikipediaClient();
             return wikipedia.Search(query);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using FlawBOT.Services;
 using NUnit.Framework;
 
-namespace Modules
+namespace FlawBOT.Test
 {
     [TestFixture]
     internal class OMDB
@@ -9,7 +9,7 @@ namespace Modules
         [Test]
         public void GetMovieData()
         {
-            Assert.IsNotNull(OmdbService.GetMovieDataAsync("office+space").Result);
+            Assert.IsNotNull(OmdbService.GetMovieDataAsync(TestSetup.Tokens.OmdbToken, "office+space").Result);
         }
     }
 }

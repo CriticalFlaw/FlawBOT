@@ -15,16 +15,16 @@ using FlawBOT.Services;
 namespace FlawBOT.Modules
 {
     [Group("emoji")]
-    [Aliases("emojis", "em", "e")]
-    [Description("Commands for managing server emojis")]
+    [Aliases("emote")]
+    [Description("Commands for managing server emojis.")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class EmojiModule : BaseCommandModule
     {
         #region COMMAND_ADD
 
         [Command("add")]
-        [Aliases("addnew", "create")]
-        [Description("Add a new server emoji through URL or as an attachment.")]
+        [Aliases("new", "create")]
+        [Description("Add a new server emoji using a URL image.")]
         [RequirePermissions(Permissions.ManageEmojis)]
         public async Task CreateEmoji(CommandContext ctx,
             [Description("Image URL.")] Uri url,
@@ -80,8 +80,8 @@ namespace FlawBOT.Modules
         #region COMMAND_DELETE
 
         [Command("delete")]
-        [Aliases("remove", "rm", "del")]
-        [Description("Remove an existing server emoji. Note: Bots can only delete emojis they created.")]
+        [Aliases("remove")]
+        [Description("Remove a server emoji. Note: Bots can only delete emojis they created.")]
         [RequirePermissions(Permissions.ManageEmojis)]
         public async Task DeleteEmoji(CommandContext ctx,
             [Description("Server emoji to delete.")]
@@ -104,13 +104,13 @@ namespace FlawBOT.Modules
 
         #region COMMAND_EDIT
 
-        [Command("modify")]
-        [Aliases("e", "edit", "rename")]
-        [Description("Edit the name of an existing server emoji.")]
+        [Command("rename")]
+        [Aliases("edit", "modify")]
+        [Description("Rename a server emoji.")]
         [RequirePermissions(Permissions.ManageEmojis)]
         public async Task EditEmoji(CommandContext ctx,
             [Description("Emoji to rename.")] DiscordEmoji query,
-            [Description("New name.")] string name)
+            [Description("New emoji name.")] string name)
         {
             try
             {
@@ -138,7 +138,6 @@ namespace FlawBOT.Modules
         #region COMMAND_INFO
 
         [Command("info")]
-        [Aliases("i")]
         [Description("Retrieve server emoji information.")]
         public async Task GetEmojiInfo(CommandContext ctx,
             [Description("Server emoji.")] DiscordEmoji query)
@@ -158,8 +157,8 @@ namespace FlawBOT.Modules
         #region COMMAND_LIST
 
         [Command("list")]
-        [Aliases("print", "l", "ls", "all")]
-        [Description("Retrieve the list of server emojis.")]
+        [Aliases("print", "all")]
+        [Description("Retrieve a list of server emojis.")]
         public async Task GetEmojiList(CommandContext ctx)
         {
             var emojiList = new StringBuilder();

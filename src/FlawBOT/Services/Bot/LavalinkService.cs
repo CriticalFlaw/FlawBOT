@@ -6,7 +6,6 @@ using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using DSharpPlus.Net;
 using Emzi0767.Utilities;
-using FlawBOT.Common;
 using Microsoft.Extensions.Logging;
 
 namespace FlawBOT.Services
@@ -21,13 +20,13 @@ namespace FlawBOT.Services
             Discord.Ready += Client_Ready;
             _trackException =
                 new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>(
-                    $"{SharedData.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION",
+                    $"{Program.Settings.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION",
                     TimeSpan.Zero, EventExceptionHandler);
         }
 
         private DiscordClient Discord { get; }
 
-        public static EventId LogEvent { get; } = new(1001, SharedData.Name);
+        public static EventId LogEvent { get; } = new(1001, Program.Settings.Name);
 
         public LavalinkNodeConnection Node { get; private set; }
 
@@ -37,14 +36,17 @@ namespace FlawBOT.Services
                 _ = Task.Run(async () =>
                 {
                     var lava = sender.GetLavalink();
-                    Node = await lava.ConnectAsync(new LavalinkConfiguration
+                    if (lava is not null)
                     {
-                        Password = "youshallnotpass",
-                        SocketEndpoint = new ConnectionEndpoint("127.0.0.1", 2333),
-                        RestEndpoint = new ConnectionEndpoint("127.0.0.1", 2333)
-                    });
+                        Node = await lava.ConnectAsync(new LavalinkConfiguration
+                        {
+                            Password = "youshallnotpass",
+                            SocketEndpoint = new ConnectionEndpoint("192.168.2.38", 2333),
+                            RestEndpoint = new ConnectionEndpoint("192.168.2.38", 2333)
+                        });
 
-                    Node.TrackException += LavalinkNode_TrackException;
+                        Node.TrackException += LavalinkNode_TrackException;
+                    }
                 });
 
             return Task.CompletedTask;

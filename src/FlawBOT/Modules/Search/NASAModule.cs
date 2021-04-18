@@ -15,10 +15,11 @@ namespace FlawBOT.Modules
 
         [Command("nasa")]
         [Aliases("apod", "space")]
-        [Description("Retrieve NASA's Astronomy Picture of the Day")]
+        [Description("Retrieve NASA's Astronomy Picture of the Day.")]
         public async Task Nasa(CommandContext ctx)
         {
-            var results = await NasaService.GetNasaImageAsync().ConfigureAwait(false);
+            await ctx.TriggerTypingAsync();
+            var results = await NasaService.GetNasaImageAsync(Program.Settings.Tokens.NasaToken).ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Missing)

@@ -15,7 +15,7 @@ using FlawBOT.Services;
 namespace FlawBOT.Modules
 {
     [Group("tf2")]
-    [Description("Commands related to Team Fortress 2")]
+    [Description("Commands related to Team Fortress 2.")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class TeamFortressModule : BaseCommandModule
     {
@@ -23,11 +23,12 @@ namespace FlawBOT.Modules
 
         [Command("item")]
         [Aliases("schema", "hat")]
-        [Description("Retrieve an item from the latest TF2 item schema")]
+        [Description("Retrieve an item from the latest TF2 item schema.")]
         public async Task Tf2Schema(CommandContext ctx,
             [Description("Item to find in the TF2 schema")] [RemainingText]
             string query = "The Scattergun")
         {
+            await ctx.TriggerTypingAsync();
             var item = TeamFortressService.GetSchemaItem(query);
             if (item is null)
             {
@@ -76,7 +77,10 @@ namespace FlawBOT.Modules
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            var results = await TeamFortressService.GetMapStatsAsync(query.ToLowerInvariant()).ConfigureAwait(false);
+            await ctx.TriggerTypingAsync();
+            var results = await TeamFortressService
+                .GetMapStatsAsync(Program.Settings.Tokens.TeamworkToken, query.ToLowerInvariant())
+                .ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -118,7 +122,8 @@ namespace FlawBOT.Modules
 
             if (results.GameModes.Count > 0)
             {
-                var desc = TeamFortressService.GetGameModeInfoAsync(results.GameModes.FirstOrDefault()).Result;
+                var desc = TeamFortressService.GetGameModeInfoAsync(Program.Settings.Tokens.TeamworkToken,
+                    results.GameModes.FirstOrDefault()).Result;
                 output.WithDescription(desc.Title + " - " + desc.Description);
                 output.WithColor(new DiscordColor($"#{desc.Color}"));
             }
@@ -131,12 +136,14 @@ namespace FlawBOT.Modules
         #region COMMAND_NEWS
 
         [Command("news")]
-        [Description("Retrieve the latest news article from teamwork.tf")]
+        [Description("Retrieve the latest news article from teamwork.tf.")]
         public async Task Tf2News(CommandContext ctx,
             [Description("Page number from which to retrieve the news")]
             int query = 0)
         {
-            var results = await TeamFortressService.GetNewsArticlesAsync(query).ConfigureAwait(false);
+            await ctx.TriggerTypingAsync();
+            var results = await TeamFortressService.GetNewsArticlesAsync(Program.Settings.Tokens.TeamworkToken, query)
+                .ConfigureAwait(false);
             if (results is null || results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -147,8 +154,10 @@ namespace FlawBOT.Modules
             while (results.Count > 0)
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithFooter("Type 'next' within 10 seconds for the next five posts.")
-                    .WithColor(new DiscordColor("#E7B53B"));
+                    .WithColor(new DiscordColor("#E7B53B"))
+                    .WithFooter(results.Count - 5 >= 5
+                        ? "Type 'next' within 10 seconds for the next five posts."
+                        : "These are all the latest posts at this time.");
 
                 foreach (var result in results.Take(5))
                 {
@@ -160,7 +169,7 @@ namespace FlawBOT.Modules
                 var message = await ctx.RespondAsync("Latest news articles from teamwork.tf", output)
                     .ConfigureAwait(false);
 
-                if (results.Count == 5) continue;
+                if (results.Count < 5) break;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                 if (interactivity.Result is null) break;
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
@@ -174,12 +183,13 @@ namespace FlawBOT.Modules
 
         [Command("creator")]
         [Aliases("creators", "youtuber")]
-        [Description("Retrieve a community creator profile from teamwork.tf")]
+        [Description("Retrieve a community creator profile from teamwork.tf.")]
         public async Task Tf2Creators(CommandContext ctx,
-            [Description("Name of the community creator to find")] [RemainingText]
+            [Description("Name of the community creator to find.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
+            await ctx.TriggerTypingAsync();
             var steamId = SteamService.GetSteamUserId(query).Result;
             if (steamId is null)
             {
@@ -188,7 +198,8 @@ namespace FlawBOT.Modules
                 return;
             }
 
-            var results = await TeamFortressService.GetContentCreatorAsync(steamId.Data).ConfigureAwait(false);
+            var results = await TeamFortressService
+                .GetContentCreatorAsync(Program.Settings.Tokens.TeamworkToken, steamId.Data).ConfigureAwait(false);
             if (results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
@@ -201,7 +212,7 @@ namespace FlawBOT.Modules
                 var user = results.FirstOrDefault();
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(user?.Name)
-                    .WithDescription("Main Class: " + user?.Main?.ToString().ToUpper())
+                    .WithDescription("Main Class: " + user?.Main?.ToString()?.ToUpper())
                     .WithThumbnail(user?.ThumbnailUrl)
                     .WithUrl(user?.Link)
                     .WithColor(new DiscordColor("#E7B53B"))
@@ -240,13 +251,15 @@ namespace FlawBOT.Modules
 
         [Command("server")]
         [Aliases("servers")]
-        [Description("Retrieve a list of servers with given game-mode")]
+        [Description("Retrieve a list of servers with given game-mode.")]
         public async Task Tf2ServerByMode(CommandContext ctx,
-            [Description("Name of the game-mode, like payload")] [RemainingText]
+            [Description("Name of the game-mode, like payload.")] [RemainingText]
             string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            var results = await TeamFortressService.GetServersByGameModeAsync(query.Trim().Replace(' ', '-'))
+            await ctx.TriggerTypingAsync();
+            var results = await TeamFortressService
+                .GetServersByGameModeAsync(Program.Settings.Tokens.TeamworkToken, query.Trim().Replace(' ', '-'))
                 .ConfigureAwait(false);
             if (results is null)
             {
@@ -270,10 +283,11 @@ namespace FlawBOT.Modules
                     .AddField("All Talk", server.HasAllTalk ? "Yes" : "No", true)
                     .AddField("Current Map", server.MapName ?? "Unknown", true)
                     .AddField("Next Map", server.MapNameNext ?? "Unknown", true)
-                    .WithFooter("Type 'next' within 10 seconds for the next server")
+                    .WithFooter("Type 'next' within 10 seconds for the next server.")
                     .WithColor(new DiscordColor("#E7B53B"));
 
-                var thumbnailUrl = await TeamFortressService.GetMapThumbnailAsync(server.MapName).ConfigureAwait(false);
+                var thumbnailUrl = await TeamFortressService
+                    .GetMapThumbnailAsync(Program.Settings.Tokens.TeamworkToken, server.MapName).ConfigureAwait(false);
                 output.WithImageUrl(thumbnailUrl.Name);
 
                 var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
@@ -294,6 +308,7 @@ namespace FlawBOT.Modules
             [Description("Game server IP address, like 164.132.233.16")] [RemainingText]
             string ip)
         {
+            await ctx.TriggerTypingAsync();
             if (string.IsNullOrWhiteSpace(ip) || !IPAddress.TryParse(ip, out var address))
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP, ResponseType.Missing)
@@ -302,7 +317,9 @@ namespace FlawBOT.Modules
             }
 
             await ctx.RespondAsync(string.Format(Resources.URL_Steam_Connect, address)).ConfigureAwait(false);
-            await ctx.RespondAsync(TeamFortressService.GetServerInfo(address.ToString())).ConfigureAwait(false);
+            await ctx.RespondAsync(
+                    TeamFortressService.GetServerInfo(Program.Settings.Tokens.TeamworkToken, address.ToString()))
+                .ConfigureAwait(false);
         }
 
         [Command("list")]
@@ -310,12 +327,14 @@ namespace FlawBOT.Modules
         [Description("Retrieve a curated list of servers")]
         public async Task Tf2ServerList(CommandContext ctx)
         {
-            var results = await TeamFortressService.GetCustomServerListsAsync().ConfigureAwait(false);
+            await ctx.TriggerTypingAsync();
+            var results = await TeamFortressService.GetCustomServerListsAsync(Program.Settings.Tokens.TeamworkToken)
+                .ConfigureAwait(false);
             results = results.OrderBy(_ => new Random().Next()).ToList();
             while (results.Count > 0)
             {
                 var output = new DiscordEmbedBuilder()
-                    .WithFooter("Type 'next' within 10 seconds for the next set of server lists")
+                    .WithFooter("Type 'next' within 10 seconds for the next set of server lists.")
                     .WithColor(new DiscordColor("#E7B53B"));
 
                 foreach (var list in results.Take(4))

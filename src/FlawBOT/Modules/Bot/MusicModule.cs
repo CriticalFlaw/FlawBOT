@@ -65,7 +65,6 @@ namespace FlawBOT.Modules
         #region COMMAND_VOLUME
 
         [Command("volume")]
-        [Aliases("v")]
         [Description("Set audio playback volume.")]
         public async Task SetVolume(CommandContext ctx,
             [Description("Audio volume. Can be set to 0-150 (default 100).")]
@@ -150,10 +149,9 @@ namespace FlawBOT.Modules
 
         [Priority(1)]
         [Command("play")]
-        [Aliases("p")]
         [Description("Play audio from provided URL or search by specified query.")]
         public async Task PlaySong(CommandContext ctx,
-            [Description("URL from which to play audio")]
+            [Description("URL from which to play audio.")]
             Uri uri)
         {
             var trackLoad = await Service.GetTracksAsync(uri);

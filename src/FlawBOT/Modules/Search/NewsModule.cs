@@ -16,12 +16,14 @@ namespace FlawBOT.Modules
         #region COMMAND_NEWS
 
         [Command("news")]
-        [Description("Retrieve the latest news articles from NewsAPI.org")]
+        [Description("Retrieve the news articles on a topic from NewsAPI.org.")]
         public async Task News(CommandContext ctx,
-            [Description("Article topic to find on Google News")] [RemainingText]
+            [Description("Article topic to find on NewsAPI.org.")] [RemainingText]
             string query)
         {
-            var results = await NewsService.GetNewsDataAsync(query).ConfigureAwait(false);
+            await ctx.TriggerTypingAsync();
+            var results = await NewsService.GetNewsDataAsync(Program.Settings.Tokens.NewsToken, query)
+                .ConfigureAwait(false);
             if (results.Status != "ok")
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
