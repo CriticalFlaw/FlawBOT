@@ -7,7 +7,7 @@ theme:
     favicon: resources/favicon.ico
     palette:
         scheme: slate
-        primary: indigo
+        primary: deep purple
         accent: orange
 repo_name: GitHub
 site_url: https://www.flawbot.criticalflaw.ca/
@@ -16,12 +16,17 @@ nav:
     - Home: 'index.md'
     - Installation: 'install.md'
     - Deployment: 'deploy.md'
-    - Modules:
-        - Main: 'modules/bot.md'
-        - Media: 'modules/media.md'
-        - Misc: 'modules/misc.md'
-        - Music: 'modules/music.md'
-        - Server: 'modules/server.md'
+    - Commands:
+        - Bot: 'cmd/bot.md'
+        - Channel: 'cmd/channel.md'
+        - Emoji: 'cmd/emoji.md'
+        - Games: 'cmd/games.md'
+        - Misc: 'cmd/misc.md'
+        - Music: 'cmd/music.md'
+        - Role: 'cmd/role.md'
+        - Search: 'cmd/search.md'
+        - Server: 'cmd/server.md'
+        - User: 'cmd/user.md'
 markdown_extensions:
     - admonition
     - pymdownx.superfences
