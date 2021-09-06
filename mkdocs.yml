@@ -5,10 +5,21 @@ theme:
     name: material
     logo: resources/favicon.ico
     favicon: resources/favicon.ico
+    features:
+        - navigation.expand
     palette:
-        scheme: slate
-        primary: deep purple
-        accent: orange
+        - scheme: default
+          primary: indigo
+          accent: amber
+          toggle:
+            icon: material/toggle-switch-off-outline
+            name: Switch to dark mode
+        - scheme: slate
+          primary: amber
+          accent: orange
+          toggle:
+            icon: material/toggle-switch
+            name: Switch to light mode
 repo_name: GitHub
 site_url: https://www.flawbot.criticalflaw.ca/
 repo_url: https://github.com/CriticalFlaw/FlawBOT/
@@ -27,9 +38,13 @@ nav:
         - Search: 'cmd/search.md'
         - Server: 'cmd/server.md'
         - User: 'cmd/user.md'
+hide:
+    - toc
 markdown_extensions:
     - admonition
     - pymdownx.superfences
+    - toc:
+        toc_depth: 0
 plugins:
     - search
     - git-revision-date-localized:
