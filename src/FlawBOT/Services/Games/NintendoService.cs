@@ -12,6 +12,8 @@ namespace FlawBOT.Services
 {
     public class NintendoService : HttpHandler
     {
+        private static List<string> PokemonList { get; set; } = new();
+
         public static async Task<AmiiboData> GetAmiiboDataAsync(string query)
         {
             try
@@ -25,8 +27,6 @@ namespace FlawBOT.Services
                 return null;
             }
         }
-
-        private static List<string> PokemonList { get; set; } = new();
 
         /// <summary>
         ///     Call the Pokémon TCG API for a set of cards.

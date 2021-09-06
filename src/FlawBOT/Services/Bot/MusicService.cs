@@ -21,12 +21,9 @@ namespace FlawBOT.Services
 
         private ConcurrentDictionary<ulong, MusicPlayer> MusicData { get; }
 
-        public async Task<MusicPlayer> GetOrCreateDataAsync(DiscordGuild server)
+        public Task<MusicPlayer> GetOrCreateDataAsync(DiscordGuild server)
         {
-            if (MusicData.TryGetValue(server.Id, out var player))
-                return player;
-
-            return MusicData.AddOrUpdate(server.Id, new MusicPlayer(Lavalink), (_, v) => v);
+            return Task.FromResult(MusicData.TryGetValue(server.Id, out var player) ? player : MusicData.AddOrUpdate(server.Id, new MusicPlayer(Lavalink), (_, v) => v));
         }
 
         public Task<LavalinkLoadResult> GetTracksAsync(Uri uri)

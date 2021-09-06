@@ -223,8 +223,7 @@ namespace FlawBOT.Modules
         [Description("Remove all role from a server user.")]
         [RequirePermissions(Permissions.ManageRoles)]
         public async Task RevokeAllRoles(CommandContext ctx,
-            [Description("Server user name.")]
-            DiscordMember member)
+            [Description("Server user name.")] DiscordMember member)
         {
             if (!member.Roles.Any())
             {
@@ -254,8 +253,7 @@ namespace FlawBOT.Modules
         [Description("Assign a role to server user.")]
         [RequirePermissions(Permissions.ManageRoles)]
         public async Task SetUserRole(CommandContext ctx,
-            [Description("Server user name.")]
-            DiscordMember member,
+            [Description("Server user name.")] DiscordMember member,
             [Description("Server role name.")] [RemainingText]
             DiscordRole role)
         {

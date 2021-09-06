@@ -340,9 +340,9 @@ namespace FlawBOT.Modules
                 foreach (var list in results.Take(4))
                 {
                     var desc = Regex.Replace(
-                        list.DescriptionLarge.Length <= 400
-                            ? list.DescriptionLarge
-                            : list.DescriptionLarge.Substring(0, 200) + "...", "<[^>]*>", "");
+                        list.DescriptionLong.Length <= 400
+                            ? list.DescriptionLong
+                            : list.DescriptionLong.Substring(0, 200) + "...", "<[^>]*>", "");
                     output.AddField($"Created By: {list.Creator.Name ?? "Unknown"} \t Subscribers: {list.Subscribed}",
                         $"[{list.Name}]({Resources.URL_TeamworkTF + list.Id}) - {desc}");
 

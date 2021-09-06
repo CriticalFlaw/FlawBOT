@@ -66,7 +66,8 @@ namespace FlawBOT.Modules
         [Description("Deafen a server user.")]
         [RequirePermissions(Permissions.DeafenMembers)]
         public async Task DeafenUser(CommandContext ctx,
-            [Description("Server user to deafen.")] DiscordMember member,
+            [Description("Server user to deafen.")]
+            DiscordMember member,
             [Description("Reason for the deafen.")] [RemainingText]
             string reason = null)
         {
@@ -184,8 +185,7 @@ namespace FlawBOT.Modules
         [Description("Change server user's nickname.")]
         [RequireUserPermissions(Permissions.ChangeNickname)]
         public async Task SetUserName(CommandContext ctx,
-            [Description("Server user name.")]
-            DiscordMember member,
+            [Description("Server user name.")] DiscordMember member,
             [Description("New nickname for the name.")] [RemainingText]
             string name = null)
         {
@@ -205,8 +205,7 @@ namespace FlawBOT.Modules
         [Command("perms")]
         [Description("Retrieve server user's permissions.")]
         public async Task GetPermissionsList(CommandContext ctx,
-            [Description("Server user name.")]
-            DiscordMember member = null,
+            [Description("Server user name.")] DiscordMember member = null,
             [Description("Server channel.")] DiscordChannel channel = null)
         {
             member ??= ctx.Member;
@@ -268,7 +267,8 @@ namespace FlawBOT.Modules
         [Description("Unmute a server user.")]
         [RequirePermissions(Permissions.MuteMembers)]
         public async Task Unmute(CommandContext ctx,
-            [Description("Server user to unmute.")] DiscordMember member,
+            [Description("Server user to unmute.")]
+            DiscordMember member,
             [Description("Reason for the deafen.")] [RemainingText]
             string reason = null)
         {

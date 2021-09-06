@@ -22,13 +22,13 @@ namespace FlawBOT.Services
         {
             List<News> results;
             if (page > 0)
-                results = await new TeamworkClient(token).GetNewsByPageAsync(page)
+                results = await new TeamworkAPI(token).GetNewsByPageAsync(page)
                     .ConfigureAwait(false);
             else if (provider != string.Empty)
-                results = await new TeamworkClient(token).GetNewsByProviderAsync(provider)
+                results = await new TeamworkAPI(token).GetNewsByProviderAsync(provider)
                     .ConfigureAwait(false);
             else
-                results = await new TeamworkClient(token).GetNewsOverviewAsync()
+                results = await new TeamworkAPI(token).GetNewsOverviewAsync()
                     .ConfigureAwait(false);
             return results.Where(x => x.Type != "tf2-notification").ToList();
         }
@@ -37,10 +37,10 @@ namespace FlawBOT.Services
 
         #region CREATORS
 
-        public static async Task<List<Creator>> GetContentCreatorAsync(string token, ulong query)
+        public static async Task<List<User>> GetContentCreatorAsync(string token, ulong query)
         {
-            return await new TeamworkClient(token)
-                .GetYouTubeCreatorAsync(query.ToString())
+            return await new TeamworkAPI(token)
+                .GetCommunityUserAsync(query.ToString())
                 .ConfigureAwait(false);
         }
 
@@ -79,25 +79,25 @@ namespace FlawBOT.Services
 
         public static async Task<GameMode> GetGameModeInfoAsync(string token, string query)
         {
-            return await new TeamworkClient(token).GetGameModeAsync(query)
+            return await new TeamworkAPI(token).GetGameModeAsync(query)
                 .ConfigureAwait(false);
         }
 
         public static async Task<List<Server>> GetServersByGameModeAsync(string token, string query)
         {
-            return await new TeamworkClient(token).GetServerListByGameModeAsync(query)
+            return await new TeamworkAPI(token).GetServerListByGameModeAsync(query)
                 .ConfigureAwait(false);
         }
 
         public static async Task<List<ServerList>> GetCustomServerListsAsync(string token)
         {
-            return await new TeamworkClient(token).GetServerListsAsync()
+            return await new TeamworkAPI(token).GetServerListsAsync()
                 .ConfigureAwait(false);
         }
 
         public static string GetServerInfo(string token, string address)
         {
-            return new TeamworkClient(token).GetServerBanner(address);
+            return new TeamworkAPI(token).GetServerBanner(address);
         }
 
         #endregion SERVERS
@@ -106,15 +106,15 @@ namespace FlawBOT.Services
 
         public static async Task<Map> GetMapStatsAsync(string token, string query)
         {
-            var map = new TeamworkClient(token).GetMapsBySearchAsync(query).Result
+            var map = new TeamworkAPI(token).GetMapsBySearchAsync(query).Result
                 .FirstOrDefault()?.Name;
-            return await new TeamworkClient(token).GetMapStatsAsync(map)
+            return await new TeamworkAPI(token).GetMapStatsAsync(map)
                 .ConfigureAwait(false);
         }
 
         public static async Task<MapThumbnail> GetMapThumbnailAsync(string token, string query)
         {
-            return await new TeamworkClient(token).GetMapThumbnailAsync(query)
+            return await new TeamworkAPI(token).GetMapThumbnailAsync(query)
                 .ConfigureAwait(false);
         }
 

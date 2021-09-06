@@ -1,5 +1,4 @@
-﻿using System.Net;
-using FlawBOT.Services;
+﻿using FlawBOT.Services;
 using NUnit.Framework;
 
 namespace FlawBOT.Test
