@@ -412,7 +412,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.urbandictionary.com/v0/define?term={0}.
+        ///   Looks up a localized string similar to https://api.urbandictionary.com/v0/define?term={0}.
         /// </summary>
         internal static string URL_Dictionary {
             get {

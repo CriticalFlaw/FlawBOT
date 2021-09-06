@@ -245,7 +245,7 @@
     <value>http://aws.random.cat/meow</value>
   </data>
   <data name="URL_Dictionary" xml:space="preserve">
-    <value>http://api.urbandictionary.com/v0/define?term={0}</value>
+    <value>https://api.urbandictionary.com/v0/define?term={0}</value>
   </data>
   <data name="URL_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>

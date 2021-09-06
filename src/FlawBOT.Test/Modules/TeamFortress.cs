@@ -18,6 +18,7 @@ namespace FlawBOT.Test
         }
 
         [Test]
+        [Timeout(10000)]
         public void GetNewsOverview()
         {
             Assert.IsNotNull(TeamFortressService.GetNewsArticlesAsync(TestSetup.Tokens.TeamworkToken).Result);
