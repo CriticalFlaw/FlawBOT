@@ -1,4 +1,3 @@
-## Raspberry Pi Deployment
 This guide assumes that you've already cloned, configured, compiled and ran an instance of FlawBOT on your local machine.
 
 1. Compile FlawBOT from Visual Studio on your local machine.

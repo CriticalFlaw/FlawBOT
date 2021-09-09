@@ -1,34 +1,17 @@
-Follow these steps to setup and run FlawBOT on your local machine.
-
-1. [Clone the repository][clone-link] or [download the release package][release-link].
-2. Modify the included **config.json** file, adding your API tokens (see list below).
-3. Open and compile the project solution using [Visual Studio 2019][vs-link]. 
+Follow these steps to run a version of FlawBOT on your local machine.
+1. [Download the latest version of **flawbot.zip**][release-link].
+2. Extract downloaded file contents into a separate folder.
+3. Modify the included **config.json** file with your [API tokens][tokens-link].
+4. Run the below command in the Command Prompt.
+   * In case of errors, install the [.NET Core 5.0 Runtime for **console apps**][runtime-link].
+```
+dotnet FlawBOT.dll
+```
 
 ---
 
-## API Tokens
-* [Discord][api-discord] (*required*)
-* [Steam][api-steam]
-* [Imgur][api-imgur]
-* [OMDB][api-omdb]
-* [Twitch][api-twitch]
-* [NASA][api-news]
-* [Teamwork.TF][api-teamwork]
-* [News API][api-news]
-* [WeatherStack][api-weather]
-* [YouTube][api-youtube]
-
-<!-- MARKDOWN LINKS -->
-[clone-link]: https://github.com/CriticalFlaw/FlawBOT/archive/master.zip
-[release-link]: https://github.com/CriticalFlaw/FlawBOT/releases
-[vs-link]: https://visualstudio.microsoft.com/
-[api-discord]: https://discordapp.com/developers/applications/me
-[api-steam]: https://steamcommunity.com/dev/apikey
-[api-imgur]: https://api.imgur.com/oauth2/addclient
-[api-omdb]: http://www.omdbapi.com/apikey.aspx
-[api-twitch]: https://dev.twitch.tv/dashboard/apps/create
-[api-news]: https://api.nasa.gov/
-[api-teamwork]: https://github.com/teamworktf/website_api
-[api-news]: https://newsapi.org/
-[api-weather]: https://weatherstack.com/
-[api-youtube]: https://console.cloud.google.com/projectselector/apis/credentials
+Follow these steps to compile and run your own version of FlawBOT from source.
+1. Clone the repository.
+2. Open `FlawBOT\src\FlawBOT.sln` in [Visual Studio 2019][vs-link].
+3. Modify the included **config.json** file with your [API tokens][tokens-link].
+4. Build and run the project.

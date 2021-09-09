@@ -1,15 +1,3 @@
-[issues-link]: https://github.com/CriticalFlaw/FlawBOT/issues
-[discord-link]: https://discord.gg/hTdtK9vBhE
-
-This section is for common issues you may encounter and how to resolve them.
-
-* For error or issues not on this page, please [open a ticket on our issue tracker][issues-link].
-* For questions not covered in this documentation, [post in our Discord server][discord-link].
-
----
-
-## User
-
 Description: Commands for controlling server users.
 Aliases: users, usr
 
