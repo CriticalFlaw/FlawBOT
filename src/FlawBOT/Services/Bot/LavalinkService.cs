@@ -32,22 +32,32 @@ namespace FlawBOT.Services
 
         private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
         {
-            if (Node == null)
+            if (Node is null)
+            {
                 _ = Task.Run(async () =>
                 {
-                    var lava = sender.GetLavalink();
-                    if (lava is not null)
+                    try
                     {
-                        Node = await lava.ConnectAsync(new LavalinkConfiguration
+                        var lava = sender.GetLavalink();
+                        if (lava is not null)
                         {
-                            Password = "youshallnotpass",
-                            SocketEndpoint = new ConnectionEndpoint("192.168.2.38", 2333),
-                            RestEndpoint = new ConnectionEndpoint("192.168.2.38", 2333)
-                        });
+                            Node = await lava.ConnectAsync(new LavalinkConfiguration
+                            {
+                                Password = "youshallnotpass",
+                                SocketEndpoint = new ConnectionEndpoint("127.0.0.1", 2333),
+                                RestEndpoint = new ConnectionEndpoint("127.0.0.1", 2333)
+                            });
 
-                        Node.TrackException += LavalinkNode_TrackException;
+                            Node.TrackException += LavalinkNode_TrackException;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Discord.Logger.LogError(LogEvent, ex, "Exception occurred when connecting the lavalink node.");
+                        throw;
                     }
                 });
+            }
 
             return Task.CompletedTask;
         }

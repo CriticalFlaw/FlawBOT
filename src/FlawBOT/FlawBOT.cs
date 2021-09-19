@@ -110,7 +110,7 @@ namespace FlawBOT
             });
 
             // Setup Lavalink
-            if (settings.UseLavalink && File.Exists($"{Directory.GetCurrentDirectory()}\\Lavalink.jar"))
+            if (settings.Lavalink && File.Exists($"{Directory.GetCurrentDirectory()}\\Lavalink.jar"))
                 Lavalink = Client.UseLavalink();
 
             // Start the uptime counter
@@ -150,7 +150,7 @@ namespace FlawBOT
         private static Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
         {
             var settings = Program.Settings;
-            sender.Logger.LogInformation(EventId, $"{settings.Name}, version: {settings.Version}");
+            sender.Logger.LogInformation(EventId, $"{settings.Name}, version {settings.Version}");
             return Task.CompletedTask;
         }
 

@@ -14,7 +14,7 @@ namespace FlawBOT.Common
         [JsonPropertyName("Prefix")] public string Prefix;
         [JsonPropertyName("ShardCount")] public int ShardCount;
         [JsonPropertyName("Tokens")] public Tokens Tokens;
-        [JsonPropertyName("Lavalink")] public bool UseLavalink;
+        [JsonPropertyName("Lavalink")] public bool Lavalink;
         public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
         public string GitHubLink { get; } = Resources.URL_BOT_GitHub;
         public string InviteLink { get; } = Resources.URL_BOT_Invite;
@@ -24,7 +24,8 @@ namespace FlawBOT.Common
 
     public class Tokens
     {
-        [JsonProperty("Discord")] public string DiscordToken { get; set; }
+        [JsonProperty("Discord")]
+        public string DiscordToken { get; set; }
 
         [JsonProperty("Steam", NullValueHandling = NullValueHandling.Ignore)]
         public string SteamToken { get; set; }
