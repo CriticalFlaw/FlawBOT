@@ -29,7 +29,12 @@ Below is a sample of what the final config.json will look like.
   "Name": "FlawBOT",
   "Prefix": ".",
   "ShardCount": 1,
-  "Lavalink": false,
+  "Lavalink": {
+    "Enabled": true,
+    "Address": "192.168.2.38",
+    "Port": 2333,
+    "Password": "youshallnotpass"
+  },
   "Tokens": {
 	  "Discord": "MzMM4kn_WRCjbDkqS5jFJD4EzMD5ODMzMDI5MD54Yz8EyNDgz.XjAxwA.k-",
 	  "Steam": "CB6352D346CBA5DC46CC09SD615E4EC8",

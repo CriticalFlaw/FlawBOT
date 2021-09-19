@@ -1,36 +1,113 @@
-![banner][banner-image]
-![version][version-badge]
-[![build][build-badge]][build-link]
-[![quality][quality-badge]][quality-link]
+<!-- BADGES -->
+[![version-shield]][releases-link]
+[![releases-shield]][releases-link]
+[![docs-shield]][docs-link]
+[![license-shield]][license-link]
+[![issues-shield]][issues-link]
+[![invite-shield]][invite-link]
 
-A Discord bot written in C# using the [DSharpPlus][dsharp-link] library. This bot is not being hosted online, however you're welcome to fork this repository and host it yourself or reuse the code for your own bot, as long as you credit it properly. 
-
-## Invite
-[Click here to invite FlawBOT to your server][invite-link]. Please note that the bot will only be online periodically for testing purposes.
-
-## Installation
-To run your own instance of FlawBOT, [clone this repository][clone-link] or [download the release package][release-link] and modify the provided **config.json** file, adding the API tokens. If you're cloning the repository, use [Visual Studio 2019][vs-link] to compile the project. 
-
-## Running FlawBOT
-As of version 3.0, FlawBOT requires a [Lavalink][lava-link] node to be running in order to play music and not display lavalink-related errors in console. `lavalink.jar` and `application.yml` are included in the project directory, so all you have to do is open the command prompt and launch lavalink with the command `java -jar Lavalink.jar` (be sure to install [Java 13 or later][java-link]).
-
-## Documentation
-For more information on the project, including the complete list of commands can be found [here][docs-link].
-
-## API Tokens
-* [Discord][api-discord] (*required*)
-* [Steam][api-steam]
-* [Imgur][api-imgur]
-* [OMDB][api-omdb]
-* [Twitch][api-twitch]
-* [NASA][api-news]
-* [Teamwork.TF][api-teamwork]
-* [News API][api-news]
-* [WeatherStack][api-weather]
-* [YouTube][api-youtube]
-
+![image](https://user-images.githubusercontent.com/6818236/133937428-8f74b640-52f9-4291-bf42-62929c9938a0.png)
+<p align="center">
+  <p align="center">
+    A Discord bot written in C# using the DSharpPlus library. Features include server management, playing music and calling popular APIs.
+    <br />
+    <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest">Download</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/">Documentation</a>
+    ·
+    <a href="https://github.com/DSharpPlus/DSharpPlus">DSharpPlus</a>
+    ·
+    <a href="https://github.com/CriticalFlaw/TF2HUD.Editor/issues">Issue Tracker</a>
+    ·
+    <a href="https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303">Invite FlawBOT</a>
+  </p>
+</p>
 
 <!-- MARKDOWN LINKS -->
+[version-shield]: https://img.shields.io/github/release/CriticalFlaw/FlawBOT.svg?style=flat-square
+[releases-shield]: https://img.shields.io/github/downloads/criticalflaw/flawbot/total?style=flat-square
+[releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
+[docs-shield]: https://readthedocs.org/projects/flawbot/badge/?version=latest&style=flat-square
+[docs-link]: https://www.flawbot.criticalflaw.ca/
+[license-shield]: https://img.shields.io/github/license/CriticalFlaw/FlawBOT?style=flat-square
+[license-link]: https://github.com/CriticalFlaw/FlawBOT/blob/master/.github/LICENSE
+[issues-shield]: https://img.shields.io/github/issues/CriticalFlaw/FlawBOT?style=flat-square
+[issues-link]: https://github.com/CriticalFlaw/FlawBOT/issues
+[invite-shield]: https://img.shields.io/badge/Discord-invite-7289da.svg?style=flat-square&logo=discord
+[invite-link]: https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303
+[tokens-link]: https://www.flawbot.criticalflaw.ca/tokens/
+[runtime-link]: https://dotnet.microsoft.com/download/dotnet/5.0/runtime
+
+---
+                                                           
+### Basic Installation
+1. [Download the latest version of **flawbot.zip**][releases-link].
+2. Extract downloaded file contents into a separate folder.
+3. Modify the included **config.json** file with your [API tokens](#API-Tokens).
+4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
+   * In case of errors, install the [.NET Core 5.0 Runtime for **console apps**][runtime-link].
+
+### Advanced Installation
+1. Clone the repository.
+2. Open `FlawBOT\src\FlawBOT.sln` in [Visual Studio 2019][vs-link].
+3. Modify the included **config.json** file with your [API tokens](#API-Tokens).
+4. To use music commands, run the included `Lavalink.jar` file.
+5. Build and run the project.
+
+---
+
+### Command Modules
+FlawBOT includes multiple commands for managing your server, playing music and calling public APIs like Steam, OMDB and more.
+<p align="east">
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/bot/">Bot</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/games/">Games</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/role/music/">Music</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/search/">Search</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/role/misc/">Misc</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/server/">Server</a>
+    ·
+    <a href=https://www.flawbot.criticalflaw.ca/cmd/channel/">Channel</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/user/">User</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/role/">Role</a>
+    ·
+    <a href="https://www.flawbot.criticalflaw.ca/cmd/emoji/">Emoji</a>
+  </p>
+</p>
+
+### API-Tokens
+Below are links to various platforms where you can generate your API tokens to then put into the included **config.json** file.
+<p align="east">
+    <a href="https://discordapp.com/developers/applications/me">Discord</a>
+    ·
+    <a href="https://steamcommunity.com/dev/apikey">Steam</a>
+    ·
+    <a href="https://api.imgur.com/oauth2/addclient">Imgur</a>
+    ·
+    <a href="http://www.omdbapi.com/apikey.aspx">OMDB</a>
+    ·
+    <a href="https://dev.twitch.tv/dashboard/apps/create">Twitch</a>
+    ·
+    <a href="https://api.nasa.gov/">NASA</a>
+    ·
+    <a href="https://github.com/teamworktf/website_api">Teamwork.TF</a>
+    ·
+    <a href="https://newsapi.org/">NewsAPI</a>
+    ·
+    <a href="https://weatherstack.com/">WeatherStack</a>
+    ·
+    <a href="https://console.cloud.google.com/projectselector/apis/credentials">YouTube</a>
+  </p>
+</p>
+
+<!-- MARKDOWN LINKS -->
+                                                                               
 [banner-image]: https://i.imgur.com/YlbST5I.jpg
 [version-badge]: https://img.shields.io/github/release/CriticalFlaw/FlawBOT.svg
 [build-badge]: https://ci.appveyor.com/api/projects/status/6hw48u0v6muwxvvo?svg=true
@@ -41,17 +118,7 @@ For more information on the project, including the complete list of commands can
 [docs-link]: https://flawbot.criticalflaw.ca/
 [invite-link]: https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303
 [clone-link]: https://github.com/CriticalFlaw/FlawBOT/archive/master.zip
-[release-link]: https://github.com/CriticalFlaw/FlawBOT/releases
 [vs-link]: https://visualstudio.microsoft.com/
 [lava-link]: https://github.com/Frederikam/Lavalink#requirements
 [java-link]: https://www.oracle.com/java/technologies/javase-jdk13-downloads.html
-[api-discord]: https://discordapp.com/developers/applications/me
-[api-steam]: https://steamcommunity.com/dev/apikey
-[api-imgur]: https://api.imgur.com/oauth2/addclient
-[api-omdb]: http://www.omdbapi.com/apikey.aspx
-[api-twitch]: https://dev.twitch.tv/dashboard/apps/create
-[api-news]: https://api.nasa.gov/
-[api-teamwork]: https://github.com/teamworktf/website_api
-[api-news]: https://newsapi.org/
-[api-weather]: https://weatherstack.com/
-[api-youtube]: https://console.cloud.google.com/projectselector/apis/credentials
+

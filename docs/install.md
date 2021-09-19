@@ -1,4 +1,4 @@
-Follow these steps to run a version of FlawBOT on your local machine.
+Follow these steps to run the latest version of FlawBOT on your local machine.
 
 1. [Download the latest version of **flawbot.zip**][releases-link].
 2. Extract downloaded file contents into a separate folder.
