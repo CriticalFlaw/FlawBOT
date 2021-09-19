@@ -1,6 +1,6 @@
 server: # REST and WS server
   port: 2333
-  address: 192.168.2.38
+  address: 127.0.0.1
 spring:
   main:
     banner-mode: log
