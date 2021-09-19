@@ -9,7 +9,7 @@
 ![image](https://user-images.githubusercontent.com/6818236/133937428-8f74b640-52f9-4291-bf42-62929c9938a0.png)
 <p align="center">
   <p align="center">
-    Discord bot written in C# using DSharpPlus. Features include server management, playing music and calling popular APIs.
+    Discord bot written in C# using DSharpPlus. Manage your server, play music and call popular APIs.
     <br />
     <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest">Download</a>
     ·
