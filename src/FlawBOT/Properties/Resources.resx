@@ -326,13 +326,4 @@
   <data name="ERR_LAVALINK_PLAYBACK" xml:space="preserve">
     <value>Exception occurred during audio playback.</value>
   </data>
-  <data name="LAVALINK_IP" xml:space="preserve">
-    <value>192.168.2.38</value>
-  </data>
-  <data name="LAVALINK_PASSWORD" xml:space="preserve">
-    <value>youshallnotpass</value>
-  </data>
-  <data name="LAVALINK_PORT" xml:space="preserve">
-    <value>2333</value>
-  </data>
 </root>

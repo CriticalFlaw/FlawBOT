@@ -331,33 +331,6 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 192.168.2.38.
-        /// </summary>
-        internal static string LAVALINK_IP {
-            get {
-                return ResourceManager.GetString("LAVALINK_IP", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to youshallnotpass.
-        /// </summary>
-        internal static string LAVALINK_PASSWORD {
-            get {
-                return ResourceManager.GetString("LAVALINK_PASSWORD", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 2333.
-        /// </summary>
-        internal static string LAVALINK_PORT {
-            get {
-                return ResourceManager.GetString("LAVALINK_PORT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No results found..
         /// </summary>
         internal static string NOT_FOUND_COMMON {

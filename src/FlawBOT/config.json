@@ -2,7 +2,12 @@
   "Name": "FlawBOT",
   "Prefix": ".",
   "ShardCount": 1,
-  "Lavalink": false,
+  "Lavalink": {
+    "Enabled": true,
+    "Address": "192.168.2.38",
+    "Port": 2333,
+    "Password": "youshallnotpass"
+  },
   "Tokens": {
     "Discord": null,
     "Steam": null,

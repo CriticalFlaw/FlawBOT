@@ -14,12 +14,27 @@ namespace FlawBOT.Common
         [JsonPropertyName("Prefix")] public string Prefix;
         [JsonPropertyName("ShardCount")] public int ShardCount;
         [JsonPropertyName("Tokens")] public Tokens Tokens;
-        [JsonPropertyName("Lavalink")] public bool Lavalink;
+        [JsonPropertyName("Lavalink")] public Lavalink Lavalink;
         public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
         public string GitHubLink { get; } = Resources.URL_BOT_GitHub;
         public string InviteLink { get; } = Resources.URL_BOT_Invite;
         public string DocsLink { get; } = Resources.URL_BOT_Docs;
         public DateTime ProcessStarted { get; set; }
+    }
+
+    public class Lavalink
+    {
+        [JsonPropertyName("Enabled")]
+        public bool Enabled;
+
+        [JsonPropertyName("Address")]
+        public string Address;
+
+        [JsonPropertyName("Port")]
+        public int Port;
+
+        [JsonPropertyName("Password")]
+        public string Password;
     }
 
     public class Tokens

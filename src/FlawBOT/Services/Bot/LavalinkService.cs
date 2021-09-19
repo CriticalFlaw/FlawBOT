@@ -44,9 +44,9 @@ namespace FlawBOT.Services
                         {
                             Node = await lava.ConnectAsync(new LavalinkConfiguration
                             {
-                                Password = Resources.LAVALINK_PASSWORD,
-                                SocketEndpoint = new ConnectionEndpoint(Resources.LAVALINK_IP, int.Parse(Resources.LAVALINK_PORT)),
-                                RestEndpoint = new ConnectionEndpoint(Resources.LAVALINK_IP, int.Parse(Resources.LAVALINK_PORT))
+                                Password = Program.Settings.Lavalink.Password,
+                                SocketEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address, Program.Settings.Lavalink.Port),
+                                RestEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address, Program.Settings.Lavalink.Port)
                             });
 
                             Node.TrackException += LavalinkNode_TrackException;
