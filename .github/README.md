@@ -9,7 +9,7 @@
 ![image](https://user-images.githubusercontent.com/6818236/133937428-8f74b640-52f9-4291-bf42-62929c9938a0.png)
 <p align="center">
   <p align="center">
-    A Discord bot written in C# using the DSharpPlus library. Features include server management, playing music and calling popular APIs.
+    Discord bot written in C# using DSharpPlus. Manage your server, play music and call popular APIs.
     <br />
     <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest">Download</a>
     ·
@@ -57,7 +57,7 @@
 ---
 
 ### Command Modules
-FlawBOT includes multiple commands for managing your server, playing music and calling public APIs like Steam, OMDB and more.
+Following is a list of command modules included with FlawBOT. Check the documentation for details.
 <p align="east">
     <a href="https://www.flawbot.criticalflaw.ca/cmd/bot/">Bot</a>
     ·
@@ -82,7 +82,7 @@ FlawBOT includes multiple commands for managing your server, playing music and c
 </p>
 
 ### API-Tokens
-Below are links to various platforms where you can generate your API tokens to then put into the included **config.json** file.
+Below are links to sites where you can generate your API tokens to then put into the included **config.json** file.
 <p align="east">
     <a href="https://discordapp.com/developers/applications/me">Discord</a>
     ·
