@@ -1,23 +1,44 @@
 <!-- TITLE -->
+<style>
+  .md-typeset h1,
+  .md-content__button {
+    display: none;
+  }
+</style>
+
+![logo](https://user-images.githubusercontent.com/6818236/133937428-8f74b640-52f9-4291-bf42-62929c9938a0.png)
 <p align="center">
-  <h1 align="center">FlawBOT for Discord</h1>
-  <p align="center">
-    Multipurpose Discord bot written in C# using DSharpPlus.
-    <br />
-    <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest">Download</a>
-    ·
-    <a href="https://github.com/CriticalFlaw/FlawBOT/issues">Issue Tracker</a>
-    ·
-    <a href="https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303">Invite</a>
-  </p>
+  <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest" alt="Releases">
+    <img src="https://img.shields.io/github/downloads/criticalflaw/flawbot/total?style=flat-square" />
+  </a>
+  <a href="https://www.flawbot.criticalflaw.ca/" alt="Documentation">
+    <img src="https://readthedocs.org/projects/flawbot/badge/?version=latest&style=flat-square" />
+  </a>
+  <a href="https://github.com/CriticalFlaw/FlawBOT/blob/master/.github/LICENSE" alt="License">
+    <img src="https://img.shields.io/github/license/CriticalFlaw/FlawBOT?style=flat-square" />
+  </a>
+  <a href="https://github.com/CriticalFlaw/FlawBOT/stargazers" alt="Stars">
+    <img src="https://img.shields.io/github/stars/CriticalFlaw/FlawBOT?style=flat-square" />
+  </a>
+  <a href="https://github.com/CriticalFlaw/FlawBOT/issues" alt="Issues">
+    <img src="https://img.shields.io/github/issues/CriticalFlaw/FlawBOT?style=flat-square" />
+  </a>
+  <a href="https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303" alt="Invite">
+    <img src="https://img.shields.io/badge/Discord-invite-7289da.svg?style=flat-square&logo=discord" />
+  </a>
 </p>
 
 <!-- CONTENT -->
+
 ### Installation
-1. [Download the latest version of **flawbot.zip**][release-link].
+
+1. [Download the latest version of **flawbot.zip**][releases-link].
 2. Extract downloaded file contents into a separate folder.
 3. Modify the included **config.json** file with your [API tokens][tokens-link].
-4. Run the below command in the Command Prompt.
+4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
+   * In case of errors, install the [.NET Core 5.0 Runtime for **console apps**][runtime-link].
+
+---
 
 ### Commands
 The following is a list of modules included with the latest version of FlawBOT.
@@ -34,9 +55,9 @@ The following is a list of modules included with the latest version of FlawBOT.
 * [**User**][doc-user] - Commands for managing server users.
 
 <!-- MARKDOWN LINKS -->
-[release-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
-[install-link]: https://www.flawbot.criticalflaw.ca/install/
+[releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
 [tokens-link]: https://www.flawbot.criticalflaw.ca/tokens/
+[runtime-link]: https://dotnet.microsoft.com/download/dotnet/5.0/runtime
 [doc-bot]: https://www.flawbot.criticalflaw.ca/cmd/bot/
 [doc-channel]: https://www.flawbot.criticalflaw.ca/cmd/channel/
 [doc-emoji]: https://www.flawbot.criticalflaw.ca/cmd/emoji/

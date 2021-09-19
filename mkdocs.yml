@@ -26,7 +26,9 @@ repo_url: https://github.com/CriticalFlaw/FlawBOT/
 nav:
     - Home: 'index.md'
     - Installation: 'install.md'
+    - Tokens: 'tokens.md'
     - Deployment: 'deploy.md'
+    - Lavalink: 'lavalink.md'
     - Commands:
         - Bot: 'cmd/bot.md'
         - Channel: 'cmd/channel.md'

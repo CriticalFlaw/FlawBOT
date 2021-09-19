@@ -1,16 +1,28 @@
 To get the most out of FlawBOT's commands, modify the included **config.json** file with below API tokens.
-
-* [Discord][api-discord] (*required*)
-* [Steam][api-steam]
-* [Imgur][api-imgur]
-* [OMDB][api-omdb]
-* [Twitch][api-twitch]
-* [NASA][api-news]
-* [Teamwork.TF][api-teamwork]
-* [News API][api-news]
-* [WeatherStack][api-weather]
-* [YouTube][api-youtube]
-
+<p align="center">
+  <p align="center">
+    <a href="https://discordapp.com/developers/applications/me">Discord</a>
+    ·
+    <a href="https://steamcommunity.com/dev/apikey">Steam</a>
+    ·
+    <a href="https://api.imgur.com/oauth2/addclient">Imgur</a>
+    ·
+    <a href="http://www.omdbapi.com/apikey.aspx">OMDB</a>
+    ·
+    <a href="https://dev.twitch.tv/dashboard/apps/create">Twitch</a>
+    ·
+    <a href="https://api.nasa.gov/">NASA</a>
+    ·
+    <a href="https://github.com/teamworktf/website_api#teamworktf-json-api-for-information-about-team-fortress-2">Teamwork.TF</a>
+    ·
+    <a href="https://newsapi.org/">NewsAPI</a>
+    ·
+    <a href="https://weatherstack.com/">WeatherStack</a>
+    ·
+    <a href="https://console.cloud.google.com/projectselector/apis/credentials">YouTube</a>
+  </p>
+ </p>
+ 
 Below is a sample of what the final config.json will look like.
 ```json
 {
@@ -32,16 +44,3 @@ Below is a sample of what the final config.json will look like.
   }
 }
 ```
-
-<!-- MARKDOWN LINKS -->
-[runtime-link]: https://dotnet.microsoft.com/download/dotnet/5.0/runtime
-[api-discord]: https://discordapp.com/developers/applications/me
-[api-steam]: https://steamcommunity.com/dev/apikey
-[api-imgur]: https://api.imgur.com/oauth2/addclient
-[api-omdb]: http://www.omdbapi.com/apikey.aspx
-[api-twitch]: https://dev.twitch.tv/dashboard/apps/create
-[api-news]: https://api.nasa.gov/
-[api-teamwork]: https://github.com/teamworktf/website_api#teamworktf-json-api-for-information-about-team-fortress-2
-[api-news]: https://newsapi.org/
-[api-weather]: https://weatherstack.com/
-[api-youtube]: https://console.cloud.google.com/projectselector/apis/credentials
