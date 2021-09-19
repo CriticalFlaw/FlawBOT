@@ -1,4 +1,5 @@
 To get the most out of FlawBOT's commands, modify the included **config.json** file with below API tokens.
+
 * [Discord][api-discord] (*required*)
 * [Steam][api-steam]
 * [Imgur][api-imgur]

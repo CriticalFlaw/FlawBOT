@@ -21,6 +21,7 @@
 
 ### Commands
 The following is a list of modules included with the latest version of FlawBOT.
+
 * [**Bot**][doc-bot] - Basic commands for interacting directly with the bot.
 * [**Channel**][doc-channel] - Commands for viewing and managing server channels.
 * [**Emoji**][doc-emoji] - Create, update and view server emojis.
