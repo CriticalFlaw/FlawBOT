@@ -6,6 +6,7 @@ using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using DSharpPlus.Net;
 using Emzi0767.Utilities;
+using FlawBOT.Properties;
 using Microsoft.Extensions.Logging;
 
 namespace FlawBOT.Services
@@ -43,9 +44,9 @@ namespace FlawBOT.Services
                         {
                             Node = await lava.ConnectAsync(new LavalinkConfiguration
                             {
-                                Password = "youshallnotpass",
-                                SocketEndpoint = new ConnectionEndpoint("127.0.0.1", 2333),
-                                RestEndpoint = new ConnectionEndpoint("127.0.0.1", 2333)
+                                Password = Resources.LAVALINK_PASSWORD,
+                                SocketEndpoint = new ConnectionEndpoint(Resources.LAVALINK_IP, int.Parse(Resources.LAVALINK_PORT)),
+                                RestEndpoint = new ConnectionEndpoint(Resources.LAVALINK_IP, int.Parse(Resources.LAVALINK_PORT))
                             });
 
                             Node.TrackException += LavalinkNode_TrackException;
@@ -53,7 +54,7 @@ namespace FlawBOT.Services
                     }
                     catch (Exception ex)
                     {
-                        Discord.Logger.LogError(LogEvent, ex, "Exception occurred when connecting the lavalink node.");
+                        Discord.Logger.LogError(LogEvent, ex, Resources.ERR_LAVALINK_CONNECTION);
                         throw;
                     }
                 });
@@ -80,7 +81,7 @@ namespace FlawBOT.Services
             LavalinkGuildConnection sender,
             TrackExceptionEventArgs eventArgs)
         {
-            Discord.Logger.LogError(LogEvent, exception, "Exception occurred during audio playback.");
+            Discord.Logger.LogError(LogEvent, exception, Resources.ERR_LAVALINK_PLAYBACK);
         }
     }
 }

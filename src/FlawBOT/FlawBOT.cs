@@ -110,8 +110,19 @@ namespace FlawBOT
             });
 
             // Setup Lavalink
-            if (settings.Lavalink && File.Exists($"{Directory.GetCurrentDirectory()}\\Lavalink.jar"))
-                Lavalink = Client.UseLavalink();
+            if (settings.Lavalink)
+            {
+                Client.Logger.LogInformation(EventId, "Lavalink enabled. Looking for jar node...");
+                if (File.Exists($"{Directory.GetCurrentDirectory()}/Lavalink.jar"))
+                {
+                    Client.Logger.LogInformation(EventId, "Lavalink node found. Initializing module...");
+                    Lavalink = Client.UseLavalink();
+                }
+                else
+                    Client.Logger.LogInformation(EventId, $"Could not find Lavalink node at {Directory.GetCurrentDirectory()}");
+            }
+            else
+                Client.Logger.LogInformation(EventId, "Lavalink node not enabled. Skipping...");
 
             // Start the uptime counter
             Console.Title = $"{settings.Name}-{settings.Version}";

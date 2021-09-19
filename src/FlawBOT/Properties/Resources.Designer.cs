@@ -169,6 +169,24 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exception occurred when connecting the lavalink node..
+        /// </summary>
+        internal static string ERR_LAVALINK_CONNECTION {
+            get {
+                return ResourceManager.GetString("ERR_LAVALINK_CONNECTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception occurred during audio playback..
+        /// </summary>
+        internal static string ERR_LAVALINK_PLAYBACK {
+            get {
+                return ResourceManager.GetString("ERR_LAVALINK_PLAYBACK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error calculating the equation, make sure your values are integers and the operation is valid..
         /// </summary>
         internal static string ERR_MATH_EQUATION {
@@ -309,6 +327,33 @@ namespace FlawBOT.Properties {
         internal static string INFO_SHUTDOWN {
             get {
                 return ResourceManager.GetString("INFO_SHUTDOWN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 192.168.2.38.
+        /// </summary>
+        internal static string LAVALINK_IP {
+            get {
+                return ResourceManager.GetString("LAVALINK_IP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to youshallnotpass.
+        /// </summary>
+        internal static string LAVALINK_PASSWORD {
+            get {
+                return ResourceManager.GetString("LAVALINK_PASSWORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2333.
+        /// </summary>
+        internal static string LAVALINK_PORT {
+            get {
+                return ResourceManager.GetString("LAVALINK_PORT", resourceCulture);
             }
         }
         
