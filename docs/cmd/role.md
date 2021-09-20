@@ -1,102 +1,61 @@
-Description: Commands for controlling server roles.
-Aliases: roles
+Commands for managing server roles. The prefixes are `.role` and `.roles`
 
 ### color
-
-Description: Change the server role color.
-Aliases: setcolor, clr
-Parameters: Server role's new HEX color code. Server role to recolor
-
+Changes the server role color in HEX format. Other aliases: `setcolor`, `clr`
 ```
-.roles color #F2A92B
+.role color #F2A92B
 ```
 
 ### create
-
-Description: Create a new server role.
-Aliases: new
-Parameters: New role name.
-
+Creates a new server role. Other aliases: `new`, `add`
 ```
-.roles create admin
+.role create admin
 ```
 
 ### delete
-
-Description: Delete a server role.
-Aliases: remove
-Parameters: Server role to remove.
-
+Deletes a server role. Other alias: `remove`
 ```
-.roles delete admin
+.role delete admin
 ```
 
 ### info
-
-Description: Retrieve server role information.
-Aliases: None.
-Parameters: Server role name.
-
+Returns information on a given server role.
 ```
-.roles info admin
+.role info admin
 ```
 
 ### inrole
-
-Description: Retrieve a list of users with a given role.
-Aliases: None.
-Parameters: Server role name.
-
+Returns a list of server users with a given role.
 ```
-.roles inrole admin
+.role inrole admin
 ```
 
 ### mention
-
-Description: Toggle whether this role can be mentioned by others.
-Aliases: None.
-Parameters: Server role name.
-
+Toggles server role being mentionable by other users.
 ```
-.roles mentionadmin
+.role mention admin
 ```
 
 ### revoke
-
-Description: Remove a role from server user.
-Aliases: None
-Parameters: Server user to get revoked. Server role name.
-
+Removes a role from a server user.
 ```
-.roles revoke @CriticalFlaw admin
+.role revoke @CriticalFlaw admin
 ```
 
 ### revokeall
-
-Description: Remove all role from a server user.
-Aliases: None.
-Parameters: Server user name.
-
+Removes all roles from a server user.
 ```
-.roles revokeall @CriticalFlaw
+.role revokeall @CriticalFlaw
 ```
 
 ### setrole
-
-Description: Assign a role to server user.
-Aliases: addrole
-Parameters: Server user name. Server role name.
-
+Assigns a role to a server user. Other alias: `addrole`
 ```
-.roles setrole @CriticalFlaw admin
+.role setrole @CriticalFlaw admin
 ```
 
 ### show
-
-Description: Toggle whether this role is seen or not.
-Aliases: display, hide
-Parameters: Server role name.
-
+Toggles server role being visible to users. Other aliases: `display`, `hide`
 ```
-.roles show admin
+.role show admin
 ```

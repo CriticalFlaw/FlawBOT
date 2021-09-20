@@ -1,102 +1,61 @@
-Description: Commands for controlling channels.
-Aliases: chn, ch, c
+Commands for managing server channels. The prefixes are `.chn` and`.ch`
 
 ### category
-
-Description: Create a new channel category.
-Aliases: createcategory, newcategory, ct
-Parameters: New category name.
-
+Creates a new channel category. Other aliases: `createcategory`, `newcategory`
 ```
 .channel category Welcome
 ```
 
 ### clean
-
-Description: Remove channel messages.
-Aliases: clear
-Parameters: Number of messages to remove from the current channel.
-
+Removes last X number of messages from the current channel. Other alias: `clear`
 ```
 .channel clean 10
 ```
 
 ### delete
-
-Description: Delete a channel. If a channel isn't specified, the current one will be deleted.
-Aliases: remove
-Parameters: Channel to delete.
-
+Deletes a server channel. If a channel is not specified, the current one is used. Other alias: `remove`
 ```
 .channel delete #text
 ```
 
 ### info
-
-Description: Print channel information. If a channel isn't specified, the current one will be used.
-Aliases: i
-Parameters: Channel to retrieve information from.
-
+Returns information on a given server channel. If a channel is not specified, the current one is used.
 ```
 .channel info #text
 ```
 
 ### purge
-
-Description: Remove server user's channel messages.
-Aliases: None
-Parameters: Server user whose messages will be purged. Number of messages to purge.
-
+Removes server user's last X number of messages from the current channel.
 ```
 .channel purge @CriticalFlaw 10
 ```
 
 ### rename
-
-Description: Rename a channel. If a channel isn't specified, the current one will be used.
-Aliases: setname
-Parameters: Channel to rename. New channel name.
-
+Renames a server channel. Other alias: `setname`
 ```
 .channel rename #text newtext
 ```
 
 ### text
-
-Description: Create a new text channel.
-Aliases: createtext, newtext
-Parameters: New text channel name.
-
+Creates a new text channel. Other aliases: `createtext`, `newtext`
 ```
 .channel text texts
 ```
 
 ### topic
-
-Description: Set current channel's topic.
-Aliases: settopic
-Parameters: New channel topic.
-
+Changes the current channel's topic. Other alias: `settopic`
 ```
 .channel topic Watermelon picking
 ```
 
 ### voice
-
-Description: Create a new voice channel.
-Aliases: createvoice, newvoice
-Parameters: New voice channel name.
-
+Creates a new voice channel. Other aliases: `createvoice`, `newvoice`
 ```
 .channel voice voices
 ```
 
 ### vote
-
-Description: Run a Yay or Nay poll in the current channel.
-Aliases: poll
-Parameters: Question to be asked in the poll.
-
+Starts a Yay or Nay poll in the current channel. Other alias: `poll`
 ```
 .channel poll Am I correct?
 ```

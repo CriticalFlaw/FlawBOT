@@ -1,7 +1,6 @@
 To get the most out of FlawBOT's commands, modify the included **config.json** file with below API tokens.
-<p align="center">
-  <p align="center">
-    <a href="https://discordapp.com/developers/applications/me">Discord</a>
+<p align="east">
+	<a href="https://discordapp.com/developers/applications/me">Discord</a>
     ·
     <a href="https://steamcommunity.com/dev/apikey">Steam</a>
     ·
@@ -20,7 +19,6 @@ To get the most out of FlawBOT's commands, modify the included **config.json** f
     <a href="https://weatherstack.com/">WeatherStack</a>
     ·
     <a href="https://console.cloud.google.com/projectselector/apis/credentials">YouTube</a>
-  </p>
  </p>
  
 Below is a sample of what the final config.json will look like.

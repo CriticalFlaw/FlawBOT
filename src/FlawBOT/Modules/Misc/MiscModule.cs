@@ -17,7 +17,7 @@ namespace FlawBOT.Modules
         #region COMMAND_ASK
 
         [Command("ask")]
-        [Aliases("8b", "8ball", "ball", "8")]
+        [Aliases("8b", "8ball", "8")]
         [Description("Ask an 8-ball a question.")]
         public Task EightBall(CommandContext ctx,
             [Description("Question to ask the 8-ball.")] [RemainingText]

@@ -17,7 +17,7 @@ using FlawBOT.Services;
 namespace FlawBOT.Modules
 {
     [Group("channel")]
-    [Aliases("chn", "ch", "c")]
+    [Aliases("chn", "ch")]
     [Description("Commands for controlling channels.")]
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class ChannelModule : BaseCommandModule
@@ -25,7 +25,7 @@ namespace FlawBOT.Modules
         #region COMMAND_CATEGORY
 
         [Command("category")]
-        [Aliases("createcategory", "newcategory", "ct")]
+        [Aliases("createcategory", "newcategory")]
         [Description("Create a new channel category.")]
         [RequirePermissions(Permissions.ManageChannels)]
         public async Task CreateCategory(CommandContext ctx,

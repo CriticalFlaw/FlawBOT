@@ -54,7 +54,7 @@ namespace FlawBOT.Modules
         #region COMMAND_CREATE
 
         [Command("create")]
-        [Aliases("new")]
+        [Aliases("new", "add")]
         [Description("Create a new server role.")]
         [RequirePermissions(Permissions.ManageRoles)]
         public async Task CreateRole(CommandContext ctx,

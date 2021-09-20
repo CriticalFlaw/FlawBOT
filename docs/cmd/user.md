@@ -1,112 +1,67 @@
-Description: Commands for controlling server users.
-Aliases: users, usr
+Commands for managing server users. The prefixes are `.user`, `.users` and `.usr`
 
 ### avatar
-
-Description: Retrieve server user's profile picture.
-Aliases: getavatar, image, pfp
-Parameters: Server user whose profile picture to retrieve.
-
+Returns server user's profile picture. Other aliases: `getavatar`, `image`, `pfp`
 ```
 .user avatar @CriticalFlaw
 ```
 
 ### ban
-
-Description: Ban a server user.
-Aliases: None.
-Parameters: Server user to ban. Reason for the ban.
-
+Bans a server user. Optionally include a reason.
 ```
 .user ban @CriticalFlaw Spammer
 ```
 
 ### deafen
-
-Description: Deafen a server user.
-Aliases: deaf
-Parameters: Server user to deafen. Reason for the deafen.
-
+Deafens a server user. Optionally include a reason. Other alias: `deaf`
 ```
 .user deafen @CriticalFlaw 
 ```
 
 ### info
-
-Description: Retrieve server user's information.
-Aliases: None.
-Parameters: Server user whose information to retrieve.
-
+Returns information on a given server user. Other aliases: `poke`, `pk`
 ```
 .user info @CriticalFlaw 
 ```
 
 ### kick
-
-Description: Kick a user from the server.
-Aliases: remove
-Parameters: Server user to kick. Reason for the kick.
-
+Kicks a user from the server. Optionally include a reason. Other alias: `remove`
 ```
 .user kick @CriticalFlaw 
 ```
 
 ### mute
-
-Description: Mute a server user.
-Aliases: silence
-Parameters: Server user to mute. Reason for the mute.
-
+Mutes a server user. Optionally include a reason. Other alias: `silence`
 ```
 .user mute @CriticalFlaw 
 ```
 
 ### nickname
-
-Description: Change server user's nickname.
-Aliases: setnick, nick
-Parameters: Server user name. New nickname for the name.
-
+Changes server user's nickname. Other aliases: `setnick`, `nick`
 ```
 .user nickname @CriticalFlaw critical
 ```
 
 ### perms
-
-Description: Retrieve server user's permissions.
-Aliases: None.
-Parameters: Server user name. Server channel.
-
+Returns permissions of a server user.
 ```
 .user perms @CriticalFlaw #text
 ```
 
 ### unban
-
-Description: Unban a server user.
-Aliases: None.
-Parameters: Discord user ID to unban from the server. Reason for the unban.
-
+Unbans a server user. Optionally include a reason. Only user's Discord ID is accepted.
 ```
 .user unban 1234567
 ```
 
 ### undeafen
-
-Description: Undeafen a server user.
-Aliases: undeaf
-Parameters: Server user to undeafen. Reason for the deafen.
-
+Undeafens a server user. Optionally include a reason. Other alias: `undeaf`
 ```
 .user undeafen @CriticalFlaw
 ```
 
 ### unmute
-
-Description: Unmute a server user.
-Aliases: None.
-Parameters: Server user to unmute. Reason for the deafen.
-
+Unmutes a server user. Optionally include a reason.
 ```
 .user unmute @CriticalFlaw
 ```

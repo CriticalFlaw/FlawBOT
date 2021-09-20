@@ -1,52 +1,31 @@
-Description: Commands for managing server emojis.
-Aliases: emote
+Commands for managing server emojis. The prefixes are `.emoji` and`.emote`
 
-### add
-
-Description: Add a new server emoji using a URL image.
-Aliases: new, create
-Parameters: Image URL. Name for the emoji.
-
+### create
+Creates a new server emoji. Other aliases: `new`, `add`
 ```
-.emoji add homer [Image URL]
+.emoji create homer [Image URL in JPG, PNG or IMG format]
 ```
 
 ### delete
-
-Description: Remove a server emoji. Note: Bots can only delete emojis they created.
-Aliases: remove
-Parameters: Server emoji to delete.
-
+Deletes a server emoji. The bot can only delete emojis it created. Other alias: `remove`
 ```
 .emoji delete :homer:
 ```
 
 ### rename
-
-Description: Rename a server emoji.
-Aliases: edit, modify
-Parameters: Emoji to rename. New emoji name.
-
+Renames a server emoji. Other aliases: `edit`, `modify`
 ```
 .emoji rename :homer: homey
 ```
 
 ### info
-
-Description: Retrieve server emoji information.
-Aliases: None.
-Parameters: Server emoji.
-
+Returns information on a given server emoji.
 ```
 .emoji info :homer:
 ```
 
 ### list
-
-Description: Retrieve a list of server emojis.
-Aliases: print, all
-Parameters: None.
-
+Returns a list of server emojis. Other aliases: `print`, `all`
 ```
 .emoji list
 ```

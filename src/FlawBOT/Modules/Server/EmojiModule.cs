@@ -22,8 +22,8 @@ namespace FlawBOT.Modules
     {
         #region COMMAND_ADD
 
-        [Command("add")]
-        [Aliases("new", "create")]
+        [Command("create")]
+        [Aliases("new", "add")]
         [Description("Add a new server emoji using a URL image.")]
         [RequirePermissions(Permissions.ManageEmojis)]
         public async Task CreateEmoji(CommandContext ctx,
