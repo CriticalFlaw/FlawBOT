@@ -36,10 +36,14 @@ nav:
         - Games: 'cmd/games.md'
         - Misc: 'cmd/misc.md'
         - Music: 'cmd/music.md'
+        - Reddit: 'cmd/reddit.md'
         - Role: 'cmd/role.md'
         - Search: 'cmd/search.md'
         - Server: 'cmd/server.md'
+        - Steam: 'cmd/steam.md'
+        - TF2: 'cmd/tf2.md'
         - User: 'cmd/user.md'
+        - YouTube: 'cmd/youtube.md'
 hide:
     - toc
 markdown_extensions:
