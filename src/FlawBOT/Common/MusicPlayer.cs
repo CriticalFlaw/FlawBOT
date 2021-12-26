@@ -49,6 +49,7 @@ namespace FlawBOT.Services
 
             QueueList.Clear();
             NowPlaying = default;
+            IsPlaying = false;
             await Player.StopAsync();
         }
 
