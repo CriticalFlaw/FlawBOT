@@ -7,9 +7,10 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using FlawBOT.Services.Lookup;
 using Newtonsoft.Json.Linq;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Misc
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class MiscModule : BaseCommandModule

@@ -1,15 +1,14 @@
-﻿using FlawBOT.Services;
+﻿using FlawBOT.Services.Lookup;
 using NUnit.Framework;
 
-namespace FlawBOT.Test
+namespace FlawBOT.Test.Modules;
+
+[TestFixture]
+internal class Twitch
 {
-    [TestFixture]
-    internal class Twitch
+    [Test]
+    public void GetStreamData()
     {
-        [Test]
-        public void GetStreamData()
-        {
-            Assert.IsNotNull(TwitchService.GetTwitchDataAsync(TestSetup.Tokens.TwitchToken, "rifftrax"));
-        }
+        Assert.IsNotNull(TwitchService.GetTwitchDataAsync(TestSetup.Tokens.TwitchToken, "rifftrax"));
     }
 }

@@ -13,7 +13,7 @@ using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using Newtonsoft.Json.Linq;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public class YoutubeService : HttpHandler
     {

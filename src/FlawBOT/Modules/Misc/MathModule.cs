@@ -7,7 +7,7 @@ using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Misc
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class MathModule : BaseCommandModule

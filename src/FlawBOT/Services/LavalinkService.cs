@@ -34,7 +34,6 @@ namespace FlawBOT.Services
         private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
         {
             if (Node is null)
-            {
                 _ = Task.Run(async () =>
                 {
                     try
@@ -45,8 +44,10 @@ namespace FlawBOT.Services
                             Node = await lava.ConnectAsync(new LavalinkConfiguration
                             {
                                 Password = Program.Settings.Lavalink.Password,
-                                SocketEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address, Program.Settings.Lavalink.Port),
-                                RestEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address, Program.Settings.Lavalink.Port)
+                                SocketEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address,
+                                    Program.Settings.Lavalink.Port),
+                                RestEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address,
+                                    Program.Settings.Lavalink.Port)
                             });
 
                             Node.TrackException += LavalinkNode_TrackException;
@@ -58,7 +59,6 @@ namespace FlawBOT.Services
                         throw;
                     }
                 });
-            }
 
             return Task.CompletedTask;
         }

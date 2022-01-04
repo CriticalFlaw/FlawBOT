@@ -9,7 +9,7 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Services;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Server
 {
     [Group("user")]
     [Aliases("users", "usr")]

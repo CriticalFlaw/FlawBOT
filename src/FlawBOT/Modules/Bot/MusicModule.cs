@@ -9,8 +9,9 @@ using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using FlawBOT.Services.Lookup;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Bot
 {
     public class MusicModule : BaseCommandModule
     {

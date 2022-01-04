@@ -2,7 +2,7 @@
 using OMDbSharp;
 using OMDbSharp.Objects;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public static class OmdbService
     {

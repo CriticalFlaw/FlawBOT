@@ -13,8 +13,14 @@ using DSharpPlus.Lavalink;
 using DSharpPlus.VoiceNext;
 using Emzi0767;
 using FlawBOT.Common;
-using FlawBOT.Modules;
+using FlawBOT.Modules.Bot;
+using FlawBOT.Modules.Games;
+using FlawBOT.Modules.Misc;
+using FlawBOT.Modules.Search;
+using FlawBOT.Modules.Server;
 using FlawBOT.Services;
+using FlawBOT.Services.Games;
+using FlawBOT.Services.Lookup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -119,8 +125,11 @@ namespace FlawBOT
                     Lavalink = Client.UseLavalink();
                 }
                 else
+                {
                     output = $"Could not find Lavalink node at: {Directory.GetCurrentDirectory()}";
+                }
             }
+
             Client.Logger.LogInformation(EventId, output);
 
             // Start the uptime counter
@@ -188,7 +197,7 @@ namespace FlawBOT
 
         private async Task Client_VoiceStateUpdated(DiscordClient sender, VoiceStateUpdateEventArgs e)
         {
-            var musicData = await Services.GetService<MusicService>()?.GetOrCreateDataAsync(e.Guild);
+            var musicData = await Services.GetService<MusicService>()?.GetOrCreateDataAsync(e.Guild)!;
             if (e.After.Channel == null && e.User == Client.CurrentUser)
             {
                 await musicData.StopAsync();

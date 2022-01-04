@@ -6,8 +6,9 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using FlawBOT.Services.Lookup;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Search
 {
     [Group("reddit")]
     [Description("Commands for findings posts on a subreddit.")]

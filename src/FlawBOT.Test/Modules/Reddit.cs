@@ -1,17 +1,16 @@
-﻿using FlawBOT.Services;
+﻿using FlawBOT.Services.Lookup;
 using NUnit.Framework;
 
-namespace FlawBOT.Test
+namespace FlawBOT.Test.Modules;
+
+[TestFixture]
+internal class Reddit
 {
-    [TestFixture]
-    internal class Reddit
+    [Test]
+    public void GetEmbeddedResults()
     {
-        [Test]
-        public void GetEmbeddedResults()
-        {
-            Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.Hot));
-            Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.New));
-            Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.Top));
-        }
+        Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.Hot));
+        Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.New));
+        Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.Top));
     }
 }

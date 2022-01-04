@@ -6,7 +6,7 @@ using Imgur.API.Endpoints.Impl;
 using Imgur.API.Enums;
 using Imgur.API.Models;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public static class ImgurService
     {

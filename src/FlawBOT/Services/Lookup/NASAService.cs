@@ -3,7 +3,7 @@ using FlawBOT.Models;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public class NasaService : HttpHandler
     {

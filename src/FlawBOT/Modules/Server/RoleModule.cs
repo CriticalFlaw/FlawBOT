@@ -12,7 +12,7 @@ using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Server
 {
     [Group("role")]
     [Aliases("roles")]

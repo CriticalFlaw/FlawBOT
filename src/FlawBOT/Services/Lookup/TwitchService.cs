@@ -2,7 +2,7 @@
 using TwitchLib.Api;
 using TwitchLib.Api.V5.Models.Search;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public class TwitchService : HttpHandler
     {

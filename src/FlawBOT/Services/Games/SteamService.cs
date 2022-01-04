@@ -11,7 +11,7 @@ using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Games
 {
     public class SteamService : HttpHandler
     {
