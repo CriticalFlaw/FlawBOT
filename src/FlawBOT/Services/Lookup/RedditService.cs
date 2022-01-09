@@ -5,7 +5,7 @@ using System.ServiceModel.Syndication;
 using System.Xml;
 using FlawBOT.Properties;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public static class RedditService
     {

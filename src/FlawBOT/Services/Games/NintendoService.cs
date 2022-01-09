@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using PokemonTcgSdk;
 using PokemonTcgSdk.Models;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Games
 {
     public class NintendoService : HttpHandler
     {

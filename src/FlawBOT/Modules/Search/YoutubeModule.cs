@@ -2,9 +2,9 @@
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using FlawBOT.Services;
+using FlawBOT.Services.Lookup;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Search
 {
     [Group("youtube")]
     [Aliases("yt")]

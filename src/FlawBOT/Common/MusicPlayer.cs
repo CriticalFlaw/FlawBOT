@@ -7,8 +7,9 @@ using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using FlawBOT.Models;
+using FlawBOT.Services;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Common
 {
     public sealed class MusicPlayer
     {
@@ -49,6 +50,7 @@ namespace FlawBOT.Services
 
             QueueList.Clear();
             NowPlaying = default;
+            IsPlaying = false;
             await Player.StopAsync();
         }
 

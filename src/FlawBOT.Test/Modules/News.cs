@@ -1,17 +1,16 @@
-﻿using FlawBOT.Services;
+﻿using FlawBOT.Services.Lookup;
 using NUnit.Framework;
 
-namespace FlawBOT.Test
+namespace FlawBOT.Test.Modules;
+
+[TestFixture]
+internal class News
 {
-    [TestFixture]
-    internal class News
+    [Test]
+    public void GetNewsData()
     {
-        [Test]
-        public void GetNewsData()
-        {
-            Assert.IsTrue(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken).Result.Status == "ok");
-            Assert.IsTrue(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken, "Nintendo").Result.Status ==
-                          "ok");
-        }
+        Assert.IsTrue(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken).Result.Status == "ok");
+        Assert.IsTrue(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken, "Nintendo").Result.Status ==
+                      "ok");
     }
 }

@@ -5,6 +5,7 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
+using FlawBOT.Common;
 
 namespace FlawBOT.Services
 {
@@ -23,7 +24,9 @@ namespace FlawBOT.Services
 
         public Task<MusicPlayer> GetOrCreateDataAsync(DiscordGuild server)
         {
-            return Task.FromResult(MusicData.TryGetValue(server.Id, out var player) ? player : MusicData.AddOrUpdate(server.Id, new MusicPlayer(Lavalink), (_, v) => v));
+            return Task.FromResult(MusicData.TryGetValue(server.Id, out var player)
+                ? player
+                : MusicData.AddOrUpdate(server.Id, new MusicPlayer(Lavalink), (_, v) => v));
         }
 
         public Task<LavalinkLoadResult> GetTracksAsync(Uri uri)

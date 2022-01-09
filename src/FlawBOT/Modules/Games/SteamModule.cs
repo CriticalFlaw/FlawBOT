@@ -9,10 +9,11 @@ using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using FlawBOT.Services.Games;
 using Steam.Models.SteamCommunity;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Games
 {
     [Group("steam")]
     [Description("Commands finding Steam games and users.")]

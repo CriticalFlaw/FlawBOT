@@ -3,9 +3,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Properties;
-using FlawBOT.Services;
+using FlawBOT.Services.Lookup;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Search
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SimpsonsModule : BaseCommandModule

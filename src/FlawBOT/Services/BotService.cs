@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
@@ -66,7 +66,7 @@ namespace FlawBOT.Services
         public static async Task<MemoryStream> CheckImageInput(CommandContext ctx, string input)
         {
             var stream = new MemoryStream();
-            if (!Uri.TryCreate(input, UriKind.Absolute, out _) &&
+            if (input != null && !Uri.TryCreate(input, UriKind.Absolute, out _) &&
                 (!input.EndsWith(".img") || !input.EndsWith(".png") || !input.EndsWith(".jpg")))
             {
                 await SendResponseAsync(ctx, Resources.URL_INVALID_IMG, ResponseType.Warning)
@@ -74,9 +74,10 @@ namespace FlawBOT.Services
             }
             else
             {
-                using var client = new WebClient();
-                var results = client.DownloadData(input);
-                stream.Write(results, 0, results.Length);
+                using HttpClient client = new();
+                using var httpResponse = await client.GetAsync(input).ConfigureAwait(false);
+                var result = await httpResponse.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                stream.Write(result, 0, result.Length);
                 stream.Position = 0;
             }
 

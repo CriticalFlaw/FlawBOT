@@ -8,8 +8,9 @@ using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using FlawBOT.Services.Games;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Games
 {
     [Cooldown(3, 5, CooldownBucketType.Channel)]
     public class SpeedrunModule : BaseCommandModule

@@ -7,7 +7,7 @@ using DSharpPlus.Entities;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Bot
 {
     [Group("bot")]
     [Aliases("flaw")]

@@ -7,11 +7,11 @@ using FlawBOT.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public class MiscService : HttpHandler
     {
-        private static ImmutableArray<string> _answers = new[]
+        private static readonly ImmutableArray<string> Answers = new[]
         {
             "It is certain",
             "It is decidedly so",
@@ -38,7 +38,7 @@ namespace FlawBOT.Services
         public static string GetRandomAnswer()
         {
             var random = new Random();
-            return _answers[random.Next(_answers.Length)];
+            return Answers[random.Next(Answers.Length)];
         }
 
         public static async Task<string> GetCatFactAsync()

@@ -9,7 +9,7 @@ using SteamWebAPI2.Models.GameEconomy;
 using SteamWebAPI2.Utilities;
 using TeamworkTF.Sharp;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Games
 {
     public class TeamFortressService : HttpHandler
     {

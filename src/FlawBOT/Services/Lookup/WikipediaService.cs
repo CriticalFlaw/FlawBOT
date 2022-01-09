@@ -1,7 +1,7 @@
 ﻿using Genbox.Wikipedia;
 using Genbox.Wikipedia.Objects;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public class WikipediaService : HttpHandler
     {

@@ -1,12 +1,27 @@
 site_name: FlawBOT
 site_author: criticalflaw
+site_url: https://www.flawbot.criticalflaw.ca/
 theme:
     language: en
     name: material
     logo: resources/favicon.ico
     favicon: resources/favicon.ico
+    icon:
+        repo: fontawesome/brands/github
     features:
+        - navigation.sections
+        - navigation.top
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.sections
         - navigation.expand
+        - navigation.indexes
+        - navigation.tracking
+        - toc.integrate
+        - header.autohide
+        - content.tabs.link
+        - search.suggest
+        - search.highlight
     palette:
         - scheme: default
           primary: indigo
@@ -21,7 +36,6 @@ theme:
             icon: material/toggle-switch
             name: Switch to light mode
 repo_name: GitHub
-site_url: https://www.flawbot.criticalflaw.ca/
 repo_url: https://github.com/CriticalFlaw/FlawBOT/
 nav:
     - Home: 'index.md'
@@ -44,13 +58,15 @@ nav:
         - TF2: 'cmd/tf2.md'
         - User: 'cmd/user.md'
         - YouTube: 'cmd/youtube.md'
-hide:
-    - toc
+    - HUD Editor: 'https://www.editor.criticalflaw.ca/'
+google_analytics:
+    - G-Q532RTS1WC
+    - auto
 markdown_extensions:
     - admonition
     - pymdownx.superfences
     - toc:
-        toc_depth: 0
+        permalink: true
 plugins:
     - search
     - git-revision-date-localized:

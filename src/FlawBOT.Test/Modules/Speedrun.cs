@@ -1,16 +1,15 @@
-﻿using FlawBOT.Services;
+﻿using FlawBOT.Services.Games;
 using NUnit.Framework;
 
-namespace FlawBOT.Test
+namespace FlawBOT.Test.Modules;
+
+[TestFixture]
+internal class Speedrun
 {
-    [TestFixture]
-    internal class Speedrun
+    [Test]
+    public void GetSpeedrunGame()
     {
-        [Test]
-        public void GetSpeedrunGame()
-        {
-            Assert.Greater(SpeedrunService.GetSpeedrunGameAsync("Wind Waker").Result.Data.Count, 0);
-            Assert.AreEqual(SpeedrunService.GetSpeedrunGameAsync("Wind Wanker").Result.Data.Count, 0);
-        }
+        Assert.Greater(SpeedrunService.GetSpeedrunGameAsync("Wind Waker").Result.Data.Count, 0);
+        Assert.AreEqual(SpeedrunService.GetSpeedrunGameAsync("Wind Wanker").Result.Data.Count, 0);
     }
 }

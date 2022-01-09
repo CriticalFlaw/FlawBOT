@@ -6,7 +6,7 @@ using FlawBOT.Models;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 
-namespace FlawBOT.Services
+namespace FlawBOT.Services.Lookup
 {
     public class SimpsonsService : HttpHandler
     {
@@ -32,7 +32,7 @@ namespace FlawBOT.Services
             var content = JsonConvert.DeserializeObject<SimpsonsData>(result);
             var framesResult = await Http
                 .GetStringAsync(string.Format(Resources.URL_Simpsons_Frames, site, content?.Episode.Key,
-                    content.Frame.Timestamp))
+                    content?.Frame.Timestamp))
                 .ConfigureAwait(false);
             var frames = JsonConvert.DeserializeObject<List<Frame>>(framesResult);
             var start = frames?.FirstOrDefault()?.Timestamp;
