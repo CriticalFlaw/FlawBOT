@@ -6,6 +6,8 @@ theme:
     name: material
     logo: resources/favicon.ico
     favicon: resources/favicon.ico
+    icon:
+        repo: fontawesome/brands/github
     features:
         - navigation.sections
         - navigation.top
@@ -57,13 +59,14 @@ nav:
         - User: 'cmd/user.md'
         - YouTube: 'cmd/youtube.md'
     - HUD Editor: 'https://www.editor.criticalflaw.ca/'
-hide:
-    - toc
+google_analytics:
+    - G-Q532RTS1WC
+    - auto
 markdown_extensions:
     - admonition
     - pymdownx.superfences
     - toc:
-        toc_depth: 0
+        permalink: true
 plugins:
     - search
     - git-revision-date-localized:
