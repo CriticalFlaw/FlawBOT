@@ -58,7 +58,7 @@ nav:
         - TF2: 'cmd/tf2.md'
         - User: 'cmd/user.md'
         - YouTube: 'cmd/youtube.md'
-    - Blog: 'https://www.criticalflaw.github.io/'
+    - Blog: 'https://criticalflaw.github.io/'
 google_analytics:
     - G-Q532RTS1WC
     - auto
