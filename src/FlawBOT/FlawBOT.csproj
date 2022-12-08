@@ -60,7 +60,7 @@
 		<PackageReference Include="Genbox.Wikipedia" Version="3.0.0" />
 		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.55.0.2449" />
 		<PackageReference Include="Imgur.API" Version="4.0.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="OMDbSharp" Version="0.3.0" />
 		<PackageReference Include="PokemonTcgSdk" Version="1.1.1" />
 		<PackageReference Include="StackExchange.Redis" Version="2.2.88" />
