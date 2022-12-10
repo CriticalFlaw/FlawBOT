@@ -1,6 +1,6 @@
 site_name: FlawBOT
 site_author: criticalflaw
-site_url: https://www.flawbot.criticalflaw.ca/
+site_url: www.criticalflaw.ca/flawbot/
 theme:
     language: en
     name: material
@@ -39,7 +39,6 @@ repo_name: GitHub
 repo_url: https://github.com/CriticalFlaw/FlawBOT/
 nav:
     - Home: 'index.md'
-    - Installation: 'install.md'
     - Tokens: 'tokens.md'
     - Deployment: 'deploy.md'
     - Lavalink: 'lavalink.md'

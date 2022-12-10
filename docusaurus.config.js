@@ -4,8 +4,8 @@
 const config = {
     title: "FlawBOT",
     tagline: "Multipurpose Discord bot written in C# using DSharpPlus.",
-    url: "https://www.flawbot.criticalflaw.ca/",
-    baseUrl: "/FlawBOT/",
+    url: "https://www.criticalflaw.ca/",
+    baseUrl: "/flawbot/",
     favicon: "https://raw.githubusercontent.com/CriticalFlaw/FlawBOT/master/docs/resources/favicon.ico",
 
     // GitHub pages deployment config.
@@ -62,7 +62,7 @@ const config = {
             title: "FlawBOT",
             logo: {
                 alt: "FlawBOT Logo",
-                src: "https://raw.githubusercontent.com/CriticalFlaw/FlawBOT/master/ddocs/resources/favicon.ico",
+                src: "https://raw.githubusercontent.com/CriticalFlaw/FlawBOT/master/docs/resources/favicon.ico",
             },
             items: [
                 {
