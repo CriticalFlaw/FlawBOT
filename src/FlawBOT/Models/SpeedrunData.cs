@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace FlawBOT.Models
 {
@@ -37,21 +37,21 @@ namespace FlawBOT.Models
         [JsonProperty("released")]
         public int ReleaseYear { get; set; }
 
-        [JsonIgnore] [JsonProperty("ruleset")] public int RuleSet { get; set; }
+        [JsonIgnore][JsonProperty("ruleset")] public int RuleSet { get; set; }
 
-        [JsonIgnore] [JsonProperty("romhack")] public int RomHack { get; set; }
+        [JsonIgnore][JsonProperty("romhack")] public int RomHack { get; set; }
 
         [JsonIgnore]
         [JsonProperty("gametypes")]
         public int GameTypes { get; set; }
 
-        [JsonIgnore] [JsonProperty("regions")] public int Regions { get; set; }
+        [JsonIgnore][JsonProperty("regions")] public int Regions { get; set; }
 
-        [JsonIgnore] [JsonProperty("genres")] public int Genres { get; set; }
+        [JsonIgnore][JsonProperty("genres")] public int Genres { get; set; }
 
-        [JsonIgnore] [JsonProperty("engines")] public int Engines { get; set; }
+        [JsonIgnore][JsonProperty("engines")] public int Engines { get; set; }
 
-        [JsonIgnore] [JsonProperty("created")] public int Created { get; set; }
+        [JsonIgnore][JsonProperty("created")] public int Created { get; set; }
     }
 
     public class Names
@@ -62,7 +62,7 @@ namespace FlawBOT.Models
         [JsonProperty("japanese")]
         public string Japanese { get; set; }
 
-        [JsonIgnore] [JsonProperty("twitch")] public string Twitch { get; set; }
+        [JsonIgnore][JsonProperty("twitch")] public string Twitch { get; set; }
     }
 
     public class Assets
@@ -84,9 +84,9 @@ namespace FlawBOT.Models
     {
         [JsonProperty("uri")] public string Url { get; set; }
 
-        [JsonIgnore] [JsonProperty("width")] public int Width { get; set; }
+        [JsonIgnore][JsonProperty("width")] public int Width { get; set; }
 
-        [JsonIgnore] [JsonProperty("height")] public int Height { get; set; }
+        [JsonIgnore][JsonProperty("height")] public int Height { get; set; }
     }
 
     public class Link
@@ -113,7 +113,7 @@ namespace FlawBOT.Models
 
         [JsonProperty("weblink")] public Uri Weblink { get; set; }
 
-        [JsonIgnore] [JsonProperty("type")] public string Type { get; set; }
+        [JsonIgnore][JsonProperty("type")] public string Type { get; set; }
 
         [JsonProperty("rules")] public string Rules { get; set; }
 

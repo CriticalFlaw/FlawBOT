@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FlawBOT.Properties;
+﻿using FlawBOT.Properties;
 using Microsoft.Extensions.Options;
 using Steam.Models;
 using Steam.Models.SteamCommunity;
 using Steam.Models.SteamStore;
 using SteamWebAPI2.Interfaces;
 using SteamWebAPI2.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Games
 {

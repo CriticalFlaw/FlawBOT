@@ -1,9 +1,9 @@
-﻿using System;
-using System.Reflection;
-using System.Text.Json.Serialization;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
+using System;
+using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace FlawBOT.Common
 {
@@ -48,6 +48,9 @@ namespace FlawBOT.Common
 
         [JsonProperty("Twitch", NullValueHandling = NullValueHandling.Ignore)]
         public string TwitchToken { get; set; }
+
+        [JsonProperty("TwitchAccess", NullValueHandling = NullValueHandling.Ignore)]
+        public string TwitchAccess { get; set; }
 
         [JsonProperty("NASA", NullValueHandling = NullValueHandling.Ignore)]
         public string NasaToken { get; set; }

@@ -36,16 +36,16 @@
 [invite-shield]: https://img.shields.io/badge/Discord-invite-7289da.svg?style=flat-square&logo=discord
 [invite-link]: https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303
 [tokens-link]: https://www.flawbot.criticalflaw.ca/tokens/
-[runtime-link]: https://dotnet.microsoft.com/download/dotnet/5.0/runtime
+[runtime-link]: https://dotnet.microsoft.com/download/dotnet/7.0/runtime
 
 ---
-                                                           
+
 ### Basic Installation
 1. [Download the latest version of **flawbot.zip**][releases-link].
 2. Extract downloaded file contents into a separate folder.
 3. Modify the included **config.json** file with your [API tokens](#API-Tokens).
 4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
-   * In case of errors, install the [.NET Core 5.0 Runtime for **console apps**][runtime-link].
+   * In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
 
 ### Advanced Installation
 1. Clone the repository.
@@ -107,7 +107,7 @@ Below are links to sites where you can generate your API tokens to then put into
 </p>
 
 <!-- MARKDOWN LINKS -->
-                                                                               
+
 [banner-image]: https://i.imgur.com/YlbST5I.jpg
 [version-badge]: https://img.shields.io/github/release/CriticalFlaw/FlawBOT.svg
 [build-badge]: https://ci.appveyor.com/api/projects/status/6hw48u0v6muwxvvo?svg=true

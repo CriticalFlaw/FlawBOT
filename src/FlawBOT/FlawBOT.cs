@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -23,6 +19,10 @@ using FlawBOT.Services.Games;
 using FlawBOT.Services.Lookup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT
 {
@@ -151,7 +151,6 @@ namespace FlawBOT
             Client.Logger.LogInformation(EventId, "Initializing...");
             await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
             await TeamFortressService.UpdateTf2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
-            await NintendoService.UpdatePokemonListAsync().ConfigureAwait(false);
 
             // Send a notification to load Lavalink
             Client.Logger.LogInformation(EventId, "Make sure Lavalink is running!");

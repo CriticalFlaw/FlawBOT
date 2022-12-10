@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -9,6 +7,8 @@ using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Lookup;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Misc
 {

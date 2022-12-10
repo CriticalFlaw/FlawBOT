@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using FlawBOT.Models;
 using FlawBOT.Properties;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Lookup
 {
@@ -45,7 +45,7 @@ namespace FlawBOT.Services.Lookup
                     Color = DiscordColor.Red
                 };
             results = results.Count > 25 ? results.Take(25).ToList() : results;
-            var output = new DiscordEmbedBuilder {Color = DiscordColor.Red};
+            var output = new DiscordEmbedBuilder { Color = DiscordColor.Red };
             foreach (var result in results)
                 switch (result.Id.Kind)
                 {

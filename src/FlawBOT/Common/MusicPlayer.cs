@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using FlawBOT.Models;
 using FlawBOT.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Common
 {
@@ -117,7 +117,7 @@ namespace FlawBOT.Common
 
         public async Task CreatePlayerAsync(DiscordChannel channel)
         {
-            if (Player is {IsConnected: true}) return;
+            if (Player is { IsConnected: true }) return;
 
             Player = await LavaLink.Node.ConnectAsync(channel);
 

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FlawBOT.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
-using FlawBOT.Properties;
 
 namespace FlawBOT.Services.Lookup
 {

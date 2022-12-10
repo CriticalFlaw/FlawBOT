@@ -1,9 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
@@ -11,6 +6,11 @@ using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
 using Steam.Models.SteamCommunity;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
 namespace FlawBOT.Modules.Games

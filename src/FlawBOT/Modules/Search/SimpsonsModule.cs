@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Properties;
 using FlawBOT.Services.Lookup;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {

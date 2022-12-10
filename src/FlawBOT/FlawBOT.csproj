@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
 		<StartupObject>FlawBOT.Program</StartupObject>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -52,23 +52,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DSharpPlus" Version="4.1.0" />
-		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
-		<PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0" />
-		<PackageReference Include="DSharpPlus.Lavalink" Version="4.1.0" />
-		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.1.0" />
-		<PackageReference Include="Genbox.Wikipedia" Version="3.0.0" />
-		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.55.0.2449" />
+		<PackageReference Include="DSharpPlus" Version="4.2.0" />
+		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0" />
+		<PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0" />
+		<PackageReference Include="DSharpPlus.Lavalink" Version="4.2.0" />
+		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.2.0" />
+		<PackageReference Include="Genbox.Wikipedia" Version="4.0.0" />
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.58.0.2874" />
 		<PackageReference Include="Imgur.API" Version="4.0.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="OMDbSharp" Version="0.3.0" />
-		<PackageReference Include="PokemonTcgSdk" Version="1.1.1" />
-		<PackageReference Include="StackExchange.Redis" Version="2.2.88" />
-		<PackageReference Include="SteamWebAPI2" Version="4.3.2" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
+		<PackageReference Include="PokemonTcgSdk" Version="2.2.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.80" />
+		<PackageReference Include="SteamWebAPI2" Version="4.4.0" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 		<PackageReference Include="TeamworkTF.Sharp" Version="1.5.0" />
-		<PackageReference Include="TwitchLib.Api" Version="3.3.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.0.7" />
+		<PackageReference Include="TwitchLib.Api" Version="3.8.0" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.5" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -36,7 +36,7 @@
 2. Extract downloaded file contents into a separate folder.
 3. Modify the included **config.json** file with your [API tokens][tokens-link].
 4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
-   * In case of errors, install the [.NET Core 5.0 Runtime for **console apps**][runtime-link].
+   * In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
 
 ---
 
@@ -57,7 +57,7 @@ The following is a list of modules included with the latest version of FlawBOT.
 <!-- MARKDOWN LINKS -->
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
 [tokens-link]: https://www.flawbot.criticalflaw.ca/tokens/
-[runtime-link]: https://dotnet.microsoft.com/download/dotnet/5.0/runtime
+[runtime-link]: https://dotnet.microsoft.com/download/dotnet/7.0/runtime
 [doc-bot]: https://www.flawbot.criticalflaw.ca/cmd/bot/
 [doc-channel]: https://www.flawbot.criticalflaw.ca/cmd/channel/
 [doc-emoji]: https://www.flawbot.criticalflaw.ca/cmd/emoji/

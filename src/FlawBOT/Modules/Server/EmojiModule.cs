@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -11,6 +6,11 @@ using DSharpPlus.Exceptions;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Server
 {
@@ -49,7 +49,7 @@ namespace FlawBOT.Modules.Server
                     return;
                 }
 
-                var handler = new HttpClientHandler {AllowAutoRedirect = false};
+                var handler = new HttpClientHandler { AllowAutoRedirect = false };
                 var http = new HttpClient(handler, true);
                 var response = await http.GetAsync(url).ConfigureAwait(false);
                 if (!response.Content.Headers.ContentType.MediaType.StartsWith("image/")) return;

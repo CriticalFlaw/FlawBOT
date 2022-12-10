@@ -1,8 +1,8 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using FlawBOT.Models;
+﻿using FlawBOT.Models;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Lookup
 {

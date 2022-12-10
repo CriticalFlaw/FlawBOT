@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Misc
 {
