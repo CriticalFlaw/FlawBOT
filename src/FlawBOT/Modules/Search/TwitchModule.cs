@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Lookup;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
@@ -18,7 +18,7 @@ namespace FlawBOT.Modules.Search
         [Command("twitch")]
         [Aliases("stream")]
         [Description("Retrieve Twitch stream information.")]
-        public async Task Twitch(CommandContext ctx, [Description("Channel to find on Twitch.")] [RemainingText] string query)
+        public async Task Twitch(CommandContext ctx, [Description("Channel to find on Twitch.")][RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();

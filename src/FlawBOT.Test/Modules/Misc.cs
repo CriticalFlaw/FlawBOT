@@ -1,6 +1,6 @@
-﻿using System.Net;
-using FlawBOT.Services.Lookup;
+﻿using FlawBOT.Services.Lookup;
 using NUnit.Framework;
+using System.Net;
 
 namespace FlawBOT.Test.Modules;
 

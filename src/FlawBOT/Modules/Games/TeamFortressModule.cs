@@ -1,17 +1,17 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {

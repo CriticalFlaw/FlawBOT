@@ -1,13 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using FlawBOT.Common;
 using FlawBOT.Properties;
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services
 {

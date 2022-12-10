@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Bot
 {
@@ -29,7 +29,7 @@ namespace FlawBOT.Modules.Bot
                 .WithDescription(
                     "A multipurpose Discord bot written in C# with [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/).")
                 .AddField(":clock1: Uptime",
-                    $"{(int) uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
+                    $"{(int)uptime.TotalDays:00} days {uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}", true)
                 .AddField(":link: Links",
                     $"[Commands]({settings.DocsLink}) **|** [GitHub]({settings.GitHubLink})", true)
                 .WithFooter($"Thank you for using {settings.Name} (v{settings.Version})")

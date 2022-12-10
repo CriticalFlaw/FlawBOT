@@ -1,13 +1,13 @@
-﻿using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Lookup;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {

@@ -1,5 +1,4 @@
 ﻿using Genbox.Wikipedia;
-using Genbox.Wikipedia.Objects;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Lookup

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
@@ -8,6 +6,8 @@ using DSharpPlus.Net;
 using Emzi0767.Utilities;
 using FlawBOT.Properties;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services
 {

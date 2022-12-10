@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
@@ -9,6 +6,9 @@ using FlawBOT.Models;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Games;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {

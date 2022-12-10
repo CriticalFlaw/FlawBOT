@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Text;
-using FlawBOT.Common;
+﻿using FlawBOT.Common;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using System.IO;
+using System.Text;
 
 namespace FlawBOT.Test;
 

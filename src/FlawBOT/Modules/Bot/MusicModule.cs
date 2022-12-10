@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Lavalink;
@@ -10,6 +7,9 @@ using FlawBOT.Models;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Lookup;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Bot
 {

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using FlawBOT.Models;
+using FlawBOT.Properties;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FlawBOT.Models;
-using FlawBOT.Properties;
-using Newtonsoft.Json;
 
 namespace FlawBOT.Services.Games
 {

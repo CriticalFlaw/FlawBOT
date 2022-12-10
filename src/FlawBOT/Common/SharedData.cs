@@ -1,9 +1,9 @@
-﻿using System;
-using System.Reflection;
-using System.Text.Json.Serialization;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
+using System;
+using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace FlawBOT.Common
 {

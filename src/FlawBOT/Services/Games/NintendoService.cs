@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using FlawBOT.Models;
+﻿using FlawBOT.Models;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Base;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Games
 {

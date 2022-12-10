@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using FlawBOT.Models;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Lookup
 {

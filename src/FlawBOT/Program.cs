@@ -1,12 +1,12 @@
-﻿using System;
+﻿using FlawBOT.Common;
+using FlawBOT.Properties;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FlawBOT.Common;
-using FlawBOT.Properties;
-using Newtonsoft.Json;
 
 namespace FlawBOT
 {

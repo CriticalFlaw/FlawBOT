@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using OMDbSharp;
+﻿using OMDbSharp;
 using OMDbSharp.Objects;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Lookup
 {
