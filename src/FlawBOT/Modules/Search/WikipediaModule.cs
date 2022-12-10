@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -9,6 +6,9 @@ using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using FlawBOT.Services.Lookup;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
@@ -20,7 +20,7 @@ namespace FlawBOT.Modules.Search
         [Command("wiki")]
         [Aliases("wikipedia")]
         [Description("Find articles on Wikipedia.")]
-        public async Task Wikipedia(CommandContext ctx, [Description("Articles to find on Wikipedia.")] [RemainingText] string query)
+        public async Task Wikipedia(CommandContext ctx, [Description("Articles to find on Wikipedia.")][RemainingText] string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
             await ctx.TriggerTypingAsync();

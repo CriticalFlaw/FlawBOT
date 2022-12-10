@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using FlawBOT.Services.Lookup;
+﻿using FlawBOT.Services.Lookup;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Test.Modules;
 
