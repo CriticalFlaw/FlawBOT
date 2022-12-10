@@ -72,24 +72,21 @@ namespace FlawBOT.Modules.Games
         {
             await ctx.TriggerTypingAsync();
             var results = await NintendoService.GetPokemonCardsAsync(query).ConfigureAwait(false);
-            if (results.Cards.Count == 0)
+            if (results.Results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
                     .ConfigureAwait(false);
                 return;
             }
 
-            foreach (var dex in results.Cards)
+            foreach (var card in results.Results)
             {
-                var card = NintendoService.GetExactPokemon(dex.Id);
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(card.Name + $" (#{card.NationalPokedexNumber})")
-                    .AddField("Series", card.Series ?? "Unknown", true)
+                    .WithTitle(card.Name + $" (#{card.NationalPokedexNumbers})")
                     .AddField("Rarity", card.Rarity ?? "Unknown", true)
-                    .AddField("HP", card.Hp ?? "Unknown", true)
-                    .AddField("Ability", card.Ability != null ? card.Ability.Name : "Unknown", true)
-                    .WithImageUrl(card.ImageUrlHiRes ?? card.ImageUrl)
-                    .WithFooter(!string.Equals(card.Id, results.Cards.Last().Id)
+                    .AddField("HP", card.Hp.ToString() ?? "Unknown", true)
+                    .WithImageUrl(card.Images.Large ?? card.Images.Small)
+                    .WithFooter(!string.Equals(card.Id, results.Results.Last().Id)
                         ? "Type 'next' within 10 seconds for the next Pokémon."
                         : "This is the last found Pokémon on the list.")
                     .WithColor(DiscordColor.Gold);
@@ -106,10 +103,10 @@ namespace FlawBOT.Modules.Games
                 output.AddField("Weaknesses", weaknesses.ToString() ?? "Unknown", true);
                 await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
 
-                if (results.Cards.Count == 1) continue;
+                if (results.Results.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                 if (interactivity.Result is null) break;
-                if (!string.Equals(card.Id, results.Cards.Last().Id))
+                if (!string.Equals(card.Id, results.Results.Last().Id))
                     await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
             }
         }

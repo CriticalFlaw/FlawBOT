@@ -1,14 +1,15 @@
 ﻿using Genbox.Wikipedia;
 using Genbox.Wikipedia.Objects;
+using System.Threading.Tasks;
 
 namespace FlawBOT.Services.Lookup
 {
     public class WikipediaService : HttpHandler
     {
-        public static QueryResult GetWikipediaDataAsync(string query)
+        public static Task<WikiSearchResponse> GetWikipediaDataAsync(string query)
         {
-            var wikipedia = new WikipediaClient();
-            return wikipedia.Search(query);
+            using var client = new WikipediaClient();
+            return client.SearchAsync(query);
         }
     }
 }

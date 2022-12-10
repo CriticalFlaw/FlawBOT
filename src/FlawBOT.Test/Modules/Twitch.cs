@@ -9,6 +9,6 @@ internal class Twitch
     [Test]
     public void GetStreamData()
     {
-        Assert.IsNotNull(TwitchService.GetTwitchDataAsync(TestSetup.Tokens.TwitchToken, "rifftrax"));
+        Assert.IsNotNull(TwitchService.GetTwitchDataAsync(TestSetup.Tokens.TwitchToken, TestSetup.Tokens.TwitchAccess, "rifftrax"));
     }
 }
