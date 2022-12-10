@@ -5,7 +5,7 @@ const config = {
     title: "FlawBOT",
     tagline: "Multipurpose Discord bot written in C# using DSharpPlus.",
     url: "https://www.criticalflaw.ca/",
-    baseUrl: "/flawbot/",
+    baseUrl: "/FlawBOT/",
     favicon: "https://raw.githubusercontent.com/CriticalFlaw/FlawBOT/master/docs/resources/favicon.ico",
 
     // GitHub pages deployment config.
