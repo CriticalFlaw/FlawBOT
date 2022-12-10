@@ -1,10 +1,7 @@
-<!-- TITLE -->
-<style>
-  .md-typeset h1,
-  .md-content__button {
-    display: none;
-  }
-</style>
+---
+title: ""
+slug: /
+---
 
 ![logo](https://user-images.githubusercontent.com/6818236/133937428-8f74b640-52f9-4291-bf42-62929c9938a0.png)
 <p align="center">
