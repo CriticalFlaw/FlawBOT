@@ -10,7 +10,7 @@ namespace FlawBOT.Services.Lookup
         public static async Task<NewsData> GetNewsDataAsync(string token, string query = "")
         {
             var results = await Http
-                .GetStringAsync(string.Format(Resources.URL_News, query, token))
+                .GetStringAsync(string.Format(Resources.URL_News, query.ToLowerInvariant(), token))
                 .ConfigureAwait(false);
             return JsonConvert.DeserializeObject<NewsData>(results);
         }

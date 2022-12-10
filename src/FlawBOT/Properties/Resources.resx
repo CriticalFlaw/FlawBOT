@@ -257,7 +257,7 @@
     <value>https://api.nasa.gov/planetary/apod?api_key={0}</value>
   </data>
   <data name="URL_News" xml:space="preserve">
-    <value>https://newsapi.org/v2/everything?sources=google-news&amp;q={0}&amp;apiKey={1}</value>
+    <value>https://newsapi.org/v2/everything?q={0}&amp;apiKey={1}</value>
   </data>
   <data name="URL_Speedrun" xml:space="preserve">
     <value>https://www.speedrun.com/api/v1/games?name={0}</value>

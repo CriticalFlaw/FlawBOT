@@ -17,20 +17,18 @@ namespace FlawBOT.Services.Games
     {
         private static SteamWebInterfaceFactory _steamInterface;
 
-        private static ISteamWebResponse<IReadOnlyCollection<SteamAppModel>> SteamAppList { get; set; } =
-            new SteamWebResponse<IReadOnlyCollection<SteamAppModel>>();
+        private static ISteamWebResponse<IReadOnlyCollection<SteamAppModel>> SteamAppList { get; set; } = new SteamWebResponse<IReadOnlyCollection<SteamAppModel>>();
 
         #region STORE
 
         /// <summary>
-        ///     Call the Steam API for data on a given game title.
+        /// Call the Steam API for data on a given game title.
         /// </summary>
         public static async Task<StoreAppDetailsDataModel> GetSteamAppAsync(string query)
         {
             try
             {
-                var appId = SteamAppList.Data
-                    .First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
+                var appId = SteamAppList.Data.First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
                 var factoryOptions = new SteamWebInterfaceFactoryOptions
                 {
                     SteamWebApiKey = Program.Settings.Tokens.SteamToken
@@ -49,8 +47,7 @@ namespace FlawBOT.Services.Games
             try
             {
                 _steamInterface = new SteamWebInterfaceFactory(token);
-                SteamAppList = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient())
-                    .GetAppListAsync();
+                SteamAppList = await _steamInterface.CreateSteamWebInterface<SteamApps>(new HttpClient()).GetAppListAsync();
                 return true;
             }
             catch (Exception ex)
@@ -65,7 +62,7 @@ namespace FlawBOT.Services.Games
         #region USERS
 
         /// <summary>
-        ///     Call the Steam API for summary data on a given user.
+        /// Call the Steam API for summary data on a given user.
         /// </summary>
         public static async Task<ISteamWebResponse<PlayerSummaryModel>> GetSteamProfileAsync(string token, string query)
         {
