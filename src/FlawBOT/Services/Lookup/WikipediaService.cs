@@ -5,10 +5,10 @@ namespace FlawBOT.Services.Lookup
 {
     public class WikipediaService : HttpHandler
     {
-        public static Task<WikiSearchResponse> GetWikipediaDataAsync(string query)
+        public static async Task<WikiSearchResponse> GetWikipediaDataAsync(string query)
         {
             using var client = new WikipediaClient();
-            return client.SearchAsync(query);
+            return await client.SearchAsync(query);
         }
     }
 }

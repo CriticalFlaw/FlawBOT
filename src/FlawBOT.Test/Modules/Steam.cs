@@ -17,10 +17,8 @@ internal class Steam
     [Test]
     public void GetSteamProfile()
     {
-        Assert.IsNotNull(SteamService.GetSteamProfileAsync(TestSetup.Tokens.SteamToken, "criticalflaw")
-            .Result);
-        Assert.IsNull(SteamService.GetSteamProfileAsync(TestSetup.Tokens.SteamToken, "99999999999999999")
-            .Result);
+        Assert.IsNotNull(SteamService.GetSteamProfileAsync(TestSetup.Tokens.SteamToken, "criticalflaw").Result);
+        Assert.IsNull(SteamService.GetSteamProfileAsync(TestSetup.Tokens.SteamToken, "99999999999999999").Result);
     }
 
     [Test]

@@ -43,6 +43,9 @@ namespace FlawBOT.Common
         [JsonProperty("Imgur", NullValueHandling = NullValueHandling.Ignore)]
         public string ImgurToken { get; set; }
 
+        [JsonProperty("Pokemon", NullValueHandling = NullValueHandling.Ignore)]
+        public string PokemonToken { get; set; }
+
         [JsonProperty("OMDB", NullValueHandling = NullValueHandling.Ignore)]
         public string OmdbToken { get; set; }
 

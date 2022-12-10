@@ -71,7 +71,7 @@ namespace FlawBOT.Modules.Games
             string query = "")
         {
             await ctx.TriggerTypingAsync();
-            var results = await NintendoService.GetPokemonCardsAsync(query).ConfigureAwait(false);
+            var results = await NintendoService.GetPokemonCardsAsync(Program.Settings.Tokens.PokemonToken, query).ConfigureAwait(false);
             if (results.Results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
