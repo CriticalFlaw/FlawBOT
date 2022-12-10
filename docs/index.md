@@ -3,7 +3,7 @@ title: ""
 slug: /
 ---
 
-![logo](https://user-images.githubusercontent.com/6818236/133937428-8f74b640-52f9-4291-bf42-62929c9938a0.png)
+![logo](https://user-images.githubusercontent.com/6818236/206876167-497dca99-7248-4bd7-a1ae-9c0e037dc87b.png)
 <p align="center">
   <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest" alt="Releases">
     <img src="https://img.shields.io/github/downloads/criticalflaw/flawbot/total?style=flat-square" />
