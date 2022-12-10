@@ -66,12 +66,6 @@ const config = {
             },
             items: [
                 {
-                    label: "Installation",
-                    type: "doc",
-                    docId: "install",
-                    position: "left"
-                },
-                {
                     label: "Deployment",
                     type: "doc",
                     docId: "deploy",

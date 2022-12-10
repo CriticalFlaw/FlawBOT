@@ -33,7 +33,10 @@ slug: /
 2. Extract downloaded file contents into a separate folder.
 3. Modify the included **config.json** file with your [API tokens][tokens-link].
 4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
-   * In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
+
+:::note
+In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
+:::
 
 ---
 
