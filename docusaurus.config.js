@@ -66,27 +66,27 @@ const config = {
             },
             items: [
                 {
-                    label: "Screenshots",
+                    label: "Installation",
                     type: "doc",
-                    docId: "screenshots",
+                    docId: "install",
                     position: "left"
                 },
                 {
-                    label: "Troubleshooting",
+                    label: "Deployment",
                     type: "doc",
-                    docId: "troubleshoot",
+                    docId: "deploy",
                     position: "left"
                 },
                 {
-                    label: "How to Contribute",
+                    label: "Lavalink",
                     type: "doc",
-                    docId: "contribute",
+                    docId: "lavalink",
                     position: "left"
                 },
                 {
-                    label: "Credits",
+                    label: "Tokens",
                     type: "doc",
-                    docId: "credits",
+                    docId: "tokens",
                     position: "left"
                 },
                 {
