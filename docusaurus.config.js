@@ -66,6 +66,12 @@ const config = {
             },
             items: [
                 {
+                    label: "Modules",
+                    type: "doc",
+                    docId: "modules/bot",
+                    position: "left"
+                },
+                {
                     label: "Deployment",
                     type: "doc",
                     docId: "deploy",
