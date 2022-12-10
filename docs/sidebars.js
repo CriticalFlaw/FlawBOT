@@ -1,14 +1,21 @@
 /** @type {import("@docusaurus/plugin-content-docs").SidebarsConfig} */
 const sidebars = {
     jsonSideBar: {
-        "Adding your HUD": [
-            "json/intro",
-            "json/base",
-            "json/controls",
-            "json/options",
-            "json/files",
-            "json/animations",
-            "json/backgrounds",
+        "Modules": [
+            "cmd/bot",
+            "cmd/channel",
+            "cmd/emoji",
+            "cmd/games",
+            "cmd/misc",
+            "cmd/music",
+            "cmd/reddit",
+            "cmd/role",
+            "cmd/search",
+            "cmd/server",
+            "cmd/steam",
+            "cmd/tf2",
+            "cmd/user",
+            "cmd/youtube"
         ]
     }
 }
