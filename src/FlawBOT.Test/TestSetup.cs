@@ -14,9 +14,11 @@ public class TestSetup
     [OneTimeSetUp]
     public void PreTest()
     {
+        // Check that the configuration file is present.
         if (!File.Exists("config.json")) Assert.Inconclusive("Configuration file is not present.");
-        var json = new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd();
-        Tokens = JsonConvert.DeserializeObject<BotSettings>(json)?.Tokens;
+
+        // Load the API tokens from the configuration file.
+        Tokens = JsonConvert.DeserializeObject<BotSettings>(new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEnd())?.Tokens;
     }
 
     [OneTimeTearDown]

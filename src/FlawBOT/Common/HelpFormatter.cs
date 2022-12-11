@@ -24,8 +24,7 @@ namespace FlawBOT.Common
 
         public override CommandHelpMessage Build()
         {
-            var desc =
-                $"Listing all commands and groups. Use {Formatter.InlineCode(".help <command>")} for more details.";
+            var desc = $"Listing all commands and groups. Use {Formatter.InlineCode(".help <command>")} for more details.";
             if (!string.IsNullOrWhiteSpace(_name))
             {
                 _output.WithTitle(_name);
@@ -59,16 +58,15 @@ namespace FlawBOT.Common
                     {
                         args.Append(" (def: ")
                             .Append(Formatter.InlineCode(arg.DefaultValue is null
-                                ? "None"
-                                : arg.DefaultValue.ToString())).Append(')');
+                            ? "None"
+                            : arg.DefaultValue.ToString())).Append(')');
                         args.Append(" (optional)");
                     }
 
                     args.AppendLine();
                 }
 
-                _output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}",
-                    args.ToString() ?? "No arguments.");
+                _output.AddField($"{(cmd.Overloads.Count > 1 ? $"Overload #{overload.Priority}" : "Arguments")}", args.ToString() ?? "No arguments.");
             }
 
             return this;
@@ -78,8 +76,7 @@ namespace FlawBOT.Common
         {
             var enumerable = subcommands.ToList();
             if (enumerable.Any())
-                _output.AddField(_name is null ? "Commands" : "Subcommands",
-                    string.Join(", ", enumerable.Select(c => Formatter.InlineCode(c.Name))));
+                _output.AddField(_name is null ? "Commands" : "Subcommands", string.Join(", ", enumerable.Select(c => Formatter.InlineCode(c.Name))));
             return this;
         }
     }

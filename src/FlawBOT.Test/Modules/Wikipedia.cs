@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Lookup;
+﻿using FlawBOT.Modules.Wikipedia;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;

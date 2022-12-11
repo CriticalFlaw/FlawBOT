@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Lookup;
+﻿using FlawBOT.Modules;
 using NUnit.Framework;
 using System.Threading.Tasks;
 

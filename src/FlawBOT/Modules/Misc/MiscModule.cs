@@ -3,20 +3,19 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
-using FlawBOT.Services;
-using FlawBOT.Services.Lookup;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Misc
+namespace FlawBOT.Modules
 {
     public class MiscModule : ApplicationCommandModule
     {
         #region COMMAND_ASK
 
         [SlashCommand("ask", "Ask an 8-ball a question.")]
-        public Task EightBall(InteractionContext ctx, [Option("query", "Question to ask the 8-ball.")] string question = "")
+        public Task EightBall(InteractionContext ctx, [Option("question", "Question to ask the 8-ball.")] string question)
         {
             if (string.IsNullOrWhiteSpace(question)) return Task.CompletedTask;
             var output = new DiscordEmbedBuilder()
@@ -93,19 +92,6 @@ namespace FlawBOT.Modules.Misc
         }
 
         #endregion COMMAND_DOG
-
-        #region COMMAND_HELLO
-
-        [SlashCommand("hello", "Say hello to another user to the server.")]
-        public async Task Greet(InteractionContext ctx, [Option("member", "User to say hello to.")] DiscordMember member)
-        {
-            if (member is null)
-                await ctx.CreateResponseAsync($"Hello, {ctx.User.Mention}").ConfigureAwait(false);
-            else
-                await ctx.CreateResponseAsync($"Welcome {member.Mention} to {ctx.Guild.Name}. Enjoy your stay!").ConfigureAwait(false);
-        }
-
-        #endregion COMMAND_HELLO
 
         #region COMMAND_TTS
 

@@ -30,8 +30,7 @@ namespace FlawBOT
 
                 // Load Settings
                 if (!File.Exists("config.json")) return;
-                var json =
-                    await new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEndAsync();
+                var json = await new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEndAsync();
                 Settings = JsonConvert.DeserializeObject<BotSettings>(json);
 
                 // Generate a list of shards

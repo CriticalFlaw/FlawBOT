@@ -1,11 +1,10 @@
 ﻿using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
-using FlawBOT.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules.Bot
+namespace FlawBOT.Modules
 {
     public class BotModule : ApplicationCommandModule
     {

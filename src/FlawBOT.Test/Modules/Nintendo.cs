@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Games;
+﻿using FlawBOT.Modules;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;
