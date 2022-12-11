@@ -1,6 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
@@ -11,24 +10,17 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class NewsModule : BaseCommandModule
+    public class NewsModule : ApplicationCommandModule
     {
         #region COMMAND_NEWS
 
-        [Command("news")]
-        [Description("Retrieve the news articles on a topic from NewsAPI.org.")]
-        public async Task News(CommandContext ctx,
-            [Description("Article topic to find on NewsAPI.org.")] [RemainingText]
-            string query)
+        [SlashCommand("news", "Retrieve the news articles on a topic from NewsAPI.org.")]
+        public async Task News(InteractionContext ctx, [Option("query", "Article topic to find on NewsAPI.org.")] string query)
         {
-            await ctx.TriggerTypingAsync();
-            var results = await NewsService.GetNewsDataAsync(Program.Settings.Tokens.NewsToken, query)
-                .ConfigureAwait(false);
+            var results = await NewsService.GetNewsDataAsync(Program.Settings.Tokens.NewsToken, query).ConfigureAwait(false);
             if (results.Status != "ok")
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
@@ -40,20 +32,15 @@ namespace FlawBOT.Modules.Search
 
                 foreach (var result in results.Articles.Take(5))
                 {
-                    output.AddField(result.PublishDate.ToString(CultureInfo.InvariantCulture),
-                        $"[{result.Title}]({result.Url})");
+                    output.AddField(result.PublishDate.ToString(CultureInfo.InvariantCulture), $"[{result.Title}]({result.Url})");
                     results.Articles.Remove(result);
                 }
-
-                var message = await ctx
-                    .RespondAsync("Latest Google News articles from News API", output.Build())
-                    .ConfigureAwait(false);
+                await ctx.CreateResponseAsync("Latest Google News articles from News API", output.Build()).ConfigureAwait(false);
 
                 if (results.Articles.Count == 5) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                 if (interactivity.Result is null) break;
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                await BotServices.RemoveMessage(message).ConfigureAwait(false);
             }
         }
 

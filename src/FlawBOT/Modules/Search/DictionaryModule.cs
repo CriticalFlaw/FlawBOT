@@ -1,7 +1,6 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
@@ -11,25 +10,18 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class DictionaryModule : BaseCommandModule
+    public class DictionaryModule : ApplicationCommandModule
     {
         #region COMMAND_DICTIONARY
 
-        [Command("dictionary")]
-        [Aliases("define", "def", "dic")]
-        [Description("Retrieve an Urban Dictionary definition for a word or phrase.")]
-        public async Task UrbanDictionary(CommandContext ctx,
-            [Description("Word or phrase to find on Urban Dictionary.")] [RemainingText]
-            string query)
+        [SlashCommand("dictionary", "Retrieve an Urban Dictionary definition for a word or phrase.")]
+        public async Task UrbanDictionary(InteractionContext ctx, [Option("query", "Word or phrase to find on Urban Dictionary.")] string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            await ctx.TriggerTypingAsync();
             var results = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
             if (results.ResultType == "no_results" || results.List.Count == 0)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
@@ -51,14 +43,12 @@ namespace FlawBOT.Modules.Search
                         ? "Type 'next' within 10 seconds for the next definition."
                         : "This is the last found definition on the list.")
                     .WithColor(new DiscordColor("#1F2439"));
-                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+                await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.List.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                 if (interactivity.Result is null) break;
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                if (!definition.Equals(results.List.Last()))
-                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
             }
         }
 

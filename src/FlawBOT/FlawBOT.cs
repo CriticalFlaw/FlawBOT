@@ -77,30 +77,12 @@ namespace FlawBOT
             Commands.CommandExecuted += Command_Executed;
             Commands.CommandErrored += Command_Error;
             Commands.SetHelpFormatter<HelpFormatter>();
-            Commands.RegisterCommands<BotModule>();
+            Commands.RegisterCommands<AdminModule>();
             Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<EmojiModule>();
-            Commands.RegisterCommands<ImgurModule>();
-            Commands.RegisterCommands<MathModule>();
-            Commands.RegisterCommands<MiscModule>();
-            Commands.RegisterCommands<MusicModule>();
-            Commands.RegisterCommands<NasaModule>();
-            Commands.RegisterCommands<NewsModule>();
-            Commands.RegisterCommands<NintendoModule>();
-            Commands.RegisterCommands<OmdbModule>();
-            Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
-            Commands.RegisterCommands<SimpsonsModule>();
-            Commands.RegisterCommands<SpeedrunModule>();
-            Commands.RegisterCommands<SteamModule>();
-            Commands.RegisterCommands<TeamFortressModule>();
-            Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<UserModule>();
-            Commands.RegisterCommands<WikipediaModule>();
-            Commands.RegisterCommands<WeatherModule>();
-            Commands.RegisterCommands<YouTubeModule>();
 
             // Setup Interactivity
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
@@ -118,7 +100,25 @@ namespace FlawBOT
 
             // Setup Slash Commands
             Slash = Client.UseSlashCommands();
-            Slash.RegisterCommands<SlashCommands>();
+            Slash.RegisterCommands<BotModule>();
+            Slash.RegisterCommands<NasaModule>();
+            Slash.RegisterCommands<MusicModule>();
+            Slash.RegisterCommands<NintendoModule>();
+            Slash.RegisterCommands<DictionaryModule>();
+            Slash.RegisterCommands<ImgurModule>();
+            Slash.RegisterCommands<MathModule>();
+            Slash.RegisterCommands<MiscModule>();
+            Slash.RegisterCommands<NewsModule>();
+            Slash.RegisterCommands<OmdbModule>();
+            Slash.RegisterCommands<RedditModule>();
+            Slash.RegisterCommands<SpeedrunModule>();
+            Slash.RegisterCommands<SteamModule>();
+            Slash.RegisterCommands<TeamFortressModule>();
+            Slash.RegisterCommands<TwitchModule>();
+            Slash.RegisterCommands<WikipediaModule>();
+            Slash.RegisterCommands<WeatherModule>();
+            Slash.RegisterCommands<SimpsonsModule>();
+            Slash.RegisterCommands<YouTubeModule>();
 
             // Setup Lavalink
             var output = "Lavalink node not enabled. Skipping...";

@@ -1,6 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
@@ -10,16 +9,12 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Search
 {
-    [Group("reddit")]
-    [Description("Commands for findings posts on a subreddit.")]
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class RedditModule : BaseCommandModule
+    public class RedditModule : ApplicationCommandModule
     {
         #region COMMAND_HOT
 
-        [Command("hot")]
-        [Description("Get hottest posts from a given subreddit.")]
-        public Task HotPost(CommandContext ctx, [Description("Subreddit.")] string query)
+        [SlashCommand("hot", "Get hottest posts from a given subreddit.")]
+        public Task HotPost(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Hot);
         }
@@ -28,10 +23,8 @@ namespace FlawBOT.Modules.Search
 
         #region COMMAND_NEW
 
-        [Command("new")]
-        [Description("Get newest posts from a given subreddit.")]
-        [Aliases("newest", "latest")]
-        public Task NewPost(CommandContext ctx, [Description("Subreddit.")] string query)
+        [SlashCommand("new", "Get newest posts from a given subreddit.")]
+        public Task NewPost(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.New);
         }
@@ -40,9 +33,8 @@ namespace FlawBOT.Modules.Search
 
         #region COMMAND_TOP
 
-        [Command("top")]
-        [Description("Get top posts from a given subreddit.")]
-        public Task TopPost(CommandContext ctx, [Description("Subreddit.")] string query)
+        [SlashCommand("top", "Get top posts from a given subreddit.")]
+        public Task TopPost(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Top);
         }
@@ -51,15 +43,13 @@ namespace FlawBOT.Modules.Search
 
         #region COMMAND_POST
 
-        private static async Task RedditPost(CommandContext ctx, string query, RedditCategory category)
+        private static async Task RedditPost(InteractionContext ctx, [Option("query", "Subreddit")] string query, [Option("category", "category")] RedditCategory category)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            await ctx.TriggerTypingAsync();
             var results = RedditService.GetResults(query, category);
             if (results is null || results.Count == 0)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
@@ -71,19 +61,15 @@ namespace FlawBOT.Modules.Search
 
                 foreach (var result in results.Take(5))
                 {
-                    output.AddField(result.Authors.FirstOrDefault()?.Name,
-                        $"[{(result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "...")}]({result.Links.First().Uri})");
+                    output.AddField(result.Authors.FirstOrDefault()?.Name, $"[{(result.Title.Text.Length < 500 ? result.Title.Text : result.Title.Text.Take(500) + "...")}]({result.Links.First().Uri})");
                     results.Remove(result);
                 }
-
-                var message = await ctx.RespondAsync("Search results for r/" + query + " on Reddit", output)
-                    .ConfigureAwait(false);
+                await ctx.CreateResponseAsync("Search results for r/" + query + " on Reddit", output).ConfigureAwait(false);
 
                 if (results.Count == 5) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                 if (interactivity.Result is null) break;
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                await BotServices.RemoveMessage(message).ConfigureAwait(false);
             }
         }
 

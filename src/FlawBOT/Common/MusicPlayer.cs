@@ -23,18 +23,13 @@ namespace FlawBOT.Common
         private LavalinkService LavaLink { get; }
         private SemaphoreSlim QueueLock { get; }
         private List<MusicData> QueueList { get; }
+        private LavalinkGuildConnection Player { get; set; }
 
         public bool IsPlaying { get; private set; }
-
         public int Volume { get; private set; } = 100;
-
         public MusicData NowPlaying { get; private set; }
-
         public DiscordChannel Channel => Player?.Channel;
-
         public DiscordChannel CommandChannel { get; set; }
-
-        private LavalinkGuildConnection Player { get; set; }
 
         public async Task PlayAsync()
         {

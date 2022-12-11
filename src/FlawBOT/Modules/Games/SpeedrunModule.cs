@@ -1,6 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Models;
 using FlawBOT.Properties;
@@ -12,25 +11,18 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class SpeedrunModule : BaseCommandModule
+    public class SpeedrunModule : ApplicationCommandModule
     {
         #region COMMAND_SPEEDRUN
 
-        [Command("speedrun")]
-        [Aliases("game", "run")]
-        [Description("Retrieve a game from Speedrun.com")]
-        public async Task Speedrun(CommandContext ctx,
-            [Description("Game to find on Speedrun.com")] [RemainingText]
-            string query)
+        [SlashCommand("speedrun", "Retrieve a game from Speedrun.com")]
+        public async Task Speedrun(InteractionContext ctx, [Option("query", "Game to find on Speedrun.com")] string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            await ctx.TriggerTypingAsync();
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result;
             if (results is null || results.Data.Count == 0)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
@@ -38,16 +30,10 @@ namespace FlawBOT.Modules.Games
             {
                 var output = new DiscordEmbedBuilder()
                     .WithTitle(game.Names.International)
-                    .AddField("Developers",
-                        SpeedrunService.GetSpeedrunExtraAsync(game.Developers, SpeedrunExtras.Developers).Result ??
-                        "Unknown", true)
-                    .AddField("Publishers",
-                        SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result ??
-                        "Unknown", true)
+                    .AddField("Developers", SpeedrunService.GetSpeedrunExtraAsync(game.Developers, SpeedrunExtras.Developers).Result ?? "Unknown", true)
+                    .AddField("Publishers", SpeedrunService.GetSpeedrunExtraAsync(game.Publishers, SpeedrunExtras.Publishers).Result ?? "Unknown", true)
                     .AddField("Release Date", game.ReleaseDate ?? "Unknown")
-                    .AddField("Platforms",
-                        SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result ??
-                        "Unknown")
+                    .AddField("Platforms", SpeedrunService.GetSpeedrunExtraAsync(game.Platforms, SpeedrunExtras.Platforms).Result ?? "Unknown")
                     .WithFooter($"ID: {game.Id} - Abbreviation: {game.Abbreviation}")
                     .WithThumbnail(game.Assets.CoverLarge.Url ?? game.Assets.Icon.Url)
                     .WithUrl(game.WebLink)
@@ -60,7 +46,7 @@ namespace FlawBOT.Modules.Games
                     foreach (var x in categories.Data)
                         category.Append($"[{x.Name}]({x.Weblink}) **|** ");
                 output.AddField("Categories", category.ToString());
-                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+                await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Data.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);

@@ -1,6 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
@@ -11,25 +10,18 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules.Games
 {
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class NintendoModule : BaseCommandModule
+    public class NintendoModule : ApplicationCommandModule
     {
         #region COMMAND_AMIIBO
 
-        [Command("amiibo")]
-        [Aliases("amib")]
-        [Description("Retrieve information about an Amiibo figurine.")]
-        public async Task GetAmiibo(CommandContext ctx,
-            [Description("Name of the Amiibo figurine.")] [RemainingText]
-            string query)
+        [SlashCommand("amiibo", "Retrieve information about an Amiibo figurine.")]
+        public async Task GetAmiibo(InteractionContext ctx, [Option("query", "Name of the Amiibo figurine.")] string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return;
-            await ctx.TriggerTypingAsync();
             var results = await NintendoService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
@@ -48,14 +40,12 @@ namespace FlawBOT.Modules.Games
                         ? "Type 'next' within 10 seconds for the next amiibo."
                         : "This is the last found amiibo on the list.")
                     .WithColor(new DiscordColor("#E70009"));
-                var message = await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+                await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Amiibo.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
                 if (interactivity.Result is null) break;
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-                if (!amiibo.Equals(results.Amiibo.Last()))
-                    await BotServices.RemoveMessage(message).ConfigureAwait(false);
             }
         }
 
@@ -63,19 +53,13 @@ namespace FlawBOT.Modules.Games
 
         #region COMMAND_POKEMON
 
-        [Command("pokemon")]
-        [Aliases("poke", "pk")]
-        [Description("Retrieve a Pokémon card")]
-        public async Task Pokemon(CommandContext ctx,
-            [Description("Name of the Pokémon")] [RemainingText]
-            string query = "")
+        [SlashCommand("pokemon", "Retrieve a Pokémon card.")]
+        public async Task Pokemon(InteractionContext ctx, [Option("query", "Name of the Pokémon.")] string query = "")
         {
-            await ctx.TriggerTypingAsync();
             var results = await NintendoService.GetPokemonCardsAsync(Program.Settings.Tokens.PokemonToken, query).ConfigureAwait(false);
             if (results.Results.Count == 0)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
@@ -101,7 +85,7 @@ namespace FlawBOT.Modules.Games
                 foreach (var weakness in card.Weaknesses)
                     weaknesses.Append(weakness.Type);
                 output.AddField("Weaknesses", weaknesses.ToString() ?? "Unknown", true);
-                await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+                await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
 
                 if (results.Results.Count == 1) continue;
                 var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
