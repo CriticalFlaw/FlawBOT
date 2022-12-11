@@ -56,6 +56,7 @@
 		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0" />
 		<PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0" />
 		<PackageReference Include="DSharpPlus.Lavalink" Version="4.2.0" />
+		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0" />
 		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.2.0" />
 		<PackageReference Include="Genbox.Wikipedia" Version="4.0.0" />
 		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.58.0.2874" />

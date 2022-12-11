@@ -7,6 +7,7 @@ using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.Lavalink;
 using DSharpPlus.VoiceNext;
+using DSharpPlus.SlashCommands;
 using Emzi0767;
 using FlawBOT.Common;
 using FlawBOT.Modules.Bot;
@@ -115,6 +116,10 @@ namespace FlawBOT
                 EnableIncoming = true
             });
 
+            // Setup Slash Commands
+            Slash = Client.UseSlashCommands();
+            Slash.RegisterCommands<SlashCommands>();
+
             // Setup Lavalink
             var output = "Lavalink node not enabled. Skipping...";
             if (settings.Lavalink.Enabled)
@@ -144,6 +149,7 @@ namespace FlawBOT
         private InteractivityExtension Interactivity { get; }
         private VoiceNextExtension Voice { get; }
         private LavalinkExtension Lavalink { get; }
+        private SlashCommandsExtension Slash { get; }
 
         public async Task RunAsync()
         {
@@ -215,16 +221,13 @@ namespace FlawBOT
                 await musicData.PauseAsync();
 
                 if (musicData.CommandChannel != null)
-                    await musicData.CommandChannel.SendMessageAsync(
-                            "All users left the channel, playback paused. You can resume it by joining the channel and using the `resume` command.")
-                        .ConfigureAwait(false);
+                    await musicData.CommandChannel.SendMessageAsync("All users left the channel, playback paused. You can resume it by joining the channel and using the `resume` command.").ConfigureAwait(false);
             }
         }
 
         private static Task Command_Executed(CommandsNextExtension sender, CommandExecutionEventArgs e)
         {
-            e.Context.Client.Logger.LogInformation(EventId,
-                $"[{e.Context.Guild.Name} : {e.Context.Channel.Name}] {e.Context.User.Username} executed the command '{e.Command.QualifiedName}'");
+            e.Context.Client.Logger.LogInformation(EventId, $"[{e.Context.Guild.Name} : {e.Context.Channel.Name}] {e.Context.User.Username} executed the command '{e.Command.QualifiedName}'");
             return Task.CompletedTask;
         }
 
