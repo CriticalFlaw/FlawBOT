@@ -1,6 +1,7 @@
 ﻿using FlawBOT.Common;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -8,10 +9,12 @@ namespace FlawBOT.Modules
 {
     public class DictionaryService : HttpHandler
     {
-        public static async Task<DictionaryData> GetDictionaryDefinitionAsync(string query)
+        public static async Task<List<UrbanDictionaryDto>> GetDictionaryDefinitionAsync(string query)
         {
-            var results = await Http.GetStringAsync(string.Format(Resources.URL_Dictionary, WebUtility.UrlEncode(query.Trim()))).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<DictionaryData>(results);
+            if (string.IsNullOrWhiteSpace(query)) return null;
+            var response = await Http.GetStringAsync(string.Format(Resources.URL_Dictionary, WebUtility.UrlEncode(query.Trim()))).ConfigureAwait(false);
+            var result = JsonConvert.DeserializeObject<UrbanDictionaryList>(response);
+            return (result.ResultType == "no_results" || result.List.Count == 0) ? null : result.List;
         }
     }
 }

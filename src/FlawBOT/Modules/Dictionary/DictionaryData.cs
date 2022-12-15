@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace FlawBOT.Modules
 {
-    public class DictionaryData
+    public class UrbanDictionaryList
     {
         [JsonProperty("result_type")] public string ResultType { get; set; }
 
-        [JsonProperty("list")] public List<DictionaryDataList> List { get; set; }
+        [JsonProperty("list")] public List<UrbanDictionaryDto> List { get; set; }
     }
 
-    public class DictionaryDataList
+    public class UrbanDictionaryDto
     {
         [JsonProperty("definition")] public string Definition { get; set; }
 
