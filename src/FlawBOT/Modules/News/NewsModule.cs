@@ -13,9 +13,9 @@ namespace FlawBOT.Modules
         #region COMMAND_NEWS
 
         [SlashCommand("news", "Retrieve the news articles on a topic from NewsAPI.org.")]
-        public async Task News(InteractionContext ctx, [Option("query", "Article topic to find on NewsAPI.org.")] string query)
+        public async Task News(InteractionContext ctx, [Option("search", "Article topic to find on NewsAPI.org.")] string search)
         {
-            var results = await NewsService.GetNewsDataAsync(Program.Settings.Tokens.NewsToken, query).ConfigureAwait(false);
+            var results = await NewsService.GetNewsDataAsync(Program.Settings.Tokens.NewsToken, search).ConfigureAwait(false);
             if (results.Status != "ok")
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);

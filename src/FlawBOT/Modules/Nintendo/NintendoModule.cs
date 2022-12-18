@@ -13,10 +13,10 @@ namespace FlawBOT.Modules
         #region COMMAND_AMIIBO
 
         [SlashCommand("amiibo", "Retrieve information about an Amiibo figurine.")]
-        public async Task GetAmiibo(InteractionContext ctx, [Option("query", "Name of the Amiibo figurine.")] string query)
+        public async Task GetAmiibo(InteractionContext ctx, [Option("search", "Name of the Amiibo figurine.")] string search)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
-            var results = await NintendoService.GetAmiiboDataAsync(query).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(search)) return;
+            var results = await NintendoService.GetAmiiboDataAsync(search).ConfigureAwait(false);
             if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
@@ -52,9 +52,9 @@ namespace FlawBOT.Modules
         #region COMMAND_POKEMON
 
         [SlashCommand("pokemon", "Retrieve a Pokémon card.")]
-        public async Task Pokemon(InteractionContext ctx, [Option("query", "Name of the Pokémon.")] string query = "")
+        public async Task Pokemon(InteractionContext ctx, [Option("search", "Name of the Pokémon.")] string search = "")
         {
-            var results = await NintendoService.GetPokemonCardsAsync(Program.Settings.Tokens.PokemonToken, query).ConfigureAwait(false);
+            var results = await NintendoService.GetPokemonCardsAsync(Program.Settings.Tokens.PokemonToken, search).ConfigureAwait(false);
             if (results.Results.Count == 0)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);

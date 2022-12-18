@@ -14,12 +14,12 @@ namespace FlawBOT.Modules
         /// <summary>
         /// Call the Nintendo Amiibo API for an Amiibo figurine.
         /// </summary>
-        public static async Task<AmiiboData> GetAmiiboDataAsync(string query)
+        public static async Task<NintendoData> GetAmiiboDataAsync(string query)
         {
             try
             {
                 var results = await Http.GetStringAsync(string.Format(Resources.URL_Amiibo, query.ToLowerInvariant())).ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<AmiiboData>(results);
+                return JsonConvert.DeserializeObject<NintendoData>(results);
             }
             catch
             {

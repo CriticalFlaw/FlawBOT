@@ -10,24 +10,23 @@ namespace FlawBOT.Modules
 {
     public class ImgurModule : ApplicationCommandModule
     {
-        #region COMMAND_IMGUR
-
+        /// <summary>
+        /// Returns an image or album from the Imgur API.
+        /// </summary>
         [SlashCommand("imgur", "Retrieve an image from Imgur.")]
-        public async Task Imgur(InteractionContext ctx, [Option("query", "Search query to pass to Imgur.")] string query)
+        public async Task Imgur(InteractionContext ctx, [Option("search", "Search query to pass to Imgur.")] string search)
         {
-            var results = ImgurService.GetImgurGalleryAsync(Program.Settings.Tokens.ImgurToken, query).Result;
             var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#89C623"));
-
-            switch (results)
+            switch (ImgurService.GetImgurGalleryAsync(Program.Settings.Tokens.ImgurToken, search).Result)
             {
                 case GalleryImage image:
-                    output.WithDescription(image.Title ?? "Search results for " + Formatter.Bold(query) + " on Imgur");
+                    output.WithDescription(image.Title ?? "Search results for " + Formatter.Bold(search) + " on Imgur");
                     output.WithImageUrl(image.Link);
                     await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
                     break;
 
                 case GalleryAlbum album:
-                    output.WithDescription(album.Title ?? "Search results for " + Formatter.Bold(query) + " on Imgur");
+                    output.WithDescription(album.Title ?? "Search results for " + Formatter.Bold(search) + " on Imgur");
                     output.WithImageUrl(album.Link);
                     await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
                     break;
@@ -37,7 +36,5 @@ namespace FlawBOT.Modules
                     break;
             }
         }
-
-        #endregion COMMAND_IMGUR
     }
 }

@@ -3,37 +3,34 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
     public class MiscModule : ApplicationCommandModule
     {
-        #region COMMAND_ASK
-
+        /// <summary>
+        /// Returns an 8-ball response to a question.
+        /// </summary>
         [SlashCommand("ask", "Ask an 8-ball a question.")]
         public Task EightBall(InteractionContext ctx, [Option("question", "Question to ask the 8-ball.")] string question)
         {
             if (string.IsNullOrWhiteSpace(question)) return Task.CompletedTask;
             var output = new DiscordEmbedBuilder()
-                .WithDescription(":8ball: " + MiscService.GetRandomAnswer() + " (" + ctx.User.Mention + ")")
+                .WithDescription($":8ball: {MiscService.GetRandomAnswer()} ({ctx.User.Mention})")
                 .WithColor(DiscordColor.Black);
             return ctx.CreateResponseAsync(output.Build());
         }
 
-        #endregion COMMAND_ASK
-
-        #region COMMAND_CAT
-
+        /// <summary>
+        /// Returns a random cat photo and fact.
+        /// </summary>
         [SlashCommand("cat", "Retrieve a random cat fact and picture.")]
         public async Task GetCat(InteractionContext ctx)
         {
-            var results = MiscService.GetCatFactAsync().Result;
             var output = new DiscordEmbedBuilder()
-                .WithFooter($"Fact: {JObject.Parse(results)["fact"]}")
+                .WithFooter($"Fact: {MiscService.GetCatFactAsync().Result}")
                 .WithColor(DiscordColor.Orange);
 
             var image = MiscService.GetCatPhotoAsync().Result;
@@ -43,10 +40,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_CAT
-
-        #region COMMAND_COINFLIP
-
+        /// <summary>
+        /// Returns result of a coin flip.
+        /// </summary>
         [SlashCommand("coinflip", "Flip a coin.")]
         public Task CoinFlip(InteractionContext ctx)
         {
@@ -57,10 +53,9 @@ namespace FlawBOT.Modules
             return ctx.CreateResponseAsync(output.Build());
         }
 
-        #endregion COMMAND_COINFLIP
-
-        #region COMMAND_DICEROLL
-
+        /// <summary>
+        /// Returns result of a dice roll.
+        /// </summary>
         [SlashCommand("diceroll", "Roll a six-sided die.")]
         public Task RollDice(InteractionContext ctx)
         {
@@ -71,10 +66,9 @@ namespace FlawBOT.Modules
             return ctx.CreateResponseAsync(output.Build());
         }
 
-        #endregion COMMAND_DICEROLL
-
-        #region COMMAND_DOG
-
+        /// <summary>
+        /// Returns a random dog photo.
+        /// </summary>
         [SlashCommand("dog", "Retrieve a random dog photo.")]
         public async Task GetDog(InteractionContext ctx)
         {
@@ -91,10 +85,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_DOG
-
-        #region COMMAND_TTS
-
+        /// <summary>
+        /// Returns a text message as TTS.
+        /// </summary>
         [SlashCommand("tts", "Make FlawBOT repeat a message as text-to-speech.")]
         public async Task Say(InteractionContext ctx, [Option("message", "Message for FlawBOT to repeat.")] string message)
         {
@@ -103,7 +96,5 @@ namespace FlawBOT.Modules
             else
                 await ctx.CreateResponseAsync(Formatter.BlockCode(Formatter.Strip(message))).ConfigureAwait(false);
         }
-
-        #endregion COMMAND_TTS
     }
 }

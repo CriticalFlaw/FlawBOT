@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FlawBOT.Modules
 {
-    public class AmiiboData
+    public class NintendoData
     {
         [JsonProperty("amiibo")] public List<Amiibo> Amiibo { get; set; }
     }

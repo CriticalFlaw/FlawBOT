@@ -107,10 +107,10 @@ namespace FlawBOT.Modules
         #region COMMAND_PLAY
 
         [SlashCommand("play", "Play audio from provided URL or search by specified query.")]
-        public async Task PlaySong(InteractionContext ctx, [Option("query", "URL to playback.")] string query)
+        public async Task PlaySong(InteractionContext ctx, [Option("url", "URL to playback.")] string url)
         {
             await BeforeExecutionAsync(ctx);
-            var trackLoad = await Service.GetTracksAsync(new Uri(query, UriKind.Absolute));
+            var trackLoad = await Service.GetTracksAsync(new Uri(url, UriKind.Absolute));
             var audio = trackLoad.Tracks.FirstOrDefault();
             if (trackLoad.LoadResultType == LavalinkLoadResultType.LoadFailed || audio is null)
             {

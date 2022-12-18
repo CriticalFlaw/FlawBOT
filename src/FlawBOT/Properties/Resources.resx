@@ -318,12 +318,21 @@
     <value>The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.</value>
   </data>
   <data name="URL_BOT_Docs" xml:space="preserve">
-    <value>http://www.flawbot.criticalflaw.ca/</value>
+    <value>https://www.criticalflaw.ca/FlawBOT/modules/bot</value>
   </data>
   <data name="ERR_LAVALINK_CONNECTION" xml:space="preserve">
     <value>Exception occurred when connecting the lavalink node.</value>
   </data>
   <data name="ERR_LAVALINK_PLAYBACK" xml:space="preserve">
     <value>Exception occurred during audio playback.</value>
+  </data>
+  <data name="APP_INTERACT" xml:space="preserve">
+    <value>next</value>
+  </data>
+  <data name="INFO_LIST_LAST_RESULT" xml:space="preserve">
+    <value>This is the last found result on the list.</value>
+  </data>
+  <data name="INFO_LIST_NEXT_RESULT" xml:space="preserve">
+    <value>Type 'next' within 10 seconds for the next result.</value>
   </data>
 </root>

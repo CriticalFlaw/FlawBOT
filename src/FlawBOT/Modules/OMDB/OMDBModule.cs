@@ -12,10 +12,10 @@ namespace FlawBOT.Modules
         #region COMMAND_OMDB
 
         [SlashCommand("omdb", "Find a movie or TV show from OMDB.")]
-        public async Task Omdb(InteractionContext ctx, [Option("query", "Movie or TV show to find on OMDB.")] string query)
+        public async Task Omdb(InteractionContext ctx, [Option("search", "Movie or TV show to find on OMDB.")] string search)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
-            var results = OmdbService.GetMovieListAsync(Program.Settings.Tokens.OmdbToken, query.Replace(" ", "+")).Result;
+            if (string.IsNullOrWhiteSpace(search)) return;
+            var results = OmdbService.GetMovieListAsync(Program.Settings.Tokens.OmdbToken, search.Replace(" ", "+")).Result;
             if (!results.Search.Any())
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);

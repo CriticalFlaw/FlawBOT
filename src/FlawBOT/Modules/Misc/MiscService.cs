@@ -43,7 +43,8 @@ namespace FlawBOT.Modules
 
         public static async Task<string> GetCatFactAsync()
         {
-            return await Http.GetStringAsync(Resources.URL_CatFacts).ConfigureAwait(false);
+            var result = await Http.GetStringAsync(Resources.URL_CatFacts).ConfigureAwait(false);
+            return JObject.Parse(result)["fact"]?.ToString();
         }
 
         public static async Task<string> GetCatPhotoAsync()

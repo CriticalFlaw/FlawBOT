@@ -10,8 +10,9 @@ namespace FlawBOT.Modules
 {
     public class DictionaryModule : ApplicationCommandModule
     {
-        #region COMMAND_DICTIONARY
-
+        /// <summary>
+        /// Returns a definition to a word or phrase from the Urban Dictionary API.
+        /// </summary>
         [SlashCommand("dictionary", "Retrieve an Urban Dictionary definition for a word or phrase.")]
         public async Task UrbanDictionary(InteractionContext ctx, [Option("search", "Word or phrase to find on Urban Dictionary.")] string search)
         {
@@ -45,7 +46,5 @@ namespace FlawBOT.Modules
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
             }
         }
-
-        #endregion COMMAND_DICTIONARY
     }
 }
