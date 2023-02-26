@@ -250,8 +250,9 @@
   <data name="URL_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>
   </data>
-  <data name="URL_IPStack" xml:space="preserve">
-    <value>http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1</value>
+  <data name="URL_IPAPI" xml:space="preserve">
+    <value>https://ipapi.co/{0}/json/</value>
+    <comment>0 = ip address</comment>
   </data>
   <data name="URL_NASA" xml:space="preserve">
     <value>https://api.nasa.gov/planetary/apod?api_key={0}</value>
@@ -318,12 +319,27 @@
     <value>The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.</value>
   </data>
   <data name="URL_BOT_Docs" xml:space="preserve">
-    <value>http://www.flawbot.criticalflaw.ca/</value>
+    <value>https://www.criticalflaw.ca/FlawBOT/modules/bot</value>
   </data>
   <data name="ERR_LAVALINK_CONNECTION" xml:space="preserve">
     <value>Exception occurred when connecting the lavalink node.</value>
   </data>
   <data name="ERR_LAVALINK_PLAYBACK" xml:space="preserve">
     <value>Exception occurred during audio playback.</value>
+  </data>
+  <data name="APP_INTERACT" xml:space="preserve">
+    <value>next</value>
+  </data>
+  <data name="INFO_LIST_LAST_RESULT" xml:space="preserve">
+    <value>This is the last found result on the list.</value>
+  </data>
+  <data name="INFO_LIST_NEXT_RESULT" xml:space="preserve">
+    <value>Type 'next' within 10 seconds for the next result.</value>
+  </data>
+  <data name="INFO_TRY_AGAIN" xml:space="preserve">
+    <value>Enter the command again for a different result.</value>
+  </data>
+  <data name="URL_Dictionary_Random" xml:space="preserve">
+    <value>https://api.urbandictionary.com/v0/random</value>
   </data>
 </root>

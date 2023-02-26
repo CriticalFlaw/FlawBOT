@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net7.0</TargetFramework>
-		<ApplicationIcon>favicon.ico</ApplicationIcon>
+		<ApplicationIcon>Resources/favicon.ico</ApplicationIcon>
 		<StartupObject>FlawBOT.Program</StartupObject>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<Version>3.1.0</Version>
@@ -40,42 +40,53 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="application.yml">
+		<Content Include="Resources\application.yml">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="config.json">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<Content Include="Resources\config.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Lavalink.jar">
+		<Content Include="Resources\Lavalink.jar">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DSharpPlus" Version="4.2.0" />
-		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0" />
-		<PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0" />
-		<PackageReference Include="DSharpPlus.Lavalink" Version="4.2.0" />
-		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0" />
-		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.2.0" />
+		<PackageReference Include="AutoMapper" Version="12.0.1" />
+		<PackageReference Include="DSharpPlus" Version="4.3.0">
+		  <TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.3.0" />
+		<PackageReference Include="DSharpPlus.Interactivity" Version="4.3.0" />
+		<PackageReference Include="DSharpPlus.Lavalink" Version="4.3.0">
+		  <TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0" />
+		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.3.0" />
 		<PackageReference Include="Genbox.Wikipedia" Version="4.0.0" />
-		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.58.0.2874" />
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.60.0.2945" />
 		<PackageReference Include="Imgur.API" Version="4.0.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 		<PackageReference Include="OMDbSharp" Version="0.3.0" />
-		<PackageReference Include="PokemonTcgSdk" Version="2.2.0" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.80" />
-		<PackageReference Include="SteamWebAPI2" Version="4.4.0" />
+		<PackageReference Include="PokemonTcgSdk" Version="2.3.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.96" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 		<PackageReference Include="TeamworkTF.Sharp" Version="1.5.0" />
 		<PackageReference Include="TwitchLib.Api" Version="3.8.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.5" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.7" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="PokemonTcgSdk">
-			<HintPath>..\FlawBOT.Framework\Resources\PokemonTcgSdk.dll</HintPath>
-		</Reference>
+	  <ProjectReference Include="..\FlawBOT.Models\FlawBOT.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Steam.Models">
+	    <HintPath>Resources\Steam.Models.dll</HintPath>
+	  </Reference>
+	  <Reference Include="SteamWebAPI2">
+	    <HintPath>Resources\SteamWebAPI2.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>

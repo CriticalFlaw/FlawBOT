@@ -61,6 +61,15 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to next.
+        /// </summary>
+        internal static string APP_INTERACT {
+            get {
+                return ResourceManager.GetString("APP_INTERACT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to reach the API. Please try again later..
         /// </summary>
         internal static string ERR_API_CONNECTION {
@@ -295,6 +304,24 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is the last found result on the list..
+        /// </summary>
+        internal static string INFO_LIST_LAST_RESULT {
+            get {
+                return ResourceManager.GetString("INFO_LIST_LAST_RESULT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;next&apos; within 10 seconds for the next result..
+        /// </summary>
+        internal static string INFO_LIST_NEXT_RESULT {
+            get {
+                return ResourceManager.GetString("INFO_LIST_NEXT_RESULT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name..
         /// </summary>
         internal static string INFO_REPORT_SENDER {
@@ -327,6 +354,15 @@ namespace FlawBOT.Properties {
         internal static string INFO_SHUTDOWN {
             get {
                 return ResourceManager.GetString("INFO_SHUTDOWN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the command again for a different result..
+        /// </summary>
+        internal static string INFO_TRY_AGAIN {
+            get {
+                return ResourceManager.GetString("INFO_TRY_AGAIN", resourceCulture);
             }
         }
         
@@ -385,7 +421,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.flawbot.criticalflaw.ca/.
+        ///   Looks up a localized string similar to https://www.criticalflaw.ca/FlawBOT/modules/bot.
         /// </summary>
         internal static string URL_BOT_Docs {
             get {
@@ -439,6 +475,15 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://api.urbandictionary.com/v0/random.
+        /// </summary>
+        internal static string URL_Dictionary_Random {
+            get {
+                return ResourceManager.GetString("URL_Dictionary_Random", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://discord.gg/.
         /// </summary>
         internal static string URL_Discord {
@@ -475,11 +520,11 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1.
+        ///   Looks up a localized string similar to https://ipapi.co/{0}/json/.
         /// </summary>
-        internal static string URL_IPStack {
+        internal static string URL_IPAPI {
             get {
-                return ResourceManager.GetString("URL_IPStack", resourceCulture);
+                return ResourceManager.GetString("URL_IPAPI", resourceCulture);
             }
         }
         

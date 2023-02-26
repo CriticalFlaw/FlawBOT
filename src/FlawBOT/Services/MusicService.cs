@@ -2,7 +2,7 @@
 using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
-using FlawBOT.Common;
+using FlawBOT.Modules;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -40,8 +40,7 @@ namespace FlawBOT.Services
 
             if (!MusicData.TryGetValue(e.Player.Guild.Id, out var gmd)) return;
 
-            await gmd.CommandChannel.SendMessageAsync(
-                $"A problem occurred while playing {Formatter.Bold(Formatter.Sanitize(e.Track.Title))} by {Formatter.Bold(Formatter.Sanitize(e.Track.Author))}:\n{e.Error}");
+            await gmd.CommandChannel.SendMessageAsync($"A problem occurred while playing {Formatter.Bold(Formatter.Sanitize(e.Track.Title))} by {Formatter.Bold(Formatter.Sanitize(e.Track.Author))}:\n{e.Error}");
         }
 
         public static string ToDurationString(TimeSpan ts)

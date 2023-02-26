@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Lookup;
+﻿using FlawBOT.Services;
 using NUnit.Framework;
 using System.Net;
 
@@ -28,6 +28,6 @@ internal class Misc
     [Test]
     public void GetIpLocation()
     {
-        Assert.IsNotNull(MiscService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Type);
+        Assert.IsNotNull(MiscService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result);
     }
 }

@@ -10,20 +10,15 @@ using DSharpPlus.VoiceNext;
 using DSharpPlus.SlashCommands;
 using Emzi0767;
 using FlawBOT.Common;
-using FlawBOT.Modules.Bot;
-using FlawBOT.Modules.Games;
-using FlawBOT.Modules.Misc;
-using FlawBOT.Modules.Search;
-using FlawBOT.Modules.Server;
-using FlawBOT.Services;
-using FlawBOT.Services.Games;
-using FlawBOT.Services.Lookup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FlawBOT.Services;
+using FlawBOT.Modules;
+using DSharpPlus.SlashCommands.EventArgs;
 
 namespace FlawBOT
 {
@@ -77,36 +72,19 @@ namespace FlawBOT
             Commands.CommandExecuted += Command_Executed;
             Commands.CommandErrored += Command_Error;
             Commands.SetHelpFormatter<HelpFormatter>();
-            Commands.RegisterCommands<BotModule>();
+            Commands.RegisterCommands<AdminModule>();
             Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<DictionaryModule>();
             Commands.RegisterCommands<EmojiModule>();
-            Commands.RegisterCommands<ImgurModule>();
-            Commands.RegisterCommands<MathModule>();
-            Commands.RegisterCommands<MiscModule>();
-            Commands.RegisterCommands<MusicModule>();
-            Commands.RegisterCommands<NasaModule>();
-            Commands.RegisterCommands<NewsModule>();
-            Commands.RegisterCommands<NintendoModule>();
-            Commands.RegisterCommands<OmdbModule>();
-            Commands.RegisterCommands<RedditModule>();
             Commands.RegisterCommands<RoleModule>();
             Commands.RegisterCommands<ServerModule>();
-            Commands.RegisterCommands<SimpsonsModule>();
-            Commands.RegisterCommands<SpeedrunModule>();
-            Commands.RegisterCommands<SteamModule>();
-            Commands.RegisterCommands<TeamFortressModule>();
-            Commands.RegisterCommands<TwitchModule>();
             Commands.RegisterCommands<UserModule>();
-            Commands.RegisterCommands<WikipediaModule>();
-            Commands.RegisterCommands<WeatherModule>();
-            Commands.RegisterCommands<YouTubeModule>();
 
             // Setup Interactivity
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
             {
                 PaginationBehaviour = PaginationBehaviour.Ignore,
-                Timeout = TimeSpan.FromSeconds(30)
+                Timeout = TimeSpan.FromSeconds(30),
+                AckPaginationButtons = true
             });
 
             // Setup Voice
@@ -118,24 +96,40 @@ namespace FlawBOT
 
             // Setup Slash Commands
             Slash = Client.UseSlashCommands();
-            Slash.RegisterCommands<SlashCommands>();
+            Slash.RegisterCommands<BotModule>();
+            Slash.RegisterCommands<NasaModule>();
+            Slash.RegisterCommands<MusicModule>();
+            Slash.RegisterCommands<NintendoModule>();
+            Slash.RegisterCommands<DictionaryModule>();
+            Slash.RegisterCommands<ImgurModule>();
+            Slash.RegisterCommands<MiscModule>();
+            Slash.RegisterCommands<NewsModule>();
+            Slash.RegisterCommands<OmdbModule>();
+            Slash.RegisterCommands<RedditModule>();
+            Slash.RegisterCommands<SpeedrunModule>();
+            Slash.RegisterCommands<SteamModule>();
+            Slash.RegisterCommands<TeamFortressModule>();
+            Slash.RegisterCommands<TwitchModule>();
+            Slash.RegisterCommands<WikipediaModule>();
+            Slash.RegisterCommands<WeatherModule>();
+            Slash.RegisterCommands<SimpsonsModule>();
+            Slash.RegisterCommands<YouTubeModule>();
+            Slash.SlashCommandInvoked += SlashCommand_Executed;
+            Slash.SlashCommandErrored += SlashCommand_Errored;
 
             // Setup Lavalink
-            var output = "Lavalink node not enabled. Skipping...";
             if (settings.Lavalink.Enabled)
             {
                 if (File.Exists($"{Directory.GetCurrentDirectory()}/Lavalink.jar"))
                 {
-                    output = "Lavalink enabled. Initializing .jar node...";
+                    Client.Logger.LogInformation(EventId, "Initializing Lavalink...");
                     Lavalink = Client.UseLavalink();
                 }
                 else
                 {
-                    output = $"Could not find Lavalink node at: {Directory.GetCurrentDirectory()}";
+                    Client.Logger.LogInformation(EventId, $"Could not find Lavalink node at: {Directory.GetCurrentDirectory()}");
                 }
             }
-
-            Client.Logger.LogInformation(EventId, output);
 
             // Start the uptime counter
             Console.Title = $"{settings.Name}-{settings.Version}";
@@ -156,10 +150,7 @@ namespace FlawBOT
             // Update any other services that are being used.
             Client.Logger.LogInformation(EventId, "Initializing...");
             await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
-            await TeamFortressService.UpdateTf2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
-
-            // Send a notification to load Lavalink
-            Client.Logger.LogInformation(EventId, "Make sure Lavalink is running!");
+            await TeamFortressService.UpdateTF2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);
@@ -231,7 +222,18 @@ namespace FlawBOT
             return Task.CompletedTask;
         }
 
+        private static Task SlashCommand_Executed(SlashCommandsExtension sender, SlashCommandInvokedEventArgs e)
+        {
+            e.Context.Client.Logger.LogInformation($"{e.Context.User.Username} successfully executed '{e.Context.CommandName}'");
+            return Task.CompletedTask;
+        }
+
         private static async Task Command_Error(CommandsNextExtension sender, CommandErrorEventArgs e)
+        {
+            await Exceptions.Process(e, EventId);
+        }
+
+        private static async Task SlashCommand_Errored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e)
         {
             await Exceptions.Process(e, EventId);
         }

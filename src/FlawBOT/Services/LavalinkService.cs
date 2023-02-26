@@ -19,10 +19,7 @@ namespace FlawBOT.Services
         {
             Discord = client;
             Discord.Ready += Client_Ready;
-            _trackException =
-                new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>(
-                    $"{Program.Settings.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION",
-                    TimeSpan.Zero, EventExceptionHandler);
+            _trackException = new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>($"{Program.Settings.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION", TimeSpan.Zero, EventExceptionHandler);
         }
 
         private DiscordClient Discord { get; }
@@ -44,10 +41,8 @@ namespace FlawBOT.Services
                             Node = await lava.ConnectAsync(new LavalinkConfiguration
                             {
                                 Password = Program.Settings.Lavalink.Password,
-                                SocketEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address,
-                                    Program.Settings.Lavalink.Port),
-                                RestEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address,
-                                    Program.Settings.Lavalink.Port)
+                                SocketEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address, Program.Settings.Lavalink.Port),
+                                RestEndpoint = new ConnectionEndpoint(Program.Settings.Lavalink.Address, Program.Settings.Lavalink.Port)
                             });
 
                             Node.TrackException += LavalinkNode_TrackException;

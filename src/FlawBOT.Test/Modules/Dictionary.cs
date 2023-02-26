@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Lookup;
+﻿using FlawBOT.Services;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;
@@ -9,7 +9,7 @@ internal class Dictionary
     [Test]
     public void GetDictionaryDefinition()
     {
-        Assert.Greater(DictionaryService.GetDictionaryDefinitionAsync("computer").Result.List.Count, 0);
-        Assert.AreEqual(DictionaryService.GetDictionaryDefinitionAsync("kompuuter").Result.List.Count, 0);
+        Assert.Greater(DictionaryService.GetDictionaryDefinitionAsync("computer").Result.Count, 0);
+        Assert.IsNull(DictionaryService.GetDictionaryDefinitionAsync("kompuuter").Result);
     }
 }

@@ -1,4 +1,4 @@
-﻿using FlawBOT.Services.Games;
+﻿using FlawBOT.Services;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;
@@ -9,12 +9,9 @@ internal class TeamFortress
     [Test]
     public void GetMapStats()
     {
-        Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "pl_upward")
-            .Result);
-        Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "upward")
-            .Result);
-        Assert.IsNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "bonewards")
-            .Result);
+        Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "pl_upward").Result);
+        Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "upward").Result);
+        Assert.IsNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "bonewards").Result);
     }
 
     [Test]
@@ -35,16 +32,14 @@ internal class TeamFortress
     [Test]
     public void GetServers()
     {
-        Assert.IsNotNull(TeamFortressService
-            .GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payload").Result);
-        Assert.IsNull(TeamFortressService
-            .GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payloader").Result);
+        Assert.IsNotNull(TeamFortressService.GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payload").Result);
+        Assert.IsNull(TeamFortressService.GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payloader").Result);
     }
 
     [Test]
     [Order(1)]
     public void UpdateTf2Schema()
     {
-        Assert.IsTrue(TeamFortressService.UpdateTf2SchemaAsync(TestSetup.Tokens.SteamToken).Result);
+        Assert.IsTrue(TeamFortressService.UpdateTF2SchemaAsync(TestSetup.Tokens.SteamToken).Result);
     }
 }

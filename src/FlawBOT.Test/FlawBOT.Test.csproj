@@ -24,11 +24,21 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlawBOT.Models\FlawBOT.Models.csproj" />
     <ProjectReference Include="..\FlawBOT\FlawBOT.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Steam.Models">
+      <HintPath>..\FlawBOT\Resources\Steam.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamWebAPI2">
+      <HintPath>..\FlawBOT\Resources\SteamWebAPI2.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
