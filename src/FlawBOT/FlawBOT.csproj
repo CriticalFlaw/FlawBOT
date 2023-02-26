@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net7.0</TargetFramework>
-		<ApplicationIcon>favicon.ico</ApplicationIcon>
+		<ApplicationIcon>Resources/favicon.ico</ApplicationIcon>
 		<StartupObject>FlawBOT.Program</StartupObject>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<Version>3.1.0</Version>
@@ -40,13 +40,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="application.yml">
+		<Content Include="Resources\application.yml">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="config.json">
+		<Content Include="Resources\config.json">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Lavalink.jar">
+		<Content Include="Resources\Lavalink.jar">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
