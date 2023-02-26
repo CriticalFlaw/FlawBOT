@@ -250,8 +250,9 @@
   <data name="URL_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>
   </data>
-  <data name="URL_IPStack" xml:space="preserve">
-    <value>http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1</value>
+  <data name="URL_IPAPI" xml:space="preserve">
+    <value>https://ipapi.co/{0}/json/</value>
+    <comment>0 = ip address</comment>
   </data>
   <data name="URL_NASA" xml:space="preserve">
     <value>https://api.nasa.gov/planetary/apod?api_key={0}</value>

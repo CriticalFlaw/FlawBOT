@@ -59,11 +59,10 @@ namespace FlawBOT.Modules
             return JsonConvert.DeserializeObject<DogData>(results);
         }
 
-        public static async Task<IpStack> GetIpLocationAsync(IPAddress query)
+        public static async Task<IPLocation> GetIpLocationAsync(IPAddress query)
         {
-            var result = await Http.GetStringAsync(string.Format(Resources.URL_IPStack, query))
-                .ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<IpStack>(result);
+            var result = await Http.GetStringAsync(string.Format(Resources.URL_IPAPI, query)).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<IPLocation>(result);
         }
     }
 }

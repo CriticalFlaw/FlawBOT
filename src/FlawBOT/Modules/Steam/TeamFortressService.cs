@@ -54,7 +54,7 @@ namespace FlawBOT.Modules
             return ItemSchemaList.Find(n => n.ItemName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public static async Task<bool> UpdateTf2SchemaAsync(string token)
+        public static async Task<bool> UpdateTF2SchemaAsync(string token)
         {
             try
             {

@@ -502,11 +502,11 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.ipstack.com/{0}?access_key=2e3dea495fa72127ed0f03ccb0b141b9&amp;format=1.
+        ///   Looks up a localized string similar to https://ipapi.co/{0}/json/.
         /// </summary>
-        internal static string URL_IPStack {
+        internal static string URL_IPAPI {
             get {
-                return ResourceManager.GetString("URL_IPStack", resourceCulture);
+                return ResourceManager.GetString("URL_IPAPI", resourceCulture);
             }
         }
         
