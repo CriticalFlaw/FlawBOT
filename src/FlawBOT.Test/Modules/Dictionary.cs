@@ -1,4 +1,4 @@
-﻿using FlawBOT.Modules.Dictionary;
+﻿using FlawBOT.Services;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;
