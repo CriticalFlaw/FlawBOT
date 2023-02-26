@@ -29,8 +29,9 @@ namespace FlawBOT
                 Console.CancelKeyPress += ConsoleOnCancelKeyPress;
 
                 // Load Settings
-                if (!File.Exists("config.json")) return;
-                var json = await new StreamReader(File.OpenRead("config.json"), new UTF8Encoding(false)).ReadToEndAsync();
+                var fileName = "Resources\\config.json";
+                if (!File.Exists(fileName)) return;
+                var json = await new StreamReader(File.OpenRead(fileName), new UTF8Encoding(false)).ReadToEndAsync();
                 Settings = JsonConvert.DeserializeObject<BotSettings>(json);
 
                 // Generate a list of shards

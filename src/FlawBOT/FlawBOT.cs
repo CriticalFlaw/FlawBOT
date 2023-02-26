@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlawBOT.Services;
 using FlawBOT.Modules;
+using DSharpPlus.SlashCommands.EventArgs;
 
 namespace FlawBOT
 {
@@ -82,7 +83,8 @@ namespace FlawBOT
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
             {
                 PaginationBehaviour = PaginationBehaviour.Ignore,
-                Timeout = TimeSpan.FromSeconds(30)
+                Timeout = TimeSpan.FromSeconds(30),
+                AckPaginationButtons = true
             });
 
             // Setup Voice
@@ -112,23 +114,22 @@ namespace FlawBOT
             Slash.RegisterCommands<WeatherModule>();
             Slash.RegisterCommands<SimpsonsModule>();
             Slash.RegisterCommands<YouTubeModule>();
+            Slash.SlashCommandInvoked += SlashCommand_Executed;
+            Slash.SlashCommandErrored += SlashCommand_Errored;
 
             // Setup Lavalink
-            var output = "Lavalink node not enabled. Skipping...";
             if (settings.Lavalink.Enabled)
             {
                 if (File.Exists($"{Directory.GetCurrentDirectory()}/Lavalink.jar"))
                 {
-                    output = "Lavalink enabled. Initializing .jar node...";
+                    Client.Logger.LogInformation(EventId, "Initializing Lavalink...");
                     Lavalink = Client.UseLavalink();
                 }
                 else
                 {
-                    output = $"Could not find Lavalink node at: {Directory.GetCurrentDirectory()}";
+                    Client.Logger.LogInformation(EventId, $"Could not find Lavalink node at: {Directory.GetCurrentDirectory()}");
                 }
             }
-
-            Client.Logger.LogInformation(EventId, output);
 
             // Start the uptime counter
             Console.Title = $"{settings.Name}-{settings.Version}";
@@ -150,9 +151,6 @@ namespace FlawBOT
             Client.Logger.LogInformation(EventId, "Initializing...");
             await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
             await TeamFortressService.UpdateTF2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
-
-            // Send a notification to load Lavalink
-            Client.Logger.LogInformation(EventId, "Make sure Lavalink is running!");
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);
@@ -224,7 +222,18 @@ namespace FlawBOT
             return Task.CompletedTask;
         }
 
+        private static Task SlashCommand_Executed(SlashCommandsExtension sender, SlashCommandInvokedEventArgs e)
+        {
+            e.Context.Client.Logger.LogInformation($"{e.Context.User.Username} successfully executed '{e.Context.CommandName}'");
+            return Task.CompletedTask;
+        }
+
         private static async Task Command_Error(CommandsNextExtension sender, CommandErrorEventArgs e)
+        {
+            await Exceptions.Process(e, EventId);
+        }
+
+        private static async Task SlashCommand_Errored(SlashCommandsExtension sender, SlashCommandErrorEventArgs e)
         {
             await Exceptions.Process(e, EventId);
         }
