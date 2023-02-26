@@ -358,6 +358,15 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter the command again for a different result..
+        /// </summary>
+        internal static string INFO_TRY_AGAIN {
+            get {
+                return ResourceManager.GetString("INFO_TRY_AGAIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No results found..
         /// </summary>
         internal static string NOT_FOUND_COMMON {
@@ -462,6 +471,15 @@ namespace FlawBOT.Properties {
         internal static string URL_Dictionary {
             get {
                 return ResourceManager.GetString("URL_Dictionary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://api.urbandictionary.com/v0/random.
+        /// </summary>
+        internal static string URL_Dictionary_Random {
+            get {
+                return ResourceManager.GetString("URL_Dictionary_Random", resourceCulture);
             }
         }
         

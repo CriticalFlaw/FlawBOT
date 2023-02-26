@@ -336,4 +336,10 @@
   <data name="INFO_LIST_NEXT_RESULT" xml:space="preserve">
     <value>Type 'next' within 10 seconds for the next result.</value>
   </data>
+  <data name="INFO_TRY_AGAIN" xml:space="preserve">
+    <value>Enter the command again for a different result.</value>
+  </data>
+  <data name="URL_Dictionary_Random" xml:space="preserve">
+    <value>https://api.urbandictionary.com/v0/random</value>
+  </data>
 </root>

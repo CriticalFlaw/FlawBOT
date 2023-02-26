@@ -16,6 +16,12 @@ namespace FlawBOT.Models.Dictionary
         [JsonProperty("example")]
         public string Example { get; set; }
 
+        [JsonProperty("word")]
+        public string Word { get; set; }
+
+        [JsonProperty("written_on")]
+        public string WrittenOn { get; set; }
+
         [JsonProperty("thumbs_up")]
         public int ThumbsUp { get; set; }
 
