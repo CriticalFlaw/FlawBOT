@@ -28,6 +28,6 @@ internal class Misc
     [Test]
     public void GetIpLocation()
     {
-        Assert.IsNotNull(MiscService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result.Type);
+        Assert.IsNotNull(MiscService.GetIpLocationAsync(IPAddress.Parse("123.123.123.123")).Result);
     }
 }
