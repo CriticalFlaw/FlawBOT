@@ -1,6 +1,5 @@
 ﻿using FlawBOT.Common;
 using FlawBOT.Properties;
-using Microsoft.Extensions.Options;
 using Steam.Models;
 using Steam.Models.SteamCommunity;
 using Steam.Models.SteamStore;
@@ -30,12 +29,7 @@ namespace FlawBOT.Services
             try
             {
                 var appId = SteamAppList.Data.First(n => string.Equals(n.Name, query, StringComparison.InvariantCultureIgnoreCase)).AppId;
-                var factoryOptions = new SteamWebInterfaceFactoryOptions
-                {
-                    SteamWebApiKey = Program.Settings.Tokens.SteamToken
-                };
-                return await new SteamWebInterfaceFactory(Options.Create(factoryOptions)).CreateSteamStoreInterface()
-                    .GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
+                return await new SteamWebInterfaceFactory(Program.Settings.Tokens.SteamToken).CreateSteamStoreInterface().GetStoreAppDetailsAsync(appId).ConfigureAwait(false);
             }
             catch
             {
