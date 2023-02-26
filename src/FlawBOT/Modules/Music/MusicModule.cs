@@ -3,11 +3,13 @@ using DSharpPlus.Lavalink;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Models;
+using FlawBOT.Models.Music;
+using FlawBOT.Modules.YouTube;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Music
 {
     public class MusicModule : ApplicationCommandModule
     {

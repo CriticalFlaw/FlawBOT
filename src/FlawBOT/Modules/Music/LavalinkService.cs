@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Music
 {
     public sealed class LavalinkService
     {

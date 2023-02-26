@@ -1,4 +1,4 @@
-﻿using FlawBOT.Modules;
+﻿using FlawBOT.Modules.Images;
 using NUnit.Framework;
 using System.Threading.Tasks;
 

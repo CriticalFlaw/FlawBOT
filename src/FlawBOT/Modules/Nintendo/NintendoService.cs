@@ -8,7 +8,7 @@ using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Base;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Nintendo
 {
     public class NintendoService : HttpHandler
     {

@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.SlashCommands;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Images
 {
     public class SimpsonsModule : ApplicationCommandModule
     {

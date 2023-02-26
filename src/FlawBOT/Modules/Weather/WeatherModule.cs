@@ -1,12 +1,13 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using FlawBOT.Properties;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Weather
 {
     public class WeatherModule : ApplicationCommandModule
     {

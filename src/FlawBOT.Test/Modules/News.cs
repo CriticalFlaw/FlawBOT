@@ -1,4 +1,4 @@
-﻿using FlawBOT.Modules;
+﻿using FlawBOT.Modules.News;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;

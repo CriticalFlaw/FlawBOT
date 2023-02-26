@@ -4,7 +4,7 @@ using DSharpPlus.SlashCommands;
 using System;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Bot
 {
     public class BotModule : ApplicationCommandModule
     {

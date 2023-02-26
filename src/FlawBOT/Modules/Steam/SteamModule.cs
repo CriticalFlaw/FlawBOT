@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using FlawBOT.Properties;
 using Steam.Models.SteamCommunity;
 using System.Globalization;
@@ -10,7 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UserStatus = Steam.Models.SteamCommunity.UserStatus;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Steam
 {
     public class SteamModule : ApplicationCommandModule
     {

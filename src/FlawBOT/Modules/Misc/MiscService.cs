@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Misc
 {
     public class MiscService : HttpHandler
     {

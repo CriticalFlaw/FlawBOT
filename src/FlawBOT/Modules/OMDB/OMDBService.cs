@@ -2,7 +2,7 @@
 using OMDbSharp.Objects;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.OMDB
 {
     public static class OmdbService
     {

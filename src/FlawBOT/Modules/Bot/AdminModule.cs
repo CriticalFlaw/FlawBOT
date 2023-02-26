@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Bot
 {
     public class AdminModule : BaseCommandModule
     {
@@ -14,7 +14,7 @@ namespace FlawBOT.Modules
         [Command("activity")]
         [Aliases("setactivity")]
         [Description("Set FlawBOT's activity.")]
-        public async Task SetBotActivity(CommandContext ctx, [Description("Name of the activity.")] [RemainingText] string activity)
+        public async Task SetBotActivity(CommandContext ctx, [Description("Name of the activity.")][RemainingText] string activity)
         {
             if (string.IsNullOrWhiteSpace(activity))
             {
@@ -53,7 +53,7 @@ namespace FlawBOT.Modules
         [Command("status")]
         [Aliases("setstatus", "state")]
         [Description("Set FlawBOT's status.")]
-        public async Task SetBotStatus(CommandContext ctx, [Description("Activity Status. Online, Idle, DND or Offline")] [RemainingText] string status)
+        public async Task SetBotStatus(CommandContext ctx, [Description("Activity Status. Online, Idle, DND or Offline")][RemainingText] string status)
         {
             var settings = Program.Settings;
             status ??= "ONLINE";
@@ -97,7 +97,7 @@ namespace FlawBOT.Modules
         [Command("username")]
         [Aliases("setusername", "name", "setname", "nickname", "nick")]
         [Description("Set FlawBOT's username.")]
-        public async Task SetBotUsername(CommandContext ctx, [Description("New nickname for FlawBOT.")] [RemainingText] string name)
+        public async Task SetBotUsername(CommandContext ctx, [Description("New nickname for FlawBOT.")][RemainingText] string name)
         {
             var oldName = ctx.Client.CurrentUser.Username;
             var newName = string.IsNullOrWhiteSpace(name) ? Program.Settings.Name : name;

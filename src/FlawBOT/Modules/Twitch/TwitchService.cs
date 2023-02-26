@@ -3,7 +3,7 @@ using FlawBOT.Common;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix.Models.Streams.GetStreams;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Twitch
 {
     public class TwitchService : HttpHandler
     {

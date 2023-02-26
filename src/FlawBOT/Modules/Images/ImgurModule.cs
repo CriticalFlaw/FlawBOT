@@ -2,11 +2,12 @@
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using FlawBOT.Properties;
 using Imgur.API.Models.Impl;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Images
 {
     public class ImgurModule : ApplicationCommandModule
     {

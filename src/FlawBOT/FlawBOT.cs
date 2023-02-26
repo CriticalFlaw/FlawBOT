@@ -10,13 +10,29 @@ using DSharpPlus.VoiceNext;
 using DSharpPlus.SlashCommands;
 using Emzi0767;
 using FlawBOT.Common;
-using FlawBOT.Modules;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FlawBOT.Modules.Discord;
+using FlawBOT.Modules.Bot;
+using FlawBOT.Modules.Images;
+using FlawBOT.Modules.News;
+using FlawBOT.Modules.Steam;
+using FlawBOT.Modules.Weather;
+using FlawBOT.Modules.Music;
+using FlawBOT.Modules.Nintendo;
+using FlawBOT.Modules.YouTube;
+using FlawBOT.Modules.Wikipedia;
+using FlawBOT.Modules.Speedrun;
+using FlawBOT.Modules.Dictionary;
+using FlawBOT.Modules.Misc;
+using FlawBOT.Modules.OMDB;
+using FlawBOT.Modules.Reddit;
+using FlawBOT.Modules.NASA;
+using FlawBOT.Modules.Twitch;
 
 namespace FlawBOT
 {

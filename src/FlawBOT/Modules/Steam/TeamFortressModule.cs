@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using FlawBOT.Properties;
 using System;
 using System.Globalization;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Steam
 {
     public class TeamFortressModule : ApplicationCommandModule
     {
@@ -138,7 +139,7 @@ namespace FlawBOT.Modules
                         $"{result.Provider ?? result.Type}: [{result.Title}]({result.Link.AbsoluteUri})");
                     results.Remove(result);
                 }
-                
+
                 await ctx.CreateResponseAsync("Latest news articles from teamwork.tf", output).ConfigureAwait(false);
 
                 if (results.Count < 5) break;

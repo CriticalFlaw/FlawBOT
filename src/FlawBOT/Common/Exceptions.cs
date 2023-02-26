@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
-using FlawBOT.Modules;
+using FlawBOT.Modules.Bot;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;

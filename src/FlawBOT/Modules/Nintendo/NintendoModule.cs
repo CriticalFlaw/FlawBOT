@@ -1,12 +1,13 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using FlawBOT.Properties;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Nintendo
 {
     public class NintendoModule : ApplicationCommandModule
     {

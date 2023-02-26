@@ -1,4 +1,4 @@
-﻿using FlawBOT.Modules;
+﻿using FlawBOT.Modules.Steam;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
 

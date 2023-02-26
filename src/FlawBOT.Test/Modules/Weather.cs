@@ -1,4 +1,4 @@
-﻿using FlawBOT.Modules;
+﻿using FlawBOT.Modules.Weather;
 using NUnit.Framework;
 
 namespace FlawBOT.Test.Modules;

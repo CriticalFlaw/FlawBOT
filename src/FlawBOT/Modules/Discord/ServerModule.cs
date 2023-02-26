@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using FlawBOT.Properties;
 using System;
 using System.Globalization;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Discord
 {
     [Group("server")]
     [Aliases("guild")]
@@ -173,7 +174,7 @@ namespace FlawBOT.Modules
         }
 
         #endregion COMMAND_RENAME
-        
+
         #region COMMAND_REPORT
 
         [Hidden]
@@ -211,7 +212,7 @@ namespace FlawBOT.Modules
                 await ctx.RespondAsync("Thank You! Your report has been submitted.").ConfigureAwait(false);
             }
         }
-        
+
         #endregion COMMAND_REPORT
 
         #region COMMAND_WARN

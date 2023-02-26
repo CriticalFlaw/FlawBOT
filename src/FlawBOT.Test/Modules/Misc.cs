@@ -1,4 +1,4 @@
-﻿using FlawBOT.Modules;
+﻿using FlawBOT.Modules.Misc;
 using NUnit.Framework;
 using System.Net;
 

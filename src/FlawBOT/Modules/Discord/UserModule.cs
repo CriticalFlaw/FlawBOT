@@ -3,12 +3,13 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FlawBOT.Common;
+using FlawBOT.Modules.Bot;
 using System;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Discord
 {
     [Group("user")]
     [Aliases("users", "usr")]
@@ -118,7 +119,7 @@ namespace FlawBOT.Modules
                 roles.Append($"[`{role.Name}`] ");
             if (roles.Length > 0)
                 output.AddField("Roles", roles.ToString(), true);
-            if (((permsobj & Permissions.Administrator) | (permsobj & Permissions.AccessChannels)) == 0)
+            if ((permsobj & Permissions.Administrator | permsobj & Permissions.AccessChannels) == 0)
                 perms = $"**This user cannot see this channel!**\n{perms}";
             output.AddField("Permissions", perms ?? "*None*");
             await ctx.RespondAsync(output.Build()).ConfigureAwait(false);

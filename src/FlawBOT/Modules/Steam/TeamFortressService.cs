@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TeamworkTF.Sharp;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Steam
 {
     public class TeamFortressService : HttpHandler
     {
@@ -19,18 +19,15 @@ namespace FlawBOT.Modules
 
         #region NEWS
 
-        public static async Task<List<News>> GetNewsArticlesAsync(string token, int page = 0, string provider = "")
+        public static async Task<List<TeamworkTF.Sharp.News>> GetNewsArticlesAsync(string token, int page = 0, string provider = "")
         {
-            List<News> results;
+            List<TeamworkTF.Sharp.News> results;
             if (page > 0)
-                results = await new TeamworkAPI(token).GetNewsByPageAsync(page)
-                    .ConfigureAwait(false);
+                results = await new TeamworkAPI(token).GetNewsByPageAsync(page).ConfigureAwait(false);
             else if (provider != string.Empty)
-                results = await new TeamworkAPI(token).GetNewsByProviderAsync(provider)
-                    .ConfigureAwait(false);
+                results = await new TeamworkAPI(token).GetNewsByProviderAsync(provider).ConfigureAwait(false);
             else
-                results = await new TeamworkAPI(token).GetNewsOverviewAsync()
-                    .ConfigureAwait(false);
+                results = await new TeamworkAPI(token).GetNewsOverviewAsync().ConfigureAwait(false);
             return results.Where(x => x.Type != "tf2-notification").ToList();
         }
 

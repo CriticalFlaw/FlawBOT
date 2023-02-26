@@ -5,7 +5,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.Reddit
 {
     public static class RedditService
     {

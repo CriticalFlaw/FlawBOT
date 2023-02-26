@@ -4,7 +4,7 @@ using FlawBOT.Properties;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace FlawBOT.Modules
+namespace FlawBOT.Modules.News
 {
     public class NewsService : HttpHandler
     {
