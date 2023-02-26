@@ -73,6 +73,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\FlawBOT.Models\FlawBOT.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="PokemonTcgSdk">
 			<HintPath>..\FlawBOT.Framework\Resources\PokemonTcgSdk.dll</HintPath>
 		</Reference>

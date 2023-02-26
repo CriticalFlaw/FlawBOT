@@ -1,4 +1,5 @@
 ﻿using FlawBOT.Common;
+using FlawBOT.Models.Nintendo;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon;

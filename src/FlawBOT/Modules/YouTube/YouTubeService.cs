@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.Entities;
 using FlawBOT.Common;
+using FlawBOT.Models.Music;
 using FlawBOT.Properties;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;

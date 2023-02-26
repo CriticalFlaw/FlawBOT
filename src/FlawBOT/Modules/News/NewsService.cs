@@ -1,4 +1,5 @@
 ﻿using FlawBOT.Common;
+using FlawBOT.Models.News;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 using System.Threading.Tasks;

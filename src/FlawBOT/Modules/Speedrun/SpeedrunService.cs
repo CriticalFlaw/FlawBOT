@@ -1,4 +1,5 @@
 ﻿using FlawBOT.Common;
+using FlawBOT.Models.Speedrun;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 using System;

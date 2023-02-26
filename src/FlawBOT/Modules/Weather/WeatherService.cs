@@ -1,5 +1,5 @@
 ﻿using FlawBOT.Common;
-using FlawBOT.Models;
+using FlawBOT.Models.Weather;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 using System.Threading.Tasks;

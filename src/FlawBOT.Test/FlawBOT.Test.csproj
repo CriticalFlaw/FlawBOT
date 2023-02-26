@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlawBOT.Models\FlawBOT.Models.csproj" />
     <ProjectReference Include="..\FlawBOT\FlawBOT.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
-﻿﻿using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
+using FlawBOT.Models.Music;
 using System;
 using System.Collections.Generic;
 using System.Linq;

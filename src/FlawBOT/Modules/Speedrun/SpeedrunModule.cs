@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
+using FlawBOT.Models.Speedrun;
 using FlawBOT.Properties;
 using System.Linq;
 using System.Text;
