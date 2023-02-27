@@ -15,7 +15,6 @@ namespace FlawBOT.Modules
         [SlashCommand("speedrun", "Retrieve a game from Speedrun.com")]
         public async Task Speedrun(InteractionContext ctx, [Option("query", "Game to find on Speedrun.com")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = SpeedrunService.GetSpeedrunGameAsync(query).Result;
             if (results is null)
             {

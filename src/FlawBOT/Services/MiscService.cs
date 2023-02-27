@@ -56,8 +56,9 @@ namespace FlawBOT.Services
 
         public static async Task<DogData> GetDogPhotoAsync()
         {
-            var results = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<DogData>(results);
+            var response = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
+            var result = JsonConvert.DeserializeObject<DogData>(response);
+            return (result.Status != "success") ? null : result;
         }
 
         public static async Task<IPLocation> GetIpLocationAsync(IPAddress query)

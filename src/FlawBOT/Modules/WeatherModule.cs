@@ -13,7 +13,6 @@ namespace FlawBOT.Modules
         [SlashCommand("weather", "Retrieve the time and weather for specified location.")]
         public async Task Weather(InteractionContext ctx, [Option("query", "Location to get time and weather data from.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await WeatherService.GetWeatherDataAsync(Program.Settings.Tokens.WeatherToken, query).ConfigureAwait(false);
             if (results is null)
             {

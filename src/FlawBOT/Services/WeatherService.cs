@@ -12,6 +12,7 @@ namespace FlawBOT.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(query)) return null;
                 query = string.Format(Resources.URL_Weather, token, query.Trim());
                 var response = await Http.GetStringAsync(query).ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<WeatherData>(response);

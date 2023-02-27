@@ -10,6 +10,7 @@ namespace FlawBOT.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(query)) return null;
                 query = query.ToLowerInvariant().Replace("&", "%26").Replace(" ", "+");
                 return await new OMDbClient(token, false).GetItemByTitle(query).ConfigureAwait(false);
             }

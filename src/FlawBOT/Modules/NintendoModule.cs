@@ -13,7 +13,6 @@ namespace FlawBOT.Modules
         [SlashCommand("amiibo", "Retrieve information about an Amiibo figurine.")]
         public async Task GetAmiibo(InteractionContext ctx, [Option("search", "Name of the Amiibo figurine.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await NintendoService.GetAmiiboDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {

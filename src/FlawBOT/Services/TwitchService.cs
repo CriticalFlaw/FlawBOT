@@ -9,6 +9,7 @@ namespace FlawBOT.Services
     {
         public static async Task<Stream> GetTwitchDataAsync(string clientId, string accessToken, string query)
         {
+            if (string.IsNullOrWhiteSpace(query)) return null;
             var service = new TwitchAPI
             {
                 Settings =

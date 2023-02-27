@@ -13,7 +13,6 @@ namespace FlawBOT.Modules
         [SlashCommand("omdb", "Find a movie or TV show from OMDB.")]
         public async Task Omdb(InteractionContext ctx, [Option("search", "Movie or TV show to find on OMDB.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = OmdbService.GetMovieDataAsync(Program.Settings.Tokens.OmdbToken, query).Result;
             if (results is null)
             {

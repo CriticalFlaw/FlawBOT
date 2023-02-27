@@ -13,7 +13,6 @@ namespace FlawBOT.Modules
         [SlashCommand("wiki", "Find articles on Wikipedia.")]
         public async Task Wikipedia(InteractionContext ctx, [Option("query", "Articles to find on Wikipedia.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await WikipediaService.GetWikipediaDataAsync(query).ConfigureAwait(false);
             if (results is null)
             {

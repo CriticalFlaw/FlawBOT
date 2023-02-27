@@ -15,13 +15,12 @@ namespace FlawBOT.Modules
         /// Returns an 8-ball response to a question.
         /// </summary>
         [SlashCommand("ask", "Ask an 8-ball a question.")]
-        public Task EightBall(InteractionContext ctx, [Option("question", "Question to ask the 8-ball.")] string question)
+        public async Task EightBall(InteractionContext ctx, [Option("question", "Question to ask the 8-ball.")] string question = "")
         {
-            if (string.IsNullOrWhiteSpace(question)) return Task.CompletedTask;
             var output = new DiscordEmbedBuilder()
                 .WithDescription($":8ball: {MiscService.GetRandomAnswer()} ({ctx.User.Mention})")
                 .WithColor(DiscordColor.Black);
-            return ctx.CreateResponseAsync(output.Build());
+            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -30,14 +29,17 @@ namespace FlawBOT.Modules
         [SlashCommand("cat", "Retrieve a random cat fact and picture.")]
         public async Task GetCat(InteractionContext ctx)
         {
+            var results = MiscService.GetCatPhotoAsync().Result;
+            if (results is null)
+            {
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
+                return;
+            }
+
             var output = new DiscordEmbedBuilder()
-                .WithFooter($"Fact: {MiscService.GetCatFactAsync().Result}")
+                .WithImageUrl(results)
+                .WithFooter(MiscService.GetCatFactAsync().Result)
                 .WithColor(DiscordColor.Orange);
-
-            var image = MiscService.GetCatPhotoAsync().Result;
-            if (!string.IsNullOrWhiteSpace(image))
-                output.WithImageUrl(image);
-
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
@@ -45,26 +47,24 @@ namespace FlawBOT.Modules
         /// Returns result of a coin flip.
         /// </summary>
         [SlashCommand("coinflip", "Flip a coin.")]
-        public Task CoinFlip(InteractionContext ctx)
+        public async Task CoinFlip(InteractionContext ctx)
         {
-            var random = new Random();
             var output = new DiscordEmbedBuilder()
-                .WithDescription(ctx.User.Username + " flipped a coin and got " + Formatter.Bold(Convert.ToBoolean(random.Next(0, 2)) ? "Heads" : "Tails"))
+                .WithDescription(ctx.User.Username + " flipped a coin and got " + Formatter.Bold(Convert.ToBoolean(new Random().Next(0, 2)) ? "Heads" : "Tails"))
                 .WithColor(Program.Settings.DefaultColor);
-            return ctx.CreateResponseAsync(output.Build());
+            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Returns result of a dice roll.
         /// </summary>
         [SlashCommand("diceroll", "Roll a six-sided die.")]
-        public Task RollDice(InteractionContext ctx)
+        public async Task RollDice(InteractionContext ctx)
         {
-            var random = new Random();
             var output = new DiscordEmbedBuilder()
-                .WithDescription(ctx.User.Username + " rolled a die and got " + Formatter.Bold(random.Next(1, 7).ToString()))
+                .WithDescription(ctx.User.Username + " rolled a die and got " + Formatter.Bold(new Random().Next(1, 7).ToString()))
                 .WithColor(Program.Settings.DefaultColor);
-            return ctx.CreateResponseAsync(output.Build());
+            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace FlawBOT.Modules
         public async Task GetDog(InteractionContext ctx)
         {
             var results = MiscService.GetDogPhotoAsync().Result;
-            if (results.Status != "success")
+            if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
                 return;
@@ -90,7 +90,7 @@ namespace FlawBOT.Modules
         /// Returns a text message as TTS.
         /// </summary>
         [SlashCommand("tts", "Make FlawBOT repeat a message as text-to-speech.")]
-        public async Task Say(InteractionContext ctx, [Option("message", "Message for FlawBOT to repeat.")] string message)
+        public async Task Say(InteractionContext ctx, [Option("message", "Message for FlawBOT to repeat.")] string message = "")
         {
             if (string.IsNullOrWhiteSpace(message))
                 await ctx.CreateResponseAsync(":thinking:").ConfigureAwait(false);

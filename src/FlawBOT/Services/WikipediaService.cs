@@ -13,6 +13,7 @@ namespace FlawBOT.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(query)) return null;
                 using var client = new WikipediaClient();
                 var response = await Http.GetStringAsync(query).ConfigureAwait(false);
                 var result = await client.SearchAsync(query);

@@ -12,7 +12,6 @@ namespace FlawBOT.Modules
         [SlashCommand("twitch", "Retrieve Twitch stream information.")]
         public async Task Twitch(InteractionContext ctx, [Option("query", "Channel to find on Twitch.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await TwitchService.GetTwitchDataAsync(Program.Settings.Tokens.TwitchToken, Program.Settings.Tokens.TwitchAccess, query).ConfigureAwait(false);
             if (results is null)
             {

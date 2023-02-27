@@ -20,6 +20,7 @@ namespace FlawBOT.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(query)) return null;
                 query = string.Format(Resources.URL_Speedrun, Uri.EscapeDataString(query.Trim()));
                 var response = await Http.GetStringAsync(query).ConfigureAwait(false);
                 var result = JsonConvert.DeserializeObject<SpeedrunGame>(response);

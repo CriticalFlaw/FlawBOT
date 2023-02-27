@@ -19,8 +19,6 @@ namespace FlawBOT.Services
 
         private static ISteamWebResponse<IReadOnlyCollection<SteamAppModel>> SteamAppList { get; set; } = new SteamWebResponse<IReadOnlyCollection<SteamAppModel>>();
 
-        #region STORE
-
         /// <summary>
         /// Call the Steam API for data on a given game title.
         /// </summary>
@@ -52,10 +50,6 @@ namespace FlawBOT.Services
             }
         }
 
-        #endregion STORE
-
-        #region USERS
-
         /// <summary>
         /// Call the Steam API for summary data on a given user.
         /// </summary>
@@ -63,6 +57,7 @@ namespace FlawBOT.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(query)) return null;
                 _steamInterface = new SteamWebInterfaceFactory(token);
                 var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 var userId = ulong.TryParse(query, out var steamId) ? steamId : 0;
@@ -84,6 +79,7 @@ namespace FlawBOT.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(query)) return null;
                 var steam = _steamInterface.CreateSteamWebInterface<SteamUser>(new HttpClient());
                 return await steam.ResolveVanityUrlAsync(query.Replace(" ", "")).ConfigureAwait(false) ?? null;
             }
@@ -92,7 +88,5 @@ namespace FlawBOT.Services
                 return null;
             }
         }
-
-        #endregion USERS
     }
 }

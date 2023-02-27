@@ -15,8 +15,6 @@ namespace FlawBOT.Modules
 {
     public class SteamModule : ApplicationCommandModule
     {
-        #region COMMAND_CONNECT
-
         [SlashCommand("connect", "Format a game connection string into a link.")]
         public async Task SteamLink(InteractionContext ctx, [Option("link", "Connection string (ex. IP:PORT)")] string link)
         {
@@ -27,40 +25,36 @@ namespace FlawBOT.Modules
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP_GAME, ResponseType.Warning).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_CONNECT
-
-        #region COMMAND_GAME
-
         [SlashCommand("game", "Retrieve information on a Steam game.")]
         public async Task SteamGame(InteractionContext ctx, [Option("query", "Game to find on Steam.")] string query = "Team Fortress 2")
         {
             try
             {
-                var app = SteamService.GetSteamAppAsync(query).Result;
-                if (app is null)
+                var results = SteamService.GetSteamAppAsync(query).Result;
+                if (results is null)
                 {
                     await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                     return;
                 }
 
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(app.Name)
-                    .WithDescription(Regex.Replace(app.DetailedDescription.Length <= 500
-                        ? app.DetailedDescription
-                        : app.DetailedDescription.Substring(0, 250) + "...", "<[^>]*>", "") ?? "Unknown")
-                    .AddField("Release Date", app.ReleaseDate.Date ?? "Unknown", true)
-                    .AddField("Developers", app.Developers.FirstOrDefault() ?? "Unknown", true)
-                    .AddField("Publisher", app.Publishers.FirstOrDefault() ?? "Unknown", true)
-                    .AddField("Price", app.IsFree ? "Free" : app.PriceOverview.FinalFormatted ?? "Unknown", true)
-                    .AddField("Metacritic", app.Metacritic != null ? app.Metacritic.Score.ToString() : "Unknown", true)
-                    .WithThumbnail(app.HeaderImage)
-                    .WithUrl(string.Format(Resources.URL_Steam_App, app.SteamAppId))
-                    .WithFooter("App ID: " + app.SteamAppId)
+                    .WithTitle(results.Name)
+                    .WithDescription(Regex.Replace(results.DetailedDescription.Length <= 500
+                        ? results.DetailedDescription
+                        : results.DetailedDescription.Substring(0, 250) + "...", "<[^>]*>", "") ?? "Unknown")
+                    .AddField("Release Date", results.ReleaseDate.Date ?? "Unknown", true)
+                    .AddField("Developers", results.Developers.FirstOrDefault() ?? "Unknown", true)
+                    .AddField("Publisher", results.Publishers.FirstOrDefault() ?? "Unknown", true)
+                    .AddField("Price", results.IsFree ? "Free" : results.PriceOverview.FinalFormatted ?? "Unknown", true)
+                    .AddField("Metacritic", results.Metacritic != null ? results.Metacritic.Score.ToString() : "Unknown", true)
+                    .WithThumbnail(results.HeaderImage)
+                    .WithUrl(string.Format(Resources.URL_Steam_App, results.SteamAppId))
+                    .WithFooter("App ID: " + results.SteamAppId)
                     .WithColor(new DiscordColor("#1B2838"));
 
                 var genres = new StringBuilder();
-                foreach (var genre in app.Genres.Take(3))
-                    genres.Append(genre.Description).Append(!genre.Equals(app.Genres.Last()) ? ", " : string.Empty);
+                foreach (var genre in results.Genres.Take(3))
+                    genres.Append(genre.Description).Append(!genre.Equals(results.Genres.Last()) ? ", " : string.Empty);
                 output.AddField("Genres", genres.ToString() ?? "Unknown", true);
                 await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
             }
@@ -70,14 +64,9 @@ namespace FlawBOT.Modules
             }
         }
 
-        #endregion COMMAND_GAME
-
-        #region COMMAND_USER
-
         [SlashCommand("user", "Retrieve information on a Steam user.")]
         public async Task SteamUser(InteractionContext ctx, [Option("query", "User to find on Steam.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var profile = SteamService.GetSteamProfileAsync(Program.Settings.Tokens.SteamToken, query).Result;
             if (profile is null)
             {
@@ -110,7 +99,5 @@ namespace FlawBOT.Modules
                 await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
             }
         }
-
-        #endregion COMMAND_USER
     }
 }

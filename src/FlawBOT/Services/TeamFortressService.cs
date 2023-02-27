@@ -77,20 +77,18 @@ namespace FlawBOT.Services
 
         public static async Task<GameMode> GetGameModeInfoAsync(string token, string query)
         {
-            return await new TeamworkAPI(token).GetGameModeAsync(query)
-                .ConfigureAwait(false);
+            return await new TeamworkAPI(token).GetGameModeAsync(query).ConfigureAwait(false);
         }
 
         public static async Task<List<Server>> GetServersByGameModeAsync(string token, string query)
         {
-            return await new TeamworkAPI(token).GetServerListByGameModeAsync(query)
-                .ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(query)) return null;
+            return await new TeamworkAPI(token).GetServerListByGameModeAsync(query).ConfigureAwait(false);
         }
 
         public static async Task<List<ServerList>> GetCustomServerListsAsync(string token)
         {
-            return await new TeamworkAPI(token).GetServerListsAsync()
-                .ConfigureAwait(false);
+            return await new TeamworkAPI(token).GetServerListsAsync().ConfigureAwait(false);
         }
 
         public static string GetServerInfo(string token, string address)
@@ -104,16 +102,14 @@ namespace FlawBOT.Services
 
         public static async Task<Map> GetMapStatsAsync(string token, string query)
         {
-            var map = new TeamworkAPI(token).GetMapsBySearchAsync(query).Result
-                .FirstOrDefault()?.Name;
-            return await new TeamworkAPI(token).GetMapStatsAsync(map)
-                .ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(query)) return null;
+            var map = new TeamworkAPI(token).GetMapsBySearchAsync(query).Result.FirstOrDefault()?.Name;
+            return await new TeamworkAPI(token).GetMapStatsAsync(map).ConfigureAwait(false);
         }
 
         public static async Task<MapThumbnail> GetMapThumbnailAsync(string token, string query)
         {
-            return await new TeamworkAPI(token).GetMapThumbnailAsync(query)
-                .ConfigureAwait(false);
+            return await new TeamworkAPI(token).GetMapThumbnailAsync(query).ConfigureAwait(false);
         }
 
         #endregion MAPS

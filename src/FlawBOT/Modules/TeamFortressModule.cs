@@ -15,8 +15,6 @@ namespace FlawBOT.Modules
 {
     public class TeamFortressModule : ApplicationCommandModule
     {
-        #region COMMAND_SCHEMA
-
         [SlashCommand("item", "Retrieve an item from the latest TF2 item schema.")]
         public async Task Tf2Schema(InteractionContext ctx, [Option("query", "Item to find in the TF2 schema")] string query = "The Scattergun")
         {
@@ -54,14 +52,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_SCHEMA
-
-        #region COMMAND_MAP
-
         [SlashCommand("map", "Retrieve map information from teamwork.tf")]
         public async Task Tf2Map(InteractionContext ctx, [Option("query", "Normalized map name, like pl_upward")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await TeamFortressService.GetMapStatsAsync(Program.Settings.Tokens.TeamworkToken, query.ToLowerInvariant()).ConfigureAwait(false);
             if (results is null)
             {
@@ -111,10 +104,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_MAP
-
-        #region COMMAND_NEWS
-
         [SlashCommand("news-tf", "Retrieve the latest news article from teamwork.tf")]
         public async Task Tf2News(InteractionContext ctx, [Option("query", "Page number from which to retrieve the news")] double query = 0)
         {
@@ -149,14 +138,9 @@ namespace FlawBOT.Modules
             }
         }
 
-        #endregion COMMAND_NEWS
-
-        #region COMMAND_CREATORS
-
         [SlashCommand("creator", "Retrieve a community creator profile from teamwork.tf")]
         public async Task Tf2Creators(InteractionContext ctx, [Option("query", "Name of the community creator to find.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var steamId = SteamService.GetSteamUserId(query).Result;
             if (steamId is null)
             {
@@ -207,14 +191,9 @@ namespace FlawBOT.Modules
             }
         }
 
-        #endregion COMMAND_CREATORS
-
-        #region COMMAND_SERVERS
-
         [SlashCommand("server", "Retrieve a list of servers with given game-mode")]
         public async Task Tf2ServerByMode(InteractionContext ctx, [Option("query", "Name of the game-mode, like payload.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return;
             var results = await TeamFortressService.GetServersByGameModeAsync(Program.Settings.Tokens.TeamworkToken, query.Trim().Replace(' ', '-')).ConfigureAwait(false);
             if (results is null)
             {
@@ -291,7 +270,5 @@ namespace FlawBOT.Modules
                 await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
             }
         }
-
-        #endregion COMMAND_SERVERS
     }
 }
