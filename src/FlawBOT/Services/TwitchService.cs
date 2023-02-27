@@ -7,7 +7,7 @@ namespace FlawBOT.Services
 {
     public class TwitchService : HttpHandler
     {
-        public static async Task<GetStreamsResponse> GetTwitchDataAsync(string clientId, string accessToken, string query)
+        public static async Task<Stream> GetTwitchDataAsync(string clientId, string accessToken, string query)
         {
             var service = new TwitchAPI
             {
@@ -17,7 +17,9 @@ namespace FlawBOT.Services
                     AccessToken = accessToken,
                 }
             };
-            return await service.Helix.Streams.GetStreamsAsync(query).ConfigureAwait(false);
+            var result = await service.Helix.Streams.GetStreamsAsync(query).ConfigureAwait(false);
+            if (result.Streams.Length == 0) return null;
+            return result.Streams[random.Next(result.Streams.Length)];
         }
     }
 }

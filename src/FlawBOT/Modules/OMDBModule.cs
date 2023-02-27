@@ -10,47 +10,32 @@ namespace FlawBOT.Modules
 {
     public class OmdbModule : ApplicationCommandModule
     {
-        #region COMMAND_OMDB
-
         [SlashCommand("omdb", "Find a movie or TV show from OMDB.")]
-        public async Task Omdb(InteractionContext ctx, [Option("search", "Movie or TV show to find on OMDB.")] string search)
+        public async Task Omdb(InteractionContext ctx, [Option("search", "Movie or TV show to find on OMDB.")] string query)
         {
-            if (string.IsNullOrWhiteSpace(search)) return;
-            var results = OmdbService.GetMovieListAsync(Program.Settings.Tokens.OmdbToken, search.Replace(" ", "+")).Result;
-            if (!results.Search.Any())
+            if (string.IsNullOrWhiteSpace(query)) return;
+            var results = OmdbService.GetMovieDataAsync(Program.Settings.Tokens.OmdbToken, query).Result;
+            if (results is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
-            foreach (var title in results.Search)
-            {
-                var movie = OmdbService.GetMovieDataAsync(Program.Settings.Tokens.OmdbToken, title.Title.Replace(" ", "+")).Result;
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(movie.Title)
-                    .WithDescription(movie.Plot.Length < 500 ? movie.Plot : movie.Plot.Take(500) + "...")
-                    .AddField("Released", movie.Released, true)
-                    .AddField("Runtime", movie.Runtime, true)
-                    .AddField("Genre", movie.Genre, true)
-                    .AddField("Rating", movie.Rated, true)
-                    .AddField("IMDb Rating", movie.IMDbRating, true)
-                    .AddField("Box Office", movie.BoxOffice, true)
-                    .AddField("Directors", movie.Director)
-                    .AddField("Actors", movie.Actors)
-                    .WithFooter(!movie.Title.Equals(results.Search.Last().Title)
-                        ? "Type 'next' within 10 seconds for the next movie."
-                        : "This is the last found movie on OMDB.")
-                    .WithColor(DiscordColor.Goldenrod);
-                if (movie.Poster != "N/A") output.WithImageUrl(movie.Poster);
-                await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
-
-                if (results.Search.Length == 1) continue;
-                var interactivity = await BotServices.GetUserInteractivity(ctx, "next", 10).ConfigureAwait(false);
-                if (interactivity.Result is null) break;
-                await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-            }
+            // TODO: Add pagination when supported for slash commands.
+            var output = new DiscordEmbedBuilder()
+                .WithTitle(results.Title)
+                .WithDescription(results.Plot.Length < 500 ? results.Plot : results.Plot.Take(500) + "...")
+                .AddField("Released", results.Released, true)
+                .AddField("Runtime", results.Runtime, true)
+                .AddField("Genre", results.Genre, true)
+                .AddField("Rating", results.Rated, true)
+                .AddField("IMDb Rating", results.IMDbRating, true)
+                .AddField("Box Office", results.BoxOffice, true)
+                .AddField("Directors", results.Director)
+                .AddField("Actors", results.Actors)
+                .WithColor(DiscordColor.Goldenrod);
+            if (results.Poster != "N/A") output.WithImageUrl(results.Poster);
+            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
-
-        #endregion COMMAND_OMDB
     }
 }

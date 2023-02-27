@@ -2,7 +2,7 @@
 using DSharpPlus.Entities;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
-using FlawBOT.Modules;
+using FlawBOT.Common;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;

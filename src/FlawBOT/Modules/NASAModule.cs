@@ -9,8 +9,6 @@ namespace FlawBOT.Modules
 {
     public class NasaModule : ApplicationCommandModule
     {
-        #region COMMAND_NASA
-
         [SlashCommand("nasa", "Retrieve NASA's Astronomy Picture of the Day.")]
         public async Task Nasa(InteractionContext ctx)
         {
@@ -28,7 +26,5 @@ namespace FlawBOT.Modules
                 .WithColor(new DiscordColor("#0B3D91"));
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
-
-        #endregion COMMAND_NASA
     }
 }

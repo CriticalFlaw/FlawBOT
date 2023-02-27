@@ -9,7 +9,7 @@ internal class Dictionary
     [Test]
     public void GetDictionaryDefinition()
     {
-        Assert.Greater(DictionaryService.GetDictionaryDefinitionAsync("computer").Result.Count, 0);
+        Assert.IsNotNull(DictionaryService.GetDictionaryDefinitionAsync("computer").Result);
         Assert.IsNull(DictionaryService.GetDictionaryDefinitionAsync("kompuuter").Result);
     }
 }

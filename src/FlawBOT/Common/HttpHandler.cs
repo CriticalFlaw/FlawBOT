@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 
 namespace FlawBOT.Common
 {
@@ -6,5 +7,6 @@ namespace FlawBOT.Common
     {
         private static readonly HttpClientHandler Handler = new() { AllowAutoRedirect = false };
         protected static readonly HttpClient Http = new(Handler, true);
+        protected static readonly Random random = new();
     }
 }

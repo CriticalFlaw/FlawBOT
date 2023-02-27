@@ -16,14 +16,15 @@ namespace FlawBOT.Services
         ///     Retrieve game speedrun data
         /// </summary>
         /// <param name="query">Name of the game</param>
-        public static async Task<SpeedrunGame> GetSpeedrunGameAsync(string query)
+        public static async Task<Data> GetSpeedrunGameAsync(string query)
         {
             try
             {
-                var results = await Http
-                    .GetStringAsync(string.Format(Resources.URL_Speedrun, Uri.EscapeDataString(query.Trim())))
-                    .ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<SpeedrunGame>(results);
+                query = string.Format(Resources.URL_Speedrun, Uri.EscapeDataString(query.Trim()));
+                var response = await Http.GetStringAsync(query).ConfigureAwait(false);
+                var result = JsonConvert.DeserializeObject<SpeedrunGame>(response);
+                if (result.Data.Count == 0) return null;
+                return result.Data[random.Next(result.Data.Count)];
             }
             catch
             {
@@ -39,8 +40,8 @@ namespace FlawBOT.Services
         {
             try
             {
-                var results = await Http.GetStringAsync(query).ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<SpeedrunCategory>(results);
+                var response = await Http.GetStringAsync(query).ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<SpeedrunCategory>(response);
             }
             catch
             {
@@ -55,10 +56,9 @@ namespace FlawBOT.Services
         {
             try
             {
-                var results = await Http
-                    .GetStringAsync(string.Format(Resources.URL_Speedrun, Uri.EscapeDataString(query.Trim())))
-                    .ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<SpeedrunGame>(results)?.Data.First().Id;
+                query = string.Format(Resources.URL_Speedrun, Uri.EscapeDataString(query.Trim()));
+                var response = await Http.GetStringAsync(query).ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<SpeedrunGame>(response)?.Data.First().Id;
             }
             catch
             {
@@ -71,20 +71,18 @@ namespace FlawBOT.Services
         /// </summary>
         /// <param name="queryList">Speedrun extra identifier</param>
         /// <param name="search">Speedrun extra category</param>
-        public static async Task<string> GetSpeedrunExtraAsync(List<object> queryList, SpeedrunExtras search)
+        public static async Task<string> GetSpeedrunExtraAsync(List<object> extrasList, SpeedrunExtras search)
         {
             try
             {
-                if (queryList.Count == 0) return null;
+                if (extrasList.Count == 0) return null;
                 var results = new StringBuilder();
-                foreach (var query in queryList.Take(3))
+                foreach (var extra in extrasList.Take(3))
                 {
-                    var output = await Http
-                        .GetStringAsync(string.Format(Resources.URL_Speedrun_Extras,
-                            search.ToString().ToLowerInvariant(), query))
-                        .ConfigureAwait(false);
-                    var name = JsonConvert.DeserializeObject<SpeedrunExtra>(output)?.Data.Name;
-                    results.Append(name).Append(!query.Equals(queryList.Take(3).Last()) ? ", " : string.Empty);
+                    var query = string.Format(Resources.URL_Speedrun_Extras, search.ToString().ToLowerInvariant(), extra);
+                    var response = await Http.GetStringAsync(query).ConfigureAwait(false);
+                    var result = JsonConvert.DeserializeObject<SpeedrunExtra>(response)?.Data.Name;
+                    results.Append(result).Append(!query.Equals(extrasList.Take(3).Last()) ? ", " : string.Empty);
                 }
 
                 return results.ToString();

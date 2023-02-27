@@ -4,7 +4,6 @@ using FlawBOT.Properties;
 using Newtonsoft.Json;
 using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients;
-using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Base;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards;
 using System.Threading.Tasks;
 
@@ -15,12 +14,14 @@ namespace FlawBOT.Services
         /// <summary>
         /// Call the Nintendo Amiibo API for an Amiibo figurine.
         /// </summary>
-        public static async Task<NintendoData> GetAmiiboDataAsync(string query)
+        public static async Task<Amiibo> GetAmiiboDataAsync(string query)
         {
             try
             {
-                var results = await Http.GetStringAsync(string.Format(Resources.URL_Amiibo, query.ToLowerInvariant())).ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<NintendoData>(results);
+                query = string.Format(Resources.URL_Amiibo, query.ToLowerInvariant());
+                var response = await Http.GetStringAsync(query).ConfigureAwait(false);
+                var result = JsonConvert.DeserializeObject<NintendoData>(response);
+                return result.Amiibo[random.Next(result.Amiibo.Count)];
             }
             catch
             {
@@ -31,9 +32,17 @@ namespace FlawBOT.Services
         /// <summary>
         /// Call the Pokémon TCG API for a set of cards.
         /// </summary>
-        public static async Task<ApiResourceList<PokemonCard>> GetPokemonCardsAsync(string token, string query = "")
+        public static async Task<PokemonCard> GetPokemonCardAsync(string token, string query = "")
         {
-            return await new PokemonApiClient(token).GetApiResourceAsync<PokemonCard>(PokemonFilterBuilder.CreatePokemonFilter().AddName(query));
+            try
+            {
+                var result = await new PokemonApiClient(token).GetApiResourceAsync<PokemonCard>(PokemonFilterBuilder.CreatePokemonFilter().AddName(query));
+                return result.Results[random.Next(result.Results.Count)];
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

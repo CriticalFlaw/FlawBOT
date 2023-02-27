@@ -11,28 +11,25 @@ namespace FlawBOT.Modules
 {
     public class DictionaryModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns a definition to a word or phrase from the Urban Dictionary API.
-        /// </summary>
         [SlashCommand("dictionary", "Retrieve an Urban Dictionary definition for a word or phrase.")]
-        public async Task UrbanDictionary(InteractionContext ctx, [Option("search", "Word or phrase to find on Urban Dictionary.")] string search = "")
+        public async Task UrbanDictionary(InteractionContext ctx, [Option("search", "Word or phrase to find on Urban Dictionary.")] string query = "")
         {
-            var result = await DictionaryService.GetDictionaryDefinitionAsync(search).ConfigureAwait(false);
-            if (result == null)
+            var results = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
+            if (results == null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
 
+            // TODO: Add pagination when supported for slash commands.
             var output = new DiscordEmbedBuilder()
-                .WithTitle(Formatter.Bold(result.Word))
-                .WithDescription("Submitted on" + result.WrittenOn)
-                .AddField("Definition", result.Definition.Length < 500 ? result.Definition : result.Definition.Take(500) + "...")
-                .AddField("Example", result.Example ?? "None")
-                .AddField(":thumbsup:", result.ThumbsUp.ToString(), true)
-                .AddField(":thumbsdown:", result.ThumbsDown.ToString(), true)
-                .WithUrl(result.Permalink)
-                .WithFooter(string.IsNullOrWhiteSpace(result.Author) ? string.Empty : "Submitted by: " + result.Author)
+                .WithTitle(Formatter.Bold(results.Word))
+                .WithDescription(Formatter.Italic(results.Example) ?? string.Empty)
+                .AddField("Definition", results.Definition.Length < 500 ? results.Definition : results.Definition.Take(500) + "...")
+                .AddField(":thumbsup:", results.ThumbsUp.ToString(), true)
+                .AddField(":thumbsdown:", results.ThumbsDown.ToString(), true)
+                .WithUrl(results.Permalink)
+                .WithFooter(string.IsNullOrWhiteSpace(results.Author) ? string.Empty : "Submitted by: " + results.Author + " on " + results.WrittenOn.Split('T').First())
                 .WithColor(new DiscordColor("#1F2439"));
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }

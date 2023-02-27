@@ -26,6 +26,7 @@ namespace FlawBOT.Services
 
             await ctx.RespondAsync(message).ConfigureAwait(false);
         }
+
         public static async Task SendResponseAsync(InteractionContext ctx, string message, ResponseType type = ResponseType.Default)
         {
             message = type switch
