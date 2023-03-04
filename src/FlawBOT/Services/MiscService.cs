@@ -1,4 +1,5 @@
-﻿using FlawBOT.Common;
+﻿using DSharpPlus.Entities;
+using FlawBOT.Common;
 using FlawBOT.Models.Misc;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
@@ -42,23 +43,31 @@ namespace FlawBOT.Services
             return Answers[random.Next(Answers.Length)];
         }
 
-        public static async Task<string> GetCatFactAsync()
+        public static async Task<DiscordEmbed> GetCatPhotoAsync()
         {
-            var result = await Http.GetStringAsync(Resources.URL_CatFacts).ConfigureAwait(false);
-            return JObject.Parse(result)["fact"]?.ToString();
+            var response = await Http.GetStringAsync(Resources.URL_CatPhoto).ConfigureAwait(false);
+            var results = JObject.Parse(response)["file"]?.ToString();
+
+            var responseFact = await Http.GetStringAsync(Resources.URL_CatFacts).ConfigureAwait(false);
+            var resultsFact = JObject.Parse(responseFact)["fact"]?.ToString();
+
+            var output = new DiscordEmbedBuilder()
+                .WithImageUrl(results)
+                .WithFooter(resultsFact)
+                .WithColor(DiscordColor.Orange);
+            return output.Build();
         }
 
-        public static async Task<string> GetCatPhotoAsync()
-        {
-            var results = await Http.GetStringAsync(Resources.URL_CatPhoto).ConfigureAwait(false);
-            return JObject.Parse(results)["file"]?.ToString();
-        }
-
-        public static async Task<DogData> GetDogPhotoAsync()
+        public static async Task<DiscordEmbed> GetDogPhotoAsync()
         {
             var response = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<DogData>(response);
-            return (result.Status != "success") ? null : result;
+            var results = (result.Status != "success") ? null : result;
+
+            var output = new DiscordEmbedBuilder()
+                .WithImageUrl(results.Message)
+                .WithColor(DiscordColor.Brown);
+            return output.Build();
         }
 
         public static async Task<IPLocation> GetIpLocationAsync(IPAddress query)

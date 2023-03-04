@@ -10,14 +10,14 @@ namespace FlawBOT.Modules
         public async Task Simpsons(InteractionContext ctx)
         {
             var result = await SimpsonsService.GetEpisodeGifAsync(SimpsonsService.SiteRoot.Frinkiac).ConfigureAwait(false);
-            await ctx.CreateResponseAsync(result.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(result).ConfigureAwait(false);
         }
 
         [SlashCommand("futurama", "Retrieve a random Futurama screenshot and episode.")]
         public async Task Futurama(InteractionContext ctx)
         {
             var result = await SimpsonsService.GetEpisodeGifAsync(SimpsonsService.SiteRoot.Morbotron).ConfigureAwait(false);
-            await ctx.CreateResponseAsync(result.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(result).ConfigureAwait(false);
         }
     }
 }

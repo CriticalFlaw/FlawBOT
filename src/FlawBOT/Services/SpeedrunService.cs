@@ -1,4 +1,5 @@
-﻿using FlawBOT.Common;
+﻿using DSharpPlus.Entities;
+using FlawBOT.Common;
 using FlawBOT.Models.Speedrun;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
@@ -16,16 +17,37 @@ namespace FlawBOT.Services
         ///     Retrieve game speedrun data
         /// </summary>
         /// <param name="query">Name of the game</param>
-        public static async Task<Data> GetSpeedrunGameAsync(string query)
+        public static async Task<DiscordEmbed> GetSpeedrunGameAsync(string query)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(query)) return null;
                 query = string.Format(Resources.URL_Speedrun, Uri.EscapeDataString(query.Trim()));
                 var response = await Http.GetStringAsync(query).ConfigureAwait(false);
-                var result = JsonConvert.DeserializeObject<SpeedrunGame>(response);
-                if (result.Data.Count == 0) return null;
-                return result.Data[random.Next(result.Data.Count)];
+                var results = JsonConvert.DeserializeObject<SpeedrunGame>(response);
+                if (results.Data.Count == 0) return null;
+                var result = results.Data[random.Next(results.Data.Count)];
+
+                // TODO: Add pagination when supported for slash commands.
+                var link = result.Links.First(x => x.Rel == "categories").Url;
+                var categories = GetSpeedrunCategoryAsync(link).Result;
+                var category = new StringBuilder();
+                if (categories != null || categories.Data.Count > 0)
+                    foreach (var x in categories.Data)
+                        category.Append($"[{x.Name}]({x.Weblink}) **|** ");
+
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(result.Names.International)
+                    .AddField("Developers", GetSpeedrunExtraAsync(result.Developers, SpeedrunExtras.Developers).Result ?? "Unknown", true)
+                    .AddField("Publishers", GetSpeedrunExtraAsync(result.Publishers, SpeedrunExtras.Publishers).Result ?? "Unknown", true)
+                    .AddField("Release Date", result.ReleaseDate ?? "Unknown")
+                    .AddField("Platforms", GetSpeedrunExtraAsync(result.Platforms, SpeedrunExtras.Platforms).Result ?? "Unknown")
+                    .WithFooter($"ID: {result.Id} - Abbreviation: {result.Abbreviation}")
+                    .WithThumbnail(result.Assets.CoverLarge.Url ?? result.Assets.Icon.Url)
+                    .AddField("Categories", category.ToString())
+                    .WithUrl(result.WebLink)
+                    .WithColor(new DiscordColor("#0F7A4D"));
+                return output.Build();
             }
             catch
             {

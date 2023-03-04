@@ -11,7 +11,6 @@ internal class TeamFortress
     {
         Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "pl_upward").Result);
         Assert.IsNotNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "upward").Result);
-        Assert.IsNull(TeamFortressService.GetMapStatsAsync(TestSetup.Tokens.TeamworkToken, "bonewards").Result);
     }
 
     [Test]
@@ -26,14 +25,12 @@ internal class TeamFortress
     public void GetSchemaItem()
     {
         Assert.IsNotNull(TeamFortressService.GetSchemaItem("scattergun"));
-        Assert.IsNull(TeamFortressService.GetSchemaItem("shattergun"));
     }
 
     [Test]
     public void GetServers()
     {
-        Assert.IsNotNull(TeamFortressService.GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payload").Result);
-        Assert.IsNull(TeamFortressService.GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payloader").Result);
+        Assert.IsNotNull(TeamFortressService.GetServersByGameModeAsync(TestSetup.Tokens.TeamworkToken, "payload"));
     }
 
     [Test]

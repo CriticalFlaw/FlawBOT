@@ -9,8 +9,8 @@ internal class Reddit
     [Test]
     public void GetEmbeddedResults()
     {
-        Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.Hot));
-        Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.New));
-        Assert.IsNotNull(RedditService.GetResults("AskReddit", RedditCategory.Top));
+        Assert.IsNotNull(RedditService.GetRedditResults("AskReddit", RedditCategory.Hot));
+        Assert.IsNotNull(RedditService.GetRedditResults("AskReddit", RedditCategory.New));
+        Assert.IsNotNull(RedditService.GetRedditResults("AskReddit", RedditCategory.Top));
     }
 }

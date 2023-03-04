@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus.SlashCommands;
+﻿using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
@@ -12,19 +11,13 @@ namespace FlawBOT.Modules
         [SlashCommand("nasa", "Retrieve NASA's Astronomy Picture of the Day.")]
         public async Task Nasa(InteractionContext ctx)
         {
-            var results = await NasaService.GetNasaImageAsync(Program.Settings.Tokens.NasaToken).ConfigureAwait(false);
-            if (results is null)
+            var output = await NasaService.GetNasaImageAsync(Program.Settings.Tokens.NasaToken).ConfigureAwait(false);
+            if (output is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Missing).ConfigureAwait(false);
                 return;
             }
-
-            var output = new DiscordEmbedBuilder()
-                .WithDescription(results.Title)
-                .WithImageUrl(results.ImageHd ?? results.ImageSd)
-                .WithFooter(results.Description)
-                .WithColor(new DiscordColor("#0B3D91"));
-            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
     }
 }

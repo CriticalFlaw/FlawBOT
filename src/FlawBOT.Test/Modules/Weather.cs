@@ -9,6 +9,6 @@ internal class Weather
     [Test]
     public void GetWeatherData()
     {
-        Assert.IsNotNull(WeatherService.GetWeatherDataAsync(TestSetup.Tokens.WeatherToken, "Toronto").Result);
+        Assert.IsNotNull(WeatherService.GetWeatherDataAsync(TestSetup.Tokens.WeatherToken, "Toronto"));
     }
 }

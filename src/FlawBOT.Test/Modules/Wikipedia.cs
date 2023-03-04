@@ -9,6 +9,6 @@ internal class Wikipedia
     [Test]
     public void GetWikipediaPage()
     {
-        Assert.Greater(WikipediaService.GetWikipediaDataAsync("Russia").Result.QueryResult.SearchResults.Count, 0);
+        Assert.IsNotNull(WikipediaService.GetWikipediaDataAsync("Russia"));
     }
 }

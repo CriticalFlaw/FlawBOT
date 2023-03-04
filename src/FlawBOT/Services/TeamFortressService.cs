@@ -73,6 +73,7 @@ namespace FlawBOT.Services
 
         public static DiscordEmbed GetSchemaItem(string query)
         {
+            if (ItemSchemaList.Count == 0) return null; // TODO: Redownload item schema if missing.
             var results = ItemSchemaList.Find(n => n.ItemName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
             var textInfo = new CultureInfo("en-US", false).TextInfo;
             var output = new DiscordEmbedBuilder()

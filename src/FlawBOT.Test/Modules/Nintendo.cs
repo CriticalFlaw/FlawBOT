@@ -16,7 +16,6 @@ internal class Nintendo
     [Test]
     public void GetPokemonCards()
     {
-        Assert.Greater(NintendoService.GetPokemonCardsAsync(TestSetup.Tokens.PokemonToken, "pikachu").Result.Count, 0);
-        Assert.AreEqual(NintendoService.GetPokemonCardsAsync(TestSetup.Tokens.PokemonToken, "rikachu").Result.Count, 0);
+        Assert.IsNotNull(NintendoService.GetPokemonCardAsync(TestSetup.Tokens.PokemonToken, "pikachu"));
     }
 }

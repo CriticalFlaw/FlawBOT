@@ -29,18 +29,13 @@ namespace FlawBOT.Modules
         [SlashCommand("cat", "Retrieve a random cat fact and picture.")]
         public async Task GetCat(InteractionContext ctx)
         {
-            var results = MiscService.GetCatPhotoAsync().Result;
-            if (results is null)
+            var output = MiscService.GetCatPhotoAsync().Result;
+            if (output is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
-
-            var output = new DiscordEmbedBuilder()
-                .WithImageUrl(results)
-                .WithFooter(MiscService.GetCatFactAsync().Result)
-                .WithColor(DiscordColor.Orange);
-            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -73,17 +68,13 @@ namespace FlawBOT.Modules
         [SlashCommand("dog", "Retrieve a random dog photo.")]
         public async Task GetDog(InteractionContext ctx)
         {
-            var results = MiscService.GetDogPhotoAsync().Result;
-            if (results is null)
+            var output = MiscService.GetDogPhotoAsync().Result;
+            if (output is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
-
-            var output = new DiscordEmbedBuilder()
-                .WithImageUrl(results.Message)
-                .WithColor(DiscordColor.Brown);
-            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
         /// <summary>
