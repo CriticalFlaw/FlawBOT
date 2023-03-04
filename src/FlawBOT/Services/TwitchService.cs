@@ -1,26 +1,45 @@
 ﻿using System.Threading.Tasks;
+using DSharpPlus.Entities;
 using FlawBOT.Common;
 using TwitchLib.Api;
-using TwitchLib.Api.Helix.Models.Streams.GetStreams;
 
 namespace FlawBOT.Services
 {
     public class TwitchService : HttpHandler
     {
-        public static async Task<Stream> GetTwitchDataAsync(string clientId, string accessToken, string query)
+        public static async Task<DiscordEmbed> GetTwitchDataAsync(string clientId, string accessToken, string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return null;
-            var service = new TwitchAPI
+            try
             {
-                Settings =
+                if (string.IsNullOrWhiteSpace(query)) return null;
+                var service = new TwitchAPI
                 {
-                    ClientId = clientId,
-                    AccessToken = accessToken,
-                }
-            };
-            var result = await service.Helix.Streams.GetStreamsAsync(query).ConfigureAwait(false);
-            if (result.Streams.Length == 0) return null;
-            return result.Streams[random.Next(result.Streams.Length)];
+                    Settings =
+                    {
+                        ClientId = clientId,
+                        AccessToken = accessToken,
+                    }
+                };
+                var response = await service.Helix.Streams.GetStreamsAsync(query).ConfigureAwait(false);
+                if (response.Streams.Length == 0) return null;
+                var results = response.Streams[random.Next(response.Streams.Length)];
+
+                // TODO: Add pagination when supported for slash commands.
+                var output = new DiscordEmbedBuilder()
+                    .WithTitle(results.Title)
+                    .WithDescription("[LIVE] Now Playing: " + results.GameName)
+                    .AddField("Broadcaster", results.Type.ToUpperInvariant(), true)
+                    .AddField("Viewers", results.ViewerCount.ToString(), true)
+                    .AddField("Started at", results.StartedAt.ToString())
+                    .WithImageUrl(results.ThumbnailUrl)
+                    .WithUrl($"https://www.twitch.tv/{results.UserName}")
+                    .WithColor(new DiscordColor("#6441A5"));
+                return output.Build();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

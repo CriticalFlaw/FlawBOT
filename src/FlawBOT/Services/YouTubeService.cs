@@ -31,6 +31,7 @@ namespace FlawBOT.Services
 
         public async Task<string> GetFirstVideoResultAsync(string query)
         {
+            if (string.IsNullOrWhiteSpace(query)) return null;
             var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
             if (results is null || results.Count == 0) return Resources.NOT_FOUND_COMMON;
             return string.Format(Resources.URL_YouTube_Video, results.FirstOrDefault()?.Id.VideoId);
@@ -38,6 +39,7 @@ namespace FlawBOT.Services
 
         public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, string type = null)
         {
+            if (string.IsNullOrWhiteSpace(query)) return null;
             var results = await GetResultsAsync(query, amount, type).ConfigureAwait(false);
             if (results is null || results.Count == 0)
                 return new DiscordEmbedBuilder
@@ -87,8 +89,7 @@ namespace FlawBOT.Services
 
         public async Task<IEnumerable<YouTubeData>> GetMusicDataAsync(string term)
         {
-            var uri = new Uri(
-                $"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&fields=items(id(videoId),snippet(title,channelTitle))&key={YouTube.ApiKey}&q={WebUtility.UrlEncode(term)}");
+            var uri = new Uri($"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&fields=items(id(videoId),snippet(title,channelTitle))&key={YouTube.ApiKey}&q={WebUtility.UrlEncode(term)}");
 
             string json;
             Http.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/search");
