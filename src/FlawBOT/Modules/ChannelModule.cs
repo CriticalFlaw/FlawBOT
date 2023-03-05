@@ -1,14 +1,11 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Enums;
-using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -16,102 +13,61 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [Group("channel")]
-    [Aliases("chn", "ch")]
-    [Description("Commands for controlling channels.")]
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class ChannelModule : BaseCommandModule
+    [SlashCommandGroup("channel", "Slash command group for modal channel commands.")]
+    public class ChannelModule : ApplicationCommandModule
     {
-        #region COMMAND_CATEGORY
-
-        [Command("category")]
-        [Aliases("createcategory", "newcategory")]
-        [Description("Create a new channel category.")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateCategory(CommandContext ctx,
-            [Description("New category name.")] [RemainingText]
-            string name)
+        [SlashCommand("category_new", "Create a new channel category.")]
+        [SlashRequirePermissions(Permissions.ManageChannels)]
+        public async Task CreateCategory(InteractionContext ctx, [Option("query", "New category name.")] string name)
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
             var category = await ctx.Guild.CreateChannelCategoryAsync(name.Trim()).ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully created category " + Formatter.Bold(category.Name))
-                .ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully created category " + Formatter.Bold(category.Name)).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_CATEGORY
-
-        #region CHANNEL_CLEAN
-
-        [Command("clean")]
-        [Aliases("clear")]
-        [Description("Remove channel messages.")]
-        [RequirePermissions(Permissions.ManageMessages)]
-        public async Task CleanChannel(CommandContext ctx,
-            [Description("Number of messages to remove from the current channel.")]
-            int limit = 2)
+        [SlashCommand("clean", "Remove channel messages.")]
+        [SlashRequirePermissions(Permissions.ManageMessages)]
+        public async Task CleanChannel(InteractionContext ctx, [Option("query", "Number of messages to remove from the current channel.")] int limit = 2)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
-            await ctx.RespondAsync(Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" +
-                                   ctx.Channel.Name).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name).ConfigureAwait(false);
         }
 
-        #endregion CHANNEL_CLEAN
-
-        #region COMMAND_DELETE
-
-        [Command("delete")]
-        [Aliases("remove")]
-        [Description("Delete a channel. If a channel isn't specified, the current one will be deleted.")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        public async Task DeleteChannel(CommandContext ctx,
-            [Description("Channel to delete.")] [RemainingText]
-            DiscordChannel channel = null)
+        [SlashCommand("delete", "Delete a channel. If a channel isn't specified, the current one will be deleted.")]
+        [SlashRequirePermissions(Permissions.ManageChannels)]
+        public async Task DeleteChannel(InteractionContext ctx, [Option("query", "Channel to delete.")] DiscordChannel channel = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel ??= ctx.Channel;
 
-            var prompt = await ctx
-                .RespondAsync("You're about to delete the " + Formatter.Bold(channel.ToString()) +
-                              "\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.")
-                .ConfigureAwait(false);
+            await ctx.CreateResponseAsync("You're about to delete the " + Formatter.Bold(channel.ToString()) + "\nRespond with **yes** if you want to proceed or wait 10 seconds to cancel the operation.").ConfigureAwait(false);
             var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
             if (interactivity.Result is null)
             {
-                await ctx.RespondAsync(Resources.INFO_REQ_TIMEOUT).ConfigureAwait(false);
+                await ctx.CreateResponseAsync(Resources.INFO_REQ_TIMEOUT).ConfigureAwait(false);
                 return;
             }
 
             await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-            await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully deleted " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully deleted " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
             await channel.DeleteAsync().ConfigureAwait(false);
         }
 
-        #endregion COMMAND_DELETE
-
-        #region COMMAND_INFO
-
-        [Command("info")]
-        [Aliases("i")]
-        [Description("Print channel information. If a channel isn't specified, the current one will be used.")]
-        public Task GetChannel(CommandContext ctx,
-            [Description("Channel to retrieve information from.")] [RemainingText]
-            DiscordChannel channel = null)
+        [SlashCommand("info", "Print channel information. If a channel isn't specified, the current one will be used.")]
+        public Task GetChannel(InteractionContext ctx, [Option("query", "Channel to retrieve information from.")] DiscordChannel channel = null)
         {
             // Set the current channel for viewing if one isn't provided by the user
             channel ??= ctx.Channel;
 
             // Check that the user has the permission in the channel to view its information
             if (!ctx.Member.PermissionsIn(channel).HasPermission(Permissions.AccessChannels))
-                return BotServices.SendResponseAsync(ctx, "You are not allowed to see this channel!",
-                    ResponseType.Warning);
+                return BotServices.SendResponseAsync(ctx, "You are not allowed to see this channel!", ResponseType.Warning);
 
             // Create the base embed message
             var output = new DiscordEmbedBuilder()
@@ -129,8 +85,7 @@ namespace FlawBOT.Modules
             {
                 case ChannelType.Voice:
                     output.AddField("Bitrate", channel.Bitrate.ToString(), true);
-                    output.AddField("User limit", channel.UserLimit > 0 ? channel.UserLimit.ToString() : "No limit.",
-                        true);
+                    output.AddField("User limit", channel.UserLimit > 0 ? channel.UserLimit.ToString() : "No limit.", true);
                     break;
 
                 case ChannelType.Category:
@@ -141,189 +96,86 @@ namespace FlawBOT.Modules
                     break;
             }
 
-            return ctx.RespondAsync(output.Build());
+            return ctx.CreateResponseAsync(output.Build());
         }
 
-        #endregion COMMAND_INFO
-
-        #region CHANNEL_PURGE
-
-        [Command("purge")]
-        [Description("Remove server user's channel messages.")]
-        [RequirePermissions(Permissions.ManageMessages)]
-        public async Task Purge(CommandContext ctx,
-            [Description("Server user whose messages will be purged.")]
-            DiscordMember member,
-            [Description("Number of messages to purge.")] [RemainingText]
-            int limit = 0)
+        [SlashCommand("purge", "Remove server user's channel messages.")]
+        [SlashRequirePermissions(Permissions.ManageMessages)]
+        public async Task Purge(InteractionContext ctx, [Option("member", "Server user whose messages will be purged.")] DiscordMember member, [Option("limit", "Number of messages to purge.")] int limit = 0)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == member.Id)).ConfigureAwait(false);
-            await ctx.RespondAsync(
-                    $"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})")
-                .ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})").ConfigureAwait(false);
         }
 
-        #endregion CHANNEL_PURGE
-
-        #region COMMAND_RENAME
-
-        [Command("rename")]
-        [Aliases("setname")]
-        [Description("Rename a channel. If a channel isn't specified, the current one will be used.")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        public async Task SetChannelName(CommandContext ctx,
-            [Description("Channel to rename.")] DiscordChannel channel,
-            [Description("New channel name.")] [RemainingText]
-            string name)
+        [SlashCommand("rename", "Rename a channel. If a channel isn't specified, the current one will be used.")]
+        [SlashRequirePermissions(Permissions.ManageChannels)]
+        public async Task SetChannelName(InteractionContext ctx, [Option("channel", "Channel to rename.")] DiscordChannel channel, [Option("name", "New channel name.")] string name)
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
             var oldName = channel.Name;
             await channel.ModifyAsync(m => m.Name = name.Trim().Replace(" ", "-")).ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully renamed the channel " + Formatter.Bold(oldName) + " to " +
-                                   Formatter.Bold(name)).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully renamed the channel " + Formatter.Bold(oldName) + " to " + Formatter.Bold(name)).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_RENAME
-
-        #region COMMAND_TEXT
-
-        [Command("text")]
-        [Aliases("createtext", "newtext")]
-        [Description("Create a new text channel.")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateText(CommandContext ctx,
-            [Description("New text channel name.")] [RemainingText]
-            string name = "")
+        [SlashCommand("text", "Create a new text channel.")]
+        [SlashRequirePermissions(Permissions.ManageChannels)]
+        public async Task CreateText(InteractionContext ctx, [Option("name", "New text channel name.")] string name = "")
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
             if (ctx.Guild.Channels.Any(chn => string.Equals(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_EXISTS, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_EXISTS, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
-            var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-"))
-                .ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully created the text channel " + Formatter.Bold(channel.Name))
-                .ConfigureAwait(false);
+            var channel = await ctx.Guild.CreateTextChannelAsync(name.Trim().Replace(" ", "-")).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully created the text channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_TEXT
-
-        #region COMMAND_TOPIC
-
-        [Command("topic")]
-        [Aliases("settopic")]
-        [Description("Set current channel's topic.")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        public async Task SetChannelTopic(CommandContext ctx,
-            [Description("New channel topic.")] [RemainingText]
-            string topic = "")
+        [SlashCommand("topic", "Set current channel's topic.")]
+        [SlashRequirePermissions(Permissions.ManageChannels)]
+        public async Task SetChannelTopic(InteractionContext ctx, [Option("topic", "New channel topic.")] string topic = "")
         {
             if (topic.Length > 1024)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_TOPIC, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_TOPIC, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
             await ctx.Channel.ModifyAsync(chn => chn.Topic = topic).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(topic))
-                await ctx.RespondAsync("Successfully changed the channel topic to " + Formatter.Bold(topic))
-                    .ConfigureAwait(false);
+                await ctx.CreateResponseAsync("Successfully changed the channel topic to " + Formatter.Bold(topic)).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_TOPIC
-
-        #region COMMAND_VOICE
-
-        [Command("voice")]
-        [Aliases("createvoice", "newvoice")]
-        [Description("Create a new voice channel.")]
-        [RequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateVoice(CommandContext ctx,
-            [Description("New voice channel name.")] [RemainingText]
-            string name = "")
+        [SlashCommand("voice", "Create a new voice channel.")]
+        [SlashRequirePermissions(Permissions.ManageChannels)]
+        public async Task CreateVoice(InteractionContext ctx, [Option("name", "New voice channel name.")] string name = "")
         {
             if (!BotServices.CheckChannelName(name))
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_NAME, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
             if (ctx.Guild.Channels.Any(chn => string.Equals(name, chn.Value.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_EXISTS, ResponseType.Warning)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_EXISTS, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
-            var channel = await ctx.Guild.CreateVoiceChannelAsync(name.Trim().Replace(" ", "-"))
-                .ConfigureAwait(false);
-            await ctx.RespondAsync("Successfully created the voice channel " + Formatter.Bold(channel.Name))
-                .ConfigureAwait(false);
+            var channel = await ctx.Guild.CreateVoiceChannelAsync(name.Trim().Replace(" ", "-")).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully created the voice channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
         }
-
-        #endregion COMMAND_VOICE
-
-        #region COMMAND_VOTE
-
-        [Command("vote")]
-        [Aliases("poll")]
-        [Description("Run a Yay or Nay poll in the current channel.")]
-        public async Task Poll(CommandContext ctx,
-            [Description("Question to be asked in the poll.")] [RemainingText]
-            string question)
-        {
-            if (string.IsNullOrWhiteSpace(question))
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_POLL_QUESTION, ResponseType.Warning)
-                    .ConfigureAwait(false);
-                return;
-            }
-
-            // Build the poll question, duration and options.
-            await ctx.TriggerTypingAsync();
-            question = ctx.User.Mention + " asked: " + question;
-            var interactivity = ctx.Client.GetInteractivity();
-            var pollOptions = new List<DiscordEmoji>
-            {
-                DiscordEmoji.FromName(ctx.Client, ":thumbsup:"),
-                DiscordEmoji.FromName(ctx.Client, ":thumbsdown:")
-            };
-            var duration = new TimeSpan(0, 3, 10);
-            var message = await ctx
-                .RespondAsync(new DiscordEmbedBuilder()
-                    .WithDescription(question + $"\nThis poll ends in {duration.Minutes} minutes.").Build())
-                .ConfigureAwait(false);
-            var results = await interactivity.DoPollAsync(message, pollOptions, PollBehaviour.DeleteEmojis, duration)
-                .ConfigureAwait(false);
-
-            // Removed the initial poll and return the calculated results
-            await BotServices.RemoveMessage(message).ConfigureAwait(false);
-            var output = new DiscordEmbedBuilder()
-                .WithDescription(question)
-                .WithFooter("The voting has ended.");
-            foreach (var vote in results)
-                output.AddField(vote.Emoji.Name, vote.Voted.Count.ToString(), true);
-            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
-        }
-
-        #endregion COMMAND_VOTE
     }
 }

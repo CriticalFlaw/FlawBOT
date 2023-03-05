@@ -72,12 +72,6 @@ namespace FlawBOT
             Commands.CommandExecuted += Command_Executed;
             Commands.CommandErrored += Command_Error;
             Commands.SetHelpFormatter<HelpFormatter>();
-            Commands.RegisterCommands<AdminModule>();
-            Commands.RegisterCommands<ChannelModule>();
-            Commands.RegisterCommands<EmojiModule>();
-            Commands.RegisterCommands<RoleModule>();
-            Commands.RegisterCommands<ServerModule>();
-            Commands.RegisterCommands<UserModule>();
 
             // Setup Interactivity
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
@@ -96,23 +90,29 @@ namespace FlawBOT
 
             // Setup Slash Commands
             Slash = Client.UseSlashCommands();
+            Slash.RegisterCommands<AdminModule>();
             Slash.RegisterCommands<BotModule>();
-            Slash.RegisterCommands<NasaModule>();
-            Slash.RegisterCommands<MusicModule>();
-            Slash.RegisterCommands<NintendoModule>();
+            Slash.RegisterCommands<ChannelModule>();
             Slash.RegisterCommands<DictionaryModule>();
+            Slash.RegisterCommands<EmojiModule>();
             Slash.RegisterCommands<ImgurModule>();
             Slash.RegisterCommands<MiscModule>();
+            Slash.RegisterCommands<MusicModule>();
+            Slash.RegisterCommands<NasaModule>();
             Slash.RegisterCommands<NewsModule>();
+            Slash.RegisterCommands<NintendoModule>();
             Slash.RegisterCommands<OmdbModule>();
             Slash.RegisterCommands<RedditModule>();
+            Slash.RegisterCommands<RoleModule>();
+            Slash.RegisterCommands<ServerModule>();
+            Slash.RegisterCommands<SimpsonsModule>();
             Slash.RegisterCommands<SpeedrunModule>();
             Slash.RegisterCommands<SteamModule>();
             Slash.RegisterCommands<TeamFortressModule>();
             Slash.RegisterCommands<TwitchModule>();
-            Slash.RegisterCommands<WikipediaModule>();
+            Slash.RegisterCommands<UserModule>();
             Slash.RegisterCommands<WeatherModule>();
-            Slash.RegisterCommands<SimpsonsModule>();
+            Slash.RegisterCommands<WikipediaModule>();
             Slash.RegisterCommands<YouTubeModule>();
             Slash.SlashCommandInvoked += SlashCommand_Executed;
             Slash.SlashCommandErrored += SlashCommand_Errored;

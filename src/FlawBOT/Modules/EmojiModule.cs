@@ -1,8 +1,9 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
+using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
@@ -14,22 +15,12 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [Group("emoji")]
-    [Aliases("emote")]
-    [Description("Commands for managing server emojis.")]
-    [Cooldown(3, 5, CooldownBucketType.Channel)]
-    public class EmojiModule : BaseCommandModule
+    [SlashCommandGroup("emoji", "Slash command group for modal emoji commands.")]
+    public class EmojiModule : ApplicationCommandModule
     {
-        #region COMMAND_ADD
-
-        [Command("create")]
-        [Aliases("new", "add")]
-        [Description("Add a new server emoji using a URL image.")]
-        [RequirePermissions(Permissions.ManageEmojis)]
-        public async Task CreateEmoji(CommandContext ctx,
-            [Description("Image URL.")] Uri url,
-            [Description("Name for the emoji.")] [RemainingText]
-            string name)
+        [SlashCommand("create", "Add a new server emoji using a URL image.")]
+        [SlashRequirePermissions(Permissions.ManageEmojis)]
+        public async Task CreateEmoji(CommandContext ctx, [Option("url", "Image URL.")] Uri url, [Option("name", "Name for the emoji.")] string name)
         {
             try
             {
@@ -37,15 +28,13 @@ namespace FlawBOT.Modules
                 {
                     if (!ctx.Message.Attachments.Any() ||
                         !Uri.TryCreate(ctx.Message.Attachments[0].Url, UriKind.Absolute, out url))
-                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_IMAGE, ResponseType.Warning)
-                            .ConfigureAwait(false);
+                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_IMAGE, ResponseType.Warning).ConfigureAwait(false);
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(name) || name.Length < 2 || name.Length > 50)
                 {
-                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning)
-                        .ConfigureAwait(false);
+                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning).ConfigureAwait(false);
                     return;
                 }
 
@@ -59,8 +48,7 @@ namespace FlawBOT.Modules
                 {
                     if (stream.Length >= 256000)
                     {
-                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_SIZE, ResponseType.Warning)
-                            .ConfigureAwait(false);
+                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_SIZE, ResponseType.Warning).ConfigureAwait(false);
                         return;
                     }
 
@@ -70,28 +58,19 @@ namespace FlawBOT.Modules
             }
             catch
             {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_ADD, ResponseType.Error)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_ADD, ResponseType.Error).ConfigureAwait(false);
             }
         }
 
-        #endregion COMMAND_ADD
-
-        #region COMMAND_DELETE
-
-        [Command("delete")]
-        [Aliases("remove")]
-        [Description("Remove a server emoji. Note: Bots can only delete emojis they created.")]
-        [RequirePermissions(Permissions.ManageEmojis)]
-        public async Task DeleteEmoji(CommandContext ctx,
-            [Description("Server emoji to delete.")]
-            DiscordEmoji query)
+        [SlashCommand("delete", "Remove a server emoji. Note: Bots can only delete emojis they created.")]
+        [SlashRequirePermissions(Permissions.ManageEmojis)]
+        public async Task DeleteEmoji(InteractionContext ctx, [Option("query", "Server emoji to delete.")] DiscordEmoji query)
         {
             try
             {
                 var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
                 await ctx.Guild.DeleteEmojiAsync(emoji).ConfigureAwait(false);
-                await ctx.RespondAsync("Deleted the emoji " + Formatter.Bold(emoji.Name)).ConfigureAwait(false);
+                await ctx.CreateResponseAsync("Deleted the emoji " + Formatter.Bold(emoji.Name)).ConfigureAwait(false);
             }
             catch (NotFoundException)
             {
@@ -100,47 +79,30 @@ namespace FlawBOT.Modules
             }
         }
 
-        #endregion COMMAND_DELETE
-
-        #region COMMAND_EDIT
-
-        [Command("rename")]
-        [Aliases("edit", "modify")]
-        [Description("Rename a server emoji.")]
-        [RequirePermissions(Permissions.ManageEmojis)]
-        public async Task EditEmoji(CommandContext ctx,
-            [Description("Emoji to rename.")] DiscordEmoji query,
-            [Description("New emoji name.")] string name)
+        [SlashCommand("rename", "Rename a server emoji.")]
+        [SlashRequirePermissions(Permissions.ManageEmojis)]
+        public async Task EditEmoji(InteractionContext ctx, [Option("query", "Emoji to rename.")] DiscordEmoji query, [Option("name", "New emoji name.")] string name)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
-                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning)
-                        .ConfigureAwait(false);
+                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning).ConfigureAwait(false);
                     return;
                 }
 
                 var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
                 emoji = await ctx.Guild.ModifyEmojiAsync(emoji, name).ConfigureAwait(false);
-                await ctx.RespondAsync("Successfully renamed emoji to " + Formatter.Bold(emoji.Name))
-                    .ConfigureAwait(false);
+                await ctx.CreateResponseAsync("Successfully renamed emoji to " + Formatter.Bold(emoji.Name)).ConfigureAwait(false);
             }
             catch (NotFoundException)
             {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_EMOJI, ResponseType.Missing)
-                    .ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_EMOJI, ResponseType.Missing).ConfigureAwait(false);
             }
         }
 
-        #endregion COMMAND_EDIT
-
-        #region COMMAND_INFO
-
-        [Command("info")]
-        [Description("Retrieve server emoji information.")]
-        public async Task GetEmojiInfo(CommandContext ctx,
-            [Description("Server emoji.")] DiscordEmoji query)
+        [SlashCommand("info", "Retrieve server emoji information.")]
+        public async Task GetEmojiInfo(InteractionContext ctx, [Option("query", "Server emoji.")] DiscordEmoji query)
         {
             var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
@@ -149,17 +111,11 @@ namespace FlawBOT.Modules
                     (emoji.User is null ? "<unknown>" : emoji.User.Username) + " on " + emoji.CreationTimestamp.Date)
                 .WithColor(DiscordColor.PhthaloBlue)
                 .WithThumbnail(emoji.Url);
-            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        #endregion COMMAND_INFO
-
-        #region COMMAND_LIST
-
-        [Command("list")]
-        [Aliases("print", "all")]
-        [Description("Retrieve a list of server emojis.")]
-        public async Task GetEmojiList(CommandContext ctx)
+        [SlashCommand("list", "Retrieve a list of server emojis.")]
+        public async Task GetEmojiList(InteractionContext ctx)
         {
             var emojiList = new StringBuilder();
             foreach (var emoji in ctx.Guild.Emojis.Values)
@@ -170,9 +126,7 @@ namespace FlawBOT.Modules
                 .WithDescription(emojiList.ToString())
                 .WithThumbnail(ctx.Guild.IconUrl)
                 .WithColor(DiscordColor.PhthaloBlue);
-            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
-
-        #endregion COMMAND_LIST
     }
 }

@@ -31,10 +31,6 @@ namespace FlawBOT.Common
                     foreach (var check in cfe.FailedChecks)
                         switch (check)
                         {
-                            case RequirePermissionsAttribute perms:
-                                await BotServices.SendResponseAsync(e.Context, $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!", ResponseType.Error).ConfigureAwait(false);
-                                break;
-
                             case RequireUserPermissionsAttribute perms:
                                 await BotServices.SendResponseAsync(e.Context, $"- You do not have sufficient permissions ({perms.Permissions.ToPermissionString()})!", ResponseType.Error).ConfigureAwait(false);
                                 break;
@@ -96,10 +92,6 @@ namespace FlawBOT.Common
                     foreach (var check in cfe.FailedChecks)
                         switch (check)
                         {
-                            case RequirePermissionsAttribute perms:
-                                await BotServices.SendResponseAsync(e.Context, $"- One of us does not have the required permissions ({perms.Permissions.ToPermissionString()})!", ResponseType.Error).ConfigureAwait(false);
-                                break;
-
                             case RequireUserPermissionsAttribute perms:
                                 await BotServices.SendResponseAsync(e.Context, $"- You do not have sufficient permissions ({perms.Permissions.ToPermissionString()})!", ResponseType.Error).ConfigureAwait(false);
                                 break;

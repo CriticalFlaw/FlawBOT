@@ -156,7 +156,7 @@ namespace FlawBOT.Services
             {
                 var desc = Regex.Replace(list.DescriptionLong.Length <= 400
                     ? list.DescriptionLong
-                    : list.DescriptionLong.Substring(0, 200) + "...", "<[^>]*>", "");
+                    : list.DescriptionLong[..200] + "...", "<[^>]*>", "");
                 output.AddField($"Created By: {list.Creator.Name ?? "Unknown"} \t Subscribers: {list.Subscribed}", $"[{list.Name}]({Resources.URL_TeamworkTF + list.Id}) - {desc}");
             }
             return output.Build();
