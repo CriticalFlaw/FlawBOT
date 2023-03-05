@@ -127,7 +127,7 @@ namespace FlawBOT.Modules
             var nickname = member.DisplayName;
             await member.ModifyAsync(usr => usr.Nickname = name).ConfigureAwait(false);
             var response = !string.IsNullOrWhiteSpace(name)
-                ? $"{nickname}'s nickname has been changed to **{name}**"
+                ? $"{nickname}'s nickname has been changed to {Formatter.Bold(name)}"
                 : $"{nickname}'s nickname has been reset.";
             await ctx.CreateResponseAsync(response).ConfigureAwait(false);
         }
@@ -173,6 +173,33 @@ namespace FlawBOT.Modules
             await member.SetMuteAsync(false, reason).ConfigureAwait(false);
             await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
             await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Unmute, member, reason ?? "No reason provided").ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Direct message user with a warning.
+        /// </summary>
+        [SlashCommand("warn", "Direct message user with a warning.")]
+        public async Task Warn(InteractionContext ctx, [Option("member", "Server user to warn.")] DiscordMember member, [Option("reason", "Warning message.")] string reason = null)
+        {
+            var output = new DiscordEmbedBuilder()
+                .WithTitle("Warning received!")
+                .WithDescription(Formatter.Bold(ctx.Guild.Name) + " has issued you a server warning!")
+                .AddField("Sender:", ctx.Member.Username + "#" + ctx.Member.Discriminator, true)
+                .AddField("Server Owner:", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, true)
+                .WithThumbnail(ctx.Guild.IconUrl)
+                .WithTimestamp(DateTime.Now)
+                .WithColor(DiscordColor.Red);
+            if (!string.IsNullOrWhiteSpace(reason)) output.AddField("Warning message:", reason);
+
+            var dm = await member.CreateDmChannelAsync().ConfigureAwait(false);
+            if (dm is null)
+            {
+                await BotServices.SendResponseAsync(ctx, "Unable to direct message this user", ResponseType.Warning).ConfigureAwait(false);
+                return;
+            }
+
+            await dm.SendMessageAsync(output.Build()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully sent a warning to " + Formatter.Bold(member.Username)).ConfigureAwait(false);
         }
     }
 }

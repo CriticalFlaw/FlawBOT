@@ -8,8 +8,11 @@ namespace FlawBOT.Modules
 {
     public class SpeedrunModule : ApplicationCommandModule
     {
-        [SlashCommand("speedrun_game", "Retrieve a game from Speedrun.com")]
-        public async Task SpeedrunGame(InteractionContext ctx, [Option("query", "Game to find on Speedrun.com")] string query)
+        /// <summary>
+        /// Returns game information from Speedrun.com
+        /// </summary>
+        [SlashCommand("speedrun-game", "Returns game information from Speedrun.com")]
+        public async Task GetSpeedrunGame(InteractionContext ctx, [Option("query", "Game to find on Speedrun.com")] string query)
         {
             var output = SpeedrunService.GetSpeedrunGameAsync(query).Result;
             if (output is null)

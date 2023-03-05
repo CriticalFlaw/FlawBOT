@@ -6,21 +6,31 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
+    [SlashCommandGroup("reddit", "Slash command group for Reddit commands.")]
     public class RedditModule : ApplicationCommandModule
     {
-        [SlashCommand("reddit_hot", "Get hottest posts from a given subreddit.")]
+        /// <summary>
+        /// Returns hot-topics from Reddit.
+        /// </summary>
+        [SlashCommand("hot", "Returns hot-topics from Reddit.")]
         public Task RedditHot(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Hot);
         }
 
-        [SlashCommand("reddit_new", "Get newest posts from a given subreddit.")]
+        /// <summary>
+        /// Returns new-topics from Reddit.
+        /// </summary>
+        [SlashCommand("new", "Returns new-topics from Reddit.")]
         public Task RedditNew(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.New);
         }
 
-        [SlashCommand("reddit_top", "Get top posts from a given subreddit.")]
+        /// <summary>
+        /// Returns top-topics from Reddit.
+        /// </summary>
+        [SlashCommand("top", "Returns top-topics from Reddit.")]
         public Task RedditTop(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Top);

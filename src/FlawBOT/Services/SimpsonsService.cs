@@ -17,7 +17,7 @@ namespace FlawBOT.Services
             Morbotron
         }
 
-        public static async Task<DiscordEmbed> GetEpisodeGifAsync(SiteRoot site)
+        public static async Task<DiscordEmbed> GetEpisodePostAsync(SiteRoot site)
         {
             try
             {

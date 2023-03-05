@@ -43,7 +43,7 @@ namespace FlawBOT.Services
             return Answers[random.Next(Answers.Length)];
         }
 
-        public static async Task<DiscordEmbed> GetCatPhotoAsync()
+        public static async Task<DiscordEmbed> GetCatImageAsync()
         {
             var response = await Http.GetStringAsync(Resources.URL_CatPhoto).ConfigureAwait(false);
             var results = JObject.Parse(response)["file"]?.ToString();
@@ -58,7 +58,7 @@ namespace FlawBOT.Services
             return output.Build();
         }
 
-        public static async Task<DiscordEmbed> GetDogPhotoAsync()
+        public static async Task<DiscordEmbed> GetDogImageAsync()
         {
             var response = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<DogData>(response);

@@ -5,7 +5,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
-using FlawBOT.Properties;
 using FlawBOT.Services;
 using System;
 using System.Globalization;
@@ -18,9 +17,12 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("server", "Slash command group for modal server commands.")]
     public class ServerModule : ApplicationCommandModule
     {
+        /// <summary>
+        /// Changes server avatar.
+        /// </summary>
         [SlashCommand("avatar", "Change the server avatar.")]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task SetServerAvatar(InteractionContext ctx, [Option("query", "URL image in JPG, PNG or IMG format.")] string query)
+        public async Task SetServerAvatar(InteractionContext ctx, [Option("query", "Image URL in JPG, PNG or IMG format.")] string query)
         {
             try
             {
@@ -34,8 +36,11 @@ namespace FlawBOT.Modules
             }
         }
 
-        [SlashCommand("info", "Retrieve server information.")]
-        public async Task GetServer(InteractionContext ctx)
+        /// <summary>
+        /// Returns server information.
+        /// </summary>
+        [SlashCommand("info", "Returns server information.")]
+        public async Task GetServerInfo(InteractionContext ctx)
         {
             var output = new DiscordEmbedBuilder()
                 .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", iconUrl: ctx.Guild.Owner.AvatarUrl ?? string.Empty)
@@ -65,34 +70,22 @@ namespace FlawBOT.Modules
             if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
-         
-        [SlashCommand("invite", "Retrieve an instant invite link to the server.")]
-        public async Task Invite(InteractionContext ctx)
+
+        /// <summary>
+        /// Returns server invite link.
+        /// </summary>
+        [SlashCommand("invite", "Returns server invite link.")]
+        public async Task GetServerInvite(InteractionContext ctx)
         {
-            await ctx.CreateResponseAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ":https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ": https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code).ConfigureAwait(false);
         }
 
-        [SlashCommand("leave", "Make FlawBOT leave the server.")]
-        [RequireUserPermissions(Permissions.Administrator)]
-        public async Task LeaveServer(CommandContext ctx)
-        {
-            var settings = Program.Settings;
-            await ctx.RespondAsync($"Are you sure you want {settings.Name} to leave the server?").ConfigureAwait(false);
-            var message = await ctx.RespondAsync(Resources.INFO_RESPOND).ConfigureAwait(false);
-            var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
-            if (interactivity.Result is null)
-            {
-                await message.ModifyAsync($"~~{message.Content}~~ {Resources.INFO_REQ_TIMEOUT}").ConfigureAwait(false);
-                return;
-            }
-
-            await BotServices.SendResponseAsync(ctx, $"Thank you for using {settings.Name}").ConfigureAwait(false);
-            await ctx.Guild.LeaveAsync().ConfigureAwait(false);
-        }
-
-        [SlashCommand("prune", "Prune inactive server members.")]
+        /// <summary>
+        /// Prunes inactive users from the server.
+        /// </summary>
+        [SlashCommand("prune", "Prunes inactive users from the server.")]
         [SlashRequirePermissions(Permissions.DeafenMembers)]
-        public async Task Prune(CommandContext ctx, [Option("days", "Number of days the user had to be inactive to get pruned.")] int days = 7)
+        public async Task PruneUsers(CommandContext ctx, [Option("days", "Number of days the user had to be inactive to get pruned.")] int days = 7)
         {
             if (days < 1 || days > 30)
                 await BotServices.SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning).ConfigureAwait(false);
@@ -112,7 +105,10 @@ namespace FlawBOT.Modules
             await ctx.Guild.PruneAsync(days).ConfigureAwait(false);
         }
 
-        [SlashCommand("rename", "Change the server name.")]
+        /// <summary>
+        /// Changes the name of the server.
+        /// </summary>
+        [SlashCommand("rename", "hanges the name of the server.")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerName(InteractionContext ctx, [Option("name", "New server name.")] string name = "")
         {
@@ -124,64 +120,6 @@ namespace FlawBOT.Modules
 
             await ctx.Guild.ModifyAsync(srv => srv.Name = name).ConfigureAwait(false);
             await ctx.CreateResponseAsync("Server name has been changed to " + Formatter.Bold(name)).ConfigureAwait(false);
-        }
-
-        [Hidden]
-        [SlashCommand("report", "Report a problem with FlawBOT to the developer.")]
-        public async Task ReportIssue(CommandContext ctx, [Option("report", "Detailed description of the issue.")] string report)
-        {
-            if (string.IsNullOrWhiteSpace(report) || report.Length < 50)
-            {
-                await ctx.RespondAsync(Resources.ERR_REPORT_LENGTH).ConfigureAwait(false);
-                return;
-            }
-
-            await ctx.RespondAsync(Resources.INFO_REPORT_SENDER).ConfigureAwait(false);
-            var message = await ctx.RespondAsync(Resources.INFO_RESPOND).ConfigureAwait(false);
-            var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
-            if (interactivity.Result is null)
-            {
-                await message.ModifyAsync($"~~{message.Content}~~ {Resources.INFO_REQ_TIMEOUT}").ConfigureAwait(false);
-            }
-            else
-            {
-                var settings = Program.Settings;
-                var output = new DiscordEmbedBuilder()
-                    .WithAuthor(ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, iconUrl: ctx.User.AvatarUrl ?? ctx.User.DefaultAvatarUrl)
-                    .AddField("Issue", report)
-                    .AddField("Sent By", ctx.User.Username + "#" + ctx.User.Discriminator)
-                    .AddField("Server", ctx.Guild.Name + $" (ID: {ctx.Guild.Id})")
-                    .AddField("Owner", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator)
-                    .AddField("Confirm", $"[Click here to add this issue to GitHub]({settings.GitHubLink}/issues/new)")
-                    .WithColor(settings.DefaultColor);
-                var dm = await ctx.Member.CreateDmChannelAsync().ConfigureAwait(false);
-                await dm.SendMessageAsync(output.Build()).ConfigureAwait(false);
-                await ctx.RespondAsync("Thank You! Your report has been submitted.").ConfigureAwait(false);
-            }
-        }
-
-        [SlashCommand("warn", "Direct message user with a warning.")]
-        public async Task Warn(InteractionContext ctx, [Option("member", "Server user to warn.")] DiscordMember member, [Option("reason", "Warning message.")] string reason = null)
-        {
-            var output = new DiscordEmbedBuilder()
-                .WithTitle("Warning received!")
-                .WithDescription(Formatter.Bold(ctx.Guild.Name) + " has issued you a server warning!")
-                .AddField("Sender:", ctx.Member.Username + "#" + ctx.Member.Discriminator, true)
-                .AddField("Server Owner:", ctx.Guild.Owner.Username + "#" + ctx.Guild.Owner.Discriminator, true)
-                .WithThumbnail(ctx.Guild.IconUrl)
-                .WithTimestamp(DateTime.Now)
-                .WithColor(DiscordColor.Red);
-            if (!string.IsNullOrWhiteSpace(reason)) output.AddField("Warning message:", reason);
-
-            var dm = await member.CreateDmChannelAsync().ConfigureAwait(false);
-            if (dm is null)
-            {
-                await BotServices.SendResponseAsync(ctx, "Unable to direct message this user", ResponseType.Warning).ConfigureAwait(false);
-                return;
-            }
-
-            await dm.SendMessageAsync(output.Build()).ConfigureAwait(false);
-            await ctx.CreateResponseAsync("Successfully sent a warning to " + Formatter.Bold(member.Username)).ConfigureAwait(false);
         }
     }
 }

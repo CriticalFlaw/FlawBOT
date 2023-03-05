@@ -8,8 +8,11 @@ namespace FlawBOT.Modules
 {
     public class NasaModule : ApplicationCommandModule
     {
-        [SlashCommand("nasa", "Retrieve NASA's Astronomy Picture of the Day.")]
-        public async Task Nasa(InteractionContext ctx)
+        /// <summary>
+        /// Returns a Picture of the Day from NASA.
+        /// </summary>
+        [SlashCommand("nasa", "Returns a Picture of the Day from NASA.")]
+        public async Task GetNasaImage(InteractionContext ctx)
         {
             var output = await NasaService.GetNasaImageAsync(Program.Settings.Tokens.NasaToken).ConfigureAwait(false);
             if (output is null)

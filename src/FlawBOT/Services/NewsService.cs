@@ -11,7 +11,7 @@ namespace FlawBOT.Services
 {
     public class NewsService : HttpHandler
     {
-        public static async Task<DiscordEmbed> GetNewsDataAsync(string token, string query)
+        public static async Task<DiscordEmbed> GetNewsArticlesAsync(string token, string query)
         {
             try
             {

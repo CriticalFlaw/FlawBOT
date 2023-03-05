@@ -12,7 +12,7 @@ namespace FlawBOT.Services
 {
     public static class ImgurService
     {
-        public static async Task<DiscordEmbed> GetImgurGalleryAsync(string token, string query, GallerySortOrder order = GallerySortOrder.Top, TimeWindow time = TimeWindow.All)
+        public static async Task<DiscordEmbed> GetImgurResultAsync(string token, string query, GallerySortOrder order = GallerySortOrder.Top, TimeWindow time = TimeWindow.All)
         {
             var imgur = new GalleryEndpoint(new ImgurClient(token));
             var result = string.IsNullOrWhiteSpace(query)

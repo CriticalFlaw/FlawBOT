@@ -16,9 +16,12 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("channel", "Slash command group for modal channel commands.")]
     public class ChannelModule : ApplicationCommandModule
     {
-        [SlashCommand("category_new", "Create a new channel category.")]
+        /// <summary>
+        /// Creates a new channel category.
+        /// </summary>
+        [SlashCommand("new-category", "Creates a new channel category.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
-        public async Task CreateCategory(InteractionContext ctx, [Option("query", "New category name.")] string name)
+        public async Task CreateCategory(InteractionContext ctx, [Option("name", "New category name.")] string name)
         {
             if (!BotServices.CheckChannelName(name))
             {
@@ -30,18 +33,24 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync("Successfully created category " + Formatter.Bold(category.Name)).ConfigureAwait(false);
         }
 
-        [SlashCommand("clean", "Remove channel messages.")]
+        /// <summary>
+        /// Removes messages from current channel.
+        /// </summary>
+        [SlashCommand("clean", "Removes messages from current channel.")]
         [SlashRequirePermissions(Permissions.ManageMessages)]
-        public async Task CleanChannel(InteractionContext ctx, [Option("query", "Number of messages to remove from the current channel.")] double limit = 2)
+        public async Task DeleteChannelMessages(InteractionContext ctx, [Option("limit", "Number of messages to remove from the current channel.")] double limit = 2)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
             await ctx.CreateResponseAsync(Formatter.Bold(messages.Count.ToString()) + " message(s) removed from #" + ctx.Channel.Name).ConfigureAwait(false);
         }
 
-        [SlashCommand("delete", "Delete a channel. If a channel isn't specified, the current one will be deleted.")]
+        /// <summary>
+        /// Delete a server channel. If a channel is not provided, the current one will be deleted.
+        /// </summary>
+        [SlashCommand("delete", "Delete a server channel. If a channel is not provided, the current one will be deleted.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
-        public async Task DeleteChannel(InteractionContext ctx, [Option("query", "Channel to delete.")] DiscordChannel channel = null)
+        public async Task DeleteChannel(InteractionContext ctx, [Option("channel", "Channel to delete.")] DiscordChannel channel = null)
         {
             // Set the current channel for deletion if one isn't provided by the user
             channel ??= ctx.Channel;
@@ -59,8 +68,11 @@ namespace FlawBOT.Modules
             await channel.DeleteAsync().ConfigureAwait(false);
         }
 
-        [SlashCommand("info", "Print channel information. If a channel isn't specified, the current one will be used.")]
-        public Task GetChannel(InteractionContext ctx, [Option("query", "Channel to retrieve information from.")] DiscordChannel channel = null)
+        /// <summary>
+        /// Returns channel information. If a channel is not provided, the current one will be used.
+        /// </summary>
+        [SlashCommand("info", "Returns channel information. If a channel is not provided, the current one will be used.")]
+        public Task GetChannelInfo(InteractionContext ctx, [Option("channel", "Channel to retrieve information from.")] DiscordChannel channel = null)
         {
             // Set the current channel for viewing if one isn't provided by the user
             channel ??= ctx.Channel;
@@ -91,7 +103,7 @@ namespace FlawBOT.Modules
                 case ChannelType.Category:
                     var channels = new StringBuilder();
                     foreach (var chn in channel.Children)
-                        channels.Append($"[`{chn.Name}`]");
+                        channels.Append($"[{Formatter.BlockCode(chn.Name)}]");
                     output.AddField("Channels", channels.Length > 0 ? channels.ToString() : "None", true);
                     break;
             }
@@ -99,16 +111,22 @@ namespace FlawBOT.Modules
             return ctx.CreateResponseAsync(output.Build());
         }
 
-        [SlashCommand("purge", "Remove server user's channel messages.")]
+        /// <summary>
+        /// Removes server user's messages from the server.
+        /// </summary>
+        [SlashCommand("purge", "Removes server user's messages from the server.")]
         [SlashRequirePermissions(Permissions.ManageMessages)]
-        public async Task Purge(InteractionContext ctx, [Option("member", "Server user whose messages will be purged.")] DiscordUser user, [Option("limit", "Number of messages to purge.")] double limit = 0)
+        public async Task PurgeUserMessages(InteractionContext ctx, [Option("user", "Server user whose messages will be purged.")] DiscordUser user, [Option("limit", "Number of messages to purge.")] double limit = 0)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == user.Id)).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"Purged **{limit}** messages by {user.Username}#{user.Discriminator} (ID:{user.Id})").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"Purged {Formatter.Bold(limit.ToString())} messages by {user.Username}#{user.Discriminator} (ID:{user.Id})").ConfigureAwait(false);
         }
 
-        [SlashCommand("rename", "Rename a channel. If a channel isn't specified, the current one will be used.")]
+        /// <summary>
+        /// Renames a server channel. If a channel isn't specified, the current one will be used.
+        /// </summary>
+        [SlashCommand("rename", "Renames a server channel. If a channel isn't specified, the current one will be used.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task SetChannelName(InteractionContext ctx, [Option("channel", "Channel to rename.")] DiscordChannel channel, [Option("name", "New channel name.")] string name)
         {
@@ -123,7 +141,10 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync("Successfully renamed the channel " + Formatter.Bold(oldName) + " to " + Formatter.Bold(name)).ConfigureAwait(false);
         }
 
-        [SlashCommand("text", "Create a new text channel.")]
+        /// <summary>
+        /// Creates a new text channel.
+        /// </summary>
+        [SlashCommand("new-text", "Creates a new text channel.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task CreateText(InteractionContext ctx, [Option("name", "New text channel name.")] string name = "")
         {
@@ -143,10 +164,14 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync("Successfully created the text channel " + Formatter.Bold(channel.Name)).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Changes the server channel topic.
+        /// </summary>
         [SlashCommand("topic", "Set current channel's topic.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task SetChannelTopic(InteractionContext ctx, [Option("topic", "New channel topic.")] string topic = "")
         {
+            if (string.IsNullOrWhiteSpace(topic)) return;
             if (topic.Length > 1024)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_CHANNEL_TOPIC, ResponseType.Warning).ConfigureAwait(false);
@@ -154,11 +179,13 @@ namespace FlawBOT.Modules
             }
 
             await ctx.Channel.ModifyAsync(chn => chn.Topic = topic).ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(topic))
-                await ctx.CreateResponseAsync("Successfully changed the channel topic to " + Formatter.Bold(topic)).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Successfully changed the channel topic to " + Formatter.Bold(topic)).ConfigureAwait(false);
         }
 
-        [SlashCommand("voice", "Create a new voice channel.")]
+        /// <summary>
+        /// Creates a new voice channel.
+        /// </summary>
+        [SlashCommand("new-voice", "Creates a new voice channel.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task CreateVoice(InteractionContext ctx, [Option("name", "New voice channel name.")] string name = "")
         {

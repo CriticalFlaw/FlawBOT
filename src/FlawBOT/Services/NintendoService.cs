@@ -16,7 +16,7 @@ namespace FlawBOT.Services
         /// <summary>
         /// Call the Nintendo Amiibo API for an Amiibo figurine.
         /// </summary>
-        public static async Task<DiscordEmbed> GetAmiiboDataAsync(string query)
+        public static async Task<DiscordEmbed> GetAmiiboInfoAsync(string query)
         {
             try
             {

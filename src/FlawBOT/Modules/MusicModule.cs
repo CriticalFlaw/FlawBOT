@@ -12,18 +12,17 @@ namespace FlawBOT.Modules
 {
     public class MusicModule : ApplicationCommandModule
     {
-        public MusicModule(MusicService service, YoutubeService youTube)
+        public MusicModule(MusicService service)
         {
             Service = service;
-            YouTube = youTube;
         }
 
         private MusicService Service { get; }
         private MusicPlayer Player { get; set; }
-        private YoutubeService YouTube { get; }
 
-        #region COMMAND_STOP
-
+        /// <summary>
+        /// Stop audio playback and leave the voice channel.
+        /// </summary>
         [SlashCommand("stop", "Stop audio playback and leave the voice channel.")]
         public async Task StopSong(InteractionContext ctx)
         {
@@ -33,10 +32,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(":stop_button: Stopping Playback...").ConfigureAwait(false);
         }
 
-        #endregion COMMAND_STOP
-
-        #region COMMAND_PAUSE
-
+        /// <summary>
+        /// Pause audio playback.
+        /// </summary>
         [SlashCommand("pause", "Pause audio playback.")]
         public async Task PauseSong(InteractionContext ctx)
         {
@@ -45,10 +43,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(":pause_button: Pausing Playback...").ConfigureAwait(false);
         }
 
-        #endregion COMMAND_PAUSE
-
-        #region COMMAND_RESUME
-
+        /// <summary>
+        /// Resume audio playback.
+        /// </summary>
         [SlashCommand("resume", "Resume audio playback.")]
         public async Task ResumeAsync(InteractionContext ctx)
         {
@@ -57,10 +54,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(":play_pause: Resuming Playback...").ConfigureAwait(false);
         }
 
-        #endregion COMMAND_RESUME
-
-        #region COMMAND_VOLUME
-
+        /// <summary>
+        /// Set audio playback volume.
+        /// </summary>
         [SlashCommand("volume", "Set audio playback volume.")]
         public async Task SetVolume(InteractionContext ctx, [Option("volume", "Volume of the playback.")] double volume = 100)
         {
@@ -75,11 +71,10 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($":speaker: Volume set to {volume}%.").ConfigureAwait(false);
         }
 
-        #endregion COMMAND_VOLUME
-
-        #region COMMAND_RESTART
-
-        [SlashCommand("restart", "Restarts the playback of the current track.")]
+        /// <summary>
+        /// Restart audio playback.
+        /// </summary>
+        [SlashCommand("restart", "Restart audio playback.")]
         public async Task RestartSong(InteractionContext ctx)
         {
             await BeforeExecutionAsync(ctx);
@@ -88,11 +83,10 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($":play_pause: Restarting {Formatter.Bold(Formatter.Sanitize(track.Track.Title))} by {Formatter.Bold(Formatter.Sanitize(track.Track.Author))}...").ConfigureAwait(false);
         }
 
-        #endregion COMMAND_RESTART
-
-        #region COMMAND_NOWPLAYING
-
-        [SlashCommand("nowplaying", "Displays information about currently-played track.")]
+        /// <summary>
+        /// Returns current audio track.
+        /// </summary>
+        [SlashCommand("nowplaying", "Returns current audio track.")]
         public async Task NowPlaying(InteractionContext ctx)
         {
             await BeforeExecutionAsync(ctx);
@@ -103,11 +97,10 @@ namespace FlawBOT.Modules
                 await ctx.CreateResponseAsync($":musical_note: Now playing: {Formatter.Bold(Formatter.Sanitize(track.Track.Title))} by {Formatter.Bold(Formatter.Sanitize(track.Track.Author))} [{MusicService.ToDurationString(Player.GetCurrentPosition())}/{MusicService.ToDurationString(Player.NowPlaying.Track.Length)}] requested by {Formatter.Bold(Formatter.Sanitize(Player.NowPlaying.Requester.DisplayName))}.").ConfigureAwait(false);
         }
 
-        #endregion COMMAND_NOWPLAYING
-
-        #region COMMAND_PLAY
-
-        [SlashCommand("play", "Play audio from provided URL or search by specified query.")]
+        /// <summary>
+        /// Playback audio from a URL or search query.
+        /// </summary>
+        [SlashCommand("play", "Playback audio from a URL or search query.")]
         public async Task PlaySong(InteractionContext ctx, [Option("url", "URL to playback.")] string url)
         {
             await BeforeExecutionAsync(ctx);
@@ -124,10 +117,6 @@ namespace FlawBOT.Modules
             await Player.PlayAsync();
             await ctx.CreateResponseAsync($":play_pause: Now playing: {Formatter.Bold(Formatter.Sanitize(audio.Title))} by {Formatter.Bold(Formatter.Sanitize(audio.Author))}.").ConfigureAwait(false);
         }
-
-        #endregion COMMAND_PLAY
-
-        #region VALIDATION
 
         public async Task BeforeExecutionAsync(InteractionContext ctx)
         {
@@ -151,7 +140,5 @@ namespace FlawBOT.Modules
             Player = await Service.GetOrCreateDataAsync(ctx.Guild);
             Player.CommandChannel = ctx.Channel;
         }
-
-        #endregion VALIDATION
     }
 }

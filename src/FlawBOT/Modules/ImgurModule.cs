@@ -9,12 +9,12 @@ namespace FlawBOT.Modules
     public class ImgurModule : ApplicationCommandModule
     {
         /// <summary>
-        /// Returns an image or album from the Imgur API.
+        /// Returns an image or album from Imgur.
         /// </summary>
-        [SlashCommand("imgur", "Retrieve an image from Imgur.")]
-        public async Task Imgur(InteractionContext ctx, [Option("search", "Search query to pass to Imgur.")] string search)
+        [SlashCommand("imgur", "Returns an image or album from Imgur.")]
+        public async Task GetImgurResult(InteractionContext ctx, [Option("query", "Search query to pass to Imgur.")] string query)
         {
-            var output = ImgurService.GetImgurGalleryAsync(Program.Settings.Tokens.ImgurToken, search).Result;
+            var output = ImgurService.GetImgurResultAsync(Program.Settings.Tokens.ImgurToken, query).Result;
             if (output is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);

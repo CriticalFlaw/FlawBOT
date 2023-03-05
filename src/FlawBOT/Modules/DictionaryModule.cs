@@ -8,8 +8,11 @@ namespace FlawBOT.Modules
 {
     public class DictionaryModule : ApplicationCommandModule
     {
-        [SlashCommand("dictionary", "Retrieve an Urban Dictionary definition for a word or phrase.")]
-        public async Task UrbanDictionary(InteractionContext ctx, [Option("search", "Word or phrase to find on Urban Dictionary.")] string query = "")
+        /// <summary>
+        /// Returns a definition for a word of phrase from Urban Dictionary.
+        /// </summary>
+        [SlashCommand("definition", "Returns a definition for a word of phrase from Urban Dictionary.")]
+        public async Task GetDictionaryDefinition(InteractionContext ctx, [Option("query", "Word or phrase to search on Urban Dictionary.")] string query = "")
         {
             var output = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
             if (output == null)

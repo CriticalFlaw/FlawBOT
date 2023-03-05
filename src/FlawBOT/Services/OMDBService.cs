@@ -7,7 +7,7 @@ namespace FlawBOT.Services
 {
     public static class OmdbService
     {
-        public static async Task<DiscordEmbed> GetOMDBResult(string token, string query)
+        public static async Task<DiscordEmbed> GetOMDBDataAsync(string token, string query)
         {
             try
             {
