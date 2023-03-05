@@ -112,7 +112,7 @@ namespace FlawBOT
             //Slash.RegisterCommands<UserModule>();
             Slash.RegisterCommands<WeatherModule>();
             Slash.RegisterCommands<WikipediaModule>();
-            Slash.RegisterCommands<YouTubeModule>();
+            Slash.RegisterCommands<YoutuberModule>();
             Slash.SlashCommandInvoked += SlashCommand_Executed;
             Slash.SlashCommandErrored += SlashCommand_Errored;
 

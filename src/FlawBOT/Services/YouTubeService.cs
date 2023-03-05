@@ -18,6 +18,13 @@ namespace FlawBOT.Services
 {
     public class YoutubeService : HttpHandler
     {
+        public enum YouTubeSearch
+        {
+            Channel,
+            Playlist,
+            Video
+        }
+
         public YoutubeService()
         {
             YouTube = new YouTubeService(new BaseClientService.Initializer
@@ -32,12 +39,12 @@ namespace FlawBOT.Services
         public async Task<string> GetFirstVideoResultAsync(string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return null;
-            var results = await GetResultsAsync(query, 1, "video").ConfigureAwait(false);
+            var results = await GetResultsAsync(query, 1, YouTubeSearch.Video).ConfigureAwait(false);
             if (results is null || results.Count == 0) return Resources.NOT_FOUND_COMMON;
             return string.Format(Resources.URL_YouTube_Video, results.FirstOrDefault()?.Id.VideoId);
         }
 
-        public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, string type = null)
+        public async Task<DiscordEmbed> GetEmbeddedResults(string query, int amount, YouTubeSearch type = YouTubeSearch.Video)
         {
             if (string.IsNullOrWhiteSpace(query)) return null;
             var results = await GetResultsAsync(query, amount, type).ConfigureAwait(false);
@@ -74,13 +81,11 @@ namespace FlawBOT.Services
             return output.Build();
         }
 
-        private async Task<List<SearchResult>> GetResultsAsync(string query, int amount, string type = null)
+        private async Task<List<SearchResult>> GetResultsAsync(string query, int amount, YouTubeSearch type = YouTubeSearch.Video)
         {
             var searchListRequest = YouTube.Search.List("snippet");
             searchListRequest.Q = query;
             searchListRequest.MaxResults = amount;
-            if (!string.IsNullOrWhiteSpace(type))
-                searchListRequest.Type = type;
             var searchListResponse = await searchListRequest.ExecuteAsync().ConfigureAwait(false);
             var videos = new List<SearchResult>();
             videos.AddRange(searchListResponse.Items);
