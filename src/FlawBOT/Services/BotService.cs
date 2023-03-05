@@ -64,10 +64,10 @@ namespace FlawBOT.Services
             return await ctx.Client.GetInteractivity().WaitForMessageAsync(m => m.Channel.Id == ctx.Channel.Id && string.Equals(m.Content, keyword, StringComparison.InvariantCultureIgnoreCase), TimeSpan.FromSeconds(seconds)).ConfigureAwait(false);
         }
 
-        public static int LimitToRange(int value, int min = 1, int max = 100)
+        public static int LimitToRange(double value, int min = 1, int max = 100)
         {
             if (value <= min) return min;
-            return value >= max ? max : value;
+            return (int)(value >= max ? max : value);
         }
 
         public static async Task RemoveMessage(DiscordMessage message)
@@ -109,8 +109,15 @@ namespace FlawBOT.Services
                 stream.Write(result, 0, result.Length);
                 stream.Position = 0;
             }
+            return (stream.Length > 0) ? stream : null;
+        }
 
-            return stream;
+        public static string GetCurrentUptime()
+        {
+            var settings = Program.Settings;
+            var uptime = DateTime.Now - settings.ProcessStarted;
+            var days = uptime.Days > 0 ? $"({uptime.Days:00} days)" : string.Empty;
+            return $"{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds} {days}";
         }
     }
 }

@@ -135,7 +135,7 @@ namespace FlawBOT.Modules
 
         [SlashCommand("revoke", "Remove a role from server user.")]
         [SlashRequirePermissions(Permissions.ManageRoles)]
-        public async Task RevokeRole(CommandContext ctx, [Option("member", "Server user to get revoked.")] DiscordMember member, [Option("role", "Server role name.")] [RemainingText] DiscordRole role)
+        public async Task RevokeRole(CommandContext ctx, [Option("member", "Server user to get revoked.")] DiscordMember member, [Option("role", "Server role name.")] DiscordRole role)
         {
             if (role != null)
             {

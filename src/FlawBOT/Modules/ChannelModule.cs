@@ -32,7 +32,7 @@ namespace FlawBOT.Modules
 
         [SlashCommand("clean", "Remove channel messages.")]
         [SlashRequirePermissions(Permissions.ManageMessages)]
-        public async Task CleanChannel(InteractionContext ctx, [Option("query", "Number of messages to remove from the current channel.")] int limit = 2)
+        public async Task CleanChannel(InteractionContext ctx, [Option("query", "Number of messages to remove from the current channel.")] double limit = 2)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
             await ctx.Channel.DeleteMessagesAsync(messages).ConfigureAwait(false);
@@ -101,11 +101,11 @@ namespace FlawBOT.Modules
 
         [SlashCommand("purge", "Remove server user's channel messages.")]
         [SlashRequirePermissions(Permissions.ManageMessages)]
-        public async Task Purge(InteractionContext ctx, [Option("member", "Server user whose messages will be purged.")] DiscordMember member, [Option("limit", "Number of messages to purge.")] int limit = 0)
+        public async Task Purge(InteractionContext ctx, [Option("member", "Server user whose messages will be purged.")] DiscordUser user, [Option("limit", "Number of messages to purge.")] double limit = 0)
         {
             var messages = await ctx.Channel.GetMessagesAsync(BotServices.LimitToRange(limit)).ConfigureAwait(false);
-            await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == member.Id)).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"Purged **{limit}** messages by {member.Username}#{member.Discriminator} (ID:{member.Id})").ConfigureAwait(false);
+            await ctx.Channel.DeleteMessagesAsync(messages.Where(m => m.Author.Id == user.Id)).ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"Purged **{limit}** messages by {user.Username}#{user.Discriminator} (ID:{user.Id})").ConfigureAwait(false);
         }
 
         [SlashCommand("rename", "Rename a channel. If a channel isn't specified, the current one will be used.")]
