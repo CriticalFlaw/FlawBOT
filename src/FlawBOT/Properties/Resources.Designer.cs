@@ -88,7 +88,16 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A channel with the same name already exists..
+        ///   Looks up a localized string similar to Category name must be less than 100 characters long..
+        /// </summary>
+        internal static string ERR_CATEGORY_NAME {
+            get {
+                return ResourceManager.GetString("ERR_CATEGORY_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A channel with the same name in the same category already exists..
         /// </summary>
         internal static string ERR_CHANNEL_EXISTS {
             get {
@@ -97,7 +106,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel name cannot be blank or over a 100 characters long..
+        ///   Looks up a localized string similar to Channel name must be less than 100 characters long..
         /// </summary>
         internal static string ERR_CHANNEL_NAME {
             get {

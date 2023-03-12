@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [SlashCommandGroup("bot", "Slash command group for FlawBOT-specific commands.")]
+    [SlashCommandGroup("bot", "Slash command group for bot commands.")]
     public class BotModule : ApplicationCommandModule
     {
         /// <summary>
@@ -51,7 +51,7 @@ namespace FlawBOT.Modules
         /// </summary>
         [RequireOwner]
         [SlashCommand("activity", "Changes FlawBOT's activity.")]
-        public async Task SetBotActivity(InteractionContext ctx, [Option("activity", "Activity name.")] string activity = Properties.Resources.APP_DEFAULT_ACTIVITY)
+        public async Task SetBotActivity(InteractionContext ctx, [Option("activity", "Activity name.")] string activity)
         {
             await ctx.Client.UpdateStatusAsync(new DiscordActivity(activity)).ConfigureAwait(false);
             await ctx.CreateResponseAsync($"{Program.Settings.Name} activity has been changed to {Formatter.Bold(activity)}.").ConfigureAwait(false);
@@ -101,14 +101,14 @@ namespace FlawBOT.Modules
         {
             var oldName = ctx.Client.CurrentUser.Username;
             var newName = string.IsNullOrWhiteSpace(nickname) ? Program.Settings.Name : nickname;
-            await ctx.Client.UpdateCurrentUserAsync(newName).ConfigureAwait(false);
+            await ctx.Client.UpdateCurrentUserAsync(username: newName).ConfigureAwait(false);
             await ctx.CreateResponseAsync($"{oldName}'s username has been changed to {newName}.").ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Makes FlawBOT leave the server.
+        /// Makes FlawBOT leave the current server.
         /// </summary>
-        [SlashCommand("leave", "Make FlawBOT leave the server.")]
+        [SlashCommand("leave", "Makes FlawBOT leave the current server.")]
         [RequireUserPermissions(Permissions.Administrator)]
         public async Task LeaveServer(InteractionContext ctx)
         {

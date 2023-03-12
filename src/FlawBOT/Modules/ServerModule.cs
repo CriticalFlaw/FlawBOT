@@ -98,7 +98,7 @@ namespace FlawBOT.Modules
         //    }
 
         //    var prompt = await ctx.CreateResponseAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);
-        //    var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
+        //    var interactivity = await BotServices.GetUserInteractivity(ctx, ":heavy_check_mark:", 10).ConfigureAwait(false);
         //    if (interactivity.Result is null) return;
         //    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
         //    await BotServices.RemoveMessage(prompt).ConfigureAwait(false);

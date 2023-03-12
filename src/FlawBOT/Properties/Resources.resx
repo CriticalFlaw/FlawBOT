@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ERR_CHANNEL_EXISTS" xml:space="preserve">
-    <value>A channel with the same name already exists.</value>
+    <value>A channel with the same name in the same category already exists.</value>
   </data>
   <data name="ERR_CHANNEL_NAME" xml:space="preserve">
-    <value>Channel name cannot be blank or over a 100 characters long.</value>
+    <value>Channel name must be less than 100 characters long.</value>
   </data>
   <data name="ERR_CHANNEL_TOPIC" xml:space="preserve">
     <value>Channel topic must be less than 1024 characters long.</value>
@@ -344,5 +344,8 @@
   </data>
   <data name="APP_DEFAULT_ACTIVITY" xml:space="preserve">
     <value>Night of Fire</value>
+  </data>
+  <data name="ERR_CATEGORY_NAME" xml:space="preserve">
+    <value>Category name must be less than 100 characters long.</value>
   </data>
 </root>

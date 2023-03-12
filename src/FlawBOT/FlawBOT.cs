@@ -223,7 +223,6 @@ namespace FlawBOT
 
         private static Task SlashCommand_Executed(SlashCommandsExtension sender, SlashCommandInvokedEventArgs e)
         {
-            e.Context.Client.Logger.LogInformation($"{e.Context.User.Username} successfully executed '{e.Context.CommandName}'");
             return Task.CompletedTask;
         }
 
