@@ -93,37 +93,37 @@ namespace FlawBOT.Modules
                 await ctx.CreateResponseAsync(Formatter.BlockCode(Formatter.Strip(message))).ConfigureAwait(false);
         }
 
-        [SlashCommand("vote", "Run a Yay or Nay poll in the current channel.")]
-        public async Task Poll(CommandContext ctx, [Option("question", "Question to be asked in the poll.")] string question)
-        {
-            if (string.IsNullOrWhiteSpace(question))
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_POLL_QUESTION, ResponseType.Warning).ConfigureAwait(false);
-                return;
-            }
+        //[SlashCommand("vote", "Run a Yay or Nay poll in the current channel.")]
+        //public async Task Poll(CommandContext ctx, [Option("question", "Question to be asked in the poll.")] string question)
+        //{
+        //    if (string.IsNullOrWhiteSpace(question))
+        //    {
+        //        await BotServices.SendResponseAsync(ctx, Resources.ERR_POLL_QUESTION, ResponseType.Warning).ConfigureAwait(false);
+        //        return;
+        //    }
 
-            // TODO - Not yet implemented
-            // Build the poll question, duration and options.
-            await ctx.TriggerTypingAsync();
-            question = ctx.User.Mention + " asked: " + question;
-            var interactivity = ctx.Client.GetInteractivity();
-            var pollOptions = new List<DiscordEmoji>
-            {
-                DiscordEmoji.FromName(ctx.Client, ":thumbsup:"),
-                DiscordEmoji.FromName(ctx.Client, ":thumbsdown:")
-            };
-            var duration = new TimeSpan(0, 3, 10);
-            var message = await ctx.RespondAsync(new DiscordEmbedBuilder().WithDescription(question + $"\nThis poll ends in {duration.Minutes} minutes.").Build()).ConfigureAwait(false);
-            var results = await interactivity.DoPollAsync(message, pollOptions, PollBehaviour.DeleteEmojis, duration).ConfigureAwait(false);
+        //    // TODO - Not yet implemented
+        //    // Build the poll question, duration and options.
+        //    await ctx.TriggerTypingAsync();
+        //    question = ctx.User.Mention + " asked: " + question;
+        //    var interactivity = ctx.Client.GetInteractivity();
+        //    var pollOptions = new List<DiscordEmoji>
+        //    {
+        //        DiscordEmoji.FromName(ctx.Client, ":thumbsup:"),
+        //        DiscordEmoji.FromName(ctx.Client, ":thumbsdown:")
+        //    };
+        //    var duration = new TimeSpan(0, 3, 10);
+        //    var message = await ctx.RespondAsync(new DiscordEmbedBuilder().WithDescription(question + $"\nThis poll ends in {duration.Minutes} minutes.").Build()).ConfigureAwait(false);
+        //    var results = await interactivity.DoPollAsync(message, pollOptions, PollBehaviour.DeleteEmojis, duration).ConfigureAwait(false);
 
-            // Removed the initial poll and return the calculated results
-            await BotServices.RemoveMessage(message).ConfigureAwait(false);
-            var output = new DiscordEmbedBuilder()
-                .WithDescription(question)
-                .WithFooter("The voting has ended.");
-            foreach (var vote in results)
-                output.AddField(vote.Emoji.Name, vote.Voted.Count.ToString(), true);
-            await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
-        }
+        //    // Removed the initial poll and return the calculated results
+        //    await BotServices.RemoveMessage(message).ConfigureAwait(false);
+        //    var output = new DiscordEmbedBuilder()
+        //        .WithDescription(question)
+        //        .WithFooter("The voting has ended.");
+        //    foreach (var vote in results)
+        //        output.AddField(vote.Emoji.Name, vote.Voted.Count.ToString(), true);
+        //    await ctx.RespondAsync(output.Build()).ConfigureAwait(false);
+        //}
     }
 }

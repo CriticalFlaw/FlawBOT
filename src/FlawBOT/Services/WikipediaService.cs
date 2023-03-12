@@ -9,7 +9,7 @@ namespace FlawBOT.Services
 {
     public class WikipediaService : HttpHandler
     {
-        public static async Task<DiscordEmbed> GetWikipediaDataAsync(string query)
+        public static async Task<DiscordEmbed> GetWikipediaArticlesAsync(string query)
         {
             try
             {

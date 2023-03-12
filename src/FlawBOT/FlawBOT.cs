@@ -93,7 +93,7 @@ namespace FlawBOT
             Slash.RegisterCommands<BotModule>();
             Slash.RegisterCommands<ChannelModule>();
             Slash.RegisterCommands<DictionaryModule>();
-            //Slash.RegisterCommands<EmojiModule>();
+            Slash.RegisterCommands<EmojiModule>();
             Slash.RegisterCommands<ImgurModule>();
             Slash.RegisterCommands<MiscModule>();
             Slash.RegisterCommands<MusicModule>();
@@ -102,17 +102,17 @@ namespace FlawBOT
             Slash.RegisterCommands<NintendoModule>();
             Slash.RegisterCommands<OmdbModule>();
             Slash.RegisterCommands<RedditModule>();
-            //Slash.RegisterCommands<RoleModule>();
-            //Slash.RegisterCommands<ServerModule>();
+            Slash.RegisterCommands<RoleModule>();
+            Slash.RegisterCommands<ServerModule>();
             Slash.RegisterCommands<SimpsonsModule>();
             Slash.RegisterCommands<SpeedrunModule>();
             Slash.RegisterCommands<SteamModule>();
             Slash.RegisterCommands<TeamFortressModule>();
             Slash.RegisterCommands<TwitchModule>();
-            //Slash.RegisterCommands<UserModule>();
+            Slash.RegisterCommands<UserModule>();
             Slash.RegisterCommands<WeatherModule>();
             Slash.RegisterCommands<WikipediaModule>();
-            Slash.RegisterCommands<YoutuberModule>();
+            Slash.RegisterCommands<YouTubeModule>();
             Slash.SlashCommandInvoked += SlashCommand_Executed;
             Slash.SlashCommandErrored += SlashCommand_Errored;
 

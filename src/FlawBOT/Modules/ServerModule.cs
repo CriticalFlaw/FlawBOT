@@ -83,27 +83,27 @@ namespace FlawBOT.Modules
         /// <summary>
         /// Prunes inactive users from the server.
         /// </summary>
-        [SlashCommand("prune", "Prunes inactive users from the server.")]
-        [SlashRequirePermissions(Permissions.DeafenMembers)]
-        public async Task PruneUsers(CommandContext ctx, [Option("days", "Number of days the user had to be inactive to get pruned.")] int days = 7)
-        {
-            if (days < 1 || days > 30)
-                await BotServices.SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning).ConfigureAwait(false);
+        //[SlashCommand("prune", "Prunes inactive users from the server.")]
+        //[SlashRequirePermissions(Permissions.DeafenMembers)]
+        //public async Task PruneUsers(InteractionContext ctx, [Option("days", "Number of days the user had to be inactive to get pruned.")] int days = 7)
+        //{
+        //    if (days < 1 || days > 30)
+        //        await BotServices.SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning).ConfigureAwait(false);
 
-            var count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
-            if (count == 0)
-            {
-                await ctx.RespondAsync("No inactive members found to prune").ConfigureAwait(false);
-                return;
-            }
+        //    var count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
+        //    if (count == 0)
+        //    {
+        //        await ctx.CreateResponseAsync("No inactive members found to prune").ConfigureAwait(false);
+        //        return;
+        //    }
 
-            var prompt = await ctx.RespondAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);
-            var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
-            if (interactivity.Result is null) return;
-            await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-            await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
-            await ctx.Guild.PruneAsync(days).ConfigureAwait(false);
-        }
+        //    var prompt = await ctx.CreateResponseAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);
+        //    var interactivity = await BotServices.GetUserInteractivity(ctx, "yes", 10).ConfigureAwait(false);
+        //    if (interactivity.Result is null) return;
+        //    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
+        //    await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
+        //    await ctx.Guild.PruneAsync(days).ConfigureAwait(false);
+        //}
 
         /// <summary>
         /// Changes the name of the server.

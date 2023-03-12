@@ -8,7 +8,10 @@ namespace FlawBOT.Modules
 {
     public class WeatherModule : ApplicationCommandModule
     {
-        [SlashCommand("weather", "Retrieve the time and weather for specified location.")]
+        /// <summary>
+        /// Returns weather information for a given location.
+        /// </summary>
+        [SlashCommand("weather", "Returns weather information for a given location.")]
         public async Task Weather(InteractionContext ctx, [Option("query", "Location to get time and weather data from.")] string query)
         {
             var output = await WeatherService.GetWeatherDataAsync(Program.Settings.Tokens.WeatherToken, query).ConfigureAwait(false);

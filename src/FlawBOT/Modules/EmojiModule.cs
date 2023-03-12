@@ -18,49 +18,49 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("emoji", "Slash command group for modal emoji commands.")]
     public class EmojiModule : ApplicationCommandModule
     {
-        [SlashCommand("create", "Add a new server emoji using a URL image.")]
-        [SlashRequirePermissions(Permissions.ManageEmojis)]
-        public async Task CreateEmoji(CommandContext ctx, [Option("url", "Image URL.")] Uri url, [Option("name", "Name for the emoji.")] string name)
-        {
-            try
-            {
-                if (url is null)
-                {
-                    if (!ctx.Message.Attachments.Any() ||
-                        !Uri.TryCreate(ctx.Message.Attachments[0].Url, UriKind.Absolute, out url))
-                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_IMAGE, ResponseType.Warning).ConfigureAwait(false);
-                    return;
-                }
+        //[SlashCommand("create", "Add a new server emoji using a URL image.")]
+        //[SlashRequirePermissions(Permissions.ManageEmojis)]
+        //public async Task CreateEmoji(CommandContext ctx, [Option("url", "Image URL.")] Uri url, [Option("name", "Name for the emoji.")] string name)
+        //{
+        //    try
+        //    {
+        //        if (url is null)
+        //        {
+        //            if (!ctx.Message.Attachments.Any() ||
+        //                !Uri.TryCreate(ctx.Message.Attachments[0].Url, UriKind.Absolute, out url))
+        //                await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_IMAGE, ResponseType.Warning).ConfigureAwait(false);
+        //            return;
+        //        }
 
-                if (string.IsNullOrWhiteSpace(name) || name.Length < 2 || name.Length > 50)
-                {
-                    await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning).ConfigureAwait(false);
-                    return;
-                }
+        //        if (string.IsNullOrWhiteSpace(name) || name.Length < 2 || name.Length > 50)
+        //        {
+        //            await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_NAME, ResponseType.Warning).ConfigureAwait(false);
+        //            return;
+        //        }
 
-                var handler = new HttpClientHandler { AllowAutoRedirect = false };
-                var http = new HttpClient(handler, true);
-                var response = await http.GetAsync(url).ConfigureAwait(false);
-                if (!response.Content.Headers.ContentType.MediaType.StartsWith("image/")) return;
+        //        var handler = new HttpClientHandler { AllowAutoRedirect = false };
+        //        var http = new HttpClient(handler, true);
+        //        var response = await http.GetAsync(url).ConfigureAwait(false);
+        //        if (!response.Content.Headers.ContentType.MediaType.StartsWith("image/")) return;
 
-                using (response = await http.GetAsync(url).ConfigureAwait(false))
-                await using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                {
-                    if (stream.Length >= 256000)
-                    {
-                        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_SIZE, ResponseType.Warning).ConfigureAwait(false);
-                        return;
-                    }
+        //        using (response = await http.GetAsync(url).ConfigureAwait(false))
+        //        await using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+        //        {
+        //            if (stream.Length >= 256000)
+        //            {
+        //                await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_SIZE, ResponseType.Warning).ConfigureAwait(false);
+        //                return;
+        //            }
 
-                    var emoji = await ctx.Guild.CreateEmojiAsync(name, stream).ConfigureAwait(false);
-                    await ctx.RespondAsync("Created the emoji " + Formatter.Bold(emoji.Name)).ConfigureAwait(false);
-                }
-            }
-            catch
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_ADD, ResponseType.Error).ConfigureAwait(false);
-            }
-        }
+        //            var emoji = await ctx.Guild.CreateEmojiAsync(name, stream).ConfigureAwait(false);
+        //            await ctx.RespondAsync("Created the emoji " + Formatter.Bold(emoji.Name)).ConfigureAwait(false);
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        await BotServices.SendResponseAsync(ctx, Resources.ERR_EMOJI_ADD, ResponseType.Error).ConfigureAwait(false);
+        //    }
+        //}
 
         [SlashCommand("delete", "Remove a server emoji. Note: Bots can only delete emojis they created.")]
         [SlashRequirePermissions(Permissions.ManageEmojis)]
