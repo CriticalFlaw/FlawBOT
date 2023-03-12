@@ -342,4 +342,7 @@
   <data name="URL_Dictionary_Random" xml:space="preserve">
     <value>https://api.urbandictionary.com/v0/random</value>
   </data>
+  <data name="APP_DEFAULT_ACTIVITY" xml:space="preserve">
+    <value>Night of Fire</value>
+  </data>
 </root>

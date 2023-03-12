@@ -61,6 +61,15 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Night of Fire.
+        /// </summary>
+        internal static string APP_DEFAULT_ACTIVITY {
+            get {
+                return ResourceManager.GetString("APP_DEFAULT_ACTIVITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to next.
         /// </summary>
         internal static string APP_INTERACT {
