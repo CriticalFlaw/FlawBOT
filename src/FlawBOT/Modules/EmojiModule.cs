@@ -7,11 +7,13 @@ using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TwitchLib.Api.Helix.Models.Chat.Emotes;
 
 namespace FlawBOT.Modules
 {
@@ -107,26 +109,29 @@ namespace FlawBOT.Modules
             var emoji = await ctx.Guild.GetEmojiAsync(query.Id).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
                 .WithDescription(emoji.Name + " (" + emoji.Guild.Name + ")")
-                .AddField("Created by",
-                    (emoji.User is null ? "<unknown>" : emoji.User.Username) + " on " + emoji.CreationTimestamp.Date)
-                .WithColor(DiscordColor.PhthaloBlue)
-                .WithThumbnail(emoji.Url);
+                .AddField("Created by", (emoji.User is null ? "<unknown>" : emoji.User.Username) + " on " + emoji.CreationTimestamp.Date)
+                .WithThumbnail(emoji.Url)
+                .WithColor(Program.Settings.DefaultColor);
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
         [SlashCommand("list", "Retrieve a list of server emojis.")]
+        [SlashRequireBotPermissions(Permissions.ManageEmojis)]
         public async Task GetEmojiList(InteractionContext ctx)
         {
-            var emojiList = new StringBuilder();
-            foreach (var emoji in ctx.Guild.Emojis.Values)
-                emojiList.Append(emoji.Name).Append(!emoji.Equals(ctx.Guild.Emojis.Last().Value) ? ", " : string.Empty);
 
-            var output = new DiscordEmbedBuilder()
-                .WithTitle(ctx.Guild.Name + " Emoji List")
-                .WithDescription(emojiList.ToString())
-                .WithThumbnail(ctx.Guild.IconUrl)
-                .WithColor(DiscordColor.PhthaloBlue);
-            await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
+            //var output = new DiscordEmbedBuilder()
+            //    .WithTitle($"{ctx.Guild.Name} Emojis")
+            //    .WithThumbnail(ctx.Guild.IconUrl)
+            //    .WithColor(Program.Settings.DefaultColor);
+
+            var emojiList = new StringBuilder();
+            foreach (var x in ctx.Guild.Emojis.Values)
+                emojiList.Append($":{x.Name}: :x:").Append(!x.Equals(ctx.Guild.Emojis.Last().Value) ? ", " : string.Empty);
+            //    output.AddField(x.Name, x.GetDiscordName(), true);
+            //await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
+
+            await BotServices.SendResponseAsync(ctx, emojiList.ToString()).ConfigureAwait(false);
         }
     }
 }

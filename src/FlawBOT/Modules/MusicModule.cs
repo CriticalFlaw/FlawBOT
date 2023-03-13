@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
+    /// <summary>
+    /// TODO: Check that Lavalink is active before processing any of these commands.
+    /// </summary>
     public class MusicModule : ApplicationCommandModule
     {
         public MusicModule(MusicService service)

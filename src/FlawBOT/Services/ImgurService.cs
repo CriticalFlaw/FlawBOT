@@ -1,5 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Enums;
@@ -24,13 +23,13 @@ namespace FlawBOT.Services
             switch (results)
             {
                 case GalleryImage image:
-                    output.WithDescription(image.Title ?? "Search results for " + Formatter.Bold(query) + " on Imgur");
                     output.WithImageUrl(image.Link);
+                    output.WithFooter(image.Title ?? "Found via ImgurAPI");
                     break;
 
                 case GalleryAlbum album:
-                    output.WithDescription(album.Title ?? "Search results for " + Formatter.Bold(query) + " on Imgur");
                     output.WithImageUrl(album.Link);
+                    output.WithFooter(album.Title ?? "Found via ImgurAPI");
                     break;
 
                 default:

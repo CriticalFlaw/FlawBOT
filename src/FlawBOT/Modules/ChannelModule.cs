@@ -102,7 +102,7 @@ namespace FlawBOT.Modules
             var output = new DiscordEmbedBuilder()
                 .WithTitle(channel.Name)
                 .AddField("Type", channel.Type.ToString(), true)
-                .AddField("Created On", channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
+                .AddField("Created On", channel.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture).Split(' ').First(), true)
                 .WithThumbnail(ctx.Guild.IconUrl)
                 .WithFooter($"ID: {channel.Id}")
                 .WithColor(Program.Settings.DefaultColor);

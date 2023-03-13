@@ -11,7 +11,7 @@ namespace FlawBOT.Modules
         /// <summary>
         /// Returns a definition for a word of phrase from Urban Dictionary.
         /// </summary>
-        [SlashCommand("definition", "Returns a definition for a word of phrase from Urban Dictionary.")]
+        [SlashCommand("define", "Returns a definition for a word of phrase from Urban Dictionary.")]
         public async Task GetDictionaryDefinition(InteractionContext ctx, [Option("query", "Word or phrase to search on Urban Dictionary.")] string query = "")
         {
             var output = await DictionaryService.GetDictionaryDefinitionAsync(query).ConfigureAwait(false);
