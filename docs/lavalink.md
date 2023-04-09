@@ -28,4 +28,4 @@ In case of errors, install the [latest Java Development Kit][java-link].
 
 [lavalink-repo]: https://github.com/freyacodes/Lavalink
 [java-link]: https://www.oracle.com/java/technologies/downloads/
-[music-link]: https://www.criticalflaw.ca/FlawBOT/modules/music/
+[music-link]: https://criticalflaw.ca/FlawBOT/modules/music/

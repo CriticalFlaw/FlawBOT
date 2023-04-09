@@ -34,4 +34,4 @@ dotnet FlawBOT.dll
 [clone-link]: https://github.com/CriticalFlaw/FlawBOT.git
 [download-link]: https://github.com/CriticalFlaw/FlawBOT/archive/refs/heads/master.zip
 [vs-link]: https://visualstudio.microsoft.com/
-[tokens-link]: https://www.criticalflaw.ca/FlawBOT/tokens
+[tokens-link]: https://criticalflaw.ca/FlawBOT/tokens

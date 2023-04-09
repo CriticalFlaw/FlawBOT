@@ -1,6 +1,6 @@
 site_name: FlawBOT
 site_author: criticalflaw
-site_url: www.criticalflaw.ca/flawbot/
+site_url: criticalflaw.ca/FlawBOT
 theme:
     language: en
     name: material

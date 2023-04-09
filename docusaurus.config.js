@@ -4,7 +4,7 @@
 const config = {
     title: "FlawBOT",
     tagline: "Multipurpose Discord bot written in C# using DSharpPlus.",
-    url: "https://www.criticalflaw.ca/",
+    url: "https://criticalflaw.ca/",
     baseUrl: "/FlawBOT/",
     favicon: "https://raw.githubusercontent.com/CriticalFlaw/FlawBOT/master/docs/resources/favicon.ico",
 
@@ -91,7 +91,7 @@ const config = {
                 },
                 {
                     label: "Blog",
-                    href: "https://www.criticalflaw.ca/"
+                    href: "https://criticalflaw.ca/"
                 },
                 {
                     href: "https://github.com/CriticalFlaw/FlawBOT/",

@@ -8,7 +8,7 @@ slug: /
   <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest" alt="Releases">
     <img src="https://img.shields.io/github/downloads/criticalflaw/flawbot/total?style=flat-square" />
   </a>
-  <a href="https://www.criticalflaw.ca/FlawBOT/" alt="Documentation">
+  <a href="https://criticalflaw.ca/FlawBOT/" alt="Documentation">
     <img src="https://readthedocs.org/projects/flawbot/badge/?version=latest&style=flat-square" />
   </a>
   <a href="https://github.com/CriticalFlaw/FlawBOT/blob/master/.github/LICENSE" alt="License">
@@ -56,15 +56,15 @@ The following is a list of modules included with the latest version of FlawBOT.
 
 <!-- MARKDOWN LINKS -->
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
-[tokens-link]: https://www.criticalflaw.ca/FlawBOT/tokens/
+[tokens-link]: https://criticalflaw.ca/FlawBOT/tokens/
 [runtime-link]: https://dotnet.microsoft.com/download/dotnet/7.0/runtime
-[doc-bot]: https://www.criticalflaw.ca/FlawBOT/modules/bot/
-[doc-channel]: https://www.criticalflaw.ca/FlawBOT/modules/channel/
-[doc-emoji]: https://www.criticalflaw.ca/FlawBOT/modules/emoji/
-[doc-games]: https://www.criticalflaw.ca/FlawBOT/modules/games/
-[doc-misc]: https://www.criticalflaw.ca/FlawBOT/modules/misc/
-[doc-music]: https://www.criticalflaw.ca/FlawBOT/modules/music/
-[doc-role]: https://www.criticalflaw.ca/FlawBOT/modules/role/
-[doc-search]: https://www.criticalflaw.ca/FlawBOT/modules/search/
-[doc-server]: https://www.criticalflaw.ca/FlawBOT/modules/server/
-[doc-user]: https://www.criticalflaw.ca/FlawBOT/modules/user/
+[doc-bot]: https://criticalflaw.ca/FlawBOT/modules/bot/
+[doc-channel]: https://criticalflaw.ca/FlawBOT/modules/channel/
+[doc-emoji]: https://criticalflaw.ca/FlawBOT/modules/emoji/
+[doc-games]: https://criticalflaw.ca/FlawBOT/modules/games/
+[doc-misc]: https://criticalflaw.ca/FlawBOT/modules/misc/
+[doc-music]: https://criticalflaw.ca/FlawBOT/modules/music/
+[doc-role]: https://criticalflaw.ca/FlawBOT/modules/role/
+[doc-search]: https://criticalflaw.ca/FlawBOT/modules/search/
+[doc-server]: https://criticalflaw.ca/FlawBOT/modules/server/
+[doc-user]: https://criticalflaw.ca/FlawBOT/modules/user/
