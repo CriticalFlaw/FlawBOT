@@ -1,9 +1,9 @@
 ﻿using DSharpPlus;
+using DSharpPlus.AsyncEvents;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Lavalink.EventArgs;
 using DSharpPlus.Net;
-using Emzi0767.Utilities;
 using FlawBOT.Properties;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,7 +19,7 @@ namespace FlawBOT.Services
         {
             Discord = client;
             Discord.Ready += Client_Ready;
-            _trackException = new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>($"{Program.Settings.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION", TimeSpan.Zero, EventExceptionHandler);
+            _trackException = new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>($"{Program.Settings.Name.ToUpperInvariant()}_LAVALINK_TRACK_EXCEPTION", EventExceptionHandler);
         }
 
         private DiscordClient Discord { get; }

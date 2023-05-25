@@ -8,7 +8,6 @@ using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.Lavalink;
 using DSharpPlus.VoiceNext;
 using DSharpPlus.SlashCommands;
-using Emzi0767;
 using FlawBOT.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -52,7 +51,6 @@ namespace FlawBOT
 
             // Setup Services
             Services = new ServiceCollection()
-                .AddTransient<SecureRandom>()
                 .AddSingleton<MusicService>()
                 .AddSingleton(new LavalinkService(Client))
                 .AddSingleton(new YoutubeService())
