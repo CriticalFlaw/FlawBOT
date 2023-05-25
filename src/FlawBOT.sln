@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlawBOT", "FlawBOT\FlawBOT.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlawBOT.Test", "FlawBOT.Test\FlawBOT.Test.csproj", "{7E946A49-2539-45FA-A5C3-DC3411CBC399}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlawBOT.Models", "FlawBOT.Models\FlawBOT.Models.csproj", "{8D63001C-6360-49A8-9BFA-FF3FA2215317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlawBOT.Models", "FlawBOT.Models\FlawBOT.Models.csproj", "{8D63001C-6360-49A8-9BFA-FF3FA2215317}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
