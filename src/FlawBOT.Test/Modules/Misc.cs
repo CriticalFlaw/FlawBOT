@@ -10,13 +10,13 @@ internal class Misc
     [Test]
     public void GetCatFact()
     {
-        Assert.IsNotNull(MiscService.GetCatPhotoAsync().Result);
+        Assert.IsNotNull(MiscService.GetCatImageAsync().Result);
     }
 
     [Test]
     public void GetDogPhoto()
     {
-        Assert.IsNotNull(MiscService.GetDogPhotoAsync());
+        Assert.IsNotNull(MiscService.GetDogImageAsync());
     }
 
     [Test]

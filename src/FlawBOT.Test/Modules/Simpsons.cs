@@ -9,12 +9,12 @@ internal class Simpsons
     [Test]
     public void GetFuturamaEpisode()
     {
-        Assert.NotNull(SimpsonsService.GetEpisodeGifAsync(SimpsonsService.SiteRoot.Morbotron).Result.Title);
+        Assert.NotNull(SimpsonsService.GetEpisodePostAsync(SimpsonsService.SiteRoot.Morbotron).Result.Title);
     }
 
     [Test]
     public void GetSimpsonsEpisode()
     {
-        Assert.NotNull(SimpsonsService.GetEpisodeGifAsync(SimpsonsService.SiteRoot.Frinkiac).Result.Title);
+        Assert.NotNull(SimpsonsService.GetEpisodePostAsync(SimpsonsService.SiteRoot.Frinkiac).Result.Title);
     }
 }

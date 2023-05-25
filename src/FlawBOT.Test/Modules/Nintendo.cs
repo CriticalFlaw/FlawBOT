@@ -9,8 +9,8 @@ internal class Nintendo
     [Test]
     public void GetAmiiboData()
     {
-        Assert.IsNotNull(NintendoService.GetAmiiboDataAsync("Donkey Kong").Result);
-        Assert.IsNull(NintendoService.GetAmiiboDataAsync("Konkey Dong").Result);
+        Assert.IsNotNull(NintendoService.GetAmiiboInfoAsync("Donkey Kong").Result);
+        Assert.IsNull(NintendoService.GetAmiiboInfoAsync("Konkey Dong").Result);
     }
 
     [Test]

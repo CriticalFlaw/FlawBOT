@@ -9,6 +9,6 @@ internal class News
     [Test]
     public void GetNewsData()
     {
-        Assert.IsNotNull(NewsService.GetNewsDataAsync(TestSetup.Tokens.NewsToken, "bitcoin"));
+        Assert.IsNotNull(NewsService.GetNewsArticlesAsync(TestSetup.Tokens.NewsToken, "bitcoin"));
     }
 }
