@@ -29,7 +29,7 @@ namespace FlawBOT.Modules
 
         private static async Task GetEpisodePost(InteractionContext ctx, SiteRoot show)
         {
-            var output = await SimpsonsService.GetEpisodePostAsync(show).ConfigureAwait(false);
+            var output = await GetEpisodePostAsync(show).ConfigureAwait(false);
             if (output is null)
             {
                 await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);

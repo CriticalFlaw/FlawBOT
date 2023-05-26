@@ -21,7 +21,7 @@ namespace FlawBOT.Modules
                 .WithTitle(settings.Name)
                 .WithDescription($"Multipurpose Discord bot written in C# with DSharpPlus.")
                 .AddField(":clock1: Uptime", BotServices.GetCurrentUptime(), true)
-                .AddField(":link: Links", $"[Commands]({settings.DocsLink}) **|**[Commands]({settings.DocsLink}) **|** [GitHub]({settings.GitHubLink})", true)
+                .AddField(":link: Links", $"[Commands]({settings.DocsLink}) **|** [Commands]({settings.DocsLink}) **|** [GitHub]({settings.GitHubLink})", true)
                 .WithFooter($"Version {settings.Version}")
                 .WithUrl(settings.GitHubLink)
                 .WithColor(settings.DefaultColor).Build();

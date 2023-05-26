@@ -75,8 +75,7 @@ namespace FlawBOT
             Interactivity = Client.UseInteractivity(new InteractivityConfiguration
             {
                 PaginationBehaviour = PaginationBehaviour.Ignore,
-                Timeout = TimeSpan.FromSeconds(30),
-                AckPaginationButtons = true
+                Timeout = TimeSpan.FromSeconds(30)
             });
 
             // Setup Voice
@@ -146,8 +145,8 @@ namespace FlawBOT
         {
             // Update any other services that are being used.
             Client.Logger.LogInformation(EventId, "Initializing...");
-            //await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
-            //await TeamFortressService.UpdateTF2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
+            await SteamService.UpdateSteamAppListAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
+            await TeamFortressService.UpdateTF2SchemaAsync(Program.Settings.Tokens.SteamToken).ConfigureAwait(false);
 
             // Set the initial activity and connect the bot to Discord
             var act = new DiscordActivity("Night of Fire", ActivityType.ListeningTo);

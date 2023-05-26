@@ -439,7 +439,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.criticalflaw.ca/FlawBOT/modules/bot.
+        ///   Looks up a localized string similar to https://criticalflaw.ca/FlawBOT/modules/bot.
         /// </summary>
         internal static string URL_BOT_Docs {
             get {

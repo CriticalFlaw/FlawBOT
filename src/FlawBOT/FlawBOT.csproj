@@ -64,7 +64,7 @@
 		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.1" />
 		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.4.1" />
 		<PackageReference Include="Genbox.Wikipedia" Version="4.0.0" />
-		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.60.0.3043" />
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.60.0.3064" />
 		<PackageReference Include="Imgur.API" Version="4.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 		<PackageReference Include="OMDbSharp" Version="0.3.0" />
@@ -73,7 +73,7 @@
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 		<PackageReference Include="TeamworkTF.Sharp" Version="1.5.0" />
 		<PackageReference Include="TwitchLib.Api" Version="3.9.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.14" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.15" />
 	</ItemGroup>
 
 	<ItemGroup>

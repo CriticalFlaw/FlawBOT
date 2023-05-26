@@ -27,7 +27,6 @@ namespace FlawBOT.Services
                 if (result.Count < 5) return null;
                 var results = result.OrderBy(x => random.Next()).Take(5).ToList();
 
-
                 // TODO: Add pagination when supported for slash commands.
                 var output = new DiscordEmbedBuilder()
                     .WithFooter($"Search results for {query} on Reddit")

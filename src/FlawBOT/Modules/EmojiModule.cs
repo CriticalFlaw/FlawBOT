@@ -1,5 +1,4 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Exceptions;
 using DSharpPlus.SlashCommands;
@@ -7,13 +6,9 @@ using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
-using Microsoft.Extensions.Primitives;
-using System;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using TwitchLib.Api.Helix.Models.Chat.Emotes;
 
 namespace FlawBOT.Modules
 {

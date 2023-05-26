@@ -26,20 +26,22 @@ namespace FlawBOT.Modules
         //    await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         //}
 
-        //[SlashCommand("ban", "Ban a server user.")]
-        //[SlashRequirePermissions(Permissions.BanMembers)]
-        //public async Task Ban(InteractionContext ctx, [Option("member", "Server user to ban.")] DiscordMember member, [Option("reason", "Reason for the ban.")] string reason = null)
-        //{
-        //    if (ctx.Member.Id == member.Id)
-        //    {
-        //        await ctx.CreateResponseAsync("You cannot ban yourself.").ConfigureAwait(false);
-        //        return;
-        //    }
+        [SlashCommand("ban", "Ban a server user.")]
+        [SlashRequirePermissions(Permissions.BanMembers)]
+        public async Task BanUser(InteractionContext ctx,
+            [Option("user", "Server user to ban.")] DiscordUser user,
+            [Choice("None", 0)][Choice("1 Day", 1)][Choice("1 Week", 7)] [Option("deletedays", "Number of days of message history to delete")] long deleteDays = 0,
+            [Option("reason", "Reason for the ban.")] string reason = null)
+        {
+            if (ctx.Member.Id == user.Id)
+            {
+                await ctx.CreateResponseAsync("You cannot ban yourself.").ConfigureAwait(false);
+                return;
+            }
 
-        //    await ctx.Guild.BanMemberAsync(member, 7, reason).ConfigureAwait(false);
-        //    await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-        //    await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Ban, member, reason ?? "No reason provided.").ConfigureAwait(false);
-        //}
+            await ctx.Guild.BanMemberAsync(user.Id, (int)deleteDays, reason).ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{user.Username} has been banned.").ConfigureAwait(false);
+        }
 
         //[SlashCommand("deafen", "Deafen a server user.")]
         //[SlashRequirePermissions(Permissions.DeafenMembers)]
@@ -69,8 +71,8 @@ namespace FlawBOT.Modules
         //        .AddField("Registered on", member.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
         //        .AddField("Joined on", member.JoinedAt.DateTime.ToString(CultureInfo.InvariantCulture), true)
         //        .AddField("Nickname", member.Nickname ?? "None", true)
-        //        .AddField("Muted?", member.IsMuted ? "Yes" : "No", true)
-        //        .AddField("Deafened?", member.IsDeafened ? "Yes" : "No", true)
+        //        .AddField("Muted?", member.IsMuted ? ":heavy_check_mark:" : ":x:", true)
+        //        .AddField("Deafened?", member.IsDeafened ? ":heavy_check_mark:" : ":x:", true)
         //        .WithThumbnail(member.AvatarUrl)
         //        .WithFooter($"{ctx.Guild.Name} / #{ctx.Channel.Name} / {DateTime.Now}")
         //        .WithColor(member.Color);
@@ -78,7 +80,7 @@ namespace FlawBOT.Modules
         //        output.Title += " __[BOT]__ ";
         //    if (member.IsOwner)
         //        output.Title += " __[OWNER]__ ";
-        //    output.AddField("Verified?", member.Verified == true ? "Yes" : "No", true);
+        //    output.AddField("Verified?", member.Verified == true ? ":heavy_check_mark:" : ":x:", true);
         //    foreach (var role in member.Roles)
         //        roles.Append($"[`{role.Name}`] ");
         //    if (roles.Length > 0)

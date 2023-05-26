@@ -1,12 +1,10 @@
 ﻿using DSharpPlus;
-using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using System;
 using System.Threading.Tasks;
-using TwitchLib.Api.Helix;
 
 namespace FlawBOT.Modules
 {
