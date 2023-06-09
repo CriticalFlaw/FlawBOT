@@ -13,7 +13,7 @@
     <br />
     <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest">Download</a>
     ·
-    <a href="https://www.flawbot.criticalflaw.ca/">Documentation</a>
+    <a href="https://criticalflaw.ca/FlawBOT/">Documentation</a>
     ·
     <a href="https://github.com/DSharpPlus/DSharpPlus">DSharpPlus</a>
     ·
