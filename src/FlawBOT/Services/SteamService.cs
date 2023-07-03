@@ -32,7 +32,7 @@ namespace FlawBOT.Services
                     .WithTitle(results.Name)
                     .WithDescription(Regex.Replace(results.DetailedDescription.Length <= 500
                         ? results.DetailedDescription
-                        : results.DetailedDescription.Substring(0, 250) + "...", "<[^>]*>", "") ?? "Unknown")
+                        : results.DetailedDescription[..250] + "...", "<[^>]*>", "") ?? "Unknown")
                     .AddField("Release Date", results.ReleaseDate.Date ?? "Unknown", true)
                     .AddField("Developers", results.Developers.FirstOrDefault() ?? "Unknown", true)
                     .AddField("Publisher", results.Publishers.FirstOrDefault() ?? "Unknown", true)
