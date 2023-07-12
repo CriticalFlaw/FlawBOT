@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [SlashCommandGroup("music", "Slash command group for modal emoji commands.")]
+    [SlashCommandGroup("music", "Slash command group for music commands.")]
     public class MusicModule : ApplicationCommandModule
     {
         public MusicModule(MusicService service)

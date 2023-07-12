@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
+    [SlashCommandGroup("tf2", "Slash command group for Team Fortress 2 commands.")]
     public class TeamFortressModule : ApplicationCommandModule
     {
-        [SlashCommand("tf2_item", "Retrieve an item from the latest TF2 item schema.")]
+        [SlashCommand("item", "Returns an item from the latest TF2 item schema.")]
         public async Task Tf2Schema(InteractionContext ctx, [Option("query", "Item to find in the TF2 schema")] string query = "The Scattergun")
         {
             var output = TeamFortressService.GetSchemaItem(query);
@@ -21,7 +22,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        [SlashCommand("tf2_map", "Retrieve map information from teamwork.tf")]
+        [SlashCommand("map", "Returns map information from teamwork.tf")]
         public async Task Tf2Map(InteractionContext ctx, [Option("query", "Normalized map name, like pl_upward")] string query)
         {
             var output = await TeamFortressService.GetMapStatsAsync(Program.Settings.Tokens.TeamworkToken, query.ToLowerInvariant()).ConfigureAwait(false);
@@ -33,7 +34,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        [SlashCommand("tf2_news", "Retrieve the latest news article from teamwork.tf")]
+        [SlashCommand("news", "Returns the latest news article from teamwork.tf")]
         public async Task Tf2News(InteractionContext ctx, [Option("query", "Page number from which to retrieve the news")] double query = 0)
         {
             var output = await TeamFortressService.GetNewsArticlesAsync(Program.Settings.Tokens.TeamworkToken, (int)query).ConfigureAwait(false);
@@ -45,7 +46,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        [SlashCommand("tf2_creator", "Retrieve a community creator profile from teamwork.tf")]
+        [SlashCommand("creator", "Returns a community creator profile from teamwork.tf")]
         public async Task Tf2Creator(InteractionContext ctx, [Option("query", "Name of the community creator to find.")] string query)
         {
             var steamId = SteamService.GetSteamUserId(query).Result;
@@ -64,7 +65,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        [SlashCommand("tf2_server", "Retrieve a list of servers with given game-mode")]
+        [SlashCommand("server", "Returns a list of servers with given game-mode")]
         public async Task Tf2Server(InteractionContext ctx, [Option("query", "Name of the game-mode, like payload.")] string query)
         {
             var output = await TeamFortressService.GetServersByGameModeAsync(Program.Settings.Tokens.TeamworkToken, query.Trim().Replace(' ', '-')).ConfigureAwait(false);
@@ -76,7 +77,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        [SlashCommand("tf2_server_list", "Retrieve a curated list of servers.")]
+        [SlashCommand("server_list", "Returns a curated list of servers.")]
         public async Task Tf2ServerList(InteractionContext ctx)
         {
             var output = await TeamFortressService.GetCustomServerListsAsync(Program.Settings.Tokens.TeamworkToken).ConfigureAwait(false);
@@ -88,7 +89,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync("Community-Curated Server Lists from teamwork.tf", output).ConfigureAwait(false);
         }
 
-        [SlashCommand("tf2_search_search", "Retrieve a game server with given ip address.")]
+        [SlashCommand("search_search", "Returns a game server with given ip address.")]
         public async Task Tf2ServerSearch(InteractionContext ctx, [Option("query", "Game server IP address, like 164.132.233.16")] string ip)
         {
             if (string.IsNullOrWhiteSpace(ip) || !IPAddress.TryParse(ip, out var address))
