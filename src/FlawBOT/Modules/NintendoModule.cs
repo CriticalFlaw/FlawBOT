@@ -8,10 +8,7 @@ namespace FlawBOT.Modules
 {
     public class NintendoModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns information about an Amiibo figurine.
-        /// </summary>
-        [SlashCommand("amiibo", "Returns information about an Amiibo figurine.")]
+        [SlashCommand("amiibo", "Returns information about an Amiibo figurine or card.")]
         public async Task GetAmiiboInfo(InteractionContext ctx, [Option("query", "Name of an Amiibo figurine.")] string query)
         {
             var output = await NintendoService.GetAmiiboInfoAsync(query).ConfigureAwait(false);
@@ -23,9 +20,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Returns a Pokémon card.
-        /// </summary>
         [SlashCommand("pokemon", "Returns a Pokémon card.")]
         public async Task GetPokemonCard(InteractionContext ctx, [Option("query", "Name of a Pokémon.")] string query = "")
         {

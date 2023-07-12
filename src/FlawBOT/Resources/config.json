@@ -3,7 +3,7 @@
   "Prefix": ".",
   "ShardCount": 1,
   "Lavalink": {
-    "Enabled": true,
+    "Enabled": false,
     "Address": "127.0.0.1",
     "Port": 2333,
     "Password": "youshallnotpass"
@@ -12,6 +12,7 @@
     "Discord": null,
     "Steam": null,
     "Imgur": null,
+    "Pokemon": null,
     "OMDB": null,
     "Twitch": null,
     "TwitchAccess": null,

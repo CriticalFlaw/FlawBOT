@@ -8,9 +8,6 @@ namespace FlawBOT.Modules
 {
     public class NewsModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns articles from NewsAPI.
-        /// </summary>
         [SlashCommand("news", "Returns articles from NewsAPI.")]
         public async Task GetNewsArticles(InteractionContext ctx, [Option("query", "Topic to search on NewsAPI.org.")] string query)
         {

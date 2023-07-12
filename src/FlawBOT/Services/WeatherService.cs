@@ -20,11 +20,11 @@ namespace FlawBOT.Services
                 var results = JsonConvert.DeserializeObject<WeatherData>(response);
 
                 var output = new DiscordEmbedBuilder()
-                    .WithDescription("Weather in " + results.Location.Name + ", " + results.Location.Country)
-                    .AddField(":partly_sunny: Currently", results.Current.Descriptions.FirstOrDefault(), true)
+                    .WithTitle(results.Location.Name + ", " + results.Location.Country)
+                    .WithDescription($"Currently: {results.Current.Descriptions.FirstOrDefault()}")
                     .AddField(":thermometer: Temperature", $"{results.Current.Temperature:F1}°C / {CelsiusToFahrenheit(results.Current.Temperature):F1}°F", true)
                     .AddField(":droplet: Humidity", $"{results.Current.Humidity}%", true)
-                    .AddField(":clock1: Local Time", results.Location.LocalTime, true)
+                    .WithFooter($"Local Time: {results.Location.LocalTime}")
                     .WithColor(Program.Settings.DefaultColor);
                 return output.Build();
             }

@@ -15,8 +15,12 @@ namespace FlawBOT.Services
             {
                 if (string.IsNullOrWhiteSpace(query)) return null;
                 using var client = new WikipediaClient();
-                var response = await Http.GetStringAsync(query).ConfigureAwait(false);
-                var results = await client.SearchAsync(query);
+                var request = new WikiSearchRequest(query)
+                {
+                    Limit = 5
+                };
+
+                var results = await client.SearchAsync(request);
                 if (results.QueryResult.SearchResults.Count < 5) return null;
 
                 // TODO: Add pagination when supported for slash commands.

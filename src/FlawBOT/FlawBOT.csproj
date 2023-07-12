@@ -64,12 +64,12 @@
 		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.2" />
 		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.4.2" />
 		<PackageReference Include="Genbox.Wikipedia" Version="4.0.0" />
-		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.61.0.3064" />
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.61.0.3106" />
 		<PackageReference Include="Imgur.API" Version="4.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 		<PackageReference Include="OMDbSharp" Version="0.3.0" />
 		<PackageReference Include="PokemonTcgSdk" Version="2.4.1" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.116" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 		<PackageReference Include="TeamworkTF.Sharp" Version="1.5.0" />
 		<PackageReference Include="TwitchLib.Api" Version="3.9.0" />

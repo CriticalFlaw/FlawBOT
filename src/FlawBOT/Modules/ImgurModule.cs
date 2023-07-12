@@ -8,10 +8,7 @@ namespace FlawBOT.Modules
 {
     public class ImgurModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns an image or album from Imgur.
-        /// </summary>
-        [SlashCommand("imgur", "Returns an image or album from Imgur.")]
+        [SlashCommand("imgur", "Returns a queried image from Imgur.")]
         public async Task GetImgurResult(InteractionContext ctx, [Option("query", "Search query to pass to Imgur.")] string query)
         {
             var output = ImgurService.GetImgurResultAsync(Program.Settings.Tokens.ImgurToken, query).Result;
