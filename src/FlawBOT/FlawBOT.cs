@@ -90,7 +90,6 @@ namespace FlawBOT
             Slash.RegisterCommands<BotModule>();
             Slash.RegisterCommands<ChannelModule>();
             Slash.RegisterCommands<DictionaryModule>();
-            Slash.RegisterCommands<EmojiModule>();
             Slash.RegisterCommands<ImgurModule>();
             Slash.RegisterCommands<MiscModule>();
             Slash.RegisterCommands<MusicModule>();
