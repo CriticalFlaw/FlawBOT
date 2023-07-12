@@ -1,5 +1,4 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
@@ -13,20 +12,20 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [SlashCommandGroup("user", "Slash command group for modal user commands.")]
+    [SlashCommandGroup("user", "Slash command group for user commands.")]
     public class UserModule : ApplicationCommandModule
     {
-        [SlashCommand("avatar", "Retrieve server user's profile picture.")]
-        public async Task GetAvatar(InteractionContext ctx, [Option("member", "Server user whose profile picture to retrieve.")] DiscordMember member)
+        [SlashCommand("profile-pic", "Returns server user's profile picture.")]
+        public async Task GetAvatar(InteractionContext ctx, [Option("member", "Server user whose profile picture to retrieve.")] DiscordUser user)
         {
-            member ??= ctx.Member;
+            user ??= ctx.User;
             var output = new DiscordEmbedBuilder()
-                .WithImageUrl(member.AvatarUrl)
+                .WithImageUrl(user.AvatarUrl)
                 .WithColor(DiscordColor.Lilac);
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        [SlashCommand("ban", "Ban a server user.")]
+        [SlashCommand("ban", "Bans a server user.")]
         [SlashRequirePermissions(Permissions.BanMembers)]
         public async Task BanUser(InteractionContext ctx,
             [Option("user", "Server user to ban.")] DiscordUser user,
@@ -40,10 +39,10 @@ namespace FlawBOT.Modules
             }
 
             await ctx.Guild.BanMemberAsync(user.Id, (int)deleteDays, reason).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"{user.Username} has been banned.").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{user.Username} has been **banned** from the server.").ConfigureAwait(false);
         }
 
-        [SlashCommand("deafen", "Deafen a server user.")]
+        [SlashCommand("deafen", "Deafens a server user.")]
         [SlashRequirePermissions(Permissions.DeafenMembers)]
         public async Task DeafenUser(InteractionContext ctx, [Option("member", "Server user to deafen.")] DiscordMember member, [Option("reason", "Reason for the deafen.")] string reason = null)
         {
@@ -54,11 +53,10 @@ namespace FlawBOT.Modules
             }
 
             await member.SetDeafAsync(true, reason).ConfigureAwait(false);
-            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Deafen, member, reason ?? "No reason provided.").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{member} has been **deafened**.").ConfigureAwait(false);
         }
 
-        [SlashCommand("info", "Retrieve server user's information.")]
+        [SlashCommand("info", "Returns server user's information.")]
         public async Task GetUser(InteractionContext ctx, [Option("member", "Server user whose information to retrieve.")] DiscordMember member)
         {
             member ??= ctx.Member;
@@ -91,7 +89,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        [SlashCommand("kick", "Kick a user from the server.")]
+        [SlashCommand("kick", "Kicks a user from the server.")]
         [SlashRequirePermissions(Permissions.KickMembers)]
         public async Task Kick(InteractionContext ctx, [Option("member", "Server user to kick.")] DiscordMember member, [Option("reason", "Reason for the kick.")] string reason = null)
         {
@@ -102,11 +100,10 @@ namespace FlawBOT.Modules
             }
 
             await member.RemoveAsync(reason).ConfigureAwait(false);
-            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Kick, member, reason ?? "No reason provided.").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{member} has been **kicked** from the server.").ConfigureAwait(false);
         }
 
-        [SlashCommand("mute", "Mute a server user.")]
+        [SlashCommand("mute", "Mutes a server user.")]
         [SlashRequirePermissions(Permissions.MuteMembers)]
         public async Task Mute(InteractionContext ctx, [Option("member", "Server user to mute.")] DiscordMember member, [Option("reason", "Reason for the mute.")] string reason = null)
         {
@@ -117,11 +114,10 @@ namespace FlawBOT.Modules
             }
 
             await member.SetMuteAsync(true, reason).ConfigureAwait(false);
-            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Mute, member, reason ?? "No reason provided.").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{member} has been **muted**.").ConfigureAwait(false);
         }
 
-        [SlashCommand("nickname", "Change server user's nickname.")]
+        [SlashCommand("nickname", "Changes server user's nickname.")]
         [RequireUserPermissions(Permissions.ChangeNickname)]
         public async Task SetUserName(InteractionContext ctx, [Option("member", "Server user name.")] DiscordMember member, [Option("name", "New nickname for the name.")] string name = null)
         {
@@ -134,7 +130,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(response).ConfigureAwait(false);
         }
 
-        [SlashCommand("perms", "Retrieve server user's permissions.")]
+        [SlashCommand("perms", "Returns server user's permissions.")]
         public async Task GetPermissionsList(InteractionContext ctx, [Option("member", "Server user name.")] DiscordMember member = null, [Option("channel", "Server channel.")] DiscordChannel channel = null)
         {
             member ??= ctx.Member;
@@ -149,14 +145,13 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        [SlashCommand("unban", "Unban a server user.")]
+        [SlashCommand("unban", "Unbans a user from the server.")]
         [SlashRequirePermissions(Permissions.BanMembers)]
         public async Task Unban(InteractionContext ctx, [Option("userId", "Discord user ID to unban from the server.")] ulong userId, [Option("reason", "Reason for the unban.")] string reason = null)
         {
             var member = await ctx.Client.GetUserAsync(userId).ConfigureAwait(false);
             await ctx.Guild.UnbanMemberAsync(member, reason ?? "No reason provided.").ConfigureAwait(false);
-            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"Unbanned Discord User #{member} from the server.").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{member} has been **unbanned** from the server.").ConfigureAwait(false);
         }
 
         [SlashCommand("undeafen", "Undeafen a server user.")]
@@ -164,23 +159,18 @@ namespace FlawBOT.Modules
         public async Task Undeafen(InteractionContext ctx, [Option("member", "Server user to undeafen.")] DiscordMember member, [Option("reason", "Reason for the deafen.")] string reason = null)
         {
             await member.SetDeafAsync(false, reason).ConfigureAwait(false);
-            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Undeafen, member, reason ?? "No reason provided").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{member} has been **undeafened**.").ConfigureAwait(false);
         }
 
-        [SlashCommand("unmute", "Unmute a server user.")]
+        [SlashCommand("unmute", "Unmutes a server user.")]
         [SlashRequirePermissions(Permissions.MuteMembers)]
         public async Task Unmute(InteractionContext ctx, [Option("member", "Server user to unmute.")] DiscordMember member, [Option("reason", "Reason for the deafen.")] string reason = null)
         {
             await member.SetMuteAsync(false, reason).ConfigureAwait(false);
-            await BotServices.RemoveMessage(ctx.Message).ConfigureAwait(false);
-            await BotServices.SendUserStateChangeAsync(ctx, UserStateChange.Unmute, member, reason ?? "No reason provided").ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{member} has been **unmuted**.").ConfigureAwait(false);
         }
 
-        / <summary>
-        / Direct message user with a warning.
-        / </summary>
-        [SlashCommand("warn", "Direct message user with a warning.")]
+        [SlashCommand("warn", "Direct messages user with a warning.")]
         public async Task Warn(InteractionContext ctx, [Option("member", "Server user to warn.")] DiscordMember member, [Option("reason", "Warning message.")] string reason = null)
         {
             var output = new DiscordEmbedBuilder()
