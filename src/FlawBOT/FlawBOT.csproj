@@ -6,11 +6,11 @@
 		<ApplicationIcon>Resources/favicon.ico</ApplicationIcon>
 		<StartupObject>FlawBOT.Program</StartupObject>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<Version>3.1.0</Version>
+		<Version>4.0</Version>
 		<Win32Resource />
 		<LangVersion>9.0</LangVersion>
-		<AssemblyVersion>3.1.0.0</AssemblyVersion>
-		<FileVersion>3.1.0.0</FileVersion>
+		<AssemblyVersion>4.0.0.0</AssemblyVersion>
+		<FileVersion>4.0.0.0</FileVersion>
 		<AssemblyName>FlawBOT</AssemblyName>
 		<RootNamespace>FlawBOT</RootNamespace>
 		<PackageTags />
