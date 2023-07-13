@@ -8,9 +8,6 @@ namespace FlawBOT.Modules
 {
     public class WikipediaModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns articles found on Wikipedia.
-        /// </summary>
         [SlashCommand("wikipedia", "Returns articles found on Wikipedia.")]
         public async Task GetWikipediaArticles(InteractionContext ctx, [Option("query", "Articles to find on Wikipedia.")] string query)
         {

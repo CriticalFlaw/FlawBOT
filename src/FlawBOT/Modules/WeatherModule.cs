@@ -8,9 +8,6 @@ namespace FlawBOT.Modules
 {
     public class WeatherModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns weather information for a given location.
-        /// </summary>
         [SlashCommand("weather", "Returns weather information for a given location.")]
         public async Task Weather(InteractionContext ctx, [Option("query", "Location to get time and weather data from.")] string query)
         {

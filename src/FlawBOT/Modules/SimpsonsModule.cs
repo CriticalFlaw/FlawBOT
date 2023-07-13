@@ -9,19 +9,12 @@ namespace FlawBOT.Modules
 {
     public class SimpsonsModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns a random Simpsons episode GIF and info.
-        /// </summary>
-        [SlashCommand("simpsons", "Returns a random Simpsons episode GIF and info.")]
+        [SlashCommand("simpsons", "Returns a random Simpsons episode GIF.")]
         public Task Simpsons(InteractionContext ctx)
         {
             return GetEpisodePost(ctx, SiteRoot.Frinkiac);
         }
-
-        /// <summary>
-        /// Returns a random Futurama episode GIF and info.
-        /// </summary>
-        [SlashCommand("futurama", "Returns a random Futurama episode GIF and info.")]
+        [SlashCommand("futurama", "Returns a random Futurama episode GIF.")]
         public Task Futurama(InteractionContext ctx)
         {
             return GetEpisodePost(ctx, SiteRoot.Morbotron);

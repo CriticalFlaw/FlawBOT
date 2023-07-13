@@ -8,9 +8,6 @@ namespace FlawBOT.Modules
 {
     public class DictionaryModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Returns a definition for a word of phrase from Urban Dictionary.
-        /// </summary>
         [SlashCommand("define", "Returns a definition for a word of phrase from Urban Dictionary.")]
         public async Task GetDictionaryDefinition(InteractionContext ctx, [Option("query", "Word or phrase to search on Urban Dictionary.")] string query = "")
         {

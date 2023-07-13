@@ -6,11 +6,11 @@
 		<ApplicationIcon>Resources/favicon.ico</ApplicationIcon>
 		<StartupObject>FlawBOT.Program</StartupObject>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<Version>3.1.0</Version>
+		<Version>4.0</Version>
 		<Win32Resource />
 		<LangVersion>9.0</LangVersion>
-		<AssemblyVersion>3.1.0.0</AssemblyVersion>
-		<FileVersion>3.1.0.0</FileVersion>
+		<AssemblyVersion>4.0.0.0</AssemblyVersion>
+		<FileVersion>4.0.0.0</FileVersion>
 		<AssemblyName>FlawBOT</AssemblyName>
 		<RootNamespace>FlawBOT</RootNamespace>
 		<PackageTags />
@@ -53,27 +53,27 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="DSharpPlus" Version="4.4.1">
+		<PackageReference Include="DSharpPlus" Version="4.4.2">
 		  <TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
-		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.4.1" />
-		<PackageReference Include="DSharpPlus.Interactivity" Version="4.4.1" />
-		<PackageReference Include="DSharpPlus.Lavalink" Version="4.4.1">
+		<PackageReference Include="DSharpPlus.CommandsNext" Version="4.4.2" />
+		<PackageReference Include="DSharpPlus.Interactivity" Version="4.4.2" />
+		<PackageReference Include="DSharpPlus.Lavalink" Version="4.4.2">
 		  <TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>
-		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.1" />
-		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.4.1" />
+		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.2" />
+		<PackageReference Include="DSharpPlus.VoiceNext" Version="4.4.2" />
 		<PackageReference Include="Genbox.Wikipedia" Version="4.0.0" />
-		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.60.0.3064" />
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.61.0.3106" />
 		<PackageReference Include="Imgur.API" Version="4.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
 		<PackageReference Include="OMDbSharp" Version="0.3.0" />
 		<PackageReference Include="PokemonTcgSdk" Version="2.4.1" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.111" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
 		<PackageReference Include="TeamworkTF.Sharp" Version="1.5.0" />
 		<PackageReference Include="TwitchLib.Api" Version="3.9.0" />
-		<PackageReference Include="YoutubeExplode" Version="6.2.15" />
+		<PackageReference Include="YoutubeExplode" Version="6.2.16" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -16,31 +16,7 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("role", "Slash command group for role commands.")]
     public class RoleModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Changes server role color.
-        /// </summary>
-        //[SlashCommand("color", "Changes server role color.")]
-        //[SlashRequirePermissions(Permissions.ManageRoles)]
-        //public async Task SetRoleColor(InteractionContext ctx, [Option("color", "Server role's new HEX color code.")] DiscordColor color, [Option("role", "Server role to recolor.")] DiscordRole role)
-        //{
-        //    var regex = new Regex("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", RegexOptions.Compiled).Match(color.ToString());
-        //    if (!regex.Success)
-        //    {
-        //        await BotServices.SendResponseAsync(ctx, "Invalid color code. Please enter a HEX color code like #E7B53B", ResponseType.Warning).ConfigureAwait(false);
-        //        return;
-        //    }
-
-        //    await role.ModifyAsync(color: color).ConfigureAwait(false);
-        //    var output = new DiscordEmbedBuilder()
-        //        .WithTitle("Successfully set the color for the role " + Formatter.Bold(role.Name) + " to " + Formatter.InlineCode(role.Color.ToString()))
-        //        .WithColor(color);
-        //    await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
-        //}
-
-        /// <summary>
-        /// Creates a new server role.
-        /// </summary>
-        [SlashCommand("create", "Creates a mew server role.")]
+        [SlashCommand("create", "Creates a new server role.")]
         [SlashRequirePermissions(Permissions.ManageRoles)]
         public async Task CreateRole(InteractionContext ctx, [Option("role", "New role name.")] string role = "")
         {
@@ -54,12 +30,9 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync("Successfully created the server role " + Formatter.Bold(role)).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Deletes server role.
-        /// </summary>
-        [SlashCommand("delete", "Deletes server role.")]
+        [SlashCommand("delete", "Deletes a server role.")]
         [SlashRequirePermissions(Permissions.ManageRoles)]
-        public async Task DeleteRole(InteractionContext ctx, [Option("role", "Server role to remove.")] DiscordRole role = null)
+        public async Task DeleteRole(InteractionContext ctx, [Option("role", "Server role to remove.")] DiscordRole role)
         {
             if (role is null)
             {
@@ -71,11 +44,8 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync("Successfully removed the server role " + Formatter.Bold(role.Name)).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Returns server role information.
-        /// </summary>
         [SlashCommand("info", "Returns server role information.")]
-        public async Task GetRoleInfo(InteractionContext ctx, [Option("role", "Server role name.")] DiscordRole role = null)
+        public async Task GetRoleInfo(InteractionContext ctx, [Option("role", "Server role name.")] DiscordRole role)
         {
             if (role is null)
             {
@@ -96,11 +66,8 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Returns list of users in a given role.
-        /// </summary>
         [SlashCommand("inrole", "Returns list of users in a given role.")]
-        public async Task GetRoleUsers(InteractionContext ctx, [Option("role", "Server role name.")] DiscordRole role = null)
+        public async Task GetRoleUsers(InteractionContext ctx, [Option("role", "Server role name.")] DiscordRole role)
         {
             if (role is null)
             {
@@ -127,9 +94,6 @@ namespace FlawBOT.Modules
                 await BotServices.SendResponseAsync(ctx, Formatter.Bold(role.Name) + " has " + Formatter.Bold(userCount.ToString()) + " member(s): " + usersList).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Toggles whether the role can be mentioned by others.
-        /// </summary>
         [SlashCommand("mention", "Toggles whether the role can be mentioned by others.")]
         [SlashRequirePermissions(Permissions.ManageRoles)]
         public async Task SetRoleMention(InteractionContext ctx, [Option("role", "Server role name.")] DiscordRole role)
@@ -147,9 +111,6 @@ namespace FlawBOT.Modules
             }
         }
 
-        /// <summary>
-        /// Revokes server role from a user.
-        /// </summary>
         //[SlashCommand("revoke", "Revokes server role from the user.")]
         //[SlashRequirePermissions(Permissions.ManageRoles)]
         //public async Task RevokeUserRole(InteractionContext ctx, [Option("member", "Server user to get revoked.")] DiscordMember member, [Option("role", "Server role name.")] DiscordRole role)
@@ -160,9 +121,6 @@ namespace FlawBOT.Modules
         //    await ctx.CreateResponseAsync(Formatter.Bold(member.DisplayName) + " has been removed from the role " + Formatter.Bold(role.Name)).ConfigureAwait(false);
         //}
 
-        /// <summary>
-        /// Revokes all server roles from a user.
-        /// </summary>
         //[SlashCommand("revokeall", "Revokes all server roles from a user.")]
         //[SlashRequirePermissions(Permissions.ManageRoles)]
         //public async Task RevokeUserRoles(InteractionContext ctx, [Option("member", "Server user name.")] DiscordMember member)
@@ -183,9 +141,6 @@ namespace FlawBOT.Modules
         //    await ctx.CreateResponseAsync("Removed all roles from " + Formatter.Bold(member.DisplayName)).ConfigureAwait(false);
         //}
 
-        /// <summary>
-        /// Assigns a server role to a user.
-        /// </summary>
         //[SlashCommand("setrole", "Assigns a server role to a user.")]
         //[SlashRequirePermissions(Permissions.ManageRoles)]
         //public async Task SetUserRole(InteractionContext ctx, [Option("member", "Server user name.")] DiscordMember member, [Option("role", "Server role name.")] DiscordRole role)
@@ -195,9 +150,6 @@ namespace FlawBOT.Modules
         //    await ctx.CreateResponseAsync(member.DisplayName + " been granted the role " + Formatter.Bold(role.Name)).ConfigureAwait(false);
         //}
 
-        /// <summary>
-        /// Toggles whether the role can be seen by others.
-        /// </summary>
         //[SlashCommand("show", "Toggles whether the role can be seen by others.")]
         //[SlashRequirePermissions(Permissions.ManageRoles)]
         //public async Task SetRoleVisibility(InteractionContext ctx, [Option("role", "Server role name.")] DiscordRole role)

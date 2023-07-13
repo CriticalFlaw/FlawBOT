@@ -16,9 +16,6 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("channel", "Slash command group for channel commands.")]
     public class ChannelModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Creates a new channel category.
-        /// </summary>
         [SlashCommand("new-category", "Creates a new channel category.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task CreateCategory(InteractionContext ctx, [Option("name", "New category name.")] string name)
@@ -32,9 +29,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"Created channel category {Formatter.Bold(name)}.").ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Creates a new text channel.
-        /// </summary>
         [SlashCommand("new-text", "Creates a new text channel.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task CreateText(InteractionContext ctx, [Option("name", "New text channel name.")] string name)
@@ -55,9 +49,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"Created text channel #{Formatter.Bold(channel.Name)}.").ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Creates a new voice channel.
-        /// </summary>
         [SlashCommand("new-voice", "Creates a new voice channel.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task CreateVoice(InteractionContext ctx, [Option("name", "New voice channel name.")] string name)
@@ -78,10 +69,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"Created voice channel #{Formatter.Bold(channel.Name)}.").ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Deletes server channel.
-        /// </summary>
-        [SlashCommand("delete", "Delete server channel.")]
+        [SlashCommand("delete", "Deletes a server channel.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task DeleteChannel(InteractionContext ctx, [Option("channel", "Channel to delete.")] DiscordChannel channel)
         {
@@ -89,9 +77,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"Deleted channel #{Formatter.Bold(channel.Name)}.").ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Returns information about a server channel.
-        /// </summary>
         [SlashCommand("info", "Returns information about a server channel.")]
         public Task GetChannelInfo(InteractionContext ctx, [Option("channel", "Channel to retrieve information from.")] DiscordChannel channel)
         {
@@ -108,7 +93,6 @@ namespace FlawBOT.Modules
                 .WithColor(Program.Settings.DefaultColor);
 
             // Add topic if it exists and target is not a category.
-            // BUG - DSharpPlus returns null even though a channel has a topic.
             if (!channel.IsCategory && channel.Topic is not null)
                 output.WithDescription($"Topic: {channel.Topic}");
 
@@ -131,10 +115,7 @@ namespace FlawBOT.Modules
             return ctx.CreateResponseAsync(output.Build());
         }
 
-        /// <summary>
-        /// Removes messages from current channel.
-        /// </summary>
-        [SlashCommand("clean", "Removes messages from current channel.")]
+        [SlashCommand("clean", "Removes messages from the current server channel.")]
         [SlashRequirePermissions(Permissions.ManageMessages)]
         public async Task DeleteChannelMessages(InteractionContext ctx, [Option("count", "Number of messages to remove from the current channel.")] double count)
         {
@@ -143,10 +124,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"Removed {Formatter.Bold(messages.Count.ToString())} message(s) removed from #{ctx.Channel.Name}.").ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Rename a server channel.
-        /// </summary>
-        [SlashCommand("rename", "Rename a server channel.")]
+        [SlashCommand("rename", "Changes the server channel name.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task SetChannelName(InteractionContext ctx, [Option("channel", "Channel to rename.")] DiscordChannel channel, [Option("name", "New channel name.")] string name)
         {
@@ -161,9 +139,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"Renamed channel #{Formatter.Bold(oldName)} to #{Formatter.Bold(name)}.").ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Changes the server channel topic.
-        /// </summary>
         [SlashCommand("topic", "Changes the server channel topic.")]
         [SlashRequirePermissions(Permissions.ManageChannels)]
         public async Task SetChannelTopic(InteractionContext ctx, [Option("topic", "New channel topic.")] string topic = "")

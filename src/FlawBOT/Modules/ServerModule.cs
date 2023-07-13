@@ -12,13 +12,10 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
-    [SlashCommandGroup("server", "Slash command group for modal server commands.")]
+    [SlashCommandGroup("server", "Slash command group for server commands.")]
     public class ServerModule : ApplicationCommandModule
     {
-        /// <summary>
-        /// Changes server avatar.
-        /// </summary>
-        [SlashCommand("avatar", "Change the server avatar.")]
+        [SlashCommand("avatar", "Changes the server avatar.")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerAvatar(InteractionContext ctx, [Option("query", "Image URL in JPG, PNG or IMG format.")] string query)
         {
@@ -34,9 +31,6 @@ namespace FlawBOT.Modules
             }
         }
 
-        /// <summary>
-        /// Returns server information.
-        /// </summary>
         [SlashCommand("info", "Returns server information.")]
         public async Task GetServerInfo(InteractionContext ctx)
         {
@@ -46,7 +40,6 @@ namespace FlawBOT.Modules
                 .WithDescription("ID: " + ctx.Guild.Id)
                 .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
                 .AddField("Member Count", ctx.Guild.MemberCount.ToString(), true)
-                .AddField("Region", ctx.Guild.VoiceRegion.Name.ToUpperInvariant(), true)
                 .AddField("Authentication", ctx.Guild.MfaLevel.ToString(), true)
                 .AddField("Content Filter", ctx.Guild.ExplicitContentFilter.ToString(), true)
                 .AddField("Verification", ctx.Guild.VerificationLevel.ToString(), true)
@@ -69,44 +62,13 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Returns server invite link.
-        /// </summary>
         [SlashCommand("invite", "Returns server invite link.")]
         public async Task GetServerInvite(InteractionContext ctx)
         {
             await ctx.CreateResponseAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ": https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Prunes inactive users from the server.
-        /// </summary>
-        //[SlashCommand("prune", "Prunes inactive users from the server.")]
-        //[SlashRequirePermissions(Permissions.DeafenMembers)]
-        //public async Task PruneUsers(InteractionContext ctx, [Option("days", "Number of days the user had to be inactive to get pruned.")] int days = 7)
-        //{
-        //    if (days < 1 || days > 30)
-        //        await BotServices.SendResponseAsync(ctx, "Number of days must be between 1 and 30", ResponseType.Warning).ConfigureAwait(false);
-
-        //    var count = await ctx.Guild.GetPruneCountAsync(days).ConfigureAwait(false);
-        //    if (count == 0)
-        //    {
-        //        await ctx.CreateResponseAsync("No inactive members found to prune").ConfigureAwait(false);
-        //        return;
-        //    }
-
-        //    var prompt = await ctx.CreateResponseAsync($"Pruning will remove {Formatter.Bold(count.ToString())} member(s).\nRespond with **yes** to continue.").ConfigureAwait(false);
-        //    var interactivity = await BotServices.GetUserInteractivity(ctx, ":heavy_check_mark:", 10).ConfigureAwait(false);
-        //    if (interactivity.Result is null) return;
-        //    await BotServices.RemoveMessage(interactivity.Result).ConfigureAwait(false);
-        //    await BotServices.RemoveMessage(prompt).ConfigureAwait(false);
-        //    await ctx.Guild.PruneAsync(days).ConfigureAwait(false);
-        //}
-
-        /// <summary>
-        /// Changes the name of the server.
-        /// </summary>
-        [SlashCommand("rename", "hanges the name of the server.")]
+        [SlashCommand("rename", "Changes the name of the server.")]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task SetServerName(InteractionContext ctx, [Option("name", "New server name.")] string name = "")
         {

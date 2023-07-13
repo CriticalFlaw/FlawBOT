@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
+    [SlashCommandGroup("steam", "Slash command group for Steam commands.")]
     public class SteamModule : ApplicationCommandModule
     {
-        [SlashCommand("steam_connect", "Format a game connection string into a link.")]
+        [SlashCommand("connect", "Formats a server connection string into a link.")]
         public async Task SteamConnect(InteractionContext ctx, [Option("link", "Connection string (ex. IP:PORT)")] string link)
         {
             var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
@@ -19,7 +20,7 @@ namespace FlawBOT.Modules
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP_GAME, ResponseType.Warning).ConfigureAwait(false);
         }
 
-        [SlashCommand("steam_game", "Retrieve information on a Steam game.")]
+        [SlashCommand("game", "Returns information on a Steam game.")]
         public async Task SteamGame(InteractionContext ctx, [Option("query", "Game to find on Steam.")] string query = "Team Fortress 2")
         {
             var output = await SteamService.GetSteamGame(query).ConfigureAwait(false);
@@ -31,7 +32,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
-        [SlashCommand("steam_user", "Retrieve information on a Steam user.")]
+        [SlashCommand("user", "Returns information on a Steam user.")]
         public async Task SteamUser(InteractionContext ctx, [Option("query", "User to find on Steam.")] string query)
         {
             var output = SteamService.GetSteamProfileAsync(Program.Settings.Tokens.SteamToken, query).Result;
