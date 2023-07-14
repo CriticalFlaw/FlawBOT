@@ -2,7 +2,7 @@
 title: How to Deploy FlawBOT
 ---
 
-1. [Clone][clone-link] or [Download][download-link] the source code.
+1. [Download][download-link] the latest FlawBOT source code.
 2. Open `FlawBOT\src\FlawBOT.sln` in [Visual Studio][vs-link].
 3. Modify the included **config.json** file with your [API tokens][tokens-link].
 4. Build the project.
@@ -31,7 +31,6 @@ dotnet FlawBOT.dll
 ```
 
 <!-- MARKDOWN LINKS -->
-[clone-link]: https://github.com/CriticalFlaw/FlawBOT.git
-[download-link]: https://github.com/CriticalFlaw/FlawBOT/archive/refs/heads/master.zip
+[download-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
 [vs-link]: https://visualstudio.microsoft.com/
 [tokens-link]: https://criticalflaw.ca/FlawBOT/tokens
