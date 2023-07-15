@@ -25,6 +25,14 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
+        [SlashCommand("leave", "Removes FlawBOT from the server.")]
+        [RequireUserPermissions(Permissions.Administrator)]
+        public async Task LeaveServer(InteractionContext ctx)
+        {
+            await BotServices.SendResponseAsync(ctx, $"Thank you for using {Program.Settings.Name}. Goodbye!").ConfigureAwait(false);
+            await ctx.Guild.LeaveAsync().ConfigureAwait(false);
+        }
+
         [SlashCommand("ping", "Pings the active FlawBOT instance.")]
         public async Task GetBotPing(InteractionContext ctx)
         {
@@ -62,6 +70,16 @@ namespace FlawBOT.Modules
         }
 
         [RequireOwner]
+        [SlashCommand("nickname", "Changes FlawBOT's server nickname.")]
+        public async Task SetBotUsername(InteractionContext ctx, [Option("nickname", "New nickname for FlawBOT.")] string nickname)
+        {
+            var oldName = ctx.Client.CurrentUser.Username;
+            var newName = string.IsNullOrWhiteSpace(nickname) ? Program.Settings.Name : nickname;
+            await ctx.Client.UpdateCurrentUserAsync(username: newName).ConfigureAwait(false);
+            await ctx.CreateResponseAsync($"{oldName}'s username has been changed to {Formatter.Bold(newName)}.").ConfigureAwait(false);
+        }
+
+        [RequireOwner]
         [SlashCommand("status", "Changes FlawBOT's status.")]
         public async Task SetBotStatus(InteractionContext ctx, [Choice("Online", "Online")][Choice("Idle", "Idle")][Choice("Invisible", "Invisible")][Choice("Do Not Disturb", "Do Not Disturb")][Option("status", "New FlawBOT status.")] string status)
         {
@@ -76,24 +94,6 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"{Program.Settings.Name} status has been changed to {status}.").ConfigureAwait(false);
         }
 
-        [RequireOwner]
-        [SlashCommand("nickname", "Changes FlawBOT's nickname.")]
-        public async Task SetBotUsername(InteractionContext ctx, [Option("nickname", "New nickname for FlawBOT.")] string nickname)
-        {
-            var oldName = ctx.Client.CurrentUser.Username;
-            var newName = string.IsNullOrWhiteSpace(nickname) ? Program.Settings.Name : nickname;
-            await ctx.Client.UpdateCurrentUserAsync(username: newName).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"{oldName}'s username has been changed to {Formatter.Bold(newName)}.").ConfigureAwait(false);
-        }
-
         #endregion
-
-        [SlashCommand("leave", "Removes FlawBOT from the server.")]
-        [RequireUserPermissions(Permissions.Administrator)]
-        public async Task LeaveServer(InteractionContext ctx)
-        {
-            await BotServices.SendResponseAsync(ctx, $"Thank you for using {Program.Settings.Name}. Goodbye!").ConfigureAwait(false);
-            await ctx.Guild.LeaveAsync().ConfigureAwait(false);
-        }
     }
 }

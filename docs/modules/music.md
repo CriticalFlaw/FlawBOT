@@ -1,41 +1,43 @@
-### play
-Plays YouTube audio from your current voice channel.
+Commands for playing audio in voice channels using [Lavalink](https://criticalflaw.ca/FlawBOT/lavalink). The prefix is `/music`.
+
+### info
+Returns the current audio track information.
 ```
-.play https://www.youtube.com/watch?v=4JkIs37a2JE
+/music info
 ```
 
 ### pause
-Pauses active audio playback.
+Pauses audio playback.
 ```
-.pause
+/music pause
+```
+
+### play
+Plays audio from a URL or search query.
+```
+/music play https://www.youtube.com/watch?v=4JkIs37a2JE
+```
+
+### restart
+Restarts audio playback.
+```
+/music replay
 ```
 
 ### resume
 Resumes audio playback.
 ```
-.resume
+/music resume
 ```
 
 ### stop
-Stops active audio playback and leaves the current voice channel.
+Stops audio playback and leave the voice channel.
 ```
-.stop
+/music stop
 ```
 
 ### volume
-Sets audio playback volume between 0 and 100.
+Changes audio playback volume between 0% and 100%.
 ```
-.volume 50
-```
-
-### restart
-Restarts the audio playback of the current track.
-```
-.replay
-```
-
-### nowplaying
-Returns information on the currently playing track.
-```
-.nowplaying
+/music volume 50
 ```

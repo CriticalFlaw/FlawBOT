@@ -16,18 +16,6 @@ namespace FlawBOT.Modules
             await BotServices.SendResponseAsync(ctx, $":8ball: {MiscService.GetRandomAnswer()}.").ConfigureAwait(false);
         }
 
-        [SlashCommand("coinflip", "Flips a coin.")]
-        public async Task GetCoinFlip(InteractionContext ctx)
-        {
-            await BotServices.SendResponseAsync(ctx, $":coin: {ctx.User.Username} flipped a coin and got {Formatter.Bold(Convert.ToBoolean(new Random().Next(0, 2)) ? "Heads" : "Tails")}.").ConfigureAwait(false);
-        }
-
-        [SlashCommand("diceroll", "Rolls a six-sided die.")]
-        public async Task GetRollDice(InteractionContext ctx)
-        {
-            await BotServices.SendResponseAsync(ctx, $":game_die: {ctx.User.Username} rolled a die and got {Formatter.Bold(new Random().Next(1, 7).ToString())}.").ConfigureAwait(false);
-        }
-
         [SlashCommand("cat", "Returns a random cat fact and image.")]
         public async Task GetCatImage(InteractionContext ctx)
         {
@@ -38,6 +26,18 @@ namespace FlawBOT.Modules
                 return;
             }
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+        }
+
+        [SlashCommand("coinflip", "Flips a coin.")]
+        public async Task GetCoinFlip(InteractionContext ctx)
+        {
+            await BotServices.SendResponseAsync(ctx, $":coin: {ctx.User.Username} flipped a coin and got {Formatter.Bold(Convert.ToBoolean(new Random().Next(0, 2)) ? "Heads" : "Tails")}.").ConfigureAwait(false);
+        }
+
+        [SlashCommand("diceroll", "Rolls a six-sided die.")]
+        public async Task GetRollDice(InteractionContext ctx)
+        {
+            await BotServices.SendResponseAsync(ctx, $":game_die: {ctx.User.Username} rolled a die and got {Formatter.Bold(new Random().Next(1, 7).ToString())}.").ConfigureAwait(false);
         }
 
         [SlashCommand("dog", "Returns a random dog image.")]

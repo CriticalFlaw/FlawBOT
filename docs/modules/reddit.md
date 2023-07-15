@@ -1,19 +1,19 @@
-Commands for calling the Reddit API for posts from various subreddits. The prefix is `.reddit`
+Commands for interacting with the Reddit RSS Feed. The prefix is `/reddit`.
 
 ### hot
-Returns the hottest posts from a given subreddit.
+Returns hot-topics from Reddit for a given subreddit.
 ```
-.reddit hot tf2
+/reddit hot tf2
 ```
 
 ### new
-Returns the latest posts from a given subreddit.
+Returns new-topics from Reddit for a given subreddit.
 ```
-.reddit new tf2
+/reddit new tf2
 ```
 
 ### top
-Returns the top posts from a given subreddit.
+Returns top-topics from Reddit for a given subreddit.
 ```
-.reddit top tf2
+/reddit top tf2
 ```

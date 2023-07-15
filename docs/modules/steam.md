@@ -1,13 +1,19 @@
-Commands for calling the Steam API for game and user information. The prefix is `.steam`
+Commands for interacting with the Steam API. The prefix is `/steam`.
+
+### connect
+Formats a server connection string into a link.
+```
+/steam connect 192.168.0.200
+```
 
 ### game
-Returns information on a given Steam game.
+Returns information on a Steam game.
 ```
-.steam game Team Fortress 2
+/steam game Team Fortress 2
 ```
 
 ### user
-Returns information on a given Steam user. Other alias: `player`
+Returns information on a Steam user.
 ```
-.steam user criticalflaw
+/steam user criticalflaw
 ```

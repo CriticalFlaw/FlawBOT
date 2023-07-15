@@ -1,61 +1,49 @@
-Commands for managing server channels. The prefixes are `.chn` and`.ch`
-
-### category
-Creates a new channel category. Other aliases: `createcategory`, `newcategory`
-```
-.channel category Welcome
-```
+Commands for managing server channels. The prefix is `/channel`.
 
 ### clean
-Removes last X number of messages from the current channel. Other alias: `clear`
+Removes messages from the current server channel.
 ```
-.channel clean 10
+/channel clean 10
 ```
 
 ### delete
-Deletes a server channel. If a channel is not specified, the current one is used. Other alias: `remove`
+Deletes a server channel.
 ```
-.channel delete #text
+/channel delete #text
 ```
 
 ### info
-Returns information on a given server channel. If a channel is not specified, the current one is used.
+Returns information about a server channel.
 ```
-.channel info #text
+/channel info #text
 ```
 
-### purge
-Removes server user's last X number of messages from the current channel.
+### new-category
+Creates a new channel category.
 ```
-.channel purge @CriticalFlaw 10
+/channel new-category Welcome
+```
+
+### new-text
+Creates a new text channel.
+```
+/channel text texts
+```
+
+### new-voice
+Creates a new voice channel.
+```
+/channel voice voices
 ```
 
 ### rename
-Renames a server channel. Other alias: `setname`
+Changes the server channel name.
 ```
-.channel rename #text newtext
-```
-
-### text
-Creates a new text channel. Other aliases: `createtext`, `newtext`
-```
-.channel text texts
+/channel rename #text newtext
 ```
 
 ### topic
-Changes the current channel's topic. Other alias: `settopic`
+Changes the server channel topic.
 ```
-.channel topic Watermelon picking
-```
-
-### voice
-Creates a new voice channel. Other aliases: `createvoice`, `newvoice`
-```
-.channel voice voices
-```
-
-### vote
-Starts a Yay or Nay poll in the current channel. Other alias: `poll`
-```
-.channel poll Am I correct?
+/channel topic Watermelon picking
 ```

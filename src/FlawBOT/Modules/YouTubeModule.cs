@@ -23,12 +23,6 @@ namespace FlawBOT.Modules
             return GetYouTubePost(ctx, query, YouTubeSearch.Playlist);
         }
 
-        [SlashCommand("video", "Returns a list of queried YouTube videos.")]
-        public Task GetYouTubeVideos(InteractionContext ctx, [Option("query", "Videos to find on YouTube.")] string query)
-        {
-            return GetYouTubePost(ctx, query, YouTubeSearch.Channel);
-        }
-
         [SlashCommand("search", "Returns the first YouTube search result.")]
         public async Task GetYouTubeSearch(InteractionContext ctx, [Option("query", "Video to find on YouTube.")] string query)
         {
@@ -39,6 +33,12 @@ namespace FlawBOT.Modules
                 return;
             }
             await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+        }
+
+        [SlashCommand("video", "Returns a list of queried YouTube videos.")]
+        public Task GetYouTubeVideos(InteractionContext ctx, [Option("query", "Videos to find on YouTube.")] string query)
+        {
+            return GetYouTubePost(ctx, query, YouTubeSearch.Channel);
         }
 
         private static async Task GetYouTubePost(InteractionContext ctx, string query, YouTubeSearch type)

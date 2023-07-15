@@ -1,37 +1,43 @@
-Commands for calling APIs related to Team Fortress 2. The prefix is `.tf2`
-
-### connect
-Formats a server connection string into a clickable link.
-```
-.tf2 connect 123.345.56.789:000; password hello
-```
+Commands for interacting with the Teamwork.TF API for Team Fortress 2. The prefix is `/tf2`.
 
 ### creator
-Returns the profile of a community creator. Other aliases: `creators`, `youtuber`
+Returns a community creator profile from teamwork.tf
 ```
-.tf2 creator criticalflaw
+/tf2 creator criticalflaw
 ```
 
 ### item
-Returns information on a given schema item. Other aliases: `schema`, `hat`
+Returns an item from the latest TF2 item schema.
 ```
-.tf2 item natasha
+/tf2 item natasha
 ```
 
 ### map
-Returns information on a given map. Other alias: `maps`
+Returns map information from teamwork.tf
 ```
-.tf2 map pl_upward
+/tf2 map pl_upward
 ```
 
 ### news
-Returns a list of news articles from teamwork.tf.
+Returns the latest news article from teamwork.tf
 ```
-.tf2 news
+/tf2 news
+```
+
+### search
+Returns a game server with given ip address.
+```
+/tf2 search 164.132.233.16
 ```
 
 ### server
-Returns a list of servers with a given gamemode. Other alias: `servers`
+Returns a list of servers for a given game-mode.
 ```
-.tf2 server payload
+/tf2 server payload
+```
+
+### server-list
+Returns a curated list of servers.
+```
+/tf2 server-list
 ```

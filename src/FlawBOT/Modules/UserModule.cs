@@ -11,7 +11,7 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("user", "Slash command group for user commands.")]
     public class UserModule : ApplicationCommandModule
     {
-        [SlashCommand("profile-pic", "Returns server user's profile picture.")]
+        [SlashCommand("avatar", "Returns server user's profile picture.")]
         public async Task GetAvatar(InteractionContext ctx, [Option("user", "Server user whose profile picture to retrieve.")] DiscordUser user)
         {
             user ??= ctx.User;
@@ -21,7 +21,7 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
-        [SlashCommand("ban", "Bans a server user.")]
+        [SlashCommand("ban", "Bans a server user for a given day duration and reason.")]
         [SlashRequirePermissions(Permissions.BanMembers)]
         public async Task BanUser(InteractionContext ctx,
             [Option("user", "Server user to ban.")] DiscordUser user,

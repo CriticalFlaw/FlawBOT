@@ -1,61 +1,31 @@
-Commands for managing server roles. The prefixes are `.role` and `.roles`
-
-### color
-Changes the server role color in HEX format. Other aliases: `setcolor`, `clr`
-```
-.role color #F2A92B
-```
+Commands for managing server roles. The prefix is `/role`.
 
 ### create
-Creates a new server role. Other aliases: `new`, `add`
+Creates a new server role.
 ```
-.role create admin
+/role create admin
 ```
 
 ### delete
-Deletes a server role. Other alias: `remove`
+Deletes a server role.
 ```
-.role delete admin
+/role delete admin
 ```
 
 ### info
-Returns information on a given server role.
+Returns server role information.
 ```
-.role info admin
+/role info admin
 ```
 
 ### inrole
-Returns a list of server users with a given role.
+Returns list of users in a given role.
 ```
-.role inrole admin
+/role inrole admin
 ```
 
 ### mention
-Toggles server role being mentionable by other users.
+Toggles whether the role can be mentioned by others.
 ```
-.role mention admin
-```
-
-### revoke
-Removes a role from a server user.
-```
-.role revoke @CriticalFlaw admin
-```
-
-### revokeall
-Removes all roles from a server user.
-```
-.role revokeall @CriticalFlaw
-```
-
-### setrole
-Assigns a role to a server user. Other alias: `addrole`
-```
-.role setrole @CriticalFlaw admin
-```
-
-### show
-Toggles server role being visible to users. Other aliases: `display`, `hide`
-```
-.role show admin
+/role mention admin
 ```

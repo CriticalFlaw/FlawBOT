@@ -9,19 +9,19 @@ namespace FlawBOT.Modules
     [SlashCommandGroup("reddit", "Slash command group for Reddit commands.")]
     public class RedditModule : ApplicationCommandModule
     {
-        [SlashCommand("hot", "Returns hot-topics from Reddit.")]
+        [SlashCommand("hot", "Returns hot-topics from Reddit for a given subreddit.")]
         public Task RedditHot(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Hot);
         }
 
-        [SlashCommand("new", "Returns new-topics from Reddit.")]
+        [SlashCommand("new", "Returns new-topics from Reddit for a given subreddit.")]
         public Task RedditNew(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.New);
         }
 
-        [SlashCommand("top", "Returns top-topics from Reddit.")]
+        [SlashCommand("top", "Returns top-topics from Reddit for a given subreddit.")]
         public Task RedditTop(InteractionContext ctx, [Option("query", "Subreddit")] string query)
         {
             return RedditPost(ctx, query, RedditCategory.Top);

@@ -1,55 +1,49 @@
-Commands for directly interacting with FlawBOT. The prefixes are `.bot` and`.flaw`
+Commands for directly interacting with FlawBOT. The prefix is `/bot`.
 
 ### info
-Returns information about the current FlawBOT instance.
+Returns basic information about FlawBOT.
 ```
-.bot info
+/bot info
 ```
 
 ### leave
-Kicks FlawBOT from the current server. Respond with **yes** when prompted.
+Removes FlawBOT from the server. Requires administrative permissions on the server.
 ```
-.bot leave
+/bot leave
 ```
 
 ### ping
-Pings the FlawBOT client. Other alias: `pong`
+Pings the active FlawBOT instance.
 ```
-.bot ping
-```
-
-### report
-Reports a problem with FlawBOT to the developer. Other alias: `issue`
-```
-.bot report [Description of the problem, minimum 50 characters]
+/bot ping
 ```
 
 ### uptime
-Returns FlawBOT's current uptime.
+Returns the uptime of the active FlawBOT instance.
 ```
-.bot uptime
+/bot uptime
 ```
 
 ### activity
-**Owner Only.** Changes FlawBOT's activity. Other alias: `setactivity`
+**Owner Only.** Changes FlawBOT's activity.
 ```
-.bot activity Team Fortress 2
+/bot activity Team Fortress 2
 ```
 
 ### avatar
-**Owner Only.** Changes FlawBOT's avatar. Other aliases: `setavatar`, `pfp`, `photo`
+**Owner Only.** Changes FlawBOT's avatar.
 ```
-.bot avatar [Image URL in JPG, PNG or IMG format]
+/bot avatar https://frinkiac.com/img/S03E20/301341.jpg
+```
+
+### nickname
+**Owner Only.** Changes FlawBOT's server nickname.
+```
+/bot nickname FlowBOT
 ```
 
 ### status
-**Owner Only.** Changes FlawBOT's current status to Online, Idle, DND or Offline. Other aliases: `setstatus`, `state`
+**Owner Only.** Changes FlawBOT's status to Online, Idle, DND or Offline.
 ```
-.bot status Idle
-```
-
-### username
-**Owner Only.** Changes FlawBOT's server username. Other aliases: `setusername`, `name`, `setname`, `nickname`, `nick`
-```
-.sudo setname FlowBOT
+/bot status Idle
 ```

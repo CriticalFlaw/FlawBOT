@@ -1,25 +1,25 @@
-Commands for calling the YouTube API for videos and playlists. The prefix is `.youtube`
+Commands for interacting with the YouTube API. The prefix is `/youtube`.
 
 ### channel
-Returns a list of YouTube channels. Other aliases: `channels`, `chn`
+Returns a list of queried YouTube channels.
 ```
-.youtube channel pewdiepie
+/youtube channel Jerma2nd
 ```
 
 ### playlist
-Returns a list of YouTube playlists. Other aliases: `playlists`, `list`
+Returns a list of queried YouTube playlists.
 ```
-.youtube playlist Let's Drown Out
+/youtube playlist gmod
 ```
 
 ### search
-Returns the first YouTube search result. Other aliases: `find`, `watch`
+Returns the first YouTube search result.
 ```
-.youtube search Accursed Farms
+/youtube search tf2
 ```
 
 ### video
-Returns a list of YouTube videos. Other aliases: `videos`, `vid`
+Returns a list of queried YouTube videos.
 ```
-.youtube video Zero Punctuation
+/youtube video tf2
 ```
