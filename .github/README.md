@@ -27,18 +27,21 @@
 ---
 
 ### Installation
-1. [Download the latest version of **flawbot.zip**][releases-link].
-2. Extract downloaded file contents into a separate folder.
-3. Modify the included **config.json** file with your [API tokens][tokens-link].
-4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
-   * In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
+1. Install [.NET Core 7.0 Runtime for **console apps**][runtime-link].
+2. [Download the latest version of **flawbot.zip**][releases-link].
+3. Extract downloaded file contents into a separate folder.
+4. Modify the included **config.json** file with your [API tokens][tokens-link].
+5. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
 
 ### Commands
-Following is a list of command modules included with FlawBOT. Check the documentation for details.
-There are multiple commands modules available in FlawBOT. Manage your Discord server, call popular public APIs or play music in your voice channel. [Click here for the full command documentation][commands-link].
+There are multiple commands available in FlawBOT. Manage your Discord server, call popular public APIs or play music in your voice channel.
+
+[Click here for the full command documentation][commands-link].
 
 ### API Tokens
-To get the most out of FlawBOT's commands, modify the included **config.json** file with the required API tokens. [Click here for the full list of API tokens and where to find them.][tokens-link]
+To get the most out of FlawBOT's commands, modify the included **config.json** file with the required API tokens.
+
+[Click here for the full list of API tokens and where to find them.][tokens-link]
 
 <!-- MARKDOWN LINKS -->
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
