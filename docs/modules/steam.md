@@ -1,4 +1,4 @@
-Commands for interacting with the Steam API. The prefix is `/steam`.
+Commands for interacting with the Steam API.
 
 ### connect
 Formats a server connection string into a link.

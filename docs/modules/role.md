@@ -1,4 +1,4 @@
-Commands for managing server roles. The prefix is `/role`.
+Commands for managing server roles.
 
 ### create
 Creates a new server role.

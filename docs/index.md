@@ -4,26 +4,6 @@ slug: /
 ---
 
 ![logo](https://user-images.githubusercontent.com/6818236/206876167-497dca99-7248-4bd7-a1ae-9c0e037dc87b.png)
-<p align="center">
-  <a href="https://github.com/CriticalFlaw/FlawBOT/releases/latest" alt="Releases">
-    <img src="https://img.shields.io/github/downloads/criticalflaw/flawbot/total?style=flat-square" />
-  </a>
-  <a href="https://criticalflaw.ca/FlawBOT/" alt="Documentation">
-    <img src="https://readthedocs.org/projects/flawbot/badge/?version=latest&style=flat-square" />
-  </a>
-  <a href="https://github.com/CriticalFlaw/FlawBOT/blob/master/.github/LICENSE" alt="License">
-    <img src="https://img.shields.io/github/license/CriticalFlaw/FlawBOT?style=flat-square" />
-  </a>
-  <a href="https://github.com/CriticalFlaw/FlawBOT/stargazers" alt="Stars">
-    <img src="https://img.shields.io/github/stars/CriticalFlaw/FlawBOT?style=flat-square" />
-  </a>
-  <a href="https://github.com/CriticalFlaw/FlawBOT/issues" alt="Issues">
-    <img src="https://img.shields.io/github/issues/CriticalFlaw/FlawBOT?style=flat-square" />
-  </a>
-  <a href="https://discordapp.com/oauth2/authorize?client_id=339833029013012483&scope=bot&permissions=66186303" alt="Invite">
-    <img src="https://img.shields.io/badge/Discord-invite-7289da.svg?style=flat-square&logo=discord" />
-  </a>
-</p>
 
 <!-- CONTENT -->
 
@@ -48,26 +28,26 @@ In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runt
 The following is a list of modules included with the latest version of FlawBOT.
 
 * [**Bot**][doc-bot] - Basic commands for interacting directly with the bot.
-* [**Channel**][doc-channel] - Commands for viewing and managing server channels.
-* [**Dictionary**][doc-dictionary] - 
-* [**Imgur**][doc-imgur] - 
-* [**Misc**][doc-misc] - Miscellenaous commands for doing math and viewing animals photos.
+* [**Channel**][doc-channel] - Commands for managing server channels.
+* [**Dictionary**][doc-dictionary] - Commands for interacting with the Urban Dictionary API.
+* [**Imgur**][doc-imgur] - Commands for interacting with the Imgur API.
+* [**Misc**][doc-misc] - Miscellenaous bot interaction commands.
 * [**Music**][doc-music] - Have the bot play music in a voice channel.
-* [**NASA**][doc-nasa] - 
-* [**News**][doc-news] - 
-* [**Nintendo**][doc-nintendo] - 
-* [**OMDB**][doc-omdb] - 
-* [**Reddit**][doc-reddit] - 
+* [**NASA**][doc-nasa] - Commands for interacting with the NASA API.
+* [**News**][doc-news] - Commands for interacting with the News API.
+* [**Nintendo**][doc-nintendo] - Commands for interacting with the Nintendo game APIs.
+* [**OMDB**][doc-omdb] - Commands for interacting with the OMDB API.
+* [**Reddit**][doc-reddit] - Commands for interacting with the Reddit RSS feeds.
 * [**Role**][doc-role] - Commands for managing server roles.
-* [**Server**][doc-server] - Commands for managing the server.
-* [**Simpsons**][doc-simpsons] - 
-* [**Speedrun**][doc-speedrun] - 
-* [**Steam**][doc-steam] - 
-* [**Team Fortress 2**][doc-tf2] - 
+* [**Server**][doc-server] - Commands for managing the Discord server.
+* [**Simpsons**][doc-simpsons] - Commands for interacting with Frinkiac and Morbotron.
+* [**Speedrun**][doc-speedrun] - Commands for interacting with the Speedrun.com API.
+* [**Steam**][doc-steam] - Commands for interacting with the Steam API.
+* [**Team Fortress 2**][doc-tf2] - Commands for interacting with the Teamwork.TF API for TF2.
 * [**User**][doc-user] - Commands for managing server users.
-* [**Weather**][doc-weather] - 
-* [**Wikipedia**][doc-wikipedia] - 
-* [**YouTube**][doc-youtube] - 
+* [**Weather**][doc-weather] - Commands for interacting with the WeatherStack API.
+* [**Wikipedia**][doc-wikipedia] - Commands for interacting with the Wikipedia API.
+* [**YouTube**][doc-youtube] - Commands for interacting with the YouTube API.
 
 <!-- MARKDOWN LINKS -->
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest

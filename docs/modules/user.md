@@ -1,4 +1,4 @@
-Commands for managing server users. The prefix is `/user`.
+Commands for managing server users.
 
 ### avatar
 Returns server user's profile picture.

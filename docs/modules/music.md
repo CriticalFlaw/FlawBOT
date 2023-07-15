@@ -1,4 +1,4 @@
-Commands for playing audio in voice channels using [Lavalink](https://criticalflaw.ca/FlawBOT/lavalink). The prefix is `/music`.
+Commands for playing audio in voice channels using [Lavalink](https://criticalflaw.ca/FlawBOT/lavalink).
 
 ### info
 Returns the current audio track information.

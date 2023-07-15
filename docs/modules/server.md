@@ -1,4 +1,4 @@
-Commands for managing the Discord server. The prefix is `/server`.
+Commands for managing the Discord server.
 
 ### avatar
 Changes the server avatar.

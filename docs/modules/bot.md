@@ -1,4 +1,4 @@
-Commands for directly interacting with FlawBOT. The prefix is `/bot`.
+Commands for directly interacting with FlawBOT.
 
 ### info
 Returns basic information about FlawBOT.

@@ -1,4 +1,4 @@
-Commands for managing server channels. The prefix is `/channel`.
+Commands for managing server channels.
 
 ### clean
 Removes messages from the current server channel.

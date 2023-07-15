@@ -1,4 +1,4 @@
-Commands for interacting with the Teamwork.TF API for Team Fortress 2. The prefix is `/tf2`.
+Commands for interacting with the Teamwork.TF API for Team Fortress 2.
 
 ### creator
 Returns a community creator profile from teamwork.tf

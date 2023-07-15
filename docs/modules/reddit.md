@@ -1,4 +1,4 @@
-Commands for interacting with the Reddit RSS Feed. The prefix is `/reddit`.
+Commands for interacting with the Reddit RSS Feed.
 
 ### hot
 Returns hot-topics from Reddit for a given subreddit.

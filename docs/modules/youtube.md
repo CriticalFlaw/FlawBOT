@@ -1,4 +1,4 @@
-Commands for interacting with the YouTube API. The prefix is `/youtube`.
+Commands for interacting with the YouTube API.
 
 ### channel
 Returns a list of queried YouTube channels.
