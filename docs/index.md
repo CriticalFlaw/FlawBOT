@@ -13,14 +13,11 @@ This project is no longer in development.
 
 ### Installation
 
-1. [Download the latest version of **flawbot.zip**][releases-link].
-2. Extract downloaded file contents into a separate folder.
-3. Modify the included **config.json** file with your [API tokens][tokens-link].
-4. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
-
-:::note
-In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
-:::
+1. Install [.NET Core 7.0 Runtime for **console apps**][runtime-link].
+2. [Download the latest version of **flawbot.zip**][releases-link].
+3. Extract downloaded file contents into a separate folder.
+4. Modify the included **config.json** file with your [API tokens][tokens-link].
+5. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
 
 ---
 
