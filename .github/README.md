@@ -34,11 +34,12 @@
    * In case of errors, install the [.NET Core 7.0 Runtime for **console apps**][runtime-link].
 
 ### Commands
-Following is a list of command modules included with FlawBOT. Check the documentation for details.
-There are multiple commands modules available in FlawBOT. Manage your Discord server, call popular public APIs or play music in your voice channel. [Click here for the full command documentation][commands-link].
+There are multiple commands modules available in FlawBOT. Manage your Discord server, call popular public APIs or play music in your voice channel.
+[Click here for the full command documentation][commands-link].
 
 ### API Tokens
-To get the most out of FlawBOT's commands, modify the included **config.json** file with the required API tokens. [Click here for the full list of API tokens and where to find them.][tokens-link]
+To get the most out of FlawBOT's commands, modify the included **config.json** file with the required API tokens.
+[Click here for the full list of API tokens and where to find them.][tokens-link]
 
 <!-- MARKDOWN LINKS -->
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
