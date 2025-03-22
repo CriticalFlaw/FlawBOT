@@ -4,7 +4,7 @@
 const config = {
     title: "FlawBOT",
     tagline: "Multipurpose Discord bot written in C# using DSharpPlus.",
-    url: "https://criticalflaw.ca/",
+    url: "https://criticalflaw.ca",
     baseUrl: "/FlawBOT/",
     favicon: "https://raw.githubusercontent.com/CriticalFlaw/FlawBOT/master/docs/resources/favicon.ico",
 
@@ -41,6 +41,10 @@ const config = {
                 blog: false,
                 theme: {
                     customCss: require.resolve("./docs/resources/custom.css"),
+                },
+                googleAnalytics: {
+                    trackingID: "G-Q532RTS1WC",
+                    anonymizeIP: true
                 }
             })
         ]
