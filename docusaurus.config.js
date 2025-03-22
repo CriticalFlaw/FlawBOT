@@ -96,35 +96,8 @@ const config = {
                 {
                     label: "Blog",
                     href: "https://criticalflaw.ca/"
-                },
-                {
-                    href: "https://github.com/CriticalFlaw/FlawBOT/",
-                    position: "right",
-                    className: "header-github-link"
                 }
             ]
-        },
-        footer: {
-            links: [
-                {
-                    title: "Community",
-                    items: [
-                        {
-                            label: "Github",
-                            href: "https://github.com/CriticalFlaw/FlawBOT",
-                        },
-                        {
-                            label: "Twitter",
-                            href: "https://twitter.com/CriticalFlaw_",
-                        },
-                        {
-                            label: "Discord",
-                            href: "https://discord.gg/hTdtK9vBhE",
-                        }
-                    ]
-                }
-            ],
-            copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`
         }
     }
 }

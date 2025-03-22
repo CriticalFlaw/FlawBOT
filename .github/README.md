@@ -1,7 +1,7 @@
 <!-- BADGES -->
 [![releases-shield]][releases-link]
-[![docs-shield]][docs-link]
 [![license-shield]][license-link]
+[![docs-shield]][docs-link]
 
 ![logo](https://user-images.githubusercontent.com/6818236/206876167-497dca99-7248-4bd7-a1ae-9c0e037dc87b.png)
 <p align="center">
@@ -17,11 +17,11 @@
 </p>
 
 <!-- MARKDOWN LINKS -->
-[releases-shield]: https://img.shields.io/github/release/CriticalFlaw/FlawBOT.svg?style=flat-square
+[releases-shield]: https://img.shields.io/github/release/CriticalFlaw/FlawBOT.svg
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
-[docs-shield]: https://readthedocs.org/projects/flawbot/badge/?version=latest&style=flat-square
-[docs-link]: https://www.flawbot.criticalflaw.ca/
-[license-shield]: https://img.shields.io/github/license/CriticalFlaw/FlawBOT?style=flat-square
+[docs-shield]: https://github.com/CriticalFlaw/FlawBOT/actions/workflows/docs.yml/badge.svg
+[docs-link]: https://github.com/CriticalFlaw/FlawBOT/actions/workflows/docs.yml
+[license-shield]: https://img.shields.io/github/license/CriticalFlaw/FlawBOT
 [license-link]: https://github.com/CriticalFlaw/FlawBOT/blob/master/.github/LICENSE
 
 ---
