@@ -1,0 +1,24 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - '.github/workflows/build.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - '.github/workflows/build.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet restore src/FlawBOT.sln
+      - run: dotnet build src/FlawBOT.sln -c Release --no-restore
+      # Unit tests only; the Live category needs API tokens and is excluded by test.runsettings.
+      - run: dotnet test src/FlawBOT.sln -c Release --no-build
