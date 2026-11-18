@@ -11,12 +11,14 @@ Some of the ways you can contribute to the project include:
 To contribute code changes to the project:
 
 1. [Fork the repository][repo-link].
-2. Make your changes using an IDE like [Microsoft Visual Studio 2019][vs-link].
-3. Create a pull request so the changes can be reviewed.
-4. If approved, I'll merge the PR and credit you for your work.
+2. Make your changes using an IDE like [Microsoft Visual Studio][vs-link] with the [.NET 10 SDK][sdk-link].
+3. Run the tests with `dotnet test src/FlawBOT.sln` and make sure they pass.
+4. Create a pull request so the changes can be reviewed.
+5. If approved, I'll merge the PR and credit you for your work.
 
 <!-- MARKDOWN LINKS -->
 [issues-link]: https://github.com/CriticalFlaw/FlawBOT/issues
 [sponsors-link]: https://github.com/sponsors/CriticalFlaw
 [repo-link]: https://github.com/CriticalFlaw/FlawBOT
 [vs-link]: https://visualstudio.microsoft.com/
+[sdk-link]: https://dotnet.microsoft.com/download/dotnet/10.0

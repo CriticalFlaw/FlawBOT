@@ -425,3 +425,7 @@ FodyWeavers.xsd
 .docusaurus
 build
 node_modules
+# Lavalink server files downloaded for local testing (see docs/lavalink.md)
+Lavalink.jar
+plugins/
+logs/
