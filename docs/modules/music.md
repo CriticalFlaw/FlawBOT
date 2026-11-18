@@ -1,5 +1,9 @@
 Commands for playing audio in voice channels using [Lavalink](https://criticalflaw.ca/FlawBOT/lavalink).
 
+:::note
+Music commands are only registered when Lavalink is enabled in **config.json**. Playing a new track replaces the current one.
+:::
+
 ### info
 Returns the current audio track information.
 ```
@@ -13,15 +17,16 @@ Pauses audio playback.
 ```
 
 ### play
-Plays audio from a URL or search query.
+Plays audio from a URL or search query. Plain text is searched on YouTube.
 ```
 /music play https://www.youtube.com/watch?v=4JkIs37a2JE
+/music play night of fire
 ```
 
 ### restart
 Restarts audio playback.
 ```
-/music replay
+/music restart
 ```
 
 ### resume
@@ -37,7 +42,7 @@ Stops audio playback and leave the voice channel.
 ```
 
 ### volume
-Changes audio playback volume between 0% and 100%.
+Changes audio playback volume between 0% and 100%. Defaults to 100%.
 ```
 /music volume 50
 ```

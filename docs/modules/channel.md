@@ -1,7 +1,7 @@
 Commands for managing server channels.
 
 ### clean
-Removes messages from the current server channel.
+Removes up to 100 messages from the current server channel. Messages older than two weeks cannot be bulk-deleted by Discord and are skipped.
 ```
 /channel clean 10
 ```
@@ -25,15 +25,15 @@ Creates a new channel category.
 ```
 
 ### new-text
-Creates a new text channel.
+Creates a new text channel. Spaces are replaced with dashes.
 ```
-/channel text texts
+/channel new-text general-chat
 ```
 
 ### new-voice
 Creates a new voice channel.
 ```
-/channel voice voices
+/channel new-voice Music Room
 ```
 
 ### rename

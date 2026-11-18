@@ -7,7 +7,7 @@ Returns a community creator profile from teamwork.tf
 ```
 
 ### item
-Returns an item from the latest TF2 item schema.
+Returns an item from the latest TF2 item schema. Requires a Steam API token.
 ```
 /tf2 item natasha
 ```
@@ -19,9 +19,10 @@ Returns map information from teamwork.tf
 ```
 
 ### news
-Returns the latest news article from teamwork.tf
+Returns the latest news article from teamwork.tf. Optionally pass a page number for older posts.
 ```
 /tf2 news
+/tf2 news 2
 ```
 
 ### search

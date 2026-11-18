@@ -37,13 +37,13 @@ Returns the uptime of the active FlawBOT instance.
 ```
 
 ### nickname
-**Owner Only.** Changes FlawBOT's server nickname.
+**Owner Only.** Changes FlawBOT's nickname on the current server. Leave empty to reset it.
 ```
 /bot nickname FlowBOT
 ```
 
 ### status
-**Owner Only.** Changes FlawBOT's status to Online, Idle, DND or Offline.
+**Owner Only.** Changes FlawBOT's status to Online, Idle, Do Not Disturb or Invisible.
 ```
 /bot status Idle
 ```

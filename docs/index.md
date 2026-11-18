@@ -7,17 +7,14 @@ slug: /
 
 <!-- CONTENT -->
 
-:::caution
-This project is no longer in development.
-:::
-
 ### Installation
 
-1. Install [.NET Core 7.0 Runtime for **console apps**][runtime-link].
+1. Install the [.NET 10 Runtime][runtime-link].
 2. [Download the latest version of **flawbot.zip**][releases-link].
 3. Extract downloaded file contents into a separate folder.
-4. Modify the included **config.json** file with your [API tokens][tokens-link].
+4. Modify the included **Resources/config.json** file with your [API tokens][tokens-link].
 5. Open the command prompt and start the bot by entering: `dotnet FlawBOT.dll`
+6. To use the music commands, also [set up Lavalink][lavalink-link].
 
 ---
 
@@ -28,7 +25,7 @@ The following is a list of modules included with the latest version of FlawBOT.
 * [**Channel**][doc-channel] - Commands for managing server channels.
 * [**Dictionary**][doc-dictionary] - Commands for interacting with the Urban Dictionary API.
 * [**Imgur**][doc-imgur] - Commands for interacting with the Imgur API.
-* [**Misc**][doc-misc] - Miscellenaous bot interaction commands.
+* [**Misc**][doc-misc] - Miscellaneous bot interaction commands.
 * [**Music**][doc-music] - Have the bot play music in a voice channel.
 * [**NASA**][doc-nasa] - Commands for interacting with the NASA API.
 * [**News**][doc-news] - Commands for interacting with the News API.
@@ -49,7 +46,8 @@ The following is a list of modules included with the latest version of FlawBOT.
 <!-- MARKDOWN LINKS -->
 [releases-link]: https://github.com/CriticalFlaw/FlawBOT/releases/latest
 [tokens-link]: https://criticalflaw.ca/FlawBOT/tokens/
-[runtime-link]: https://dotnet.microsoft.com/download/dotnet/7.0/runtime
+[lavalink-link]: https://criticalflaw.ca/FlawBOT/lavalink/
+[runtime-link]: https://dotnet.microsoft.com/download/dotnet/10.0
 [doc-bot]: https://criticalflaw.ca/FlawBOT/modules/bot/
 [doc-channel]: https://criticalflaw.ca/FlawBOT/modules/channel/
 [doc-dictionary]: https://criticalflaw.ca/FlawBOT/modules/dictionary/

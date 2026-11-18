@@ -20,6 +20,10 @@ Returns server role information.
 
 ### inrole
 Returns list of users in a given role.
+
+:::note
+Listing server members requires the **Server Members Intent** to be enabled for your bot in the [Discord Developer Portal](https://discord.com/developers/applications) (Bot > Privileged Gateway Intents).
+:::
 ```
 /role inrole admin
 ```

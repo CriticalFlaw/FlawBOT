@@ -2,25 +2,26 @@
 title: Tokens
 ---
 
-To get the most out of FlawBOT's commands, modify the included **config.json** file with below API tokens.
+To get the most out of FlawBOT's commands, modify the included **config.json** file with the API tokens below.
+Only the Discord token is required. Commands whose token is missing reply with "No results found."
 
-* [Discord][discord-link]
-* [Imgur][imgur-link]
-* [NASA][nasa-link]
-* [NewsAPI][news-link]
-* [OMDB][omdb-link]
-* [Pokemon][pokemon-link]
-* [Steam][steam-link]
-* [Teamwork.TF][teamwork-link]
-* [Twitch][twitch-link]
-* [Weather][weather-link]
-* [YouTube][youtube-link]
-
+| Token | Used by | Notes |
+|---|---|---|
+| [Discord][discord-link] | Everything | **Required.** The bot token from the Bot page of your application. |
+| [Imgur][imgur-link] | `/imgur` | The application's Client ID. |
+| [NASA][nasa-link] | `/nasa` | Optional. Uses NASA's rate-limited `DEMO_KEY` when empty. |
+| [NewsAPI][news-link] | `/news` | |
+| [OMDB][omdb-link] | `/omdb` | |
+| [Pokemon][pokemon-link] | `/pokemon` | Optional. Raises the Pokémon TCG API rate limit. |
+| [Steam][steam-link] | `/steam`, `/tf2 item`, `/tf2 creator` | `/steam game` also works without a token. |
+| [Teamwork.TF][teamwork-link] | `/tf2` | |
+| [Twitch][twitch-link] | `/twitch` | `Twitch` is the Client ID and `TwitchAccess` is an app access token. |
+| [Weather][weather-link] | `/weather` | Weatherstack access key. |
+| [YouTube][youtube-link] | `/youtube` | YouTube Data API v3 key. |
 
 ```json
 {
 	"Name": "FlawBOT",
-	"Prefix": ".",
 	"ShardCount": 1,
 	"Lavalink": {
 		"Enabled": false,
@@ -45,15 +46,21 @@ To get the most out of FlawBOT's commands, modify the included **config.json** f
 }
 ```
 
+:::note
+Twitch app access tokens expire after about 60 days. Generate a new one with the
+[client credentials flow][twitch-token-link] when `/twitch` stops returning results.
+:::
+
 <!-- MARKDOWN LINKS -->
-[discord-link]: https://discordapp.com/developers/applications/me
+[discord-link]: https://discord.com/developers/applications
 [steam-link]: https://steamcommunity.com/dev/apikey
 [imgur-link]: https://api.imgur.com/oauth2/addclient
-[omdb-link]: http://www.omdbapi.com/apikey.aspx
+[omdb-link]: https://www.omdbapi.com/apikey.aspx
 [pokemon-link]: https://dev.pokemontcg.io/
-[twitch-link]: https://dev.twitch.tv/dashboard/apps/create
+[twitch-link]: https://dev.twitch.tv/console/apps/create
+[twitch-token-link]: https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
 [nasa-link]: https://api.nasa.gov/
 [teamwork-link]: https://github.com/teamworktf/website_api#teamworktf-json-api-for-information-about-team-fortress-2
 [news-link]: https://newsapi.org/
 [weather-link]: https://weatherstack.com/
-[youtube-link]: https://console.cloud.google.com/projectselector/apis/credentials
+[youtube-link]: https://console.cloud.google.com/apis/credentials
