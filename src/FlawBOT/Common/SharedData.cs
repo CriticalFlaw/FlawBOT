@@ -3,72 +3,45 @@ using FlawBOT.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Reflection;
-using System.Text.Json.Serialization;
 
 namespace FlawBOT.Common
 {
     public class BotSettings
     {
-        public DiscordColor DefaultColor = new("#00FF7F");
-        [JsonPropertyName("Lavalink")] public Lavalink Lavalink;
-        [JsonPropertyName("Name")] public string Name;
-        [JsonPropertyName("Prefix")] public string Prefix;
-        [JsonPropertyName("ShardCount")] public int ShardCount;
-        [JsonPropertyName("Tokens")] public Tokens Tokens;
-        public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-        public string GitHubLink { get; } = Resources.URL_BOT_GitHub;
-        public string InviteLink { get; } = Resources.URL_BOT_Invite;
-        public string DocsLink { get; } = Resources.URL_BOT_Docs;
-        public DateTime ProcessStarted { get; set; }
+        [JsonIgnore] public DiscordColor DefaultColor { get; } = new("#00FF7F");
+        [JsonProperty("Lavalink")] public Lavalink Lavalink { get; set; } = new();
+        [JsonProperty("Name")] public string Name { get; set; } = "FlawBOT";
+        [JsonProperty("ShardCount")] public int ShardCount { get; set; } = 1;
+        [JsonProperty("Tokens")] public Tokens Tokens { get; set; } = new();
+        [JsonIgnore] public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3);
+        [JsonIgnore] public string GitHubLink { get; } = Resources.URL_BOT_GitHub;
+        [JsonIgnore] public string InviteLink { get; } = Resources.URL_BOT_Invite;
+        [JsonIgnore] public string DocsLink { get; } = Resources.URL_BOT_Docs;
+        [JsonIgnore] public DateTime ProcessStarted { get; set; } = DateTime.Now;
     }
 
     public class Lavalink
     {
-        [JsonPropertyName("Address")] public string Address;
-
-        [JsonPropertyName("Enabled")] public bool Enabled;
-
-        [JsonPropertyName("Password")] public string Password;
-
-        [JsonPropertyName("Port")] public int Port;
+        [JsonProperty("Enabled")] public bool Enabled { get; set; }
+        [JsonProperty("Address")] public string Address { get; set; } = "127.0.0.1";
+        [JsonProperty("Port")] public int Port { get; set; } = 2333;
+        [JsonProperty("Password")] public string Password { get; set; } = "youshallnotpass";
     }
 
     public class Tokens
     {
         [JsonProperty("Discord")] public string DiscordToken { get; set; }
-
-        [JsonProperty("Steam", NullValueHandling = NullValueHandling.Ignore)]
-        public string SteamToken { get; set; }
-
-        [JsonProperty("Imgur", NullValueHandling = NullValueHandling.Ignore)]
-        public string ImgurToken { get; set; }
-
-        [JsonProperty("Pokemon", NullValueHandling = NullValueHandling.Ignore)]
-        public string PokemonToken { get; set; }
-
-        [JsonProperty("OMDB", NullValueHandling = NullValueHandling.Ignore)]
-        public string OmdbToken { get; set; }
-
-        [JsonProperty("Twitch", NullValueHandling = NullValueHandling.Ignore)]
-        public string TwitchToken { get; set; }
-
-        [JsonProperty("TwitchAccess", NullValueHandling = NullValueHandling.Ignore)]
-        public string TwitchAccess { get; set; }
-
-        [JsonProperty("NASA", NullValueHandling = NullValueHandling.Ignore)]
-        public string NasaToken { get; set; }
-
-        [JsonProperty("TeamworkTF", NullValueHandling = NullValueHandling.Ignore)]
-        public string TeamworkToken { get; set; }
-
-        [JsonProperty("News", NullValueHandling = NullValueHandling.Ignore)]
-        public string NewsToken { get; set; }
-
-        [JsonProperty("Weather", NullValueHandling = NullValueHandling.Ignore)]
-        public string WeatherToken { get; set; }
-
-        [JsonProperty("YouTube", NullValueHandling = NullValueHandling.Ignore)]
-        public string YouTubeToken { get; set; }
+        [JsonProperty("Steam")] public string SteamToken { get; set; }
+        [JsonProperty("Imgur")] public string ImgurToken { get; set; }
+        [JsonProperty("Pokemon")] public string PokemonToken { get; set; }
+        [JsonProperty("OMDB")] public string OmdbToken { get; set; }
+        [JsonProperty("Twitch")] public string TwitchToken { get; set; }
+        [JsonProperty("TwitchAccess")] public string TwitchAccess { get; set; }
+        [JsonProperty("NASA")] public string NasaToken { get; set; }
+        [JsonProperty("TeamworkTF")] public string TeamworkToken { get; set; }
+        [JsonProperty("News")] public string NewsToken { get; set; }
+        [JsonProperty("Weather")] public string WeatherToken { get; set; }
+        [JsonProperty("YouTube")] public string YouTubeToken { get; set; }
     }
 
     public enum ResponseType
@@ -77,16 +50,5 @@ namespace FlawBOT.Common
         Warning,
         Missing,
         Error
-    }
-
-    public enum UserStateChange
-    {
-        Ban,
-        Deafen,
-        Kick,
-        Mute,
-        Unban,
-        Undeafen,
-        Unmute
     }
 }

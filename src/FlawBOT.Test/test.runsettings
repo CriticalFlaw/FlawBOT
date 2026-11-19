@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Live tests call real third-party APIs and need network access plus API tokens, so they are excluded by default.
+  To run them, pass NUnit.Where="cat == Live" to dotnet test (see docs/deploy.md).
+-->
+<RunSettings>
+  <NUnit>
+    <Where>cat != Live</Where>
+  </NUnit>
+</RunSettings>

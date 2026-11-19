@@ -1,6 +1,5 @@
 {
   "Name": "FlawBOT",
-  "Prefix": ".",
   "ShardCount": 1,
   "Lavalink": {
     "Enabled": false,

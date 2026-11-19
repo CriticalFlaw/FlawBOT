@@ -11,13 +11,9 @@ namespace FlawBOT.Modules
         [SlashCommand("speedrun", "Returns game information from Speedrun.com")]
         public async Task GetSpeedrunGame(InteractionContext ctx, [Option("query", "Game to find on Speedrun.com")] string query)
         {
-            var output = SpeedrunService.GetSpeedrunGameAsync(query).Result;
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await ctx.DeferAsync().ConfigureAwait(false);
+            var output = await SpeedrunService.GetSpeedrunGameAsync(query).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
         }
     }
 }

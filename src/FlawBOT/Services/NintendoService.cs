@@ -6,7 +6,10 @@ using Newtonsoft.Json;
 using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients;
 using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards;
-using System.Text;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services
@@ -14,30 +17,20 @@ namespace FlawBOT.Services
     public class NintendoService : HttpHandler
     {
         /// <summary>
-        /// Call the Nintendo Amiibo API for an Amiibo figurine.
+        ///     Call the Nintendo Amiibo API for an Amiibo figurine.
         /// </summary>
         public static async Task<DiscordEmbed> GetAmiiboInfoAsync(string query)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(query)) return null;
-                query = string.Format(Resources.URL_Amiibo, query.ToLowerInvariant());
-                var response = await Http.GetStringAsync(query).ConfigureAwait(false);
-                var result = JsonConvert.DeserializeObject<NintendoData>(response);
-                var results = result.Amiibo[random.Next(result.Amiibo.Count)];
-
-                // TODO: Add pagination when supported for slash commands.
-                var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.Name)
-                    .AddField("Amiibo Series", results.AmiiboSeries, true)
-                    .AddField("Game Series", results.GameSeries, true)
-                    .AddField(":flag_us: Release:", results.ReleaseDate.American, true)
-                    .AddField(":flag_jp: Release:", results.ReleaseDate.Japanese, true)
-                    .AddField(":flag_eu: Release:", results.ReleaseDate.European, true)
-                    .AddField(":flag_au: Release:", results.ReleaseDate.Australian, true)
-                    .WithImageUrl(results.Image)
-                    .WithColor(new DiscordColor("#E70009"));
-                return output.Build();
+                var url = string.Format(Resources.URL_Amiibo, Uri.EscapeDataString(query.Trim().ToLowerInvariant()));
+                using var response = await Http.GetAsync(url).ConfigureAwait(false);
+                // The API answers 404 when nothing matches.
+                if (response.StatusCode == HttpStatusCode.NotFound) return null;
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return BuildAmiiboEmbed(JsonConvert.DeserializeObject<NintendoData>(json));
             }
             catch
             {
@@ -45,35 +38,49 @@ namespace FlawBOT.Services
             }
         }
 
+        public static DiscordEmbed BuildAmiiboEmbed(NintendoData result)
+        {
+            if (result?.Amiibo is null || result.Amiibo.Count == 0) return null;
+            var results = result.Amiibo[Random.Next(result.Amiibo.Count)];
+            var release = results.ReleaseDate ?? new Release();
+            var output = new DiscordEmbedBuilder()
+                .WithTitle(results.Name)
+                .AddSafeField("Amiibo Series", results.AmiiboSeries, true)
+                .AddSafeField("Game Series", results.GameSeries, true)
+                .AddSafeField(":flag_us: Release:", release.American, true)
+                .AddSafeField(":flag_jp: Release:", release.Japanese, true)
+                .AddSafeField(":flag_eu: Release:", release.European, true)
+                .AddSafeField(":flag_au: Release:", release.Australian, true)
+                .WithColor(new DiscordColor("#E70009"));
+            if (!string.IsNullOrWhiteSpace(results.Image)) output.WithImageUrl(results.Image);
+            return output.Build();
+        }
+
         /// <summary>
-        /// Call the Pokémon TCG API for a set of cards.
+        ///     Call the Pokémon TCG API for a set of cards.
         /// </summary>
         public static async Task<DiscordEmbed> GetPokemonCardAsync(string token, string query = "")
         {
             try
             {
-                var result = await new PokemonApiClient(token).GetApiResourceAsync<PokemonCard>(PokemonFilterBuilder.CreatePokemonFilter().AddName(query));
-                var results = result.Results[random.Next(result.Results.Count)];
+                var client = string.IsNullOrWhiteSpace(token) ? new PokemonApiClient() : new PokemonApiClient(token);
+                var filter = PokemonFilterBuilder.CreatePokemonFilter();
+                if (!string.IsNullOrWhiteSpace(query)) filter.AddName(query.Trim());
+                var result = await client.GetApiResourceAsync<PokemonCard>(25, 1, filter).ConfigureAwait(false);
+                if (result?.Results is null || result.Results.Count == 0) return null;
 
-                // TODO: Add pagination when supported for slash commands.
-                var types = new StringBuilder();
-                if (results.Types != null)
-                    foreach (var type in results.Types)
-                        types.Append(type);
-
-                var weaknesses = new StringBuilder();
-                foreach (var weakness in results.Weaknesses)
-                    weaknesses.Append(weakness.Type);
-
+                var card = result.Results[Random.Next(result.Results.Count)];
+                var pokedex = card.NationalPokedexNumbers?.Count > 0 ? $" (#{string.Join(", #", card.NationalPokedexNumbers)})" : string.Empty;
                 var output = new DiscordEmbedBuilder()
-                    .WithTitle(results.Name + $" (#{results.NationalPokedexNumbers})")
-                    .AddField("Rarity", results.Rarity ?? "Unknown", true)
-                    .AddField("HP", results.Hp.ToString() ?? "Unknown", true)
-                    .AddField("Types", types.ToString() ?? "Unknown", true)
-                    .AddField("Weaknesses", weaknesses.ToString() ?? "Unknown", true)
-                    .WithImageUrl(results.Images.Large ?? results.Images.Small)
-                    .WithFooter(results.Id)
+                    .WithTitle(card.Name + pokedex)
+                    .AddSafeField("Rarity", card.Rarity, true)
+                    .AddSafeField("HP", card.Hp > 0 ? card.Hp.ToString() : null, true)
+                    .AddSafeField("Types", card.Types.JoinOrDefault(), true)
+                    .AddSafeField("Weaknesses", card.Weaknesses?.Select(x => x.Type).JoinOrDefault(", ", "None"), true)
+                    .WithFooter(card.Id)
                     .WithColor(DiscordColor.Gold);
+                var image = card.Images?.Large ?? card.Images?.Small;
+                if (image is not null) output.WithImageUrl(image);
                 return output.Build();
             }
             catch

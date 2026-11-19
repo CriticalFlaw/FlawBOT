@@ -1,124 +1,126 @@
 ﻿using DSharpPlus;
-using DSharpPlus.Lavalink;
 using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
-using FlawBOT.Models.Music;
 using FlawBOT.Services;
-using System;
-using System.Linq;
+using Lavalink4NET.Players;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
     [SlashCommandGroup("music", "Slash command group for music commands.")]
-    public class MusicModule : ApplicationCommandModule
+    [SlashRequireGuild]
+    public class MusicModule(MusicService service) : ApplicationCommandModule
     {
-        public MusicModule(MusicService service)
-        {
-            Service = service;
-        }
-
-        private MusicService Service { get; }
-        private MusicPlayer Player { get; set; }
+        private MusicService Service { get; } = service;
 
         [SlashCommand("info", "Returns the current audio track information.")]
         public async Task NowPlaying(InteractionContext ctx)
         {
-            await BeforeExecutionAsync(ctx);
-            var track = Player.NowPlaying;
-            if (Player.NowPlaying.Track?.TrackString == null)
+            var player = await GetPlayerAsync(ctx).ConfigureAwait(false);
+            if (player is null) return;
+
+            var track = player.CurrentTrack;
+            if (track is null)
+            {
                 await ctx.CreateResponseAsync("Currently not playing anything...").ConfigureAwait(false);
-            else
-                await ctx.CreateResponseAsync($":musical_note: Now playing: {Formatter.Bold(Formatter.Sanitize(track.Track.Title))} by {Formatter.Bold(Formatter.Sanitize(track.Track.Author))} [{MusicService.ToDurationString(Player.GetCurrentPosition())}/{MusicService.ToDurationString(Player.NowPlaying.Track.Length)}] requested by {Formatter.Bold(Formatter.Sanitize(Player.NowPlaying.Requester.DisplayName))}.").ConfigureAwait(false);
+                return;
+            }
+
+            var position = player.Position?.Position ?? System.TimeSpan.Zero;
+            var requester = Service.GetRequester(ctx.Guild.Id);
+            var requestedBy = requester is null ? string.Empty : $" requested by {Formatter.Bold(Formatter.Sanitize(requester.DisplayName))}";
+            await ctx.CreateResponseAsync($":musical_note: Now playing: {MusicService.DescribeTrack(track)} [{MusicService.ToDurationString(position)}/{MusicService.ToDurationString(track.Duration)}]{requestedBy}.").ConfigureAwait(false);
         }
 
         [SlashCommand("pause", "Pauses audio playback.")]
         public async Task PauseSong(InteractionContext ctx)
         {
-            await BeforeExecutionAsync(ctx);
-            await Player.PauseAsync();
+            var player = await GetPlayerAsync(ctx).ConfigureAwait(false);
+            if (player is null) return;
+            await player.PauseAsync().ConfigureAwait(false);
             await ctx.CreateResponseAsync(":pause_button: Pausing Playback...").ConfigureAwait(false);
         }
 
         [SlashCommand("play", "Plays audio from a URL or search query.")]
-        public async Task PlaySong(InteractionContext ctx, [Option("url", "URL to playback.")] string url)
+        public async Task PlaySong(InteractionContext ctx, [Option("query", "URL or search query to play.")] string query)
         {
-            await BeforeExecutionAsync(ctx);
-            var trackLoad = await Service.GetTracksAsync(new Uri(url, UriKind.Absolute));
-            var audio = trackLoad.Tracks.FirstOrDefault();
-            if (trackLoad.LoadResultType == LavalinkLoadResultType.LoadFailed || audio is null)
+            // Loading tracks can take longer than the three seconds Discord allows for a response.
+            await ctx.DeferAsync().ConfigureAwait(false);
+
+            var (player, error) = await Service.GetPlayerAsync(ctx, true).ConfigureAwait(false);
+            if (player is null)
             {
-                await ctx.CreateResponseAsync(":mag: No tracks were found at specified link.").ConfigureAwait(false);
+                await BotServices.SendDeferredAsync(ctx, error, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
-            Player.Enqueue(new MusicData(audio, ctx.Member));
-            await Player.CreatePlayerAsync(ctx.Member.VoiceState.Channel);
-            await Player.PlayAsync();
-            await ctx.CreateResponseAsync($":play_pause: Now playing: {Formatter.Bold(Formatter.Sanitize(audio.Title))} by {Formatter.Bold(Formatter.Sanitize(audio.Author))}.").ConfigureAwait(false);
+            var track = await Service.LoadTrackAsync(query).ConfigureAwait(false);
+            if (track is null)
+            {
+                await BotServices.SendDeferredAsync(ctx, "No tracks were found for that link or search.", ResponseType.Missing).ConfigureAwait(false);
+                return;
+            }
+
+            Service.SetRequester(ctx.Guild.Id, ctx.Member);
+            await player.PlayAsync(track).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, $":play_pause: Now playing: {MusicService.DescribeTrack(track)}.").ConfigureAwait(false);
         }
 
         [SlashCommand("restart", "Restarts audio playback.")]
         public async Task RestartSong(InteractionContext ctx)
         {
-            await BeforeExecutionAsync(ctx);
-            var track = Player.NowPlaying;
-            await Player.RestartAsync();
-            await ctx.CreateResponseAsync($":play_pause: Restarting {Formatter.Bold(Formatter.Sanitize(track.Track.Title))} by {Formatter.Bold(Formatter.Sanitize(track.Track.Author))}...").ConfigureAwait(false);
+            var player = await GetPlayerAsync(ctx).ConfigureAwait(false);
+            if (player is null) return;
+
+            var track = player.CurrentTrack;
+            if (track is null)
+            {
+                await ctx.CreateResponseAsync("Currently not playing anything...").ConfigureAwait(false);
+                return;
+            }
+
+            await player.SeekAsync(System.TimeSpan.Zero).ConfigureAwait(false);
+            await ctx.CreateResponseAsync($":play_pause: Restarting {MusicService.DescribeTrack(track)}...").ConfigureAwait(false);
         }
 
         [SlashCommand("resume", "Resumes audio playback.")]
         public async Task ResumeAsync(InteractionContext ctx)
         {
-            await BeforeExecutionAsync(ctx);
-            await Player.ResumeAsync();
+            var player = await GetPlayerAsync(ctx).ConfigureAwait(false);
+            if (player is null) return;
+            await player.ResumeAsync().ConfigureAwait(false);
             await ctx.CreateResponseAsync(":play_pause: Resuming Playback...").ConfigureAwait(false);
         }
 
         [SlashCommand("stop", "Stops audio playback and leave the voice channel.")]
         public async Task StopSong(InteractionContext ctx)
         {
-            await BeforeExecutionAsync(ctx);
-            await Player.StopAsync();
-            await Player.DestroyPlayerAsync();
+            var player = await GetPlayerAsync(ctx).ConfigureAwait(false);
+            if (player is null) return;
+            await player.StopAsync().ConfigureAwait(false);
+            await player.DisconnectAsync().ConfigureAwait(false);
             await ctx.CreateResponseAsync(":stop_button: Stopping Playback...").ConfigureAwait(false);
         }
 
         [SlashCommand("volume", "Changes audio playback volume between 0% and 100%.")]
-        public async Task SetVolume(InteractionContext ctx, [Option("volume", "Volume of the playback.")] double volume = 100)
+        public async Task SetVolume(InteractionContext ctx, [Option("volume", "Volume of the playback.")][Minimum(0)][Maximum(100)] long volume = 100)
         {
-            await BeforeExecutionAsync(ctx);
-            if (volume < 0 || volume > 150)
-            {
-                await ctx.CreateResponseAsync(":warning: Volume must be greater than 0, and less than or equal to 150.").ConfigureAwait(false);
-                return;
-            }
-
-            await Player.SetVolumeAsync((int)volume);
+            var player = await GetPlayerAsync(ctx).ConfigureAwait(false);
+            if (player is null) return;
+            await player.SetVolumeAsync(volume / 100f).ConfigureAwait(false);
             await ctx.CreateResponseAsync($":speaker: Volume set to {volume}%.").ConfigureAwait(false);
         }
 
-        public async Task BeforeExecutionAsync(InteractionContext ctx)
+        /// <summary>
+        ///     Gets the existing player for the guild, or responds with the reason it is unavailable and returns null.
+        /// </summary>
+        private async Task<LavalinkPlayer> GetPlayerAsync(InteractionContext ctx)
         {
-            // Check that the user is in a voice channel
-            var channel = ctx.Member.VoiceState?.Channel;
-            if (channel == null)
-            {
-                await ctx.CreateResponseAsync("You need to be in a voice channel.").ConfigureAwait(false);
-                return;
-            }
-
-            // Check that the user in the same voice channel
-            var userState = ctx.Guild.CurrentMember?.VoiceState?.Channel;
-            if (userState != null && channel != userState)
-            {
-                await ctx.CreateResponseAsync("You need to be in the same voice channel.").ConfigureAwait(false);
-                return;
-            }
-
-            // Connect the music play to the voice channel
-            Player = await Service.GetOrCreateDataAsync(ctx.Guild);
-            Player.CommandChannel = ctx.Channel;
+            var (player, error) = await Service.GetPlayerAsync(ctx, false).ConfigureAwait(false);
+            if (player is null)
+                await BotServices.SendResponseAsync(ctx, error, ResponseType.Warning).ConfigureAwait(false);
+            return player;
         }
     }
 }

@@ -1,85 +1,83 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using FlawBOT.Common;
+using FlawBOT.Properties;
 using FlawBOT.Services;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
 {
     [SlashCommandGroup("server", "Slash command group for server commands.")]
+    [SlashRequireGuild]
     public class ServerModule : ApplicationCommandModule
     {
         [SlashCommand("avatar", "Changes the server avatar.")]
-        [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task SetServerAvatar(InteractionContext ctx, [Option("query", "Image URL in JPG, PNG or IMG format.")] string query)
+        [SlashRequirePermissions(Permissions.ManageGuild)]
+        public async Task SetServerAvatar(InteractionContext ctx, [Option("query", "Image URL in JPG, PNG or GIF format.")] string query)
         {
-            try
+            await ctx.DeferAsync().ConfigureAwait(false);
+            await using var stream = await BotServices.CheckImageInput(query).ConfigureAwait(false);
+            if (stream is null)
             {
-                var stream = BotServices.CheckImageInput(ctx, query).Result;
-                await ctx.Guild.ModifyAsync(chn => chn.Icon = stream).ConfigureAwait(false);
-                await ctx.CreateResponseAsync(ctx.Guild.Name + " server avatar has been updated!").ConfigureAwait(false);
+                await BotServices.SendDeferredAsync(ctx, Resources.URL_INVALID_IMG, ResponseType.Warning).ConfigureAwait(false);
+                return;
             }
-            catch
-            {
-                await BotServices.SendResponseAsync(ctx, ctx.Guild.Name + " server avatar has not been updated!", ResponseType.Error).ConfigureAwait(false);
-            }
+
+            await ctx.Guild.ModifyAsync(x => x.Icon = stream).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, ctx.Guild.Name + " server avatar has been updated!").ConfigureAwait(false);
         }
 
         [SlashCommand("info", "Returns server information.")]
         public async Task GetServerInfo(InteractionContext ctx)
         {
+            var guild = ctx.Guild;
+            // The owner may not be cached without the members intent, so fetch it.
+            var owner = await guild.GetMemberAsync(guild.OwnerId).ConfigureAwait(false);
             var output = new DiscordEmbedBuilder()
-                .WithAuthor($"Owner: {ctx.Guild.Owner.Username}#{ctx.Guild.Owner.Discriminator}", iconUrl: ctx.Guild.Owner.AvatarUrl ?? string.Empty)
-                .WithTitle(ctx.Guild.Name)
-                .WithDescription("ID: " + ctx.Guild.Id)
-                .AddField("Created on", ctx.Guild.CreationTimestamp.DateTime.ToString(CultureInfo.InvariantCulture), true)
-                .AddField("Member Count", ctx.Guild.MemberCount.ToString(), true)
-                .AddField("Authentication", ctx.Guild.MfaLevel.ToString(), true)
-                .AddField("Content Filter", ctx.Guild.ExplicitContentFilter.ToString(), true)
-                .AddField("Verification", ctx.Guild.VerificationLevel.ToString(), true)
-                .WithFooter(ctx.Guild.Name + " / #" + ctx.Channel.Name + " / " + DateTime.Now)
+                .WithAuthor($"Owner: {BotServices.FormatUserName(owner)}", iconUrl: owner?.AvatarUrl)
+                .WithTitle(guild.Name)
+                .WithDescription("ID: " + guild.Id)
+                .AddSafeField("Created on", guild.CreationTimestamp.UtcDateTime.ToString("yyyy-MM-dd HH:mm 'UTC'", CultureInfo.InvariantCulture), true)
+                .AddSafeField("Member Count", guild.MemberCount.ToString(), true)
+                .AddSafeField("Authentication", guild.MfaLevel.ToString(), true)
+                .AddSafeField("Content Filter", guild.ExplicitContentFilter.ToString(), true)
+                .AddSafeField("Verification", guild.VerificationLevel.ToString(), true)
+                .AddSafeField("Roles", guild.Roles.Values.OrderByDescending(x => x.Position).Select(x => $"[`{x.Name}`]").JoinWithinLimit(""))
+                .WithFooter($"{guild.Name} / #{ctx.Channel.Name}")
+                .WithTimestamp(DateTimeOffset.UtcNow)
                 .WithColor(DiscordColor.Rose);
-
-            if (!string.IsNullOrEmpty(ctx.Guild.IconHash))
-                output.WithThumbnail(ctx.Guild.IconUrl);
-
-            var roles = new StringBuilder();
-            foreach (var role in ctx.Guild.Roles)
-                roles.Append($"[`{role.Value.Name}`]");
-            if (roles.Length == 0) roles.Append("None");
-            output.AddField("Roles", roles.ToString());
-
-            var emojis = new StringBuilder();
-            foreach (var emoji in ctx.Guild.Emojis)
-                emojis.Append(emoji.Value.Name + (!emoji.Equals(ctx.Guild.Emojis.Last()) ? ", " : string.Empty));
-            if (emojis.Length != 0) output.AddField("Emojis", emojis.ToString(), true);
+            if (!string.IsNullOrEmpty(guild.IconHash))
+                output.WithThumbnail(guild.IconUrl);
+            if (guild.Emojis.Count > 0)
+                output.AddSafeField("Emojis", guild.Emojis.Values.Select(x => x.Name).JoinWithinLimit(", "), true);
             await ctx.CreateResponseAsync(output.Build()).ConfigureAwait(false);
         }
 
         [SlashCommand("invite", "Returns server invite link.")]
+        [SlashRequireBotPermissions(Permissions.CreateInstantInvite)]
         public async Task GetServerInvite(InteractionContext ctx)
         {
-            await ctx.CreateResponseAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ": https://discord.gg/" + ctx.Channel.CreateInviteAsync().Result.Code).ConfigureAwait(false);
+            var invite = await ctx.Channel.CreateInviteAsync().ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Instant Invite to " + Formatter.Bold(ctx.Guild.Name) + ": https://discord.gg/" + invite.Code).ConfigureAwait(false);
         }
 
         [SlashCommand("rename", "Changes the name of the server.")]
-        [RequireUserPermissions(Permissions.ManageGuild)]
+        [SlashRequirePermissions(Permissions.ManageGuild)]
         public async Task SetServerName(InteractionContext ctx, [Option("name", "New server name.")] string name = "")
         {
-            if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
+            if (string.IsNullOrWhiteSpace(name) || name.Trim().Length < 2 || name.Trim().Length > 100)
             {
-                await BotServices.SendResponseAsync(ctx, "Server name cannot be blank or over 100 characters!", ResponseType.Warning).ConfigureAwait(false);
+                await BotServices.SendResponseAsync(ctx, "Server name must be between 2 and 100 characters!", ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
 
-            await ctx.Guild.ModifyAsync(srv => srv.Name = name).ConfigureAwait(false);
-            await ctx.CreateResponseAsync("Server name has been changed to " + Formatter.Bold(name)).ConfigureAwait(false);
+            await ctx.Guild.ModifyAsync(srv => srv.Name = name.Trim()).ConfigureAwait(false);
+            await ctx.CreateResponseAsync("Server name has been changed to " + Formatter.Bold(name.Trim())).ConfigureAwait(false);
         }
     }
 }

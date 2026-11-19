@@ -11,13 +11,9 @@ namespace FlawBOT.Modules
         [SlashCommand("twitch", "Returns Twitch stream information, if online.")]
         public async Task Twitch(InteractionContext ctx, [Option("query", "Channel to find on Twitch.")] string query)
         {
+            await ctx.DeferAsync().ConfigureAwait(false);
             var output = await TwitchService.GetTwitchDataAsync(Program.Settings.Tokens.TwitchToken, Program.Settings.Tokens.TwitchAccess, query).ConfigureAwait(false);
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_TWITCH, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_TWITCH, ResponseType.Missing).ConfigureAwait(false);
         }
     }
 }

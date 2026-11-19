@@ -1,72 +1,127 @@
 ﻿using FlawBOT.Common;
 using FlawBOT.Properties;
+using FlawBOT.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlawBOT
 {
-    internal sealed class Program
+    internal static class Program
     {
-        private static List<FlawBot> Shards { get; } = new();
-        private static CancellationTokenSource CancelTokenSource { get; } = new();
-        public static BotSettings Settings { get; set; }
+        public static BotSettings Settings { get; set; } = new();
 
-        public static void Main(string[] args)
-        {
-            RunBotAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
+        /// <summary>
+        ///     Location of the configuration file, relative to the application rather than the working directory.
+        /// </summary>
+        public static string ConfigPath { get; } = Path.Combine(AppContext.BaseDirectory, "Resources", "config.json");
 
-        private static async Task RunBotAsync(string[] args)
+        public static async Task<int> Main(string[] args)
         {
+            using var cancelTokenSource = new CancellationTokenSource();
+
+            // Shut down cleanly on Ctrl+C (SIGINT) and on SIGTERM (systemd, Docker).
+            Console.CancelKeyPress += (_, e) =>
+            {
+                e.Cancel = true;
+                cancelTokenSource.Cancel();
+            };
+            using var sigterm = PosixSignalRegistration.Create(PosixSignal.SIGTERM, ctx =>
+            {
+                ctx.Cancel = true;
+                cancelTokenSource.Cancel();
+            });
+
+            var shards = new List<FlawBot>();
             try
             {
-                // Set a command for canceling the bot process
-                Console.CancelKeyPress += ConsoleOnCancelKeyPress;
-
-                // Load Settings
-                var fileName = "Resources\\config.json";
-                if (!File.Exists(fileName)) return;
-                var json = await new StreamReader(File.OpenRead(fileName), new UTF8Encoding(false)).ReadToEndAsync();
-                Settings = JsonConvert.DeserializeObject<BotSettings>(json);
-
-                // Generate a list of shards
-                var botList = new List<Task>();
-                for (var i = 0; i < Settings?.ShardCount; i++)
+                if (!File.Exists(ConfigPath))
                 {
-                    var client = new FlawBot(i);
-                    Shards.Add(client);
-                    botList.Add(client.RunAsync());
-                    await Task.Delay(7500).ConfigureAwait(false);
+                    Console.Error.WriteLine($"Configuration file not found: {ConfigPath}");
+                    return 1;
                 }
 
-                // Run bot shards
-                await Task.WhenAll(botList).ConfigureAwait(false);
-                await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
+                Settings = LoadSettings(await File.ReadAllTextAsync(ConfigPath, cancelTokenSource.Token).ConfigureAwait(false));
+                if (string.IsNullOrWhiteSpace(Settings.Tokens.DiscordToken))
+                {
+                    Console.Error.WriteLine($"A Discord bot token is required. Add it to {ConfigPath} under Tokens > Discord.");
+                    return 1;
+                }
+
+                // Download the Steam app list and TF2 item schema in the background so the bot can connect right away.
+                _ = Task.Run(() => RefreshSteamDataAsync(Settings.Tokens.SteamToken));
+
+                // Start each shard, waiting between them as Discord limits how quickly sessions can be identified.
+                for (var i = 0; i < Settings.ShardCount; i++)
+                {
+                    var client = new FlawBot(i);
+                    shards.Add(client);
+                    // Connecting retries until Discord is reachable, so stop waiting if shutdown is requested.
+                    await client.RunAsync().WaitAsync(cancelTokenSource.Token).ConfigureAwait(false);
+                    if (i + 1 < Settings.ShardCount)
+                        await Task.Delay(TimeSpan.FromSeconds(7.5), cancelTokenSource.Token).ConfigureAwait(false);
+                }
+
+                await Task.Delay(Timeout.Infinite, cancelTokenSource.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancelTokenSource.IsCancellationRequested)
+            {
+                // Shutdown requested.
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Resources.ERR_EXCEPTION, ex.Message);
+                Console.Error.WriteLine(Resources.ERR_EXCEPTION, ex.Message);
                 if (ex.InnerException is not null)
-                    Console.WriteLine(Resources.ERR_EXCEPTION_INNER, ex.InnerException.Message);
-                Console.ReadKey();
+                    Console.Error.WriteLine(Resources.ERR_EXCEPTION_INNER, ex.InnerException.Message);
+                return 1;
+            }
+            finally
+            {
+                Console.WriteLine(Resources.INFO_SHUTDOWN);
+                foreach (var shard in shards)
+                {
+                    try
+                    {
+                        await shard.StopAsync().WaitAsync(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Console.Error.WriteLine("Timed out while disconnecting from Discord.");
+                    }
+                }
             }
 
-            Console.WriteLine(Resources.INFO_SHUTDOWN);
+            return 0;
         }
 
-        private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        /// <summary>
+        ///     Parses the configuration file contents. Missing sections fall back to their defaults.
+        /// </summary>
+        public static BotSettings LoadSettings(string json)
         {
-            e.Cancel = true;
+            var settings = JsonConvert.DeserializeObject<BotSettings>(json) ?? new BotSettings();
+            settings.Lavalink ??= new Lavalink();
+            settings.Tokens ??= new Tokens();
+            settings.ShardCount = Math.Max(1, settings.ShardCount);
+            if (string.IsNullOrWhiteSpace(settings.Name)) settings.Name = "FlawBOT";
+            return settings;
+        }
 
-            foreach (var shard in Shards)
-                shard.StopAsync().GetAwaiter().GetResult();
+        private static async Task RefreshSteamDataAsync(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Console.WriteLine("No Steam token provided; Steam and TF2 item lookups will be unavailable.");
+                return;
+            }
 
-            CancelTokenSource.Cancel();
+            var results = await Task.WhenAll(SteamService.UpdateSteamAppListAsync(token), TeamFortressService.UpdateTF2SchemaAsync(token)).ConfigureAwait(false);
+            if (results.All(x => x)) Console.WriteLine("Steam app list and TF2 item schema loaded.");
         }
     }
 }

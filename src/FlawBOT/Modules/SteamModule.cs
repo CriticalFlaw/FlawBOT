@@ -2,7 +2,6 @@
 using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Modules
@@ -11,37 +10,29 @@ namespace FlawBOT.Modules
     public class SteamModule : ApplicationCommandModule
     {
         [SlashCommand("connect", "Formats a server connection string into a link.")]
-        public async Task SteamConnect(InteractionContext ctx, [Option("link", "Connection string (ex. IP:PORT)")] string link)
+        public async Task SteamConnect(InteractionContext ctx, [Option("link", "Connection string (ex. IP:PORT; password PASS)")] string link)
         {
-            var regex = new Regex(@"\s*(?'ip'\S+)\s*", RegexOptions.Compiled).Match(link);
-            if (regex.Success)
-                await ctx.CreateResponseAsync(string.Format($"steam://connect/{regex.Groups["ip"].Value}/{regex.Groups["pw"].Value}")).ConfigureAwait(false);
-            else
+            var output = SteamService.FormatConnectLink(link);
+            if (output is null)
                 await BotServices.SendResponseAsync(ctx, Resources.ERR_INVALID_IP_GAME, ResponseType.Warning).ConfigureAwait(false);
+            else
+                await ctx.CreateResponseAsync(output).ConfigureAwait(false);
         }
 
         [SlashCommand("game", "Returns information on a Steam game.")]
         public async Task SteamGame(InteractionContext ctx, [Option("query", "Game to find on Steam.")] string query = "Team Fortress 2")
         {
-            var output = await SteamService.GetSteamGame(query).ConfigureAwait(false);
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await ctx.DeferAsync().ConfigureAwait(false);
+            var output = await SteamService.GetSteamGameAsync(Program.Settings.Tokens.SteamToken, query).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_COMMON).ConfigureAwait(false);
         }
 
         [SlashCommand("user", "Returns information on a Steam user.")]
-        public async Task SteamUser(InteractionContext ctx, [Option("query", "User to find on Steam.")] string query)
+        public async Task SteamUser(InteractionContext ctx, [Option("query", "Steam ID, profile link or custom URL name of the user.")] string query)
         {
-            var output = SteamService.GetSteamProfileAsync(Program.Settings.Tokens.SteamToken, query).Result;
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await ctx.DeferAsync().ConfigureAwait(false);
+            var output = await SteamService.GetSteamProfileAsync(Program.Settings.Tokens.SteamToken, query).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_COMMON).ConfigureAwait(false);
         }
     }
 }

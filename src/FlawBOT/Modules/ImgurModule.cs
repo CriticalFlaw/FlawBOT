@@ -11,13 +11,9 @@ namespace FlawBOT.Modules
         [SlashCommand("imgur", "Returns a queried image from Imgur.")]
         public async Task GetImgurResult(InteractionContext ctx, [Option("query", "Search query to pass to Imgur.")] string query)
         {
-            var output = ImgurService.GetImgurResultAsync(Program.Settings.Tokens.ImgurToken, query).Result;
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await ctx.DeferAsync().ConfigureAwait(false);
+            var output = await ImgurService.GetImgurResultAsync(Program.Settings.Tokens.ImgurToken, query).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
         }
     }
 }

@@ -10,8 +10,7 @@
 
 namespace FlawBOT.Properties {
     using System;
-    
-    
+        
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -70,15 +69,6 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to next.
-        /// </summary>
-        internal static string APP_INTERACT {
-            get {
-                return ResourceManager.GetString("APP_INTERACT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unable to reach the API. Please try again later..
         /// </summary>
         internal static string ERR_API_CONNECTION {
@@ -120,42 +110,6 @@ namespace FlawBOT.Properties {
         internal static string ERR_CHANNEL_TOPIC {
             get {
                 return ResourceManager.GetString("ERR_CHANNEL_TOPIC", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to create the server emoji. Either the HTTP request failed or Discord prevented the operation from completing..
-        /// </summary>
-        internal static string ERR_EMOJI_ADD {
-            get {
-                return ResourceManager.GetString("ERR_EMOJI_ADD", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The provided URL must point to an image file or an attachment..
-        /// </summary>
-        internal static string ERR_EMOJI_IMAGE {
-            get {
-                return ResourceManager.GetString("ERR_EMOJI_IMAGE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Emoji name is invalid or does not meet the length requirement of 2-50 characters..
-        /// </summary>
-        internal static string ERR_EMOJI_NAME {
-            get {
-                return ResourceManager.GetString("ERR_EMOJI_NAME", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to create the server emoji. Image file size is too large..
-        /// </summary>
-        internal static string ERR_EMOJI_SIZE {
-            get {
-                return ResourceManager.GetString("ERR_EMOJI_SIZE", resourceCulture);
             }
         }
         
@@ -214,51 +168,6 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error calculating the equation, make sure your values are integers and the operation is valid..
-        /// </summary>
-        internal static string ERR_MATH_EQUATION {
-            get {
-                return ResourceManager.GetString("ERR_MATH_EQUATION", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error updating the Pokémon card list: {0}.
-        /// </summary>
-        internal static string ERR_POKEMON_LIST {
-            get {
-                return ResourceManager.GetString("ERR_POKEMON_LIST", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please provide a poll question..
-        /// </summary>
-        internal static string ERR_POLL_QUESTION {
-            get {
-                return ResourceManager.GetString("ERR_POLL_QUESTION", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please provide an existing category..
-        /// </summary>
-        internal static string ERR_REDDIT_UNKNOWN {
-            get {
-                return ResourceManager.GetString("ERR_REDDIT_UNKNOWN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please provide more information on the issue (50 characters minimum)..
-        /// </summary>
-        internal static string ERR_REPORT_LENGTH {
-            get {
-                return ResourceManager.GetString("ERR_REPORT_LENGTH", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please provide an existing server role..
         /// </summary>
         internal static string ERR_ROLE_EXISTING {
@@ -273,24 +182,6 @@ namespace FlawBOT.Properties {
         internal static string ERR_ROLE_NAME {
             get {
                 return ResourceManager.GetString("ERR_ROLE_NAME", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This user doesn&apos;t have any roles..
-        /// </summary>
-        internal static string ERR_ROLE_NONE {
-            get {
-                return ResourceManager.GetString("ERR_ROLE_NONE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You are unauthorized to remove roles from this user..
-        /// </summary>
-        internal static string ERR_ROLE_NOT_ALLOWED {
-            get {
-                return ResourceManager.GetString("ERR_ROLE_NOT_ALLOWED", resourceCulture);
             }
         }
         
@@ -322,51 +213,6 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is the last found result on the list..
-        /// </summary>
-        internal static string INFO_LIST_LAST_RESULT {
-            get {
-                return ResourceManager.GetString("INFO_LIST_LAST_RESULT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Type &apos;next&apos; within 10 seconds for the next result..
-        /// </summary>
-        internal static string INFO_LIST_NEXT_RESULT {
-            get {
-                return ResourceManager.GetString("INFO_LIST_NEXT_RESULT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name..
-        /// </summary>
-        internal static string INFO_REPORT_SENDER {
-            get {
-                return ResourceManager.GetString("INFO_REPORT_SENDER", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Request timed out....
-        /// </summary>
-        internal static string INFO_REQ_TIMEOUT {
-            get {
-                return ResourceManager.GetString("INFO_REQ_TIMEOUT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Respond with **yes** to proceed or wait 10 seconds to cancel this operation..
-        /// </summary>
-        internal static string INFO_RESPOND {
-            get {
-                return ResourceManager.GetString("INFO_RESPOND", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Shutting Down....
         /// </summary>
         internal static string INFO_SHUTDOWN {
@@ -376,29 +222,11 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the command again for a different result..
-        /// </summary>
-        internal static string INFO_TRY_AGAIN {
-            get {
-                return ResourceManager.GetString("INFO_TRY_AGAIN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No results found..
         /// </summary>
         internal static string NOT_FOUND_COMMON {
             get {
                 return ResourceManager.GetString("NOT_FOUND_COMMON", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Emoji not found in the server list..
-        /// </summary>
-        internal static string NOT_FOUND_EMOJI {
-            get {
-                return ResourceManager.GetString("NOT_FOUND_EMOJI", resourceCulture);
             }
         }
         
@@ -457,7 +285,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://discordapp.com/oauth2/authorize?client_id=339833029013012483&amp;scope=bot&amp;permissions=66186303.
+        ///   Looks up a localized string similar to https://discord.com/oauth2/authorize?client_id=339833029013012483&amp;scope=bot+applications.commands&amp;permissions=66186303.
         /// </summary>
         internal static string URL_BOT_Invite {
             get {
@@ -475,7 +303,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://aws.random.cat/meow.
+        ///   Looks up a localized string similar to https://api.thecatapi.com/v1/images/search.
         /// </summary>
         internal static string URL_CatPhoto {
             get {
@@ -520,29 +348,11 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.google.ca/maps/@{0},{1},14z.
-        /// </summary>
-        internal static string URL_Google_Maps {
-            get {
-                return ResourceManager.GetString("URL_Google_Maps", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An image URL ending with .img, .png or .jpg is required!.
+        ///   Looks up a localized string similar to A valid http(s) link to a PNG, JPG or GIF image (10MB max) is required!.
         /// </summary>
         internal static string URL_INVALID_IMG {
             get {
                 return ResourceManager.GetString("URL_INVALID_IMG", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://ipapi.co/{0}/json/.
-        /// </summary>
-        internal static string URL_IPAPI {
-            get {
-                return ResourceManager.GetString("URL_IPAPI", resourceCulture);
             }
         }
         
@@ -628,20 +438,11 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://store.steampowered.com/app/{0}.
+        ///   Looks up a localized string similar to https://store.steampowered.com/app/{0}.
         /// </summary>
         internal static string URL_Steam_App {
             get {
                 return ResourceManager.GetString("URL_Steam_App", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to steam://connect/{0}:27015.
-        /// </summary>
-        internal static string URL_Steam_Connect {
-            get {
-                return ResourceManager.GetString("URL_Steam_Connect", resourceCulture);
             }
         }
         
@@ -700,7 +501,7 @@ namespace FlawBOT.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.weatherstack.com//current?access_key={0}&amp;query={1}.
+        ///   Looks up a localized string similar to http://api.weatherstack.com/current?access_key={0}&amp;query={1}.
         /// </summary>
         internal static string URL_Weather {
             get {
@@ -732,6 +533,51 @@ namespace FlawBOT.Properties {
         internal static string URL_YouTube_Video {
             get {
                 return ResourceManager.GetString("URL_YouTube_Video", resourceCulture);
+            }
+        }
+            
+        /// <summary>
+        ///   Looks up a localized string similar to https://api.imgur.com/3/gallery/search/top/all/0?q={0}.
+        /// </summary>
+        internal static string URL_Imgur_Search {
+            get {
+                return ResourceManager.GetString("URL_Imgur_Search", resourceCulture);
+            }
+        }
+            
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.omdbapi.com/?t={0}&amp;apikey={1}&amp;plot=short.
+        /// </summary>
+        internal static string URL_OMDB {
+            get {
+                return ResourceManager.GetString("URL_OMDB", resourceCulture);
+            }
+        }
+            
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.imdb.com/title/{0}/.
+        /// </summary>
+        internal static string URL_IMDB {
+            get {
+                return ResourceManager.GetString("URL_IMDB", resourceCulture);
+            }
+        }
+            
+        /// <summary>
+        ///   Looks up a localized string similar to https://store.steampowered.com/api/storesearch/?term={0}&amp;l=english&amp;cc=US.
+        /// </summary>
+        internal static string URL_Steam_Search {
+            get {
+                return ResourceManager.GetString("URL_Steam_Search", resourceCulture);
+            }
+        }
+            
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.twitch.tv/{0}.
+        /// </summary>
+        internal static string URL_Twitch_Channel {
+            get {
+                return ResourceManager.GetString("URL_Twitch_Channel", resourceCulture);
             }
         }
     }

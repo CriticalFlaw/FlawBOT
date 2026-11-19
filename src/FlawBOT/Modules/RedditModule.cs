@@ -29,13 +29,9 @@ namespace FlawBOT.Modules
 
         private static async Task RedditPost(InteractionContext ctx, string query, RedditCategory category)
         {
-            var output = RedditService.GetRedditResults(query, category);
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await ctx.DeferAsync().ConfigureAwait(false);
+            var output = await RedditService.GetRedditResultsAsync(query, category).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_COMMON).ConfigureAwait(false);
         }
     }
 }

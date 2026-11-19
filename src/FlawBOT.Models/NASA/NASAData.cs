@@ -16,6 +16,9 @@ namespace FlawBOT.Models.NASA
         [JsonProperty("hdurl")]
         public string ImageHd { get; set; }
 
+        [JsonProperty("media_type")]
+        public string MediaType { get; set; }
+
         [JsonProperty("title")]
         public string Title { get; set; }
 

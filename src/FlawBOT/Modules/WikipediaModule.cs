@@ -11,13 +11,9 @@ namespace FlawBOT.Modules
         [SlashCommand("wikipedia", "Returns articles found on Wikipedia.")]
         public async Task GetWikipediaArticles(InteractionContext ctx, [Option("query", "Articles to find on Wikipedia.")] string query)
         {
+            await ctx.DeferAsync().ConfigureAwait(false);
             var output = await WikipediaService.GetWikipediaArticlesAsync(query).ConfigureAwait(false);
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_WIKIPEDIA, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_WIKIPEDIA, ResponseType.Missing).ConfigureAwait(false);
         }
     }
 }

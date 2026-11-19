@@ -1,5 +1,4 @@
 ﻿using DSharpPlus.SlashCommands;
-using FlawBOT.Common;
 using FlawBOT.Properties;
 using FlawBOT.Services;
 using System.Threading.Tasks;
@@ -14,6 +13,7 @@ namespace FlawBOT.Modules
         {
             return GetEpisodePost(ctx, SiteRoot.Frinkiac);
         }
+
         [SlashCommand("futurama", "Returns a random Futurama episode GIF.")]
         public Task Futurama(InteractionContext ctx)
         {
@@ -22,13 +22,9 @@ namespace FlawBOT.Modules
 
         private static async Task GetEpisodePost(InteractionContext ctx, SiteRoot show)
         {
+            await ctx.DeferAsync().ConfigureAwait(false);
             var output = await GetEpisodePostAsync(show).ConfigureAwait(false);
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.NOT_FOUND_COMMON, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.NOT_FOUND_COMMON).ConfigureAwait(false);
         }
     }
 }

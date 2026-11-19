@@ -1,7 +1,9 @@
 ﻿using DSharpPlus;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
+using FlawBOT.Common;
+using FlawBOT.Properties;
 using FlawBOT.Services;
 using System.Threading.Tasks;
 
@@ -16,7 +18,7 @@ namespace FlawBOT.Modules
             var settings = Program.Settings;
             var output = new DiscordEmbedBuilder()
                 .WithTitle(settings.Name)
-                .WithDescription($"Multipurpose Discord bot written in C# with DSharpPlus.")
+                .WithDescription("Multipurpose Discord bot written in C# with DSharpPlus.")
                 .AddField(":clock1: Uptime", BotServices.GetCurrentUptime(), true)
                 .AddField(":link: Links", $"[Documentation]({settings.DocsLink}) **|** [GitHub]({settings.GitHubLink})", true)
                 .WithFooter($"Version {settings.Version}")
@@ -26,7 +28,8 @@ namespace FlawBOT.Modules
         }
 
         [SlashCommand("leave", "Removes FlawBOT from the server.")]
-        [RequireUserPermissions(Permissions.Administrator)]
+        [SlashRequireGuild]
+        [SlashRequireUserPermissions(Permissions.Administrator)]
         public async Task LeaveServer(InteractionContext ctx)
         {
             await BotServices.SendResponseAsync(ctx, $"Thank you for using {Program.Settings.Name}. Goodbye!").ConfigureAwait(false);
@@ -47,7 +50,7 @@ namespace FlawBOT.Modules
 
         #region OWNER-ONLY
 
-        [RequireOwner]
+        [SlashRequireOwner]
         [SlashCommand("activity", "Changes FlawBOT's activity.")]
         public async Task SetBotActivity(InteractionContext ctx, [Option("activity", "Activity name.")] string activity)
         {
@@ -55,31 +58,41 @@ namespace FlawBOT.Modules
             await ctx.CreateResponseAsync($"{Program.Settings.Name} activity has been changed to {Formatter.Bold(activity)}.").ConfigureAwait(false);
         }
 
-        [RequireOwner]
+        [SlashRequireOwner]
         [SlashCommand("avatar", "Changes FlawBOT's avatar.")]
-        public async Task SetBotAvatar(InteractionContext ctx, [Option("url", "Image URL in JPG, PNG or IMG format.")] string url)
+        public async Task SetBotAvatar(InteractionContext ctx, [Option("url", "Image URL in JPG, PNG or GIF format.")] string url)
         {
-            var stream = BotServices.CheckImageInput(ctx, url).Result;
+            await ctx.DeferAsync().ConfigureAwait(false);
+            await using var stream = await BotServices.CheckImageInput(url).ConfigureAwait(false);
             if (stream is null)
             {
-                await ctx.CreateResponseAsync("Invalid image format. Please try again.").ConfigureAwait(false);
+                await BotServices.SendDeferredAsync(ctx, Resources.URL_INVALID_IMG, ResponseType.Warning).ConfigureAwait(false);
                 return;
             }
+
             await ctx.Client.UpdateCurrentUserAsync(avatar: stream).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"{Program.Settings.Name} avatar has been updated.").ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, $"{Program.Settings.Name} avatar has been updated.").ConfigureAwait(false);
         }
 
-        [RequireOwner]
+        [SlashRequireOwner]
+        [SlashRequireGuild]
         [SlashCommand("nickname", "Changes FlawBOT's server nickname.")]
-        public async Task SetBotUsername(InteractionContext ctx, [Option("nickname", "New nickname for FlawBOT.")] string nickname)
+        public async Task SetBotNickname(InteractionContext ctx, [Option("nickname", "New nickname for FlawBOT. Leave empty to reset.")] string nickname = null)
         {
-            var oldName = ctx.Client.CurrentUser.Username;
-            var newName = string.IsNullOrWhiteSpace(nickname) ? Program.Settings.Name : nickname;
-            await ctx.Client.UpdateCurrentUserAsync(username: newName).ConfigureAwait(false);
-            await ctx.CreateResponseAsync($"{oldName}'s username has been changed to {Formatter.Bold(newName)}.").ConfigureAwait(false);
+            var newName = string.IsNullOrWhiteSpace(nickname) ? null : nickname.Trim();
+            if (newName?.Length > 32)
+            {
+                await BotServices.SendResponseAsync(ctx, "Nicknames must be 32 characters or less.", ResponseType.Warning).ConfigureAwait(false);
+                return;
+            }
+
+            await ctx.Guild.CurrentMember.ModifyAsync(x => x.Nickname = newName).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(newName is null
+                ? $"{Program.Settings.Name}'s nickname has been reset."
+                : $"{Program.Settings.Name}'s nickname has been changed to {Formatter.Bold(newName)}.").ConfigureAwait(false);
         }
 
-        [RequireOwner]
+        [SlashRequireOwner]
         [SlashCommand("status", "Changes FlawBOT's status.")]
         public async Task SetBotStatus(InteractionContext ctx, [Choice("Online", "Online")][Choice("Idle", "Idle")][Choice("Invisible", "Invisible")][Choice("Do Not Disturb", "Do Not Disturb")][Option("status", "New FlawBOT status.")] string status)
         {

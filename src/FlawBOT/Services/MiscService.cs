@@ -4,17 +4,15 @@ using FlawBOT.Models.Misc;
 using FlawBOT.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Immutable;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services
 {
     public class MiscService : HttpHandler
     {
-        private static readonly ImmutableArray<string> Answers = new[]
-        {
+        public static readonly ImmutableArray<string> Answers =
+        [
             "It is certain",
             "It is decidedly so",
             "Without a doubt",
@@ -35,45 +33,66 @@ namespace FlawBOT.Services
             "My sources say no",
             "Outlook not so good",
             "Very doubtful"
-        }.ToImmutableArray();
+        ];
 
         public static string GetRandomAnswer()
         {
-            var random = new Random();
-            return Answers[random.Next(Answers.Length)];
+            return Answers[Random.Next(Answers.Length)];
         }
 
         public static async Task<DiscordEmbed> GetCatImageAsync()
         {
-            var response = await Http.GetStringAsync(Resources.URL_CatPhoto).ConfigureAwait(false);
-            var results = JObject.Parse(response)["file"]?.ToString();
+            try
+            {
+                // The previous provider (random.cat) has shut down; TheCatAPI's search endpoint needs no key.
+                var response = await Http.GetStringAsync(Resources.URL_CatPhoto).ConfigureAwait(false);
+                var image = JArray.Parse(response).First?["url"]?.ToString();
+                if (string.IsNullOrWhiteSpace(image)) return null;
 
-            var responseFact = await Http.GetStringAsync(Resources.URL_CatFacts).ConfigureAwait(false);
-            var resultsFact = JObject.Parse(responseFact)["fact"]?.ToString();
+                var output = new DiscordEmbedBuilder()
+                    .WithImageUrl(image)
+                    .WithColor(DiscordColor.Orange);
 
-            var output = new DiscordEmbedBuilder()
-                .WithImageUrl(results)
-                .WithFooter(resultsFact)
-                .WithColor(DiscordColor.Orange);
-            return output.Build();
+                // The fact is a nice-to-have; still show the picture if the facts API is down.
+                try
+                {
+                    var responseFact = await Http.GetStringAsync(Resources.URL_CatFacts).ConfigureAwait(false);
+                    var fact = JObject.Parse(responseFact)["fact"]?.ToString();
+                    if (!string.IsNullOrWhiteSpace(fact)) output.WithFooter(fact.Truncate(EmbedExtensions.FooterLimit));
+                }
+                catch
+                {
+                    // Ignore
+                }
+
+                return output.Build();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static async Task<DiscordEmbed> GetDogImageAsync()
         {
-            var response = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
-            var result = JsonConvert.DeserializeObject<DogData>(response);
-            var results = (result.Status != "success") ? null : result;
-
-            var output = new DiscordEmbedBuilder()
-                .WithImageUrl(results.Message)
-                .WithColor(DiscordColor.Brown);
-            return output.Build();
+            try
+            {
+                var response = await Http.GetStringAsync(Resources.URL_DogPhoto).ConfigureAwait(false);
+                return BuildDogEmbed(JsonConvert.DeserializeObject<DogData>(response));
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public static async Task<IPLocation> GetIpLocationAsync(IPAddress query)
+        public static DiscordEmbed BuildDogEmbed(DogData result)
         {
-            var result = await Http.GetStringAsync(string.Format(Resources.URL_IPAPI, query)).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<IPLocation>(result);
+            if (result?.Status != "success" || string.IsNullOrWhiteSpace(result.Message)) return null;
+            return new DiscordEmbedBuilder()
+                .WithImageUrl(result.Message)
+                .WithColor(DiscordColor.Brown)
+                .Build();
         }
     }
 }

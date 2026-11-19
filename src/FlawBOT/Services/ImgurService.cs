@@ -1,41 +1,51 @@
 ﻿using DSharpPlus.Entities;
-using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
-using Imgur.API.Enums;
-using Imgur.API.Models.Impl;
+using FlawBOT.Common;
+using FlawBOT.Models.Imgur;
+using FlawBOT.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace FlawBOT.Services
 {
-    public static class ImgurService
+    public class ImgurService : HttpHandler
     {
-        public static async Task<DiscordEmbed> GetImgurResultAsync(string token, string query, GallerySortOrder order = GallerySortOrder.Top, TimeWindow time = TimeWindow.All)
+        /// <summary>
+        ///     Searches the Imgur gallery and returns a random safe-for-work image from the results.
+        /// </summary>
+        public static async Task<DiscordEmbed> GetImgurResultAsync(string token, string query)
         {
-            var imgur = new GalleryEndpoint(new ImgurClient(token));
-            var result = string.IsNullOrWhiteSpace(query)
-                ? (await imgur.GetRandomGalleryAsync().ConfigureAwait(false)).ToList()
-                : (await imgur.SearchGalleryAsync(query, order, time).ConfigureAwait(false)).ToList();
-            var results = result.Count > 0 ? result[new Random().Next(0, result.Count)] : null;
-
-            var output = new DiscordEmbedBuilder().WithColor(new DiscordColor("#89C623"));
-            switch (results)
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(query)) return null;
+            try
             {
-                case GalleryImage image:
-                    output.WithImageUrl(image.Link);
-                    output.WithFooter(image.Title ?? "Found via ImgurAPI");
-                    break;
-
-                case GalleryAlbum album:
-                    output.WithImageUrl(album.Link);
-                    output.WithFooter(album.Title ?? "Found via ImgurAPI");
-                    break;
-
-                default:
-                    return null;
+                using var request = new HttpRequestMessage(HttpMethod.Get, string.Format(Resources.URL_Imgur_Search, Uri.EscapeDataString(query.Trim())));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Client-ID", token);
+                using var response = await Http.SendAsync(request).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode) return null;
+                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return BuildGalleryEmbed(JsonConvert.DeserializeObject<ImgurGalleryResponse>(json));
             }
-            return output.Build();
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static DiscordEmbed BuildGalleryEmbed(ImgurGalleryResponse result)
+        {
+            var items = result?.Data?.Where(x => !x.Nsfw && !string.IsNullOrWhiteSpace(x.GetImageLink())).ToList();
+            if (items is null || items.Count == 0) return null;
+
+            var item = items[Random.Next(items.Count)];
+            return new DiscordEmbedBuilder()
+                .WithColor(new DiscordColor("#89C623"))
+                .WithImageUrl(item.GetImageLink())
+                .WithUrl(item.Link)
+                .WithFooter((item.Title ?? "Found via Imgur").Truncate(EmbedExtensions.FooterLimit))
+                .Build();
         }
     }
 }

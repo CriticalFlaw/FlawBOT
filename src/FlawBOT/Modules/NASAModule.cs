@@ -11,13 +11,9 @@ namespace FlawBOT.Modules
         [SlashCommand("nasa", "Returns the Picture of the Day from NASA.")]
         public async Task GetNasaImage(InteractionContext ctx)
         {
+            await ctx.DeferAsync().ConfigureAwait(false);
             var output = await NasaService.GetNasaImageAsync(Program.Settings.Tokens.NasaToken).ConfigureAwait(false);
-            if (output is null)
-            {
-                await BotServices.SendResponseAsync(ctx, Resources.ERR_API_CONNECTION, ResponseType.Missing).ConfigureAwait(false);
-                return;
-            }
-            await ctx.CreateResponseAsync(output).ConfigureAwait(false);
+            await BotServices.SendDeferredAsync(ctx, output, Resources.ERR_API_CONNECTION, ResponseType.Warning).ConfigureAwait(false);
         }
     }
 }

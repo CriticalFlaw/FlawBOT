@@ -1,0 +1,19 @@
+<Project>
+	<!-- Settings shared by every project in the solution. -->
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Version>5.0.0</Version>
+		<AssemblyVersion>5.0.0.0</AssemblyVersion>
+		<FileVersion>5.0.0.0</FileVersion>
+		<Authors>Igor Nikitin</Authors>
+		<Company>CriticalFlaw</Company>
+		<Product>FlawBOT</Product>
+		<RepositoryUrl>https://github.com/CriticalFlaw/FlawBOT</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<NeutralLanguage>en-CA</NeutralLanguage>
+		<!-- Only ship English satellite assemblies from dependencies. -->
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	</PropertyGroup>
+</Project>

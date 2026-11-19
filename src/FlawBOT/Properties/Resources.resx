@@ -129,44 +129,14 @@
   <data name="ERR_API_CONNECTION" xml:space="preserve">
     <value>Unable to reach the API. Please try again later.</value>
   </data>
-  <data name="ERR_EMOJI_ADD" xml:space="preserve">
-    <value>Unable to create the server emoji. Either the HTTP request failed or Discord prevented the operation from completing.</value>
-  </data>
-  <data name="ERR_EMOJI_IMAGE" xml:space="preserve">
-    <value>The provided URL must point to an image file or an attachment.</value>
-  </data>
-  <data name="ERR_EMOJI_NAME" xml:space="preserve">
-    <value>Emoji name is invalid or does not meet the length requirement of 2-50 characters.</value>
-  </data>
-  <data name="ERR_EMOJI_SIZE" xml:space="preserve">
-    <value>Unable to create the server emoji. Image file size is too large.</value>
-  </data>
-  <data name="ERR_MATH_EQUATION" xml:space="preserve">
-    <value>Error calculating the equation, make sure your values are integers and the operation is valid.</value>
-  </data>
-  <data name="ERR_POLL_QUESTION" xml:space="preserve">
-    <value>Please provide a poll question.</value>
-  </data>
-  <data name="ERR_REPORT_LENGTH" xml:space="preserve">
-    <value>Please provide more information on the issue (50 characters minimum).</value>
-  </data>
   <data name="ERR_ROLE_EXISTING" xml:space="preserve">
     <value>Please provide an existing server role.</value>
   </data>
   <data name="ERR_ROLE_NAME" xml:space="preserve">
     <value>Role name cannot be blank.</value>
   </data>
-  <data name="ERR_ROLE_NONE" xml:space="preserve">
-    <value>This user doesn't have any roles.</value>
-  </data>
-  <data name="ERR_ROLE_NOT_ALLOWED" xml:space="preserve">
-    <value>You are unauthorized to remove roles from this user.</value>
-  </data>
   <data name="ERR_INVALID_IP_GAME" xml:space="preserve">
     <value>Invalid connection info, please follow the format: `174.116.36.120:27015; password hello`</value>
-  </data>
-  <data name="NOT_FOUND_EMOJI" xml:space="preserve">
-    <value>Emoji not found in the server list.</value>
   </data>
   <data name="NOT_FOUND_COMMON" xml:space="preserve">
     <value>No results found.</value>
@@ -179,9 +149,6 @@
   </data>
   <data name="NOT_FOUND_WIKIPEDIA" xml:space="preserve">
     <value>Wikipedia page not found.</value>
-  </data>
-  <data name="INFO_REQ_TIMEOUT" xml:space="preserve">
-    <value>Request timed out...</value>
   </data>
   <data name="INFO_GIF_LOADING" xml:space="preserve">
     <value>Note: First time gifs take a few minutes to properly generate.</value>
@@ -210,9 +177,6 @@
   <data name="INFO_SHUTDOWN" xml:space="preserve">
     <value>Shutting Down...</value>
   </data>
-  <data name="INFO_RESPOND" xml:space="preserve">
-    <value>Respond with **yes** to proceed or wait 10 seconds to cancel this operation.</value>
-  </data>
   <data name="URL_TF2Wiki" xml:space="preserve">
     <value>https://wiki.teamfortress.com/wiki/{0}</value>
   </data>
@@ -220,20 +184,13 @@
     <value>https://github.com/CriticalFlaw/FlawBOT/</value>
   </data>
   <data name="URL_BOT_Invite" xml:space="preserve">
-    <value>https://discordapp.com/oauth2/authorize?client_id=339833029013012483&amp;scope=bot&amp;permissions=66186303</value>
+    <value>https://discord.com/oauth2/authorize?client_id=339833029013012483&amp;scope=bot+applications.commands&amp;permissions=66186303</value>
   </data>
   <data name="URL_Steam_App" xml:space="preserve">
-    <value>http://store.steampowered.com/app/{0}</value>
+    <value>https://store.steampowered.com/app/{0}</value>
   </data>
   <data name="ERR_INVALID_IP" xml:space="preserve">
     <value>Invalid IP address, please follow the format: `174.116.36.120`</value>
-  </data>
-  <data name="URL_Google_Maps" xml:space="preserve">
-    <value>https://www.google.ca/maps/@{0},{1},14z</value>
-    <comment>0 = longitude, 1 = latitude</comment>
-  </data>
-  <data name="URL_Steam_Connect" xml:space="preserve">
-    <value>steam://connect/{0}:27015</value>
   </data>
   <data name="URL_Amiibo" xml:space="preserve">
     <value>https://www.amiiboapi.com/api/amiibo/?name={0}</value>
@@ -242,17 +199,13 @@
     <value>https://catfact.ninja/fact</value>
   </data>
   <data name="URL_CatPhoto" xml:space="preserve">
-    <value>http://aws.random.cat/meow</value>
+    <value>https://api.thecatapi.com/v1/images/search</value>
   </data>
   <data name="URL_Dictionary" xml:space="preserve">
     <value>https://api.urbandictionary.com/v0/define?term={0}</value>
   </data>
   <data name="URL_DogPhoto" xml:space="preserve">
     <value>https://dog.ceo/api/breeds/image/random</value>
-  </data>
-  <data name="URL_IPAPI" xml:space="preserve">
-    <value>https://ipapi.co/{0}/json/</value>
-    <comment>0 = ip address</comment>
   </data>
   <data name="URL_NASA" xml:space="preserve">
     <value>https://api.nasa.gov/planetary/apod?api_key={0}</value>
@@ -267,13 +220,7 @@
     <value>https://www.speedrun.com/api/v1/{0}/{1}</value>
   </data>
   <data name="URL_Weather" xml:space="preserve">
-    <value>http://api.weatherstack.com//current?access_key={0}&amp;query={1}</value>
-  </data>
-  <data name="ERR_POKEMON_LIST" xml:space="preserve">
-    <value>Error updating the Pokémon card list: {0}</value>
-  </data>
-  <data name="ERR_REDDIT_UNKNOWN" xml:space="preserve">
-    <value>Please provide an existing category.</value>
+    <value>http://api.weatherstack.com/current?access_key={0}&amp;query={1}</value>
   </data>
   <data name="ERR_STEAM_LIST" xml:space="preserve">
     <value>Error updating Steam games list: {0}</value>
@@ -310,13 +257,10 @@
     <value>https://twitter.com/</value>
   </data>
   <data name="URL_INVALID_IMG" xml:space="preserve">
-    <value>An image URL ending with .img, .png or .jpg is required!</value>
+    <value>A valid http(s) link to a PNG, JPG or GIF image (10MB max) is required!</value>
   </data>
   <data name="URL_Simpsons_Image" xml:space="preserve">
     <value>https://{0}.com/img/{1}/{2}.jpg</value>
-  </data>
-  <data name="INFO_REPORT_SENDER" xml:space="preserve">
-    <value>The following information will be sent to the developer for investigation: User ID, Server ID, Server Name and Server Owner Name.</value>
   </data>
   <data name="URL_BOT_Docs" xml:space="preserve">
     <value>https://criticalflaw.ca/FlawBOT/modules/bot</value>
@@ -327,18 +271,6 @@
   <data name="ERR_LAVALINK_PLAYBACK" xml:space="preserve">
     <value>Exception occurred during audio playback.</value>
   </data>
-  <data name="APP_INTERACT" xml:space="preserve">
-    <value>next</value>
-  </data>
-  <data name="INFO_LIST_LAST_RESULT" xml:space="preserve">
-    <value>This is the last found result on the list.</value>
-  </data>
-  <data name="INFO_LIST_NEXT_RESULT" xml:space="preserve">
-    <value>Type 'next' within 10 seconds for the next result.</value>
-  </data>
-  <data name="INFO_TRY_AGAIN" xml:space="preserve">
-    <value>Enter the command again for a different result.</value>
-  </data>
   <data name="URL_Dictionary_Random" xml:space="preserve">
     <value>https://api.urbandictionary.com/v0/random</value>
   </data>
@@ -347,5 +279,20 @@
   </data>
   <data name="ERR_CATEGORY_NAME" xml:space="preserve">
     <value>Category name must be less than 100 characters long.</value>
+  </data>
+  <data name="URL_Imgur_Search" xml:space="preserve">
+    <value>https://api.imgur.com/3/gallery/search/top/all/0?q={0}</value>
+  </data>
+  <data name="URL_OMDB" xml:space="preserve">
+    <value>https://www.omdbapi.com/?t={0}&amp;apikey={1}&amp;plot=short</value>
+  </data>
+  <data name="URL_IMDB" xml:space="preserve">
+    <value>https://www.imdb.com/title/{0}/</value>
+  </data>
+  <data name="URL_Steam_Search" xml:space="preserve">
+    <value>https://store.steampowered.com/api/storesearch/?term={0}&amp;l=english&amp;cc=US</value>
+  </data>
+  <data name="URL_Twitch_Channel" xml:space="preserve">
+    <value>https://www.twitch.tv/{0}</value>
   </data>
 </root>
